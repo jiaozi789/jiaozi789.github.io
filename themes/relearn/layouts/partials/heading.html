@@ -1,2 +1,14 @@
 {{- $title := partial "title.gotmpl" (dict "page" .) }}
 <h1 id="{{ $title | plainify | anchorize }}">{{ $title }}</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>

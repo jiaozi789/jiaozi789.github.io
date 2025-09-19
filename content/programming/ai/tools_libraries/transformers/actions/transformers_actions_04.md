@@ -1,0 +1,811 @@
+---
+title: "Transformers实战04-微调gpt-2生成python代码。"
+date: 2025-09-18T16:55:17+08:00
+# bookComments: false
+# bookSearchExclude: false
+---
+
+
+# 简介
+GPT-2（Generative Pre-trained Transformer 2）是由OpenAI开发的一种基于Transformer架构的自然语言处理模型。以下是关于GPT-2的一些关键特点和信息：
+
+1. **Transformer架构**：GPT-2基于Transformer模型架构，这是一种使用自注意力机制来捕捉输入序列中词语之间依赖关系的深度学习模型。
+    
+2. **预训练**：GPT-2是一个预训练的语言模型，意味着它在大规模的文本数据上进行了预训练，以学习文本数据的统计特性和语言模式。
+    
+3. **无监督学习**：在预训练过程中，GPT-2采用了无监督学习的方式，即模型仅仅通过文本数据本身来学习，而没有使用人工标注的标签或监督信号。
+    
+4. **生成式任务**：GPT-2被设计用于生成式任务，如文本生成、对话生成和摘要生成等。它可以根据给定的上下文生成连贯的文本，并且在语言理解和生成方面表现出色。
+    
+5. **多层次架构**：GPT-2具有多层的Transformer编码器，其中包含数百万个参数，使得模型能够捕获复杂的语言结构和语义关系。
+    
+6. **大小变种**：GPT-2有多个大小的变种，从117M到1.5B个参数不等，每个变种都具有不同的性能和资源要求。更大的模型往往在生成更加准确和流畅的文本方面表现更好，但同时也需要更多的计算资源。
+    
+7. **开放许可**：GPT-2是在OpenAI的研究下开发的，其模型和相关资源以开放许可的形式发布，使得研究人员和开发者可以自由地使用和构建基于GPT-2的应用。
+    
+
+总的来说，GPT-2是一种强大的语言模型，具有广泛的应用潜力，可用于自然语言生成、理解、翻译等各种NLP任务。
+
+
+# 案例
+该案例来源huggingface学习中心[nlp-course](https://huggingface.co/learn)，[Training a causal language model from scratch](https://huggingface.co/learn/nlp-course/chapter7/6?fw=pt)
+文章
+## 描述
+我们将构建一个缩减版的代码生成模型：我们将专注于一行补全，而不是完整的函数或类，使用Python代码的一个子集。在Python中处理数据时，您会频繁接触到Python数据科学栈，包括matplotlib、seaborn、pandas和scikit-learn库。在使用这些框架时，经常需要查找特定的命令，因此如果我们可以使用一个模型来为我们完成这些调用，那将是很好的。
+
+## 收集数据
+我们使用huggingface收集得content包含："pandas", "sklearn", "matplotlib", "seaborn" 这些关键字python代码
+![在这里插入图片描述](/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/5289affa0aab4eec9ffcb5c434146b7d.png)
+这个数据集是从github公共仓库爬取，比如
+![在这里插入图片描述](/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3bd924ccf8e941efa901ec62731eb0f4.png)
+
+```
+from datasets import load_dataset, DatasetDict
+
+ds_train = load_dataset("huggingface-course/codeparrot-ds-train", split="train")
+ds_valid = load_dataset("huggingface-course/codeparrot-ds-valid", split="validation")
+
+raw_datasets = DatasetDict(
+    {
+        "train": ds_train,  # .shuffle().select(range(50000)),
+        "valid": ds_valid,  # .shuffle().select(range(500))
+    }
+)
+```
+让我们看一个数据集中的例子。我们只需显示每个字段的前200个字符：
+
+```
+for key in raw_datasets["train"][0]:
+    print(f"{key.upper()}: {raw_datasets['train'][0][key][:200]}")
+```
+
+输出
+
+```
+'REPO_NAME: kmike/scikit-learn'
+'PATH: sklearn/utils/__init__.py'
+'COPIES: 3'
+'SIZE: 10094'
+'''CONTENT: """
+The :mod:`sklearn.utils` module includes various utilites.
+"""
+
+from collections import Sequence
+
+import numpy as np
+from scipy.sparse import issparse
+import warnings
+
+from .murmurhash import murm
+LICENSE: bsd-3-clause'''
+```
+## 数据集处理
+首先要对数据进行标记化，这样我们才能用它进行训练。由于我们的目标主要是自动补全短函数调用，所以我们可以保持上下文大小相对较小。这样做的好处是我们可以更快地训练模型，并且需要的内存量明显较少。如果你的应用程序需要更多的上下文（例如，如果你希望模型能够基于包含函数定义的文件编写单元测试），请确保增加该数字，但也要记住这会增加GPU的内存占用。目前，让我们将上下文大小固定为128个标记，而不是 GPT-2 或 GPT-3 中分别使用的 1,024 或 2,048。
+
+### 回顾预处理
+#### input\_ids和attention_mask：
+input_ids是tokenizer处理后得到的输入特征，它将文本转换为模型能够处理的数字序列。每个单词或者标记（token）都会被映射成对应的唯一整数。这些整数序列就是模型的实际输入。
+     **示例**：假设原始文本经过tokenizer处理后，生成的`input_ids`可能是一个整数序列，如`[101, 2023, 2003, 1037, 2814, 2242, 102]`，每个整数对应一个token。
+
+
+attention_mask用于告诉模型哪些部分是真实的输入，哪些部分是填充（padding）的，以便模型在计算时能够正确处理。
+对于输入中的真实token，对应位置的attention_mask值为1；对于填充的位置，attention_mask值为0。
+示例：如果input_ids是[101, 2023, 2003, 1037, 2814, 2242, 102]，那么对应的attention_mask可能是[1, 1, 1, 1, 1, 1, 1]，表示所有位置都是真实的输入，如果某个句子词元比他小，可能就需要填充。
+
+```
+#这里演示分词器
+from transformers import AutoModel, BertTokenizer
+model_name="bert-base-chinese" #bert-base-uncased
+model=AutoModel.from_pretrained(model_name)
+tokenizer=BertTokenizer.from_pretrained(model_name)
+print(type(model),type(tokenizer))
+sequence = ["我出生在湖南岳阳,我的家在深圳.","我得儿子是小谦谦"]
+#输出中包含两个键 input_ids 和 attention_mask，其中 input_ids 对应分词之后的 tokens 映射到的数字编号列表，而 attention_mask 则是用来标记哪些 tokens #是被填充的（这里“1”表示是原文，“0”表示是填充字符）。
+print(tokenizer(sequence, padding=True, truncation=True, return_tensors="pt",pair=True))
+
+# 获取填充token的id
+pad_token_id = tokenizer.pad_token_id
+# 获取填充token的字符串表示
+pad_token = tokenizer.convert_ids_to_tokens(pad_token_id)
+print(f"实际填充是id,padid={pad_token_id},padtoken={pad_token}")
+#获取词汇表大小
+vocab = tokenizer.get_vocab()
+vocab_size = len(vocab)
+print("词汇表大小:", vocab_size,len(tokenizer))
+# 打印词汇表内容（可选）
+print("词汇表内容:", vocab)
+#将输入切分为词语、子词或者符号（例如标点符号），统称为 tokens；
+print(tokenizer.tokenize(sequence[0]),len(tokenizer.tokenize(sequence[0])))
+#我们通过 convert_tokens_to_ids() 将切分出的 tokens 转换为对应的 token IDs：
+print(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(sequence[0])))
+#可以通过 encode() 函数将这两个步骤合并，并且 encode() 会自动添加模型需要的特殊 token，例如 BERT 分词器会分别在序列的首尾添加[CLS] 和 [SEP]
+print(tokenizer.encode(sequence[0]))
+#解码还原文字，可以看到encode前后加了[CLS] 和 [SEP]
+print(tokenizer.decode(tokenizer.encode(sequence[1])))
+```
+输出
+
+```
+<class 'transformers.models.bert.modeling_bert.BertModel'> <class 'transformers.models.bert.tokenization_bert.BertTokenizer'>
+{'input_ids': tensor([[ 101, 2769, 1139, 4495, 1762, 3959, 1298, 2277, 7345,  117, 2769, 4638,
+         2157, 1762, 3918, 1766,  119,  102],
+        [ 101, 2769, 2533, 1036, 2094, 3221, 2207, 6472, 6472,  102,    0,    0,
+            0,    0,    0,    0,    0,    0]]), 'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]), 'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]])}
+实际填充是id,padid=0,padtoken=[PAD]
+词汇表大小: 21128 21128
+词汇表内容: {'[PAD]': 0, '[unused1]': 1, '[unused2]': 2, '[unused3]': 3, '[unused4]': 4, '[unused5]': 5, '[unused6]': 6, '[unused7]': 7, '[unused8]': 8, '[unused9]': 9, '[unused10]': 10, '[unused11]': 11,。。。。。。。。。。。
+['我', '出', '生', '在', '湖', '南', '岳', '阳', ',', '我', '的', '家', '在', '深', '圳', '.'] 16
+[2769, 1139, 4495, 1762, 3959, 1298, 2277, 7345, 117, 2769, 4638, 2157, 1762, 3918, 1766, 119]
+[101, 2769, 1139, 4495, 1762, 3959, 1298, 2277, 7345, 117, 2769, 4638, 2157, 1762, 3918, 1766, 119, 102]
+[CLS] 我 得 儿 子 是 小 谦 谦 [SEP]
+```
+#### special token
+Tokenizer 的特殊标记（special tokens）是在处理文本数据时经常用到的一些特殊符号或者字符串，它们在自然语言处理中起着重要的作用。这些特殊标记通常包括以下几类：
+
+1. **Padding token (`[PAD]`)** pad_token：  
+    在进行批量处理时，序列长度不一致是很常见的情况。为了保证输入数据的统一性，我们通常会使用 `[PAD]` 标记来填充较短的序列，使其与其他序列的长度相同。
+    
+2. **Start of sequence token (`[CLS]`)**  bos_token：  
+    在许多自然语言处理任务（如文本分类）中，需要在输入序列的开头添加一个特殊标记，例如 `[CLS]`，用于模型理解这是一个序列的起始点，gpt2的开始token是：<|endoftext|>。
+    
+3. **End of sequence token (`[SEP]`)** eos_token：  
+    类似地，`[SEP]` 标记通常用于表示序列的结束，特别是在处理多个句子或文本对时，可以用 `[SEP]` 分隔它们。
+    
+4. **Mask token (`[MASK]`)** mask_token：  
+    在预训练语言模型中，为了进行语言模型的掩码语言建模（Masked Language Modeling），我们需要将一些单词或子词随机地用 `[MASK]` 标记替换掉，让模型预测被掩码的部分。
+5. **unk_token** 是 tokenizer 中的一个特殊标记，通常用来表示未登录词（Unknown Token）。在自然语言处理中，未登录词指的是在训练数据中没有出现过的词汇或者子词。当模型在处理输入文本时遇到未登录词，它会用 unk_token 来替代这些词，以便继续进行处理或预测。
+6. **sep_token** 是 tokenizer 中的另一个特殊标记，通常用来表示序列的分隔符。在自然语言处理（NLP）任务中，sep_token 主要用于以下几个方面：
+某些预训练语言模型（如 BERT）要求输入数据按照特定格式组织，包括使用 sep_token 来分隔输入的各个部分。例如，在文本对分类任务中，可以用 [SEP] 标记分隔两个句子：
+`[CLS] Sentence A [SEP] Sentence B [SEP]`
+7. **cls_token** 是 tokenizer 中的另一个特殊标记，通常用来表示序列的开头或者分类任务中的特殊标记。
+
+这些特殊标记在不同的任务和模型中具有不同的用途，但它们的共同作用是帮助模型更好地处理文本数据，处理输入序列的长度变化，以及在特定任务中引导模型学习和预测。通过适当使用特殊标记，可以有效地增强模型对语言数据的理解和处理能力。
+
+```
+#特殊token
+from transformers import GPT2Tokenizer,AutoTokenizer
+
+# 初始化 GPT-2 分词器
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+tokenizer1 = AutoTokenizer.from_pretrained('bert-base-chinese')
+# 打印所有特殊标记
+print("gpt2特殊标记:")
+for token_name, token_value in tokenizer.special_tokens_map.items():
+    print(f"{token_name}: {token_value}")
+print("bert-base-chinese特殊标记:")
+for token_name, token_value in tokenizer1.special_tokens_map.items():
+    print(f"{token_name}: {token_value}")
+```
+输出
+```
+gpt2特殊标记:
+bos_token: <|endoftext|>
+eos_token: <|endoftext|>
+unk_token: <|endoftext|>
+--------------------------
+bert-base-chinese特殊标记:
+unk_token: [UNK]
+sep_token: [SEP]
+pad_token: [PAD]
+cls_token: [CLS]
+mask_token: [MASK]
+```
+
+#### chunk 
+当你有多个句子或文本段落需要处理时，你可以将它们划分成固定长度的小块（chunks），以便输入到模型中进行处理。这个过程通常用于处理较长的文本，以确保模型可以有效地处理输入数据，特别是在使用Transformer等模型时，其输入长度通常是有限制的。
+
+chunk的逻辑是，输入数据的每一行句子，超过max_length 都会被截断，当前句子被拆分成的chuck的个数为：len(句子)%max_length +1，当前有些模型会添加一些开始和分割字符 比如[CLS][SEQ]等也要算入长度。
+
+
+>注意tokenizer拆分小块的开启由 truncation=True,决定，如果是False max_length等就无效了。
+```
+#truck的问题。
+content = ["This is the first sentence. This is the second sentence.","i am a stupid man"]
+from transformers import AutoTokenizer
+
+# 选择一个预训练模型和对应的tokenizer
+model_name = "bert-base-uncased"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+# 最大的字符长度，因为字符的最前面会加一个[CLS],最后会补一个[SEP]，每一个句子都会被拆分一次，也就是一个truck行只能10个字符，content【0】因为超过10个字符，所以被切割成2个truck。
+# 输出的trucklength是[10,6]，第二个句子不满10个只有7个，最后length=[10, 6, 7]
+max_length = 10
+
+# 进行tokenization，并返回结果
+outputs = tokenizer(
+    content,
+    truncation=True,
+    max_length=max_length,
+    return_overflowing_tokens=True,
+    return_length=True,
+)
+# 输出结果
+print(outputs)
+print(tokenizer.decode(outputs['input_ids'][0]))
+print(tokenizer.decode(outputs['input_ids'][1]))
+```
+输出
+
+```
+{'input_ids': [[101, 2023, 2003, 1996, 2034, 6251, 1012, 2023, 2003, 102], [101, 1996, 2117, 6251, 1012, 102], [101, 1045, 2572, 1037, 5236, 2158, 102]], 'token_type_ids': [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]], 'attention_mask': [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1]], 'length': [10, 6, 7], 'overflow_to_sample_mapping': [0, 0, 1]}
+[CLS] this is the first sentence. this is [SEP]
+[CLS] the second sentence. [SEP]
+```
+注意overflow_to_sample_mapping中是标识每个小chuck属于之前哪个句子索引，第1-2个chuck是属于第0个索引也就是第一个句子，3个第二个句子。
+
+如果加了 padding=True,所有的子句都会自动补上padding_id，最终length都会是10，结果就变成
+```
+{'input_ids': [[101, 2023, 2003, 1996, 2034, 6251, 1012, 2023, 2003, 102], [101, 1996, 2117, 6251, 1012, 102, 0, 0, 0, 0], [101, 1045, 2572, 1037, 5236, 2158, 102, 0, 0, 0]], 'token_type_ids': [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], 'attention_mask': [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]], 'length': [10, 10, 10], 'overflow_to_sample_mapping': [0, 0, 1]}
+[CLS] this is the first sentence. this is [SEP]
+[CLS] the second sentence. [SEP] [PAD] [PAD] [PAD] [PAD]
+```
+其他更详细的预处理参考：https://github.com/huggingface/notebooks/blob/main/transformers_doc/en/preprocessing.ipynb
+
+#### datacollator
+- DataCollatorForLanguageModeling 的主要功能是为掩码语言模型（Masked Language Modeling，MLM）任务准备数据。它的主要作用是随机地掩盖输入中的一些标记，并生成相应的标签，以便模型在训练时能够预测这些被掩盖的标记。
+- DataCollatorWithPadding：对输入进行填充，使得输入张量具有相同的长度。
+
+更多相关类的实现，请[参考](https://huggingface.co/docs/transformers/main/en/main_classes/data_collator#transformers.DataCollatorForLanguageModeling)官方api
+
+以下是一个例子
+
+```
+import torch
+from transformers import BertTokenizer, DataCollatorForLanguageModeling
+# 初始化BERT分词器
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+# 定义示例文本
+texts = ["Hello, how are you?", "I am fine, thank you."]
+# 对文本进行编码
+inputs = tokenizer(texts, return_tensors='pt', padding=True, truncation=True)
+# 打印编码后的输入
+print("Encoded inputs:", inputs)
+# 将输入转换为列表，以适应DataCollatorForLanguageModeling的输入格式,他的格式要求有多少个句子就多少行[{'input_ids':,'attention_mask':},{'input_ids':,'attention_mask':}]
+# tokenizer encode的格式是字典 {'input_ids': [[],[]]是在二维数组体现，所以强制转一下
+batch = [{key: val[i] for key, val in inputs.items()} for i in range(len(texts))]
+print("collator需要格式",batch)
+# 初始化数据整理器，指定进行掩码语言模型任务
+data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.15)
+
+# 对输入数据进行整理
+collated_inputs = data_collator(batch)
+
+# 打印整理后的输入,这里因为mlm=True是自动掩盖，有15%的数据被掩盖，被掩盖的数据在input_ids被替换成103，然后在生成的labels上，没有被掩盖的数据都变成-100，被掩盖的数据替换为之前的数据
+# labels是最后的标签，通过训练反向就能很好的优化模型，这就是masked模型数据处理
+print("Collated inputs:", collated_inputs)
+data_collator1 = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+collated_inputs = data_collator1(batch)
+#mlm=False，不会产生遮盖，所有的输入生成的是输出相同的labels，如果是padding字符，labels是-100
+print("Collated inputs:", collated_inputs)
+```
+输出
+
+```
+Encoded inputs: {'input_ids': tensor([[ 101, 7592, 1010, 2129, 2024, 2017, 1029,  102,    0],
+        [ 101, 1045, 2572, 2986, 1010, 4067, 2017, 1012,  102]]), 'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]]), 'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1]])}
+collator需要格式 [{'input_ids': tensor([ 101, 7592, 1010, 2129, 2024, 2017, 1029,  102,    0]), 'token_type_ids': tensor([0, 0, 0, 0, 0, 0, 0, 0, 0]), 'attention_mask': tensor([1, 1, 1, 1, 1, 1, 1, 1, 0])}, {'input_ids': tensor([ 101, 1045, 2572, 2986, 1010, 4067, 2017, 1012,  102]), 'token_type_ids': tensor([0, 0, 0, 0, 0, 0, 0, 0, 0]), 'attention_mask': tensor([1, 1, 1, 1, 1, 1, 1, 1, 1])}]
+Collated inputs: {'input_ids': tensor([[ 101, 7592, 1010, 2129, 2024, 2017, 1029,  102,    0],
+        [ 101, 1045, 2572, 2986,  103, 4067,  103, 1012,  102]]), 'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]]), 'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1]]), 'labels': tensor([[-100, -100, -100, -100, -100, -100, -100, -100, -100],
+        [-100, -100, -100, -100, 1010, -100, 2017, -100, -100]])}
+Collated inputs: {'input_ids': tensor([[ 101, 7592, 1010, 2129, 2024, 2017, 1029,  102,    0],
+        [ 101, 1045, 2572, 2986, 1010, 4067, 2017, 1012,  102]]), 'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]]), 'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1]]), 'labels': tensor([[ 101, 7592, 1010, 2129, 2024, 2017, 1029,  102, -100],
+        [ 101, 1045, 2572, 2986, 1010, 4067, 2017, 1012,  102]])}
+```
+
+#### map
+在使用 transformers 库时，datasets 中的 map 方法是一个非常有用的工具，用于对数据集进行预处理、特征提取、数据增强等操作。下面是一个示例，展示如何使用 map 方法对数据集进行预处理，以便于将其用于训练一个文本分类模型。
+详细处理参考：[https://huggingface.co/docs/datasets/use_dataset](https://huggingface.co/docs/datasets/use_dataset)
+`map` 函数是 `datasets` 库中一个非常强大的工具，它允许你对数据集的每个样本或批次进行操作和变换。以下是 `map` 函数的几个关键参数及其解释：
+
+1. **`function`**
+
+这是一个用户定义的函数，它将应用于数据集的每个样本或批次。函数可以接受一个样本或一组样本作为输入，并返回一个或多个新的字段。
+
+`def preprocess_function(examples):     # 你的预处理逻辑     return examples`
+
+2. **`batched`**
+
+- 类型：`bool`
+- 默认值：`False`
+- 解释：如果设置为 `True`，`function` 将会批量应用到数据集中。这意味着 `function` 将接收一个包含多个样本的字典作为输入。
+
+`dataset.map(preprocess_function, batched=True)`
+
+ 3. **`batch_size`**
+
+- 类型：`int`
+- 默认值：`1000`
+- 解释：指定批量处理时的批次大小。仅当 `batched=True` 时有效。
+
+`dataset.map(preprocess_function, batched=True, batch_size=32)`
+
+ 4. **`remove_columns`**
+
+- 类型：`list` or `str`
+- 默认值：`None`
+- 解释：指定要从数据集中移除的列。这对于清理不需要的字段非常有用。
+
+`dataset.map(preprocess_function, remove_columns=["column_name"])`
+```
+# 导入必要的库
+from datasets import Dataset
+
+# 创建一个简单的数据集
+data = {
+    'text': [
+        "This is the first sentence.",
+        "Here's the second sentence.",
+        "And this is the third one."
+    ],
+    'label': [1, 0, 1]
+}
+
+# 转换为 Dataset 对象
+dataset = Dataset.from_dict(data)
+
+# 打印原始数据集
+print("原始数据集：")
+print(dataset)
+
+# 导入必要的库
+from transformers import AutoTokenizer
+
+# 加载预训练的分词器
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+
+# 定义预处理函数
+def preprocess_function(examples):
+    print("传入数据集",examples)
+    # 使用分词器对文本进行编码
+    encoded_tokenizer = tokenizer(examples['text'], truncation=True, padding='max_length', max_length=8)
+    print("分词数据集",encoded_tokenizer)
+    #返回的字典数据会被累加到原始数据集上。
+    return encoded_tokenizer
+
+# 使用 map 方法应用预处理函数
+encoded_dataset = dataset.map(preprocess_function, batched=True,batch_size=2)
+
+# 打印预处理后的数据集
+print("\n预处理后的数据集结构：",encoded_dataset)
+print("\n预处理后的数据集：",encoded_dataset[0:3])
+
+# 使用 map 方法应用预处理函数,remove_columns表示删除某些列是个数组。
+encoded_dataset = dataset.map(preprocess_function, batched=True,batch_size=2,remove_columns=dataset.features)
+
+# 打印预处理后的数据集
+print("\n预处理后的数据集：",encoded_dataset[0:3])
+```
+输出：
+
+```
+原始数据集：
+Dataset({
+    features: ['text', 'label'],
+    num_rows: 3
+})
+Map: 100%
+ 3/3 [00:00<00:00, 138.43 examples/s]
+传入数据集 {'text': ['This is the first sentence.', "Here's the second sentence.", 'And this is the third one.'], 'label': [1, 0, 1]}
+分词数据集 {'input_ids': [[101, 2023, 2003, 1996, 2034, 6251, 1012, 102], [101, 2182, 1005, 1055, 1996, 2117, 6251, 102], [101, 1998, 2023, 2003, 1996, 2353, 2028, 102]], 'token_type_ids': [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]], 'attention_mask': [[1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1]]}
+
+预处理后的数据集结构： Dataset({
+    features: ['text', 'label', 'input_ids', 'token_type_ids', 'attention_mask'],
+    num_rows: 3
+})
+
+预处理后的数据集： {'text': ['This is the first sentence.', "Here's the second sentence.", 'And this is the third one.'], 'label': [1, 0, 1], 'input_ids': [[101, 2023, 2003, 1996, 2034, 6251, 1012, 102], [101, 2182, 1005, 1055, 1996, 2117, 6251, 102], [101, 1998, 2023, 2003, 1996, 2353, 2028, 102]], 'token_type_ids': [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]], 'attention_mask': [[1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1]]}
+预处理后的数据集： {'input_ids': [[101, 2023, 2003, 1996, 2034, 6251, 1012, 102], [101, 2182, 1005, 1055, 1996, 2117, 6251, 102], [101, 1998, 2023, 2003, 1996, 2353, 2028, 102]], 'token_type_ids': [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]], 'attention_mask': [[1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1]]}
+```
+
+### 预处理
+大多数文档的标记数远超过 128 个，因此简单地将输入截断到最大长度会消除我们数据集的很大一部分。相反，我们将使用 return_overflowing_tokens 选项来对整个输入进行标记，并将其拆分为几个块。我们还将使用 return_length 选项自动返回每个创建块的长度。通常，最后一个块会小于上下文大小，我们将去掉这些部分以避免填充问题；实际上我们不需要它们，因为我们有很多数据。
+![在这里插入图片描述](/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3f5c55e1611842b7a9e191ecc1305279.png)
+让我们通过查看前两个例子来看看这到底是如何工作的：
+
+```
+from transformers import AutoTokenizer
+
+context_length = 128
+#这个分词器专门为代码搜索和理解任务设计。它主要用于处理编程语言（如 Python、JavaScript、Java 等）的源代码。
+tokenizer = AutoTokenizer.from_pretrained("huggingface-course/code-search-net-tokenizer")
+
+outputs = tokenizer(
+    #获取0，1这两个数据集的脚本内容
+    raw_datasets["train"][:2]["content"],
+    truncation=True,
+    max_length=context_length,
+    return_overflowing_tokens=True,
+    return_length=True,
+)
+
+print(f"Input IDs length: {len(outputs['input_ids'])}")
+print(f"Input chunk lengths: {(outputs['length'])}")
+print(f"Chunk mapping: {outputs['overflow_to_sample_mapping']}")
+```
+>   `huggingface-course/code-search-net-tokenizer`
+>- **设计目标**：这个分词器专门为代码搜索和理解任务设计。它主要用于处理编程语言（如 >Python、JavaScript、Java 等）的源代码。
+>- **训练数据**：该分词器使用 CodeSearchNet 数据集进行训练，数据集中包含了大量的代码示例>和注释。
+>- **应用领域**：适用于代码搜索、代码补全、代码生成和其他与代码相关的任务。
+>- **词汇表**：词汇表中包含了大量的编程语言特定的标记（如关键字、操作符、变量名等），以及>常见的编程语言语法和结构。
+><font color=red>注意：分词器模型的作用是将单词转换为一个个的数字，训练时使用的数字计算数字之间的上下文关系，最后推算对应的数字后，反向通过词典解析成文字，所以如果需要训练中文，你只需要有一个中文分词模型即可，训练只和数字相关。</font>
+
+输出：
+```
+Input IDs length: 34
+Input chunk lengths: [128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 117, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 41]
+Chunk mapping: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+```
+
+我们可以看到从这两个例子中总共得到了 34 个片段。查看片段长度，我们可以看到两个文档末尾的片段都少于 128 个标记（分别为 117 和 41）。这些仅占我们拥有的总片段的一小部分，因此我们可以安全地丢弃它们。使用 overflow_to_sample_mapping 字段，我们还可以重建哪些片段属于哪些输入样本。
+
+通过这个操作，我们利用了 🤗 Datasets 中 Dataset.map() 函数的一个便利功能，即它不需要一一对应的映射，我们可以创建比输入批次多或少的元素批次。当进行数据增强或数据过滤等会改变元素数量的操作时，这非常有用。在我们的例子中，当将每个元素标记为指定上下文大小的块时，我们从每个文档中创建了许多样本。我们只需要确保删除现有列，因为它们的大小不一致。如果我们想保留它们，可以适当重复并在 Dataset.map() 调用中返回它们：
+
+```
+def tokenize(element):
+    outputs = tokenizer(
+        element["content"],
+        truncation=True,
+        max_length=context_length,
+        return_overflowing_tokens=True,
+        return_length=True,
+    )
+    input_batch = []
+    #获取当前input_ids和长度，末尾chuck不等于context_length，就不需要加入了
+    for length, input_ids in zip(outputs["length"], outputs["input_ids"]):
+        if length == context_length:
+            input_batch.append(input_ids)
+    return {"input_ids": input_batch}
+
+
+tokenized_datasets = raw_datasets.map(
+    tokenize, batched=True, remove_columns=raw_datasets["train"].column_names
+)
+tokenized_datasets
+```
+输出：
+
+```
+DatasetDict({
+    train: Dataset({
+        features: ['input_ids'],
+        num_rows: 16702061
+    })
+    valid: Dataset({
+        features: ['input_ids'],
+        num_rows: 93164
+    })
+})
+```
+我们现在有 1670 万个例子，每个例子有 128 个标记，总共对应大约 21 亿个标记。供参考，OpenAI 的 GPT-3 和 Codex 模型分别在 300 和 1000 亿个标记上训练，其中 Codex 模型是从 GPT-3 检查点初始化的。我们在这一部分的目标不是与这些模型竞争，这些模型可以生成长而连贯的文本，而是创建一个缩减版本，为数据科学家提供快速自动补全功能。
+现在我们已经准备好数据集，接下来让我们设置模型！
+## 初始化模型
+### 回顾模型
+#### 参数计算
+在 PyTorch 中，`t.numel()` 是一个张量方法，用于返回张量中所有元素的数量。它等价于计算张量的大小（shape）的所有维度的乘积。例如，一个形状为 (3, 4, 5) 的张量有 3 \* 4 \* 5 = 60 个元素。
+
+在你提供的代码中：
+
+`model_size = sum(t.numel() for t in model.parameters())`
+
+这里 `model.parameters()` 返回模型中所有参数的一个生成器。通过 `t.numel()` 计算每个参数张量中的元素数量，然后使用 `sum()` 函数将所有这些数量加起来，得到整个模型中所有参数的总元素数量，即模型的总大小。
+示例
+假设有一个简单的神经网络模型：
+
+```
+import torch
+import torch.nn as nn
+
+class SimpleModel(nn.Module):
+    def __init__(self):
+        super(SimpleModel, self).__init__()
+        self.fc1 = nn.Linear(10, 20)
+        self.fc2 = nn.Linear(20, 30)
+        
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.fc2(x)
+        return x
+
+model = SimpleModel()
+```
+计算模型大小的代码如下：
+
+```
+model_size = sum(t.numel() for t in model.parameters())
+print(model_size)
+```
+在这个例子中，`model.parameters()` 会返回 `fc1` 和 `fc2` 的参数张量。
+
+- `fc1` 的权重张量形状为 (20, 10)，有 20 \* 10 = 200 个元素。
+- `fc1` 的偏置张量形状为 (20,)，有 20 个元素。
+- `fc2` 的权重张量形状为 (30, 20)，有 30 \* 20 = 600 个元素。
+- `fc2` 的偏置张量形状为 (30,)，有 30 个元素。
+
+总计模型中有 200 + 20 + 600 + 30 = 850 个参数元素。因此，`model_size` 的值将是 850。
+### 初始化
+我们的第一步是初始化一个GPT-2模型。我们将为我们的模型使用与小型GPT-2模型相同的配置，因此我们加载预训练的配置，确保标记器大小与模型词汇大小匹配，并传递bos和eos（序列开始和结束）令牌ID：
+
+```
+from transformers import AutoTokenizer, GPT2LMHeadModel, AutoConfig
+
+config = AutoConfig.from_pretrained(
+    "gpt2",
+    vocab_size=len(tokenizer), #获取词汇表大小
+    n_ctx=context_length,
+    bos_token_id=tokenizer.bos_token_id,
+    eos_token_id=tokenizer.eos_token_id,
+)
+```
+>因为使用了不同的分词器，所以重新加载配置
+
+通过该配置，我们可以加载一个新模型。请注意，这是我们第一次不使用 from_pretrained() 函数，因为我们实际上是在自己初始化一个模型：
+```
+model = GPT2LMHeadModel(config)
+model_size = sum(t.numel() for t in model.parameters())
+print(f"GPT-2 size: {model_size/1000**2:.1f}M parameters")
+```
+输出
+
+```
+GPT-2 size: 124.2M parameters
+```
+我们的模型有 124M 个参数需要调优。在开始训练之前，我们需要设置一个数据整理器，来处理创建批次的工作。我们可以使用 DataCollatorForLanguageModeling 整理器，它是专门为语言建模设计的（正如其名称微妙地暗示的那样）。除了堆叠和填充批次外，它还负责创建语言模型标签——在因果语言建模中，输入也作为标签（仅偏移一个元素），这个数据整理器在训练过程中实时创建它们，因此我们不需要重复 input_ids。
+请注意，DataCollatorForLanguageModeling 支持掩码语言建模 (MLM) 和因果语言建模 (CLM)。默认情况下，它为 MLM 准备数据，但我们可以通过设置参数 mlm=False 切换到 CLM：
+
+```
+from transformers import DataCollatorForLanguageModeling
+
+tokenizer.pad_token = tokenizer.eos_token
+data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
+```
+让我们来看一个例子：
+
+```
+out = data_collator([tokenized_datasets["train"][i] for i in range(5)])
+for key in out:
+    print(f"{key} shape: {out[key].shape}")
+```
+输出
+```
+input_ids shape: torch.Size([5, 128])
+attention_mask shape: torch.Size([5, 128])
+labels shape: torch.Size([5, 128])
+```
+我们可以看到示例已经被堆叠，所有张量形状相同。
+
+剩下的就是配置训练参数并启动训练器。我们将使用余弦学习率调度，并进行一些预热，实际批量大小为256（per_device_train_batch_size * gradient_accumulation_steps）。当单个批次无法适应内存时，会使用梯度累积，它通过多次前向/反向传递逐步累积梯度。当我们使用🤗 Accelerate 创建训练循环时，我们将看到这一点的实际应用。
+
+```
+from transformers import Trainer, TrainingArguments
+
+args = TrainingArguments(
+    output_dir="codeparrot-ds",
+    per_device_train_batch_size=32,
+    per_device_eval_batch_size=32,
+    evaluation_strategy="steps",
+    eval_steps=5_000,
+    logging_steps=5_000,
+    gradient_accumulation_steps=8,
+    num_train_epochs=1,
+    weight_decay=0.1,
+    warmup_steps=1_000,
+    lr_scheduler_type="cosine",
+    learning_rate=5e-4,
+    save_steps=5_000,
+    fp16=True,
+    push_to_hub=True,
+)
+
+trainer = Trainer(
+    model=model,
+    tokenizer=tokenizer,
+    args=args,
+    data_collator=data_collator,
+    train_dataset=tokenized_datasets["train"],
+    eval_dataset=tokenized_datasets["valid"],
+)
+```
+现在我们可以启动训练器并等待训练完成。根据您是在完整的训练集上运行还是在子集上运行，这将分别需要 20 小时或 2 小时，所以准备几杯咖啡和一本好书来阅读吧！
+
+```
+trainer.train()
+```
+## 完整代码
+
+```
+from datasets import load_dataset, DatasetDict
+
+ds_train = load_dataset("huggingface-course/codeparrot-ds-train", split="train")
+ds_valid = load_dataset("huggingface-course/codeparrot-ds-valid", split="validation")
+
+raw_datasets = DatasetDict(
+    {
+        "train": ds_train,  # .shuffle().select(range(50000)),
+        "valid": ds_valid,  # .shuffle().select(range(500))
+    }
+)
+from transformers import AutoTokenizer
+
+context_length = 128
+#这个分词器模型专门为代码搜索和理解任务设计。它主要用于处理编程语言（如 Python、JavaScript、Java 等）的源代码，分词器的目的是将对应词元转换为数字，让模型通过计算来理解数字和数字之间的关系，选择模型的分词器非常重要。
+tokenizer = AutoTokenizer.from_pretrained("huggingface-course/code-search-net-tokenizer")
+
+def tokenize(element):
+    outputs = tokenizer(
+        element["content"],
+        truncation=True,
+        max_length=context_length,
+        return_overflowing_tokens=True,
+        return_length=True,
+    )
+    input_batch = []
+    #获取当前input_ids和长度，末尾chuck不等于context_length，就不需要加入了
+    for length, input_ids in zip(outputs["length"], outputs["input_ids"]):
+        if length == context_length:
+            input_batch.append(input_ids)
+    return {"input_ids": input_batch}
+
+
+tokenized_datasets = raw_datasets.map(
+    tokenize, batched=True, remove_columns=raw_datasets["train"].column_names
+)
+from transformers import AutoTokenizer, GPT2LMHeadModel, AutoConfig
+
+config = AutoConfig.from_pretrained(
+    "gpt2",
+    vocab_size=len(tokenizer), #获取词汇表大小
+    n_ctx=context_length,
+    bos_token_id=tokenizer.bos_token_id,
+    eos_token_id=tokenizer.eos_token_id,
+)
+model = GPT2LMHeadModel(config)
+from transformers import DataCollatorForLanguageModeling
+
+tokenizer.pad_token = tokenizer.eos_token
+data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
+from transformers import Trainer, TrainingArguments
+
+args = TrainingArguments(
+    output_dir="/kaggle/working",
+    per_device_train_batch_size=32,
+    per_device_eval_batch_size=32,
+    evaluation_strategy="steps",
+    eval_steps=5_000,
+    logging_steps=5_000,
+    gradient_accumulation_steps=8,
+    num_train_epochs=1,
+    weight_decay=0.1,
+    warmup_steps=1_000,
+    lr_scheduler_type="cosine",
+    learning_rate=5e-4,
+    save_steps=5_000,
+    fp16=True,
+    report_to="none",
+    push_to_hub=False,
+)
+
+trainer = Trainer(
+    model=model,
+    tokenizer=tokenizer,
+    args=args,
+    data_collator=data_collator,
+    train_dataset=tokenized_datasets["train"],
+    eval_dataset=tokenized_datasets["valid"],
+)
+trainer.train()
+```
+## 测试
+>由于使用kaggle的gpu无法在12小时训练完成，所以这里只能用官方已经训练好的镜像测试了。
+
+现在是见证结果的时刻：让我们看看训练好的模型实际表现如何！我们可以在日志中看到损失值一直在稳定下降，但为了真正测试模型的效果，我们来看看它在一些提示信息上的表现。为此，我们将模型封装到一个文本生成管道中，并如果条件允许的话，将其部署到 GPU 上以实现快速生成：
+
+```
+import torch
+from transformers import pipeline
+
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+pipe = pipeline(
+    "text-generation", model="huggingface-course/codeparrot-ds", device=device
+)
+```
+让我们从创建散点图的简单任务开始：
+
+```
+txt = """\
+# create some data
+x = np.random.randn(100)
+y = np.random.randn(100)
+
+# create scatter plot with x, y
+"""
+print(pipe(txt, num_return_sequences=1)[0]["generated_text"])
+```
+输出：
+
+```
+# create some data
+x = np.random.randn(100)
+y = np.random.randn(100)
+
+# create scatter plot with x, y
+plt.scatter(x, y)
+
+# create scatter
+```
+结果看起来是正确的。对于 pandas 的操作是否也适用呢？我们来看看能否从两个数组创建一个 DataFrame：
+
+```
+txt = """\
+# create some data
+x = np.random.randn(100)
+y = np.random.randn(100)
+
+# create dataframe from x and y
+"""
+print(pipe(txt, num_return_sequences=1)[0]["generated_text"])
+```
+输出
+
+```
+# create some data
+x = np.random.randn(100)
+y = np.random.randn(100)
+
+# create dataframe from x and y
+df = pd.DataFrame({'x': x, 'y': y})
+df.insert(0,'x', x)
+for
+```
+好的，这是正确的答案——尽管随后又插入了列 x。由于生成的令牌数量有限，下面的 for 循环被截断了。我们来看看能否做一些更复杂的事情，并让模型帮助我们使用 groupby 操作：
+
+```
+txt = """\
+# dataframe with profession, income and name
+df = pd.DataFrame({'profession': x, 'income':y, 'name': z})
+
+# calculate the mean income per profession
+"""
+print(pipe(txt, num_return_sequences=1)[0]["generated_text"])
+```
+输出
+
+```
+# dataframe with profession, income and name
+df = pd.DataFrame({'profession': x, 'income':y, 'name': z})
+
+# calculate the mean income per profession
+profession = df.groupby(['profession']).mean()
+
+# compute the
+```
+还不错；这样做是对的。最后，让我们看看是否也能用它来为 scikit-learn 设置一个随机森林模型：
+
+```
+txt = """
+# import random forest regressor from scikit-learn
+from sklearn.ensemble import RandomForestRegressor
+
+# fit random forest model with 300 estimators on X, y:
+"""
+print(pipe(txt, num_return_sequences=1)[0]["generated_text"])
+```
+输出
+
+```
+# import random forest regressor from scikit-learn
+from sklearn.ensemble import RandomForestRegressor
+
+# fit random forest model with 300 estimators on X, y:
+rf = RandomForestRegressor(n_estimators=300, random_state=random_state, max_depth=3)
+rf.fit(X, y)
+rf
+```
+查看这几个例子，模型似乎学到了一些 Python 数据科学套件的语法。

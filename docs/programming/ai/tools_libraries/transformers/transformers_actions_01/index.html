@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="简介 Hugging Face Hugging Face是一个人工智能（AI）公司，它致力于开发和推广自然语言处理（NLP）相关的技术和工具。该公司以其开源项目和社区而闻名，其最知名的项目之一是Transformers库，它提供了一系列预训练的语言模型，包括BERT、GPT和RoBERTa等。这些模型已经在各种NLP任务中取得了显著的成功，并成为了许多研究和工业应用的基础。
+除了提供预训练的模型之外，Hugging Face还开发了一系列工具和平台，使得使用和部署这些模型变得更加简单。其中包括：
+Transformers库：提供了各种预训练的语言模型的接口和工具，使得开发者可以轻松地使用这些模型进行文本分类、命名实体识别、语言生成等任务。
+Datasets库：包含了各种NLP数据集的接口和工具，使得开发者可以方便地使用这些数据集进行模型训练和评估。
+Trainer库：提供了一个训练和微调模型的框架，使得开发者可以方便地使用自己的数据集对预训练模型进行微调，以适应特定的任务和应用场景。
+Model Hub：一个模型分享和发布平台，开发者可以在这里分享自己训练的模型，也可以找到其他人分享的模型，并且可以直接在自己的项目中使用这些模型。
+datasets数据集处理，transformers预训练微调等相关教程请参考官网hugging face官方文档。
+Transformers Transformers 是由 Hugging Face 开发的一个 NLP 包，支持加载目前绝大部分的预训练模型。随着 BERT、GPT 等大规模语言模型的兴起，越来越多的公司和研究者采用 Transformers 库来构建 NLP 应用，官网地址。 它提供了各种预训练的 Transformer 模型，包括 BERT、GPT、RoBERTa、DistilBERT 等。这些模型在多个 NLP 任务上取得了 state-of-the-art 的性能，并且 Transformers 库提供了简单易用的接口，使得使用这些预训练模型变得非常便捷。
+安装 官网安装教程参考：https://huggingface.co/docs/transformers/installation
+您可以通过 pip 安装 Transformers 库。在终端或命令行界面中执行以下命令（我这里使用pytorch，如果需要tensorflow的版本参考官网）：
+pip install &#39;transformers[torch]&#39;
+这将会自动从 PyPI（Python Package Index）下载并安装最新版本的 Transformers 库及其依赖项。
+如果您使用的是 Anaconda 环境，您也可以通过 conda 安装：
+conda install -c huggingface transformers
+这将会从 Anaconda 仓库中下载并安装 Transformers 库及其依赖项。">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Transformers实战01-开箱即用的 pipelines :: liaomin416100569博客">
+    <meta name="twitter:description" content="简介 Hugging Face Hugging Face是一个人工智能（AI）公司，它致力于开发和推广自然语言处理（NLP）相关的技术和工具。该公司以其开源项目和社区而闻名，其最知名的项目之一是Transformers库，它提供了一系列预训练的语言模型，包括BERT、GPT和RoBERTa等。这些模型已经在各种NLP任务中取得了显著的成功，并成为了许多研究和工业应用的基础。
+除了提供预训练的模型之外，Hugging Face还开发了一系列工具和平台，使得使用和部署这些模型变得更加简单。其中包括：
+Transformers库：提供了各种预训练的语言模型的接口和工具，使得开发者可以轻松地使用这些模型进行文本分类、命名实体识别、语言生成等任务。
+Datasets库：包含了各种NLP数据集的接口和工具，使得开发者可以方便地使用这些数据集进行模型训练和评估。
+Trainer库：提供了一个训练和微调模型的框架，使得开发者可以方便地使用自己的数据集对预训练模型进行微调，以适应特定的任务和应用场景。
+Model Hub：一个模型分享和发布平台，开发者可以在这里分享自己训练的模型，也可以找到其他人分享的模型，并且可以直接在自己的项目中使用这些模型。
+datasets数据集处理，transformers预训练微调等相关教程请参考官网hugging face官方文档。
+Transformers Transformers 是由 Hugging Face 开发的一个 NLP 包，支持加载目前绝大部分的预训练模型。随着 BERT、GPT 等大规模语言模型的兴起，越来越多的公司和研究者采用 Transformers 库来构建 NLP 应用，官网地址。 它提供了各种预训练的 Transformer 模型，包括 BERT、GPT、RoBERTa、DistilBERT 等。这些模型在多个 NLP 任务上取得了 state-of-the-art 的性能，并且 Transformers 库提供了简单易用的接口，使得使用这些预训练模型变得非常便捷。
+安装 官网安装教程参考：https://huggingface.co/docs/transformers/installation
+您可以通过 pip 安装 Transformers 库。在终端或命令行界面中执行以下命令（我这里使用pytorch，如果需要tensorflow的版本参考官网）：
+pip install &#39;transformers[torch]&#39;
+这将会自动从 PyPI（Python Package Index）下载并安装最新版本的 Transformers 库及其依赖项。
+如果您使用的是 Anaconda 环境，您也可以通过 conda 安装：
+conda install -c huggingface transformers
+这将会从 Anaconda 仓库中下载并安装 Transformers 库及其依赖项。">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/ai/tools_libraries/transformers/transformers_actions_01/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="Transformers实战01-开箱即用的 pipelines :: liaomin416100569博客">
+    <meta property="og:description" content="简介 Hugging Face Hugging Face是一个人工智能（AI）公司，它致力于开发和推广自然语言处理（NLP）相关的技术和工具。该公司以其开源项目和社区而闻名，其最知名的项目之一是Transformers库，它提供了一系列预训练的语言模型，包括BERT、GPT和RoBERTa等。这些模型已经在各种NLP任务中取得了显著的成功，并成为了许多研究和工业应用的基础。
+除了提供预训练的模型之外，Hugging Face还开发了一系列工具和平台，使得使用和部署这些模型变得更加简单。其中包括：
+Transformers库：提供了各种预训练的语言模型的接口和工具，使得开发者可以轻松地使用这些模型进行文本分类、命名实体识别、语言生成等任务。
+Datasets库：包含了各种NLP数据集的接口和工具，使得开发者可以方便地使用这些数据集进行模型训练和评估。
+Trainer库：提供了一个训练和微调模型的框架，使得开发者可以方便地使用自己的数据集对预训练模型进行微调，以适应特定的任务和应用场景。
+Model Hub：一个模型分享和发布平台，开发者可以在这里分享自己训练的模型，也可以找到其他人分享的模型，并且可以直接在自己的项目中使用这些模型。
+datasets数据集处理，transformers预训练微调等相关教程请参考官网hugging face官方文档。
+Transformers Transformers 是由 Hugging Face 开发的一个 NLP 包，支持加载目前绝大部分的预训练模型。随着 BERT、GPT 等大规模语言模型的兴起，越来越多的公司和研究者采用 Transformers 库来构建 NLP 应用，官网地址。 它提供了各种预训练的 Transformer 模型，包括 BERT、GPT、RoBERTa、DistilBERT 等。这些模型在多个 NLP 任务上取得了 state-of-the-art 的性能，并且 Transformers 库提供了简单易用的接口，使得使用这些预训练模型变得非常便捷。
+安装 官网安装教程参考：https://huggingface.co/docs/transformers/installation
+您可以通过 pip 安装 Transformers 库。在终端或命令行界面中执行以下命令（我这里使用pytorch，如果需要tensorflow的版本参考官网）：
+pip install &#39;transformers[torch]&#39;
+这将会自动从 PyPI（Python Package Index）下载并安装最新版本的 Transformers 库及其依赖项。
+如果您使用的是 Anaconda 环境，您也可以通过 conda 安装：
+conda install -c huggingface transformers
+这将会从 Anaconda 仓库中下载并安装 Transformers 库及其依赖项。">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="Transformers实战01-开箱即用的 pipelines :: liaomin416100569博客">
+    <meta itemprop="description" content="简介 Hugging Face Hugging Face是一个人工智能（AI）公司，它致力于开发和推广自然语言处理（NLP）相关的技术和工具。该公司以其开源项目和社区而闻名，其最知名的项目之一是Transformers库，它提供了一系列预训练的语言模型，包括BERT、GPT和RoBERTa等。这些模型已经在各种NLP任务中取得了显著的成功，并成为了许多研究和工业应用的基础。
+除了提供预训练的模型之外，Hugging Face还开发了一系列工具和平台，使得使用和部署这些模型变得更加简单。其中包括：
+Transformers库：提供了各种预训练的语言模型的接口和工具，使得开发者可以轻松地使用这些模型进行文本分类、命名实体识别、语言生成等任务。
+Datasets库：包含了各种NLP数据集的接口和工具，使得开发者可以方便地使用这些数据集进行模型训练和评估。
+Trainer库：提供了一个训练和微调模型的框架，使得开发者可以方便地使用自己的数据集对预训练模型进行微调，以适应特定的任务和应用场景。
+Model Hub：一个模型分享和发布平台，开发者可以在这里分享自己训练的模型，也可以找到其他人分享的模型，并且可以直接在自己的项目中使用这些模型。
+datasets数据集处理，transformers预训练微调等相关教程请参考官网hugging face官方文档。
+Transformers Transformers 是由 Hugging Face 开发的一个 NLP 包，支持加载目前绝大部分的预训练模型。随着 BERT、GPT 等大规模语言模型的兴起，越来越多的公司和研究者采用 Transformers 库来构建 NLP 应用，官网地址。 它提供了各种预训练的 Transformer 模型，包括 BERT、GPT、RoBERTa、DistilBERT 等。这些模型在多个 NLP 任务上取得了 state-of-the-art 的性能，并且 Transformers 库提供了简单易用的接口，使得使用这些预训练模型变得非常便捷。
+安装 官网安装教程参考：https://huggingface.co/docs/transformers/installation
+您可以通过 pip 安装 Transformers 库。在终端或命令行界面中执行以下命令（我这里使用pytorch，如果需要tensorflow的版本参考官网）：
+pip install &#39;transformers[torch]&#39;
+这将会自动从 PyPI（Python Package Index）下载并安装最新版本的 Transformers 库及其依赖项。
+如果您使用的是 Anaconda 环境，您也可以通过 conda 安装：
+conda install -c huggingface transformers
+这将会从 Anaconda 仓库中下载并安装 Transformers 库及其依赖项。">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="1622">
+    <title>Transformers实战01-开箱即用的 pipelines :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758265020" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758265020" defer></script>
+    <script src="/docs/js/search-lunr.js?1758265020" defer></script>
+    <script src="/docs/js/search.js?1758265020" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758265020";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758265020" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758265020" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758265020" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758265020" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['en'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758265020" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758265020" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758265020" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758265020" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758265020" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/ai\/tools_libraries\/transformers\/transformers_actions_01\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758265020" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/transformers_actions_01/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a>
+      <ul>
+        <li><a href="#hugging-face">Hugging Face</a></li>
+        <li><a href="#transformers">Transformers</a></li>
+      </ul>
+    </li>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#模型">模型</a>
+      <ul>
+        <li><a href="#文件结构">文件结构</a></li>
+      </ul>
+    </li>
+    <li><a href="#pipelines">pipelines</a>
+      <ul>
+        <li><a href="#图片转文本">图片转文本</a></li>
+        <li><a href="#文本生成">文本生成</a></li>
+        <li><a href="#情感分析">情感分析</a></li>
+        <li><a href="#零训练样本分类">零训练样本分类</a></li>
+        <li><a href="#遮盖词填充">遮盖词填充</a></li>
+        <li><a href="#命名实体识别">命名实体识别</a></li>
+        <li><a href="#自动问答">自动问答</a></li>
+        <li><a href="#自动摘要">自动摘要</a></li>
+      </ul>
+    </li>
+    <li><a href="#pipeline-背后做了什么">pipeline 背后做了什么？</a>
+      <ul>
+        <li><a href="#使用分词器进行预处理">使用分词器进行预处理</a></li>
+        <li><a href="#将预处理好的输入送入模型">将预处理好的输入送入模型</a>
+          <ul>
+            <li><a href="#transformers库结构">Transformers库结构</a></li>
+            <li><a href="#模块输出">模块输出</a></li>
+          </ul>
+        </li>
+        <li><a href="#对模型输出进行后处理">对模型输出进行后处理</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/tools_libraries/index.html"><span itemprop="name">工具库</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/tools_libraries/transformers/index.html"><span itemprop="name">transformers</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">Transformers实战01-开箱即用的 pipelines</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/tools_libraries/transformers/actions/index.html" title="transformers实战 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/tools_libraries/transformers/transformers_actions_02/index.html" title="Transformers实战02-BERT预训练模型微调 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="transformers实战01-开箱即用的-pipelines">Transformers实战01-开箱即用的 pipelines</h1>
+
+<h1 id="简介">简介</h1>
+<h2 id="hugging-face">Hugging Face</h2>
+<p>Hugging Face是一个人工智能（AI）公司，它致力于开发和推广自然语言处理（NLP）相关的技术和工具。该公司以其开源项目和社区而闻名，其最知名的项目之一是Transformers库，它提供了一系列预训练的语言模型，包括BERT、GPT和RoBERTa等。这些模型已经在各种NLP任务中取得了显著的成功，并成为了许多研究和工业应用的基础。</p>
+<p>除了提供预训练的模型之外，Hugging Face还开发了一系列工具和平台，使得使用和部署这些模型变得更加简单。其中包括：</p>
+<ol>
+<li>
+<p><strong>Transformers库</strong>：提供了各种预训练的语言模型的接口和工具，使得开发者可以轻松地使用这些模型进行文本分类、命名实体识别、语言生成等任务。</p>
+</li>
+<li>
+<p><strong>Datasets库</strong>：包含了各种NLP数据集的接口和工具，使得开发者可以方便地使用这些数据集进行模型训练和评估。</p>
+</li>
+<li>
+<p><strong>Trainer库</strong>：提供了一个训练和微调模型的框架，使得开发者可以方便地使用自己的数据集对预训练模型进行微调，以适应特定的任务和应用场景。</p>
+</li>
+<li>
+<p><strong>Model Hub</strong>：一个模型分享和发布平台，开发者可以在这里分享自己训练的模型，也可以找到其他人分享的模型，并且可以直接在自己的项目中使用这些模型。</p>
+</li>
+</ol>
+<p>datasets数据集处理，transformers预训练微调等相关教程请参考官网hugging face<a href="https://huggingface.co/docs" rel="external" target="_blank">官方文档</a>。</p>
+<h2 id="transformers">Transformers</h2>
+<p>Transformers 是由 Hugging Face 开发的一个 NLP 包，支持加载目前绝大部分的预训练模型。随着 BERT、GPT 等大规模语言模型的兴起，越来越多的公司和研究者采用 Transformers 库来构建 NLP 应用，<a href="https://huggingface.co/docs/transformers/index" rel="external" target="_blank">官网地址</a>。
+它提供了各种预训练的 Transformer 模型，包括 BERT、GPT、RoBERTa、DistilBERT 等。这些模型在多个 NLP 任务上取得了 state-of-the-art 的性能，并且 Transformers 库提供了简单易用的接口，使得使用这些预训练模型变得非常便捷。</p>
+<h1 id="安装">安装</h1>
+<p>官网安装教程参考：https://huggingface.co/docs/transformers/installation</p>
+<p>您可以通过 pip 安装 Transformers 库。在终端或命令行界面中执行以下命令（我这里使用pytorch，如果需要tensorflow的版本参考官网）：</p>
+<p><code>pip install 'transformers[torch]'</code></p>
+<p>这将会自动从 PyPI（Python Package Index）下载并安装最新版本的 Transformers 库及其依赖项。</p>
+<p>如果您使用的是 Anaconda 环境，您也可以通过 conda 安装：</p>
+<p><code>conda install -c huggingface transformers</code></p>
+<p>这将会从 Anaconda 仓库中下载并安装 Transformers 库及其依赖项。</p>
+<p>安装完成后，您就可以在 Python 环境中使用 Transformers 库了。您可以编写代码来加载预训练模型、执行各种 NLP 任务，或者使用 Transformers 提供的高级 API，如 pipelines 来快速完成任务。</p>
+<h1 id="模型">模型</h1>
+<p>自然语言处理（NLP）模型是指用于处理和理解自然语言文本的计算机模型。这些模型的设计和训练旨在使计算机能够自动处理和分析语言数据，以执行各种语言相关的任务。以下是几种常见的NLP模型类型及其功能：</p>
+<ol>
+<li>
+<p><strong>基于规则的模型</strong>：这些模型使用手工制定的规则和规则集来处理文本，例如语法分析或关键词提取。这种方法的局限性在于需要大量的人工工作和难以处理的复杂性。</p>
+</li>
+<li>
+<p><strong>基于统计的模型</strong>：这些模型利用统计学习技术从大量文本数据中学习语言模式和规律。例如，n-gram语言模型可以预测给定单词序列的下一个单词，而隐马尔可夫模型则用于词性标注和语音识别。</p>
+</li>
+<li>
+<p><strong>神经网络模型</strong>：随着深度学习的发展，神经网络在NLP中的应用越来越广泛。这些模型使用多层神经网络结构来学习复杂的语言特征和模式。例如，递归神经网络（RNN）、长短时记忆网络（LSTM）和变压器（Transformer）等模型已经在机器翻译、文本生成、情感分析等任务中取得了显著的成就。</p>
+</li>
+<li>
+<p><strong>预训练语言模型</strong>：这些模型通过在大规模文本数据上进行自监督学习来预先训练，例如BERT（Bidirectional Encoder Representations from Transformers）、GPT（Generative Pre-trained Transformer）等。预训练模型在各种NLP任务中表现出色，并通过微调适应特定的下游任务。</p>
+</li>
+</ol>
+<p>NLP模型的选择取决于任务的性质和复杂度，以及可用的训练数据和计算资源。随着技术的进步和研究的深入，NLP模型不断演进和改进，为语言处理领域带来了许多创新和新的应用可能性。</p>
+<h2 id="文件结构">文件结构</h2>
+<p><a href="#R-image-e3503abfe3c03166a686ddfa78df33fd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/cb01bc2b8c0ac0a386ef1f6692400079.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e3503abfe3c03166a686ddfa78df33fd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/cb01bc2b8c0ac0a386ef1f6692400079.png"></a>
+训练模型通常具有以下常见的目录文件结构和文件：</p>
+<ol>
+<li>
+<p><strong>vocab.json</strong>: 这是一个包含词汇表的文件，它将模型训练时使用的词汇映射到整数索引。这对于将文本转换为模型可以理解的输入格式（如整数索引或者词嵌入）非常重要。</p>
+</li>
+<li>
+<p><strong>tokenizer_config.json</strong>: 这个文件包含有关模型使用的分词器（tokenizer）的配置信息，例如分词器的类型、参数设置等。分词器用于将文本划分为词语或子词的序列，并将其转换为模型可以处理的输入格式。</p>
+</li>
+<li>
+<p><strong>tokenizer.json</strong>: 如果模型使用了特定的分词器，此文件可能包含分词器的具体实现和配置信息。这对于加载和使用模型的时候确保分词器能正确地工作非常重要。</p>
+</li>
+<li>
+<p><strong>config.json</strong>: 这个文件包含了模型本身的配置信息，例如模型的类型（如BERT、GPT）、层数、隐藏单元数等超参数设置。这些信息对于构建和初始化模型极为关键。</p>
+</li>
+<li>
+<p><strong>pytorch_model.bin</strong> 或 <strong>tensorflow_model.h5</strong>：这是包含预训练模型权重的二进制文件，其格式取决于所使用的深度学习框架。这些权重是模型学习到的参数，用于实际的预测和推理任务。</p>
+</li>
+<li>
+<p><strong>special_tokens_map.json</strong>: 如果模型包含了特殊标记（如填充标记、起始标记等），此文件将包含这些特殊标记的定义及其在模型中的使用方式。</p>
+</li>
+<li>
+<p><strong>merges.txt</strong>（对于BERT等子词级别的模型）：这个文件包含将词汇划分为子词或者字符的规则或者合并操作，这对于分词器的工作非常关键。</p>
+</li>
+<li>
+<p><strong>README.md</strong> 或者 <strong>model_card.md</strong>：这些文件通常包含了关于模型的详细信息，如作者、许可证、训练数据集、性能评估等，对于了解和使用模型非常有帮助。</p>
+</li>
+</ol>
+<p>每个模型的具体结构和文件可能会有所不同，但上述文件是构成大多数预训练模型的基本要素。通过理解和操作这些文件，可以更好地理解和使用预训练模型进行自然语言处理任务。</p>
+<h1 id="pipelines">pipelines</h1>
+<p>在 Hugging Face Transformers 中，pipelines 是一种方便的高级 API，用于执行各种自然语言处理（NLP）任务，如文本分类、命名实体识别、问答等。使用 pipelines，您无需编写大量的代码来加载模型、预处理输入数据、执行推理等操作，而是可以通过简单的函数调用来完成这些任务。</p>
+<p>ransformers 库将目前的 NLP 任务归纳为几下几类：</p>
+<ul>
+<li><strong>文本分类</strong>：例如情感分析、句子对关系判断等；</li>
+<li><strong>对文本中的词语进行分类</strong>：例如词性标注 (POS)、命名实体识别 (NER) 等；</li>
+<li><strong>文本生成</strong>：例如填充预设的模板 (prompt)、预测文本中被遮掩掉 (masked) 的词语；</li>
+<li><strong>从文本中抽取答案</strong>：例如根据给定的问题从一段文本中抽取出对应的答案；</li>
+<li><strong>根据输入文本生成新的句子</strong>：例如文本翻译、自动摘要等。</li>
+</ul>
+<p>Transformers 库最基础的对象就是 <code>pipeline()</code> 函数，它封装了预训练模型和对应的前处理和后处理环节。我们只需输入文本，就能得到预期的答案。目前常用的 <a href="https://huggingface.co/docs/transformers/main_classes/pipelines" rel="external" target="_blank">pipelines</a> 有：</p>
+<ol>
+<li><strong>audio-classification</strong>（音频分类）：用于对音频进行分类，识别音频中的类别或属性。</li>
+<li><strong>automatic-speech-recognition</strong>（自动语音识别）：用于将音频转换为文本，实现语音识别的功能。</li>
+<li><strong>conversational</strong>（会话式处理）：用于构建和处理对话系统，实现对话式交互的功能。</li>
+<li><strong>depth-estimation</strong>（深度估计）：用于从单张图片或视频中估计场景的深度信息。</li>
+<li><strong>document-question-answering</strong>（文档问答）：用于从文档中回答问题，帮助用户获取文档内容中的相关信息。</li>
+<li><strong>feature-extraction</strong>（特征提取）：用于从文本、图片等数据中提取特征，用于后续的任务或分析。</li>
+<li><strong>fill-mask</strong>（填空）：用于给定带有空白的句子，预测并填补空白处的单词或短语。</li>
+<li><strong>image-classification</strong>（图片分类）：用于对图片进行分类，识别图片中的类别或属性。</li>
+<li><strong>image-feature-extraction</strong>（图片特征提取）：用于从图片中提取特征，用于后续的任务或分析。</li>
+<li><strong>image-segmentation</strong>（图片分割）：用于将图片分割成不同的区域或对象，进行图像分割任务。</li>
+<li><strong>image-to-image</strong>（图片到图片）：用于执行图片到图片的转换，如图像风格转换、图像去噪等。</li>
+<li><strong>image-to-text</strong>（图片到文本）：用于从图片中提取文本信息，实现图片中的文字识别功能。</li>
+<li><strong>mask-generation</strong>（遮罩生成）：用于生成图片中的遮罩或掩码，用于图像处理或分割任务。</li>
+<li><strong>object-detection</strong>（目标检测）：用于从图片或视频中检测和识别出图像中的目标对象。</li>
+<li><strong>question-answering</strong>（问答）：用于回答给定问题的模型，从文本中找出包含答案的部分。</li>
+<li><strong>summarization</strong>（摘要生成）：用于生成文本的摘要或总结，将文本内容压缩为简短的形式。</li>
+<li><strong>table-question-answering</strong>（表格问答）：用于从表格数据中回答问题，帮助用户从表格中获取信息。</li>
+<li><strong>text2text-generation</strong>（文本到文本生成）：用于生成文本的模型，可以执行文本到文本的转换或生成任务。</li>
+<li><strong>text-classification</strong>（文本分类）：(别名&quot;sentiment-analysis&quot; 可用，情感分析)用于将文本进行分类，识别文本中的类别或属性。</li>
+<li><strong>text-generation</strong>（文本生成）：用于生成文本的模型，可以生成连续的文本序列。</li>
+<li><strong>text-to-audio</strong>（文本到音频）：用于将文本转换为语音，实现文本到语音的功能。</li>
+<li><strong>token-classification</strong>（标记分类）：别名&quot;ner&quot; 可用，命名实体识别，用于将文本中的每个标记或单词进行分类，识别每个标记的类别或属性。</li>
+<li><strong>translation</strong>（翻译）：用于执行文本的翻译任务，将文本从一种语言翻译成另一种语言。</li>
+<li><strong>video-classification</strong>（视频分类）：用于对视频进行分类，识别视频中的类别或属性。</li>
+<li><strong>visual-question-answering</strong>（视觉问答）：用于从图片或视频中回答问题，结合视觉和文本信息进行问答。</li>
+<li><strong>zero-shot-classification</strong>（零样本分类）：用于执行零样本分类任务，即在没有见过该类别的情况下对新样本进行分类。</li>
+<li><strong>zero-shot-image-classification</strong>（零样本图片分类）：用于执行零样本分类任务，即在没有见过该类别的情况下对新图片进行分类。</li>
+<li><strong>zero-shot-audio-classification</strong>（零样本音频分类）：用于执行零样本分类任务，即在没有见过该类别的情况下对新音频进行分类。</li>
+<li><strong>zero-shot-object-detection</strong>（零样本目标检测）：用于执行零样本目标检测任务，即在没有见过该类别的情况下对新图片中的目标对象进行检测。</li>
+</ol>
+<p>如果需要了解更多的task类型更新，参考<a href="https://huggingface.co/docs/transformers/v4.40.2/en/main_classes/pipelines" rel="external" target="_blank">官网pipeline</a>：
+下面我们以常见的几个 NLP 任务为例，展示如何调用这些 pipeline 模型。</p>
+<h2 id="图片转文本">图片转文本</h2>
+<p>教程参考自官网：https://huggingface.co/docs/transformers/v4.40.2/en/main_classes/pipelines#transformers.ImageToTextPipeline
+<a href="#R-image-5490e7684a004236b8174694680665a6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/43243b59a8fc0d9921d012e1d256d51f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5490e7684a004236b8174694680665a6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/43243b59a8fc0d9921d012e1d256d51f.png"></a></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+itt=pipeline(&#34;image-to-text&#34;,model=&#34;ydshieh/vit-gpt2-coco-en&#34;) #model不指定会使用默认模型。
+rtn=itt(&#34;https://huggingface.co/datasets/Narsil/image_dummy/raw/main/parrots.png&#34;)
+print(rtn)</code></pre></div>
+<p>可以看到输出是需要先下载模型（下载一次，自动缓存），下载在C:\Users\admin.cache\huggingface\hub目录下。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>:\python\evn311\Lib\site-packages\huggingface_hub\file_download.py:157: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\admin\.cache\huggingface\hub\models--ydshieh--vit-gpt2-coco-en. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to see activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+  warnings.warn(message)</code></pre></div>
+<p>最后输出：[{&lsquo;generated_text&rsquo;: &rsquo;two birds are standing next to each other &lsquo;}]</p>
+<p>如果希望使用其他的image-to-text模型可以在官网搜索
+<a href="https://huggingface.co/models?pipeline_tag=image-to-text&sort=trending" rel="external" target="_blank">https://huggingface.co/models?pipeline_tag=image-to-text&sort=trending</a>
+<a href="#R-image-103360c4daaf637c39130799ea91ade5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/0af97dd5cd118a9c950b925c53ac28b9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-103360c4daaf637c39130799ea91ade5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/0af97dd5cd118a9c950b925c53ac28b9.png"></a>
+比如选择image-to-text右侧文本框输入chinese，看下是不是有中文描述的
+<a href="#R-image-4644ef7a14713ec0ffb2a8de6840ec89" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/f99868b1909dd9c7de04e569b0d941e1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4644ef7a14713ec0ffb2a8de6840ec89"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/f99868b1909dd9c7de04e569b0d941e1.png"></a>
+使用这个模型来测试下</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>image_path=&#34;https://huggingface.co/datasets/Narsil/image_dummy/raw/main/parrots.png&#34;
+from transformers import pipeline
+itt=pipeline(&#34;image-to-text&#34;,model=&#34;IDEA-CCNL/Taiyi-BLIP-750M-Chinese&#34;)
+rtn=itt(image_path)
+print(rtn)</code></pre></div>
+<p>输出（效果没有英文的模型好，明明是两只鹦鹉啊，不过识别出了鹦鹉，英文的只是两只鸟）
+[{&lsquo;generated_text&rsquo;: &lsquo;一 只 鹦 鹉 的 黑 白 照 片 。&rsquo;}]</p>
+<h2 id="文本生成">文本生成</h2>
+<p>我们首先根据任务需要构建一个模板 (prompt)，然后将其送入到模型中来生成后续文本。注意，由于文本生成具有随机性，因此每次运行都会得到不同的结果。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+from transformers import pipeline
+generator = pipeline(&#34;text-generation&#34;,model=&#34;openai-community/gpt2&#34;)
+print(generator(&#34;I can&#39;t believe you did such a &#34;))</code></pre></div>
+<p>输出：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[{&#39;generated_text&#39;: &#39;I can\&#39;t believe you did such a _____t!&#34;\n\n&#34;You know I\&#39;m kind of an asshole to you, I mean?&#34;\n\n&#34;Just because I had one thing to do doesn\&#39;t mean I hate you. I know you&#39;}]</code></pre></div>
+<p>在huggerface上搜索一个古诗词生成的模型，
+左侧选择tag Text Generation ，搜索poem，选择最多人喜欢。
+<a href="#R-image-6181102015d70af23ebc9f6bf94bbae6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/8dfa39301693265aea3f46b80d5a3641.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6181102015d70af23ebc9f6bf94bbae6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/8dfa39301693265aea3f46b80d5a3641.png"></a></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+generator = pipeline(&#34;text-generation&#34;,model=&#34;uer/gpt2-chinese-poem&#34;)
+print(generator(&#34;[CLS] 离 离 原 上 草 ，&#34;))</code></pre></div>
+<p>输出</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[{&#39;generated_text&#39;: &#39;[CLS] 离 离 原 上 草 ， 濯 濯 原 上 桑 。 春 风 吹 罗 衣 ， 行 人 泪 成 行 。 离 人 不 可 留 ， 况 乃 隔 河 梁 。 当 和 露 餐 ， 勿 复 怨 秋 凉 。 愿 言 崇 令 德 ， 以 配 君 子 光 。 毋 怀 远 心 ， 皓 月 鉴 我 伤 。 莫 怨 东 风 ， 飘 然 入 西 楼 。 举 手 倚 阑 干 ， 举 酒 相 劝 酬 。 良 时 焉 可 再 ， 逝 水 何 悠 悠 。 我 金 石 交 ， 沉 邈 焉 能 求&#39;}]</code></pre></div>
+<h2 id="情感分析">情感分析</h2>
+<p>借助情感分析 pipeline，我们只需要输入文本，就可以得到其情感标签（积极/消极）以及对应的概率：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+
+classifier = pipeline(&#34;sentiment-analysis&#34;)
+result = classifier(&#34;I&#39;ve been waiting for a HuggingFace course my whole life.&#34;)
+print(result)
+results = classifier(
+  [&#34;I&#39;ve been waiting for a HuggingFace course my whole life.&#34;, &#34;I hate this so much!&#34;]
+)
+print(results)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>No model was supplied, defaulted to distilbert-base-uncased-finetuned-sst-2-english (https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english)
+
+[{&#39;label&#39;: &#39;POSITIVE&#39;, &#39;score&#39;: 0.9598048329353333}]
+[{&#39;label&#39;: &#39;POSITIVE&#39;, &#39;score&#39;: 0.9598048329353333}, {&#39;label&#39;: &#39;NEGATIVE&#39;, &#39;score&#39;: 0.9994558691978455}]</code></pre></div>
+<p>pipeline 模型会自动完成以下三个步骤：</p>
+<ol>
+<li>将文本预处理为模型可以理解的格式；</li>
+<li>将预处理好的文本送入模型；</li>
+<li>对模型的预测值进行后处理，输出人类可以理解的格式。</li>
+</ol>
+<p>pipeline 会自动选择合适的预训练模型来完成任务。例如对于情感分析，默认就会选择微调好的英文情感模型 <em>distilbert-base-uncased-finetuned-sst-2-english</em>。</p>
+<blockquote>
+<p>Transformers 库会在创建对象时下载并且缓存模型，只有在首次加载模型时才会下载，后续会直接调用缓存好的模型。</p></blockquote>
+<h2 id="零训练样本分类">零训练样本分类</h2>
+<p>零训练样本分类 pipeline 允许我们在不提供任何标注数据的情况下自定义分类标签。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+
+classifier = pipeline(&#34;zero-shot-classification&#34;)
+result = classifier(
+&#34;This is a course about the Transformers library&#34;,
+candidate_labels=[&#34;education&#34;, &#34;politics&#34;, &#34;business&#34;],
+)
+print(result)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>No model was supplied, defaulted to facebook/bart-large-mnli (https://huggingface.co/facebook/bart-large-mnli)
+
+{&#39;sequence&#39;: &#39;This is a course about the Transformers library&#39;, 
+ &#39;labels&#39;: [&#39;education&#39;, &#39;business&#39;, &#39;politics&#39;], 
+ &#39;scores&#39;: [0.8445973992347717, 0.11197526752948761, 0.043427325785160065]}</code></pre></div>
+<p>可以看到，pipeline 自动选择了预训练好的 <em>facebook/bart-large-mnli</em> 模型来完成任务。</p>
+<h2 id="遮盖词填充">遮盖词填充</h2>
+<p>给定一段部分词语被遮盖掉 (masked) 的文本，使用预训练模型来预测能够填充这些位置的词语。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+
+unmasker = pipeline(&#34;fill-mask&#34;)
+results = unmasker(&#34;This course will teach you all about &lt;mask&gt; models.&#34;, top_k=2)
+print(results)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>No model was supplied, defaulted to distilroberta-base (https://huggingface.co/distilroberta-base)
+
+[{&#39;sequence&#39;: &#39;This course will teach you all about mathematical models.&#39;, 
+  &#39;score&#39;: 0.19619858264923096, 
+  &#39;token&#39;: 30412, 
+  &#39;token_str&#39;: &#39; mathematical&#39;}, 
+ {&#39;sequence&#39;: &#39;This course will teach you all about computational models.&#39;, 
+  &#39;score&#39;: 0.04052719101309776, 
+  &#39;token&#39;: 38163, 
+  &#39;token_str&#39;: &#39; computational&#39;}]</code></pre></div>
+<p>可以看到，pipeline 自动选择了预训练好的 <em>distilroberta-base</em> 模型来完成任务。</p>
+<h2 id="命名实体识别">命名实体识别</h2>
+<p>命名实体识别 (NER) pipeline 负责从文本中抽取出指定类型的实体，例如人物、地点、组织等等。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+
+ner = pipeline(&#34;ner&#34;, grouped_entities=True)
+results = ner(&#34;My name is Sylvain and I work at Hugging Face in Brooklyn.&#34;)
+print(results)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>No model was supplied, defaulted to dbmdz/bert-large-cased-finetuned-conll03-english (https://huggingface.co/dbmdz/bert-large-cased-finetuned-conll03-english)
+
+[{&#39;entity_group&#39;: &#39;PER&#39;, &#39;score&#39;: 0.9981694, &#39;word&#39;: &#39;Sylvain&#39;, &#39;start&#39;: 11, &#39;end&#39;: 18}, 
+ {&#39;entity_group&#39;: &#39;ORG&#39;, &#39;score&#39;: 0.97960186, &#39;word&#39;: &#39;Hugging Face&#39;, &#39;start&#39;: 33, &#39;end&#39;: 45}, 
+ {&#39;entity_group&#39;: &#39;LOC&#39;, &#39;score&#39;: 0.99321055, &#39;word&#39;: &#39;Brooklyn&#39;, &#39;start&#39;: 49, &#39;end&#39;: 57}]</code></pre></div>
+<p>可以看到，模型正确地识别出了 Sylvain 是一个人物，Hugging Face 是一个组织，Brooklyn 是一个地名。</p>
+<blockquote>
+<p>这里通过设置参数 <code>grouped_entities=True</code>，使得 pipeline 自动合并属于同一个实体的多个子词 (token)，例如这里将“Hugging”和“Face”合并为一个组织实体，实际上 Sylvain 也进行了子词合并，因为分词器会将 Sylvain 切分为 <code>S</code>、<code>##yl</code> 、<code>##va</code> 和 <code>##in</code> 四个 token。</p></blockquote>
+<h2 id="自动问答">自动问答</h2>
+<p>自动问答 pipeline 可以根据给定的上下文回答问题，例如：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+
+question_answerer = pipeline(&#34;question-answering&#34;)
+answer = question_answerer(
+    question=&#34;Where do I work?&#34;,
+    context=&#34;My name is Sylvain and I work at Hugging Face in Brooklyn&#34;,
+)
+print(answer)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>No model was supplied, defaulted to distilbert-base-cased-distilled-squad (https://huggingface.co/distilbert-base-cased-distilled-squad)
+
+{&#39;score&#39;: 0.6949771046638489, &#39;start&#39;: 33, &#39;end&#39;: 45, &#39;answer&#39;: &#39;Hugging Face&#39;}</code></pre></div>
+<p>可以看到，pipeline 自动选择了在 SQuAD 数据集上训练好的 <em>distilbert-base</em> 模型来完成任务。这里的自动问答 pipeline 实际上是一个抽取式问答模型，即从给定的上下文中抽取答案，而不是生成答案。</p>
+<blockquote>
+<p>根据形式的不同，自动问答 (QA) 系统可以分为三种：</p>
+<ul>
+<li>**抽取式 QA (extractive QA)：**假设答案就包含在文档中，因此直接从文档中抽取答案；</li>
+<li>**多选 QA (multiple-choice QA)：**从多个给定的选项中选择答案，相当于做阅读理解题；</li>
+<li>**无约束 QA (free-form QA)：**直接生成答案文本，并且对答案文本格式没有任何限制。</li>
+</ul></blockquote>
+<h2 id="自动摘要">自动摘要</h2>
+<p>自动摘要 pipeline 旨在将长文本压缩成短文本，并且还要尽可能保留原文的主要信息，例如：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+
+summarizer = pipeline(&#34;summarization&#34;)
+results = summarizer(
+    &#34;&#34;&#34;
+    America has changed dramatically during recent years. Not only has the number of 
+    graduates in traditional engineering disciplines such as mechanical, civil, 
+    electrical, chemical, and aeronautical engineering declined, but in most of 
+    the premier American universities engineering curricula now concentrate on 
+    and encourage largely the study of engineering science. As a result, there 
+    are declining offerings in engineering subjects dealing with infrastructure, 
+    the environment, and related issues, and greater concentration on high 
+    technology subjects, largely supporting increasingly complex scientific 
+    developments. While the latter is important, it should not be at the expense 
+    of more traditional engineering.
+
+    Rapidly developing economies such as China and India, as well as other 
+    industrial countries in Europe and Asia, continue to encourage and advance 
+    the teaching of engineering. Both China and India, respectively, graduate 
+    six and eight times as many traditional engineers as does the United States. 
+    Other industrial countries at minimum maintain their output, while America 
+    suffers an increasingly serious decline in the number of engineering graduates 
+    and a lack of well-educated engineers.
+    &#34;&#34;&#34;
+)
+print(results)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>No model was supplied, defaulted to sshleifer/distilbart-cnn-12-6 (https://huggingface.co/sshleifer/distilbart-cnn-12-6)
+
+[{&#39;summary_text&#39;: &#39; America has changed dramatically during recent years . The number of engineering graduates in the U.S. has declined in traditional engineering disciplines such as mechanical, civil, electrical, chemical, and aeronautical engineering . Rapidly developing economies such as China and India, as well as other industrial countries in Europe and Asia, continue to encourage and advance engineering .&#39;}]</code></pre></div>
+<p>可以看到，pipeline 自动选择了预训练好的 <em>distilbart-cnn-12-6</em> 模型来完成任务。与文本生成类似，我们也可以通过 <code>max_length</code> 或 <code>min_length</code> 参数来控制返回摘要的长度。</p>
+<h1 id="pipeline-背后做了什么">pipeline 背后做了什么？</h1>
+<p>这些简单易用的 pipeline 模型实际上封装了许多操作，下面我们就来了解一下它们背后究竟做了啥。以第一个情感分析 pipeline 为例，我们运行下面的代码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
+
+classifier = pipeline(&#34;sentiment-analysis&#34;)
+result = classifier(&#34;This course is amazing!&#34;)
+print(result)</code></pre></div>
+<p>就会得到结果：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[{&#39;label&#39;: &#39;POSITIVE&#39;, &#39;score&#39;: 0.9998824596405029}]</code></pre></div>
+<p>实际上它的背后经过了三个步骤：</p>
+<ol>
+<li>预处理 (preprocessing)，将原始文本转换为模型可以接受的输入格式；</li>
+<li>将处理好的输入送入模型；</li>
+<li>对模型的输出进行后处理 (postprocessing)，将其转换为人类方便阅读的格式。
+<a href="#R-image-387b11d4a8f2f8b021e2318b6e2e0bc7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/e992d68b8636797327a618cd9236a749.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-387b11d4a8f2f8b021e2318b6e2e0bc7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/e992d68b8636797327a618cd9236a749.png"></a></li>
+</ol>
+<h2 id="使用分词器进行预处理">使用分词器进行预处理</h2>
+<p>因为神经网络模型无法直接处理文本，因此首先需要通过<strong>预处理</strong>环节将文本转换为模型可以理解的数字。具体地，我们会使用每个模型对应的分词器 (tokenizer) 来进行：</p>
+<ol>
+<li>将输入切分为词语、子词或者符号（例如标点符号），统称为 <strong>tokens</strong>；</li>
+<li>根据模型的词表将每个 token 映射到对应的 token 编号（就是一个数字）；</li>
+<li>根据模型的需要，添加一些额外的输入。</li>
+</ol>
+<p>我们对输入文本的预处理需要与模型自身预训练时的操作完全一致，只有这样模型才可以正常地工作。注意，每个模型都有特定的预处理操作，如果对要使用的模型不熟悉，可以通过 <a href="https://huggingface.co/models" rel="external" target="_blank">Model Hub</a> 查询。这里我们使用 <code>AutoTokenizer</code> 类和它的 <code>from_pretrained()</code> 函数，它可以自动根据模型 checkpoint 名称来获取对应的分词器。</p>
+<p>情感分析 pipeline 的默认 checkpoint 是 <a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english" rel="external" target="_blank">distilbert-base-uncased-finetuned-sst-2-english</a>，下面我们手工下载并调用其分词器：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoTokenizer
+
+checkpoint = &#34;distilbert-base-uncased-finetuned-sst-2-english&#34;
+tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+
+raw_inputs = [
+    &#34;I&#39;ve been waiting for a HuggingFace course my whole life.&#34;,
+    &#34;I hate this so much!&#34;,
+]
+inputs = tokenizer(raw_inputs, padding=True, truncation=True, return_tensors=&#34;pt&#34;)
+print(inputs)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+    &#39;input_ids&#39;: tensor([
+        [  101,  1045,  1005,  2310,  2042,  3403,  2005,  1037, 17662, 12172, 2607,  2026,  2878,  2166,  1012,   102],
+        [  101,  1045,  5223,  2023,  2061,  2172,   999,   102,     0,     0,
+             0,     0,     0,     0,     0,     0]
+    ]), 
+    &#39;attention_mask&#39;: tensor([
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+    ])
+}</code></pre></div>
+<p>可以看到，输出中包含两个键 <code>input_ids</code> 和 <code>attention_mask</code>，其中 <code>input_ids</code> 对应分词之后的 tokens 映射到的数字编号列表，而 <code>attention_mask</code> 则是用来标记哪些 tokens 是被填充的（这里“1”表示是原文，“0”表示是填充字符）。</p>
+<blockquote>
+<p>先不要关注 <code>padding</code>、<code>truncation</code> 这些参数，以及 <code>attention_mask</code> 项，后面我们会详细介绍:)。</p></blockquote>
+<h2 id="将预处理好的输入送入模型">将预处理好的输入送入模型</h2>
+<p>预训练模型的下载方式和分词器 (tokenizer) 类似，Transformers 包提供了一个 <code>AutoModel</code> 类和对应的 <code>from_pretrained()</code> 函数。下面我们手工下载这个 distilbert-base 模型：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoModel
+
+checkpoint = &#34;distilbert-base-uncased-finetuned-sst-2-english&#34;
+model = AutoModel.from_pretrained(checkpoint)</code></pre></div>
+<p>预训练模型的本体只包含基础的 Transformer 模块，对于给定的输入，它会输出一些神经元的值，称为 hidden states 或者特征 (features)。对于 NLP 模型来说，可以理解为是文本的高维语义表示。这些 hidden states 通常会被输入到其他的模型部分（称为 head），以完成特定的任务，例如送入到分类头中完成文本分类任务。</p>
+<blockquote>
+<p>其实前面我们举例的所有 pipelines 都具有类似的模型结构，只是模型的最后一部分会使用不同的 head 以完成对应的任务。
+<a href="#R-image-6fb70f2240a0b743db0c6df3bc3aa2af" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/06666f31d707e8ca43c2b24b7263dfc8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6fb70f2240a0b743db0c6df3bc3aa2af"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/transformers_actions_01.md.images/06666f31d707e8ca43c2b24b7263dfc8.png"></a></p></blockquote>
+<h3 id="transformers库结构">Transformers库结构</h3>
+<p>Transformers 库封装了很多不同的结构，常见的有：</p>
+<ul>
+<li><code>*Model</code> （返回 hidden states）</li>
+<li><code>*ForCausalLM</code> （用于条件语言模型），是一种用于因果语言模型的Transformer接口类型。在Transformer架构中,ForCausalLM是一个特殊的模型头,它被设计用于生成文本,即从前一个词预测下一个词,这类模型主要用于以下任务：1.根据已有文本生成后续文本，例如自动写作、对话生成等,2.语言建模：预测给定文本序列中下一个词的概率。</li>
+<li><code>*ForSeq2SeqLM</code>代表用于序列到序列（Sequence-to-Sequence）任务的语言模型。这类模型通常用于以下任务：1.机器翻译：将一种语言的句子翻译成另一种语言,2.文本摘要：将长文本生成简短的摘要,3.问答系统：从上下文中生成回答。。</li>
+<li><code>*ForMaskedLM</code> （用于遮盖语言模型），在MLM任务中,输入序列中的某些词会被随机mask掉,模型的目标是预测这些被mask的词。</li>
+<li><code>*ForMultipleChoice</code> （用于多选任务）</li>
+<li><code>*ForQuestionAnswering</code> （用于自动问答任务）</li>
+<li><code>*ForSequenceClassification</code> （用于文本分类任务），类似api如：图像分类：*ForImageClassification，输出维度对应于整个序列的类别预测,即整个输入序列只有一个类别输出。</li>
+<li><code>*ForTokenClassification</code> （用于 token 分类任务，例如 NER），输出维度对应于每个token的类别预测,即每个输入token都有一个类别输出。</li>
+</ul>
+<h3 id="模块输出">模块输出</h3>
+<p>Transformer 模块的输出是一个维度为 (Batch size, Sequence length, Hidden size) 的三维张量，其中 Batch size 表示每次输入的样本（文本序列）数量，即每次输入多少个句子，上例中为 2；Sequence length 表示文本序列的长度，即每个句子被分为多少个 token，上例中为 16；Hidden size 表示每一个 token 经过模型编码后的输出向量（语义表示）的维度。</p>
+<blockquote>
+<p>预训练模型编码后的输出向量的维度通常都很大，例如 Bert 模型 base 版本的输出为 768 维，一些大模型的输出维度为 3072 甚至更高。</p></blockquote>
+<p>我们可以打印出这里使用的 distilbert-base 模型的输出维度：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoTokenizer, AutoModel
+
+checkpoint = &#34;distilbert-base-uncased-finetuned-sst-2-english&#34;
+tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+model = AutoModel.from_pretrained(checkpoint)
+
+raw_inputs = [
+    &#34;I&#39;ve been waiting for a HuggingFace course my whole life.&#34;,
+    &#34;I hate this so much!&#34;,
+]
+inputs = tokenizer(raw_inputs, padding=True, truncation=True, return_tensors=&#34;pt&#34;)
+outputs = model(**inputs)
+print(outputs.last_hidden_state.shape)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>torch.Size([2, 16, 768])</code></pre></div>
+<p>Transformers 模型的输出格式类似 <code>namedtuple</code> 或字典，可以像上面那样通过属性访问，也可以通过键（<code>outputs[&quot;last_hidden_state&quot;]</code>），甚至索引访问（<code>outputs[0]</code>）。</p>
+<p>对于情感分析任务，很明显我们最后需要使用的是一个文本分类 head。因此，实际上我们不会使用 <code>AutoModel</code> 类，而是使用 <code>AutoModelForSequenceClassification</code>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoTokenizer
+from transformers import AutoModelForSequenceClassification
+
+checkpoint = &#34;distilbert-base-uncased-finetuned-sst-2-english&#34;
+tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+model = AutoModelForSequenceClassification.from_pretrained(checkpoint)
+
+raw_inputs = [
+    &#34;I&#39;ve been waiting for a HuggingFace course my whole life.&#34;,
+    &#34;I hate this so much!&#34;,
+]
+inputs = tokenizer(raw_inputs, padding=True, truncation=True, return_tensors=&#34;pt&#34;)
+outputs = model(**inputs)
+print(outputs.logits.shape)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>torch.Size([2, 2])</code></pre></div>
+<p>可以看到，对于 batch 中的每一个样本，模型都会输出一个两维的向量（每一维对应一个标签，positive 或 negative）。</p>
+<h2 id="对模型输出进行后处理">对模型输出进行后处理</h2>
+<p>由于模型的输出只是一些数值，因此并不适合人类阅读。例如我们打印出上面例子的输出：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoTokenizer
+from transformers import AutoModelForSequenceClassification
+
+checkpoint = &#34;distilbert-base-uncased-finetuned-sst-2-english&#34;
+tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+model = AutoModelForSequenceClassification.from_pretrained(checkpoint)
+
+raw_inputs = [
+    &#34;I&#39;ve been waiting for a HuggingFace course my whole life.&#34;,
+    &#34;I hate this so much!&#34;,
+]
+inputs = tokenizer(raw_inputs, padding=True, truncation=True, return_tensors=&#34;pt&#34;)
+outputs = model(**inputs)
+print(outputs.logits)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>tensor([[-1.5607,  1.6123],
+        [ 4.1692, -3.3464]], grad_fn=&lt;AddmmBackward0&gt;)</code></pre></div>
+<p>模型对第一个句子输出 [−1.5607,1.6123]，对第二个句子输出 [4.1692,−3.3464]，它们并不是概率值，而是模型最后一层输出的 logits 值。要将他们转换为概率值，还需要让它们经过一个 <a href="https://zh.wikipedia.org/wiki/Softmax%E5%87%BD%E6%95%B0" rel="external" target="_blank">SoftMax</a> 层，例如：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import torch
+predictions = torch.nn.functional.softmax(outputs.logits, dim=-1)
+print(predictions)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>tensor([[4.0195e-02, 9.5980e-01],
+        [9.9946e-01, 5.4418e-04]], grad_fn=&lt;SoftmaxBackward0&gt;)</code></pre></div>
+<blockquote>
+<p>所有 Transformers 模型都会输出 logits 值，因为训练时的损失函数通常会自动结合激活函数（例如 SoftMax）与实际的损失函数（例如交叉熵 cross entropy）。</p></blockquote>
+<p>这样模型的预测结果就是容易理解的概率值：第一个句子 [0.0402,0.9598]，第二个句子 [0.9995,0.0005]。最后，为了得到对应的标签，可以读取模型 config 中提供的 id2label 属性：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>print(model.config.id2label)</code></pre></div>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{0: &#39;NEGATIVE&#39;, 1: &#39;POSITIVE&#39;}</code></pre></div>
+<p>于是我们可以得到最终的预测结果：</p>
+<ul>
+<li>第一个句子: NEGATIVE: 0.0402, POSITIVE: 0.9598</li>
+<li>第二个句子: NEGATIVE: 0.9995, POSITIVE: 0.0005</li>
+</ul>
+<p>本文部分文本引用自：https://transformers.run/</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/transformers/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/index.html">transformers</a><ul id="R-subsections-c93b786975796f9b9f81f28585ce698d" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/index.html">transformers模型详解</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/index.html">transformers实战</a></li>
+            <li class="active " data-nav-id="/docs/programming/ai/tools_libraries/transformers/transformers_actions_01/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/transformers_actions_01/index.html">Transformers实战01-开箱即用的 pipelines</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/transformers_actions_02/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/transformers_actions_02/index.html">Transformers实战02-BERT预训练模型微调</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/transformers_actions_03/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/transformers_actions_03/index.html">Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。</a></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758265020" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758265020" defer></script>
+    <script src="/docs/js/theme.js?1758265020" defer></script>
+  </body>
+</html>

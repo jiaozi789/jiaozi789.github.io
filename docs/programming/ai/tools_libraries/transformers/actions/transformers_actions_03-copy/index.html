@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="简介 PEFT PEFT（Parameter-Efficient Fine-Tuning）是一个用于高效地将大型预训练模型适配到各种下游应用的库，而无需对模型的所有参数进行微调，因为这在计算上是非常昂贵的。PEFT 方法只微调少量的（额外的）模型参数——显著降低了计算和存储成本——同时其性能与完全微调的模型相当。这使得在消费者硬件上训练和存储大型语言模型（LLMs）变得更加可行。
+PEFT 集成了 Transformers、Diffusers 和 Accelerate 库，以提供更快、更简单的方法来加载、训练和使用大型模型进行推理。
+LORA方法 一种高效训练大型模型的流行方法是在注意力块中插入较小的可训练矩阵，这些矩阵是微调期间要学习的增量权重矩阵的低秩分解。预训练模型的原始权重矩阵被冻结，仅更新较小的矩阵。这减少了可训练参数的数量，降低了内存使用和训练时间，而这些在大型模型中可能非常昂贵。
+有几种不同的方法可以将权重矩阵表示为低秩分解，但最常见的方法是低秩适应（LoRA原理）。PEFT 库支持几种其他 LoRA 变体，例如低秩Hadamard积（LoHa）、低秩Kronecker积（LoKr）和自适应低秩适应（AdaLoRA）。你可以在适配器指南中了解这些方法的概念工作原理。如果你有兴趣将这些方法应用于其他任务和用例，比如语义分割、标记分类，可以看看我们的笔记本集合！
+Vision Transformer (ViT) Vision Transformer（ViT）模型是由Alexey Dosovitskiy，Lucas Beyer，Alexander Kolesnikov，Dirk Weissenborn，Xiaohua Zhai，Thomas Unterthiner，Mostafa Dehghani，Matthias Minderer，Georg Heigold，Sylvain Gelly，Jakob Uszkoreit，Neil Houlsby在《An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale》中提出的。这是第一篇成功在ImageNet上训练Transformer编码器并获得非常好结果的论文。
+这篇论文的摘要是：
+虽然Transformer架构已经成为自然语言处理任务的事实标准，但它在计算机视觉中的应用仍然有限。在视觉领域，注意力要么与卷积网络一起应用，要么用来替换卷积网络的某些组件，同时保持其总体结构不变。我们展示了在这种对CNN的依赖不是必要的，纯Transformer直接应用于图像块序列可以在图像分类任务上表现得非常好。当在大量数据上进行预训练并转移到多个中等规模或小型图像识别基准数据集（ImageNet，CIFAR-100，VTAB等）时，Vision Transformer（ViT）与最先进的卷积网络相比取得了出色的结果，同时训练所需的计算资源大大减少。
+具体关于该模型得结构参考：https://huggingface.co/docs/transformers/model_doc/vit
+lora方法实战 图像分类微调 本指南将向你展示如何快速训练一个图像分类模型——使用低秩分解方法——来识别图像中显示的食物类别。 案例来自官网：https://huggingface.co/docs/peft/task_guides/lora_based_methods
+模型选择 google/vit-base-patch16-224-in21k 是一个基于Transformer编码器的模型（类似于BERT），在监督方式下，即ImageNet-21k上以224x224像素的分辨率预训练了大量图像。
+图像被呈现给模型作为固定大小的补丁序列（分辨率为16x16），这些补丁被线性嵌入。在序列的开头还添加了一个[CLS]标记，用于分类任务。在将序列馈送到Transformer编码器的层之前，还会添加绝对位置嵌入。
+需要注意的是，这个模型不提供任何经过微调的头部，因为这些头部被Google研究人员清零了。但是，模型包括预训练的汇聚层，可以用于下游任务（如图像分类）。
+通过预训练模型，它学习了图像的内部表示，然后可以用于提取对下游任务有用的特征：例如，如果您有一个带标签的图像数据集，可以通过在预训练编码器顶部放置一个线性层来训练标准分类器。通常将线性层放置在[CLS]标记的顶部，因为该标记的最后隐藏状态可以被视为整个图像的表示。
+from transformers import ViTImageProcessor, FlaxViTModelfrom PIL import Imageimport requestsurl = &#39;http://images.cocodataset.org/val2017/000000039769.jpg&#39;image = Image.open(requests.get(url, stream=True).raw)processor = ViTImageProcessor.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)model = FlaxViTModel.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)inputs = processor(images=image, return_tensors=&#34;np&#34;)outputs = model(**inputs)last_hidden_states = outputs.last_hidden_stateprint(last_hidden_states.shape) 不包含分类信息，不包含label信息">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。 :: liaomin416100569博客">
+    <meta name="twitter:description" content="简介 PEFT PEFT（Parameter-Efficient Fine-Tuning）是一个用于高效地将大型预训练模型适配到各种下游应用的库，而无需对模型的所有参数进行微调，因为这在计算上是非常昂贵的。PEFT 方法只微调少量的（额外的）模型参数——显著降低了计算和存储成本——同时其性能与完全微调的模型相当。这使得在消费者硬件上训练和存储大型语言模型（LLMs）变得更加可行。
+PEFT 集成了 Transformers、Diffusers 和 Accelerate 库，以提供更快、更简单的方法来加载、训练和使用大型模型进行推理。
+LORA方法 一种高效训练大型模型的流行方法是在注意力块中插入较小的可训练矩阵，这些矩阵是微调期间要学习的增量权重矩阵的低秩分解。预训练模型的原始权重矩阵被冻结，仅更新较小的矩阵。这减少了可训练参数的数量，降低了内存使用和训练时间，而这些在大型模型中可能非常昂贵。
+有几种不同的方法可以将权重矩阵表示为低秩分解，但最常见的方法是低秩适应（LoRA原理）。PEFT 库支持几种其他 LoRA 变体，例如低秩Hadamard积（LoHa）、低秩Kronecker积（LoKr）和自适应低秩适应（AdaLoRA）。你可以在适配器指南中了解这些方法的概念工作原理。如果你有兴趣将这些方法应用于其他任务和用例，比如语义分割、标记分类，可以看看我们的笔记本集合！
+Vision Transformer (ViT) Vision Transformer（ViT）模型是由Alexey Dosovitskiy，Lucas Beyer，Alexander Kolesnikov，Dirk Weissenborn，Xiaohua Zhai，Thomas Unterthiner，Mostafa Dehghani，Matthias Minderer，Georg Heigold，Sylvain Gelly，Jakob Uszkoreit，Neil Houlsby在《An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale》中提出的。这是第一篇成功在ImageNet上训练Transformer编码器并获得非常好结果的论文。
+这篇论文的摘要是：
+虽然Transformer架构已经成为自然语言处理任务的事实标准，但它在计算机视觉中的应用仍然有限。在视觉领域，注意力要么与卷积网络一起应用，要么用来替换卷积网络的某些组件，同时保持其总体结构不变。我们展示了在这种对CNN的依赖不是必要的，纯Transformer直接应用于图像块序列可以在图像分类任务上表现得非常好。当在大量数据上进行预训练并转移到多个中等规模或小型图像识别基准数据集（ImageNet，CIFAR-100，VTAB等）时，Vision Transformer（ViT）与最先进的卷积网络相比取得了出色的结果，同时训练所需的计算资源大大减少。
+具体关于该模型得结构参考：https://huggingface.co/docs/transformers/model_doc/vit
+lora方法实战 图像分类微调 本指南将向你展示如何快速训练一个图像分类模型——使用低秩分解方法——来识别图像中显示的食物类别。 案例来自官网：https://huggingface.co/docs/peft/task_guides/lora_based_methods
+模型选择 google/vit-base-patch16-224-in21k 是一个基于Transformer编码器的模型（类似于BERT），在监督方式下，即ImageNet-21k上以224x224像素的分辨率预训练了大量图像。
+图像被呈现给模型作为固定大小的补丁序列（分辨率为16x16），这些补丁被线性嵌入。在序列的开头还添加了一个[CLS]标记，用于分类任务。在将序列馈送到Transformer编码器的层之前，还会添加绝对位置嵌入。
+需要注意的是，这个模型不提供任何经过微调的头部，因为这些头部被Google研究人员清零了。但是，模型包括预训练的汇聚层，可以用于下游任务（如图像分类）。
+通过预训练模型，它学习了图像的内部表示，然后可以用于提取对下游任务有用的特征：例如，如果您有一个带标签的图像数据集，可以通过在预训练编码器顶部放置一个线性层来训练标准分类器。通常将线性层放置在[CLS]标记的顶部，因为该标记的最后隐藏状态可以被视为整个图像的表示。
+from transformers import ViTImageProcessor, FlaxViTModelfrom PIL import Imageimport requestsurl = &#39;http://images.cocodataset.org/val2017/000000039769.jpg&#39;image = Image.open(requests.get(url, stream=True).raw)processor = ViTImageProcessor.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)model = FlaxViTModel.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)inputs = processor(images=image, return_tensors=&#34;np&#34;)outputs = model(**inputs)last_hidden_states = outputs.last_hidden_stateprint(last_hidden_states.shape) 不包含分类信息，不包含label信息">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03-copy/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。 :: liaomin416100569博客">
+    <meta property="og:description" content="简介 PEFT PEFT（Parameter-Efficient Fine-Tuning）是一个用于高效地将大型预训练模型适配到各种下游应用的库，而无需对模型的所有参数进行微调，因为这在计算上是非常昂贵的。PEFT 方法只微调少量的（额外的）模型参数——显著降低了计算和存储成本——同时其性能与完全微调的模型相当。这使得在消费者硬件上训练和存储大型语言模型（LLMs）变得更加可行。
+PEFT 集成了 Transformers、Diffusers 和 Accelerate 库，以提供更快、更简单的方法来加载、训练和使用大型模型进行推理。
+LORA方法 一种高效训练大型模型的流行方法是在注意力块中插入较小的可训练矩阵，这些矩阵是微调期间要学习的增量权重矩阵的低秩分解。预训练模型的原始权重矩阵被冻结，仅更新较小的矩阵。这减少了可训练参数的数量，降低了内存使用和训练时间，而这些在大型模型中可能非常昂贵。
+有几种不同的方法可以将权重矩阵表示为低秩分解，但最常见的方法是低秩适应（LoRA原理）。PEFT 库支持几种其他 LoRA 变体，例如低秩Hadamard积（LoHa）、低秩Kronecker积（LoKr）和自适应低秩适应（AdaLoRA）。你可以在适配器指南中了解这些方法的概念工作原理。如果你有兴趣将这些方法应用于其他任务和用例，比如语义分割、标记分类，可以看看我们的笔记本集合！
+Vision Transformer (ViT) Vision Transformer（ViT）模型是由Alexey Dosovitskiy，Lucas Beyer，Alexander Kolesnikov，Dirk Weissenborn，Xiaohua Zhai，Thomas Unterthiner，Mostafa Dehghani，Matthias Minderer，Georg Heigold，Sylvain Gelly，Jakob Uszkoreit，Neil Houlsby在《An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale》中提出的。这是第一篇成功在ImageNet上训练Transformer编码器并获得非常好结果的论文。
+这篇论文的摘要是：
+虽然Transformer架构已经成为自然语言处理任务的事实标准，但它在计算机视觉中的应用仍然有限。在视觉领域，注意力要么与卷积网络一起应用，要么用来替换卷积网络的某些组件，同时保持其总体结构不变。我们展示了在这种对CNN的依赖不是必要的，纯Transformer直接应用于图像块序列可以在图像分类任务上表现得非常好。当在大量数据上进行预训练并转移到多个中等规模或小型图像识别基准数据集（ImageNet，CIFAR-100，VTAB等）时，Vision Transformer（ViT）与最先进的卷积网络相比取得了出色的结果，同时训练所需的计算资源大大减少。
+具体关于该模型得结构参考：https://huggingface.co/docs/transformers/model_doc/vit
+lora方法实战 图像分类微调 本指南将向你展示如何快速训练一个图像分类模型——使用低秩分解方法——来识别图像中显示的食物类别。 案例来自官网：https://huggingface.co/docs/peft/task_guides/lora_based_methods
+模型选择 google/vit-base-patch16-224-in21k 是一个基于Transformer编码器的模型（类似于BERT），在监督方式下，即ImageNet-21k上以224x224像素的分辨率预训练了大量图像。
+图像被呈现给模型作为固定大小的补丁序列（分辨率为16x16），这些补丁被线性嵌入。在序列的开头还添加了一个[CLS]标记，用于分类任务。在将序列馈送到Transformer编码器的层之前，还会添加绝对位置嵌入。
+需要注意的是，这个模型不提供任何经过微调的头部，因为这些头部被Google研究人员清零了。但是，模型包括预训练的汇聚层，可以用于下游任务（如图像分类）。
+通过预训练模型，它学习了图像的内部表示，然后可以用于提取对下游任务有用的特征：例如，如果您有一个带标签的图像数据集，可以通过在预训练编码器顶部放置一个线性层来训练标准分类器。通常将线性层放置在[CLS]标记的顶部，因为该标记的最后隐藏状态可以被视为整个图像的表示。
+from transformers import ViTImageProcessor, FlaxViTModelfrom PIL import Imageimport requestsurl = &#39;http://images.cocodataset.org/val2017/000000039769.jpg&#39;image = Image.open(requests.get(url, stream=True).raw)processor = ViTImageProcessor.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)model = FlaxViTModel.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)inputs = processor(images=image, return_tensors=&#34;np&#34;)outputs = model(**inputs)last_hidden_states = outputs.last_hidden_stateprint(last_hidden_states.shape) 不包含分类信息，不包含label信息">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。 :: liaomin416100569博客">
+    <meta itemprop="description" content="简介 PEFT PEFT（Parameter-Efficient Fine-Tuning）是一个用于高效地将大型预训练模型适配到各种下游应用的库，而无需对模型的所有参数进行微调，因为这在计算上是非常昂贵的。PEFT 方法只微调少量的（额外的）模型参数——显著降低了计算和存储成本——同时其性能与完全微调的模型相当。这使得在消费者硬件上训练和存储大型语言模型（LLMs）变得更加可行。
+PEFT 集成了 Transformers、Diffusers 和 Accelerate 库，以提供更快、更简单的方法来加载、训练和使用大型模型进行推理。
+LORA方法 一种高效训练大型模型的流行方法是在注意力块中插入较小的可训练矩阵，这些矩阵是微调期间要学习的增量权重矩阵的低秩分解。预训练模型的原始权重矩阵被冻结，仅更新较小的矩阵。这减少了可训练参数的数量，降低了内存使用和训练时间，而这些在大型模型中可能非常昂贵。
+有几种不同的方法可以将权重矩阵表示为低秩分解，但最常见的方法是低秩适应（LoRA原理）。PEFT 库支持几种其他 LoRA 变体，例如低秩Hadamard积（LoHa）、低秩Kronecker积（LoKr）和自适应低秩适应（AdaLoRA）。你可以在适配器指南中了解这些方法的概念工作原理。如果你有兴趣将这些方法应用于其他任务和用例，比如语义分割、标记分类，可以看看我们的笔记本集合！
+Vision Transformer (ViT) Vision Transformer（ViT）模型是由Alexey Dosovitskiy，Lucas Beyer，Alexander Kolesnikov，Dirk Weissenborn，Xiaohua Zhai，Thomas Unterthiner，Mostafa Dehghani，Matthias Minderer，Georg Heigold，Sylvain Gelly，Jakob Uszkoreit，Neil Houlsby在《An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale》中提出的。这是第一篇成功在ImageNet上训练Transformer编码器并获得非常好结果的论文。
+这篇论文的摘要是：
+虽然Transformer架构已经成为自然语言处理任务的事实标准，但它在计算机视觉中的应用仍然有限。在视觉领域，注意力要么与卷积网络一起应用，要么用来替换卷积网络的某些组件，同时保持其总体结构不变。我们展示了在这种对CNN的依赖不是必要的，纯Transformer直接应用于图像块序列可以在图像分类任务上表现得非常好。当在大量数据上进行预训练并转移到多个中等规模或小型图像识别基准数据集（ImageNet，CIFAR-100，VTAB等）时，Vision Transformer（ViT）与最先进的卷积网络相比取得了出色的结果，同时训练所需的计算资源大大减少。
+具体关于该模型得结构参考：https://huggingface.co/docs/transformers/model_doc/vit
+lora方法实战 图像分类微调 本指南将向你展示如何快速训练一个图像分类模型——使用低秩分解方法——来识别图像中显示的食物类别。 案例来自官网：https://huggingface.co/docs/peft/task_guides/lora_based_methods
+模型选择 google/vit-base-patch16-224-in21k 是一个基于Transformer编码器的模型（类似于BERT），在监督方式下，即ImageNet-21k上以224x224像素的分辨率预训练了大量图像。
+图像被呈现给模型作为固定大小的补丁序列（分辨率为16x16），这些补丁被线性嵌入。在序列的开头还添加了一个[CLS]标记，用于分类任务。在将序列馈送到Transformer编码器的层之前，还会添加绝对位置嵌入。
+需要注意的是，这个模型不提供任何经过微调的头部，因为这些头部被Google研究人员清零了。但是，模型包括预训练的汇聚层，可以用于下游任务（如图像分类）。
+通过预训练模型，它学习了图像的内部表示，然后可以用于提取对下游任务有用的特征：例如，如果您有一个带标签的图像数据集，可以通过在预训练编码器顶部放置一个线性层来训练标准分类器。通常将线性层放置在[CLS]标记的顶部，因为该标记的最后隐藏状态可以被视为整个图像的表示。
+from transformers import ViTImageProcessor, FlaxViTModelfrom PIL import Imageimport requestsurl = &#39;http://images.cocodataset.org/val2017/000000039769.jpg&#39;image = Image.open(requests.get(url, stream=True).raw)processor = ViTImageProcessor.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)model = FlaxViTModel.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)inputs = processor(images=image, return_tensors=&#34;np&#34;)outputs = model(**inputs)last_hidden_states = outputs.last_hidden_stateprint(last_hidden_states.shape) 不包含分类信息，不包含label信息">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="5435">
+    <title>Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758265727" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758265727" defer></script>
+    <script src="/docs/js/search-lunr.js?1758265727" defer></script>
+    <script src="/docs/js/search.js?1758265727" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758265727";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758265727" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758265727" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758265727" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758265727" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['en'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758265727" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758265727" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758265727" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758265727" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758265727" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/ai\/tools_libraries\/transformers\/actions\/transformers_actions_03-copy\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758265727" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03-copy/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a>
+      <ul>
+        <li><a href="#peft">PEFT</a></li>
+        <li><a href="#lora方法">LORA方法</a></li>
+        <li><a href="#vision-transformer-vit">Vision Transformer (ViT)</a></li>
+      </ul>
+    </li>
+    <li><a href="#lora方法实战">lora方法实战</a>
+      <ul>
+        <li><a href="#图像分类微调">图像分类微调</a>
+          <ul>
+            <li><a href="#模型选择">模型选择</a></li>
+            <li><a href="#googlevit-base-patch16-224-in21k">google/vit-base-patch16-224-in21k</a>
+              <ul>
+                <li><a href="#模块">模块</a></li>
+              </ul>
+            </li>
+            <li><a href="#googlevit-base-patch16-224">google/vit-base-patch16-224</a></li>
+            <li><a href="#数据集">数据集</a></li>
+            <li><a href="#模型">模型</a></li>
+            <li><a href="#peft-configuration-and-model">PEFT configuration and model</a></li>
+            <li><a href="#训练">训练</a></li>
+            <li><a href="#预测">预测</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/index.html"><span itemprop="name">人工智能</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/tools_libraries/index.html"><span itemprop="name">工具库</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/tools_libraries/transformers/index.html"><span itemprop="name">transformers</span></a><meta itemprop="position" content="5">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/tools_libraries/transformers/actions/index.html"><span itemprop="name">transformers实战</span></a><meta itemprop="position" content="6">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。</span><meta itemprop="position" content="7"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html" title="Transformers实战02-BERT预训练模型微调 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03/index.html" title="Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="transformers实战03-peft库使用lora方法微调vit图像分类">Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。</h1>
+
+<h1 id="简介">简介</h1>
+<h2 id="peft">PEFT</h2>
+<p>PEFT（Parameter-Efficient Fine-Tuning）是一个用于高效地将大型预训练模型适配到各种下游应用的库，而无需对模型的所有参数进行微调，因为这在计算上是非常昂贵的。PEFT 方法只微调少量的（额外的）模型参数——显著降低了计算和存储成本——同时其性能与完全微调的模型相当。这使得在消费者硬件上训练和存储大型语言模型（LLMs）变得更加可行。</p>
+<p>PEFT 集成了 <a href="https://huggingface.co/docs/transformers/index" rel="external" target="_blank">Transformers</a>、<a href="https://huggingface.co/docs/diffusers/index" rel="external" target="_blank">Diffusers</a> 和 <a href="https://huggingface.co/docs/accelerate/index" rel="external" target="_blank">Accelerate</a> 库，以提供更快、更简单的方法来加载、训练和使用大型模型进行推理。</p>
+<h2 id="lora方法">LORA方法</h2>
+<p>一种高效训练大型模型的流行方法是在注意力块中插入较小的可训练矩阵，这些矩阵是微调期间要学习的增量权重矩阵的低秩分解。预训练模型的原始权重矩阵被冻结，仅更新较小的矩阵。这减少了可训练参数的数量，降低了内存使用和训练时间，而这些在大型模型中可能非常昂贵。</p>
+<p>有几种不同的方法可以将权重矩阵表示为低秩分解，但最常见的方法是低秩适应（<a href="https://huggingface.co/docs/peft/v0.11.0/en/conceptual_guides/adapter#low-rank-adaptation-lora" rel="external" target="_blank">LoRA原理</a>）。PEFT 库支持几种其他 LoRA 变体，例如低秩Hadamard积（<a href="https://huggingface.co/docs/peft/v0.11.0/en/conceptual_guides/adapter#low-rank-hadamard-product-loha" rel="external" target="_blank">LoHa</a>）、低秩Kronecker积（<a href="https://huggingface.co/docs/peft/v0.11.0/en/conceptual_guides/adapter#low-rank-kronecker-product-lokr" rel="external" target="_blank">LoKr</a>）和自适应低秩适应（<a href="https://huggingface.co/docs/peft/v0.11.0/en/conceptual_guides/adapter#adaptive-low-rank-adaptation-adalora" rel="external" target="_blank">AdaLoRA</a>）。你可以在适配器指南中了解这些方法的概念工作原理。如果你有兴趣将这些方法应用于其他任务和用例，比如语义分割、标记分类，可以看看我们的笔记本集合！</p>
+<h2 id="vision-transformer-vit">Vision Transformer (ViT)</h2>
+<p>Vision Transformer（ViT）模型是由Alexey Dosovitskiy，Lucas Beyer，Alexander Kolesnikov，Dirk Weissenborn，Xiaohua Zhai，Thomas Unterthiner，Mostafa Dehghani，Matthias Minderer，Georg Heigold，Sylvain Gelly，Jakob Uszkoreit，Neil Houlsby在《An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale》中提出的。这是第一篇成功在ImageNet上训练Transformer编码器并获得非常好结果的论文。</p>
+<p>这篇论文的摘要是：</p>
+<p>虽然Transformer架构已经成为自然语言处理任务的事实标准，但它在计算机视觉中的应用仍然有限。在视觉领域，注意力要么与卷积网络一起应用，要么用来替换卷积网络的某些组件，同时保持其总体结构不变。我们展示了在这种对CNN的依赖不是必要的，纯Transformer直接应用于图像块序列可以在图像分类任务上表现得非常好。当在大量数据上进行预训练并转移到多个中等规模或小型图像识别基准数据集（ImageNet，CIFAR-100，VTAB等）时，Vision Transformer（ViT）与最先进的卷积网络相比取得了出色的结果，同时训练所需的计算资源大大减少。</p>
+<p>具体关于该模型得结构参考：https://huggingface.co/docs/transformers/model_doc/vit</p>
+<h1 id="lora方法实战">lora方法实战</h1>
+<h2 id="图像分类微调">图像分类微调</h2>
+<p>本指南将向你展示如何快速训练一个图像分类模型——使用低秩分解方法——来识别图像中显示的食物类别。
+案例来自官网：https://huggingface.co/docs/peft/task_guides/lora_based_methods</p>
+<h3 id="模型选择">模型选择</h3>
+<h3 id="googlevit-base-patch16-224-in21k">google/vit-base-patch16-224-in21k</h3>
+<p>是一个基于Transformer编码器的模型（类似于BERT），在监督方式下，即ImageNet-21k上以224x224像素的分辨率预训练了大量图像。</p>
+<p>图像被呈现给模型作为固定大小的补丁序列（分辨率为16x16），这些补丁被线性嵌入。在序列的开头还添加了一个[CLS]标记，用于分类任务。在将序列馈送到Transformer编码器的层之前，还会添加绝对位置嵌入。</p>
+<p><strong>需要注意的是，这个模型不提供任何经过微调的头部，因为这些头部被Google研究人员清零了。但是，模型包括预训练的汇聚层，可以用于下游任务（如图像分类）。</strong></p>
+<p>通过预训练模型，它学习了图像的内部表示，然后可以用于提取对下游任务有用的特征：例如，如果您有一个带标签的图像数据集，可以通过在预训练编码器顶部放置一个线性层来训练标准分类器。通常将线性层放置在[CLS]标记的顶部，因为该标记的最后隐藏状态可以被视为整个图像的表示。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import ViTImageProcessor, FlaxViTModel
+from PIL import Image
+import requests
+
+url = &#39;http://images.cocodataset.org/val2017/000000039769.jpg&#39;
+image = Image.open(requests.get(url, stream=True).raw)
+
+processor = ViTImageProcessor.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)
+model = FlaxViTModel.from_pretrained(&#39;google/vit-base-patch16-224-in21k&#39;)
+
+inputs = processor(images=image, return_tensors=&#34;np&#34;)
+outputs = model(**inputs)
+last_hidden_states = outputs.last_hidden_state
+print(last_hidden_states.shape)</code></pre></div>
+<blockquote>
+<p>不包含分类信息，不包含label信息</p></blockquote>
+<h4 id="模块">模块</h4>
+<p>一个模型通常有很多个模块和层，模块是nn.Module是一个更高级别的组织单元，可以包含多个层、子模块或其他操作，层（Layer） 是模块的基本组成部分，用于执行特定的数学运算或神经网络中的某一步骤。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code># 自定义一个简单的模块，包含两个线性层
+class MyModule(nn.Module):
+    def __init__(self):
+        super(MyModule, self).__init__()
+        self.layer1 = nn.Linear(10, 20)
+        self.layer2 = nn.Linear(20, 5)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        return x</code></pre></div>
+<p>其中MyModule是模块，self.layer1就是层，都可以直接运行，反向传播。
+我们可以看看&rsquo;google/vit-base-patch16-224-in21k&rsquo;有哪些模块和层</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoModelForImageClassification, TrainingArguments, Trainer
+
+model = AutoModelForImageClassification.from_pretrained(
+    &#34;google/vit-base-patch16-224-in21k&#34;,
+    ignore_mismatched_sizes=True,
+)
+# 打印模型的结构，查看有哪些模块
+for name, module in model.named_modules():
+    print(name,&#34;=&#34;, module)</code></pre></div>
+<p>输出，其中ViTForImageClassification就是用于图形分类的模块，如果通过AutoModelForImageClassification，加载的必然是这个模块，后面我们通过lora优化的是其中的模块的和层，输出的是最后的classifier层。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code> = ViTForImageClassification(
+  (vit): ViTModel(
+    (embeddings): ViTEmbeddings(
+      (patch_embeddings): ViTPatchEmbeddings(
+        (projection): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+      )
+      (dropout): Dropout(p=0.0, inplace=False)
+    )
+    (encoder): ViTEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x ViTLayer(
+          (attention): ViTSdpaAttention(
+            (attention): ViTSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+          (layernorm_after): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+        )
+      )
+    )
+    (layernorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+  )
+  (classifier): Linear(in_features=768, out_features=2, bias=True)
+)
+vit = ViTModel(
+  (embeddings): ViTEmbeddings(
+    (patch_embeddings): ViTPatchEmbeddings(
+      (projection): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+    )
+    (dropout): Dropout(p=0.0, inplace=False)
+  )
+  (encoder): ViTEncoder(
+    (layer): ModuleList(
+      (0-11): 12 x ViTLayer(
+        (attention): ViTSdpaAttention(
+          (attention): ViTSdpaSelfAttention(
+            (query): Linear(in_features=768, out_features=768, bias=True)
+            (key): Linear(in_features=768, out_features=768, bias=True)
+            (value): Linear(in_features=768, out_features=768, bias=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (output): ViTSelfOutput(
+            (dense): Linear(in_features=768, out_features=768, bias=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (intermediate): ViTIntermediate(
+          (dense): Linear(in_features=768, out_features=3072, bias=True)
+          (intermediate_act_fn): GELUActivation()
+        )
+        (output): ViTOutput(
+          (dense): Linear(in_features=3072, out_features=768, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (layernorm_before): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+        (layernorm_after): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      )
+    )
+  )
+  (layernorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+)
+vit.embeddings = ViTEmbeddings(
+  (patch_embeddings): ViTPatchEmbeddings(
+    (projection): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+  )
+  (dropout): Dropout(p=0.0, inplace=False)
+)
+vit.embeddings.patch_embeddings = ViTPatchEmbeddings(
+  (projection): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+)
+。。。
+classifier = Linear(in_features=768, out_features=2, bias=True)</code></pre></div>
+<h3 id="googlevit-base-patch16-224">google/vit-base-patch16-224</h3>
+<p>是一个在大规模图像数据集上进行监督预训练的转换器编码器模型（类似于BERT），即ImageNet-21k，分辨率为224x224像素。接下来，该模型在ImageNet上进行微调（也称为ILSVRC2012），这是一个包含100万张图像和1000个类别的数据集，分辨率也为224x224。</p>
+<p>图像被呈现给模型作为固定大小补丁（分辨率为16x16）的序列，这些补丁被线性嵌入。还在序列开始处添加了一个[CLS]标记，以用于分类任务。在将序列馈送到Transformer编码器的层之前，还会添加绝对位置嵌入。</p>
+<p>通过对模型进行预训练，它学习了图像的内部表示，然后可以用于提取对下游任务有用的特征：例如，如果您有一个带标签的图像数据集，您可以在预训练编码器之上放置一个标准分类器的线性层。通常将线性层放置在[CLS]标记的顶部，因为该标记的最后隐藏状态可以被视为整个图像的表示。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoImageProcessor, ViTForImageClassification
+from PIL import Image
+import requests,torch
+
+url = &#39;http://images.cocodataset.org/val2017/000000039769.jpg&#39;
+image = Image.open(requests.get(url, stream=True).raw)
+
+processor = AutoImageProcessor.from_pretrained(&#39;google/vit-base-patch16-224&#39;)
+
+model = ViTForImageClassification.from_pretrained(&#39;google/vit-base-patch16-224&#39;)
+
+inputs = processor(images=image, return_tensors=&#34;pt&#34;)
+print(inputs)
+print(inputs[&#34;pixel_values&#34;].shape)
+outputs = model(**inputs)
+with torch.no_grad():
+    logits = model(**inputs).logits
+    predicted_label = logits.argmax(-1).item()
+    print(model.config.id2label[predicted_label])</code></pre></div>
+<p>输出：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{&#39;pixel_values&#39;: tensor([[[[ 0.1137,  0.1686,  0.1843,  ..., -0.1922, -0.1843, -0.1843],
+          [ 0.1373,  0.1686,  0.1843,  ..., -0.1922, -0.1922, -0.2078],
+          [ 0.1137,  0.1529,  0.1608,  ..., -0.2314, -0.2235, -0.2157],
+          ...,
+          [ 0.8353,  0.7882,  0.7333,  ...,  0.7020,  0.6471,  0.6157],
+          [ 0.8275,  0.7961,  0.7725,  ...,  0.5843,  0.4667,  0.3961],
+          [ 0.8196,  0.7569,  0.7569,  ...,  0.0745, -0.0510, -0.1922]],
+
+         [[-0.8039, -0.8118, -0.8118,  ..., -0.8902, -0.8902, -0.8980],
+          [-0.7882, -0.7882, -0.7882,  ..., -0.8745, -0.8745, -0.8824],
+          [-0.8118, -0.8039, -0.7882,  ..., -0.8902, -0.8902, -0.8902],
+          ...,
+          [-0.2706, -0.3176, -0.3647,  ..., -0.4275, -0.4588, -0.4824],
+          [-0.2706, -0.2941, -0.3412,  ..., -0.4824, -0.5451, -0.5765],
+          [-0.2784, -0.3412, -0.3490,  ..., -0.7333, -0.7804, -0.8353]],
+
+         [[-0.5451, -0.4667, -0.4824,  ..., -0.7412, -0.6941, -0.7176],
+          [-0.5529, -0.5137, -0.4902,  ..., -0.7412, -0.7098, -0.7412],
+          [-0.5216, -0.4824, -0.4667,  ..., -0.7490, -0.7490, -0.7647],
+          ...,
+          [ 0.5686,  0.5529,  0.4510,  ...,  0.4431,  0.3882,  0.3255],
+          [ 0.5451,  0.4902,  0.5137,  ...,  0.3020,  0.2078,  0.1294],
+          [ 0.5686,  0.5608,  0.5137,  ..., -0.2000, -0.4275, -0.5294]]]])}
+torch.Size([1, 3, 224, 224])
+{0: &#39;tench, Tinca tinca&#39;, 1: &#39;goldfish, Carassius auratus&#39;, 2: &#39;great white shark, white shark, man-eater, man-eating shark, Carcharodon carcharias&#39;, 3: &#39;tiger shark, Galeocerdo cuvieri&#39;, 4: &#39;hammerhead, hammerhead shark&#39;, 5: &#39;electric ray, crampfish, numbfish, torpedo&#39;, 6: &#39;stingray&#39;, 7: &#39;cock&#39;, 8: &#39;hen&#39;, 9: &#39;ostrich, Struthio camelus&#39;, 10: &#39;brambling, Fringilla montifringilla&#39;, 11: &#39;goldfinch, Carduelis carduelis&#39;, 12: &#39;house finch, linnet, Carpodacus mexicanus&#39;, 13: &#39;junco, snowbird&#39;, 14: &#39;indigo bunting, indigo finch, indigo bird, Passerina cyanea&#39;, 15: &#39;robin, American robin, Turdus migratorius&#39;, 16: &#39;bulbul&#39;, 17: &#39;jay&#39;, 18: &#39;magpie&#39;, 19: &#39;chickadee&#39;, 20: &#39;water ouzel, dipper&#39;, 21: &#39;kite&#39;, 22: &#39;bald eagle, American eagle, Haliaeetus leucocephalus&#39;, 23: &#39;vulture&#39;, 24: &#39;great grey owl, great gray owl, Strix nebulosa&#39;, 25: &#39;European fire salamander, Salamandra salamandra&#39;, 26: &#39;common newt, Triturus vulgaris&#39;, 27: &#39;eft&#39;, 28: &#39;spotted salamander, Ambystoma maculatum&#39;, 29: &#39;axolotl, mud puppy, Ambystoma mexicanum&#39;, 30: &#39;bullfrog, Rana catesbeiana&#39;, 31: &#39;tree frog, tree-frog&#39;, 32: &#39;tailed frog, bell toad, ribbed toad, tailed toad, Ascaphus trui&#39;, 33: &#39;loggerhead, loggerhead turtle, Caretta caretta&#39;, 34: &#39;leatherback turtle, leatherback, leathery turtle, Dermochelys coriacea&#39;, 35: &#39;mud turtle&#39;, 36: &#39;terrapin&#39;, 37: &#39;box turtle, box tortoise&#39;, 38: &#39;banded gecko&#39;, 39: &#39;common iguana, iguana, Iguana iguana&#39;, 40: &#39;American chameleon, anole, Anolis carolinensis&#39;, 41: &#39;whiptail, whiptail lizard&#39;, 42: &#39;agama&#39;, 43: &#39;frilled lizard, Chlamydosaurus kingi&#39;, 44: &#39;alligator lizard&#39;, 45: &#39;Gila monster, Heloderma suspectum&#39;, 46: &#39;green lizard, Lacerta viridis&#39;, 47: &#39;African chameleon, Chamaeleo chamaeleon&#39;, 48: &#39;Komodo dragon, Komodo lizard, dragon lizard, giant lizard, Varanus komodoensis&#39;, 49: &#39;African crocodile, Nile crocodile, Crocodylus niloticus&#39;, 50: &#39;American alligator, Alligator mississipiensis&#39;, 51: &#39;triceratops&#39;, 52: &#39;thunder snake, worm snake, Carphophis amoenus&#39;, 53: &#39;ringneck snake, ring-necked snake, ring snake&#39;, 54: &#39;hognose snake, puff adder, sand viper&#39;, 55: &#39;green snake, grass snake&#39;, 56: &#39;king snake, kingsnake&#39;, 57: &#39;garter snake, grass snake&#39;, 58: &#39;water snake&#39;, 59: &#39;vine snake&#39;, 60: &#39;night snake, Hypsiglena torquata&#39;, 61: &#39;boa constrictor, Constrictor constrictor&#39;, 62: &#39;rock python, rock snake, Python sebae&#39;, 63: &#39;Indian cobra, Naja naja&#39;, 64: &#39;green mamba&#39;, 65: &#39;sea snake&#39;, 66: &#39;horned viper, cerastes, sand viper, horned asp, Cerastes cornutus&#39;, 67: &#39;diamondback, diamondback rattlesnake, Crotalus adamanteus&#39;, 68: &#39;sidewinder, horned rattlesnake, Crotalus cerastes&#39;, 69: &#39;trilobite&#39;, 70: &#39;harvestman, daddy longlegs, Phalangium opilio&#39;, 71: &#39;scorpion&#39;, 72: &#39;black and gold garden spider, Argiope aurantia&#39;, 73: &#39;barn spider, Araneus cavaticus&#39;, 74: &#39;garden spider, Aranea diademata&#39;, 75: &#39;black widow, Latrodectus mactans&#39;, 76: &#39;tarantula&#39;, 77: &#39;wolf spider, hunting spider&#39;, 78: &#39;tick&#39;, 79: &#39;centipede&#39;, 80: &#39;black grouse&#39;, 81: &#39;ptarmigan&#39;, 82: &#39;ruffed grouse, partridge, Bonasa umbellus&#39;, 83: &#39;prairie chicken, prairie grouse, prairie fowl&#39;, 84: &#39;peacock&#39;, 85: &#39;quail&#39;, 86: &#39;partridge&#39;, 87: &#39;African grey, African gray, Psittacus erithacus&#39;, 88: &#39;macaw&#39;, 89: &#39;sulphur-crested cockatoo, Kakatoe galerita, Cacatua galerita&#39;, 90: &#39;lorikeet&#39;, 91: &#39;coucal&#39;, 92: &#39;bee eater&#39;, 93: &#39;hornbill&#39;, 94: &#39;hummingbird&#39;, 95: &#39;jacamar&#39;, 96: &#39;toucan&#39;, 97: &#39;drake&#39;, 98: &#39;red-breasted merganser, Mergus serrator&#39;, 99: &#39;goose&#39;, 100: &#39;black swan, Cygnus atratus&#39;, 101: &#39;tusker&#39;, 102: &#39;echidna, spiny anteater, anteater&#39;, 103: &#39;platypus, duckbill, duckbilled platypus, duck-billed platypus, Ornithorhynchus anatinus&#39;, 104: &#39;wallaby, brush kangaroo&#39;, 105: &#39;koala, koala bear, kangaroo bear, native bear, Phascolarctos cinereus&#39;, 106: &#39;wombat&#39;, 107: &#39;jellyfish&#39;, 108: &#39;sea anemone, anemone&#39;, 109: &#39;brain coral&#39;, 110: &#39;flatworm, platyhelminth&#39;, 111: &#39;nematode, nematode worm, roundworm&#39;, 112: &#39;conch&#39;, 113: &#39;snail&#39;, 114: &#39;slug&#39;, 115: &#39;sea slug, nudibranch&#39;, 116: &#39;chiton, coat-of-mail shell, sea cradle, polyplacophore&#39;, 117: &#39;chambered nautilus, pearly nautilus, nautilus&#39;, 118: &#39;Dungeness crab, Cancer magister&#39;, 119: &#39;rock crab, Cancer irroratus&#39;, 120: &#39;fiddler crab&#39;, 121: &#39;king crab, Alaska crab, Alaskan king crab, Alaska king crab, Paralithodes camtschatica&#39;, 122: &#39;American lobster, Northern lobster, Maine lobster, Homarus americanus&#39;, 123: &#39;spiny lobster, langouste, rock lobster, crawfish, crayfish, sea crawfish&#39;, 124: &#39;crayfish, crawfish, crawdad, crawdaddy&#39;, 125: &#39;hermit crab&#39;, 126: &#39;isopod&#39;, 127: &#39;white stork, Ciconia ciconia&#39;, 128: &#39;black stork, Ciconia nigra&#39;, 129: &#39;spoonbill&#39;, 130: &#39;flamingo&#39;, 131: &#39;little blue heron, Egretta caerulea&#39;, 132: &#39;American egret, great white heron, Egretta albus&#39;, 133: &#39;bittern&#39;, 134: &#39;crane&#39;, 135: &#39;limpkin, Aramus pictus&#39;, 136: &#39;European gallinule, Porphyrio porphyrio&#39;, 137: &#39;American coot, marsh hen, mud hen, water hen, Fulica americana&#39;, 138: &#39;bustard&#39;, 139: &#39;ruddy turnstone, Arenaria interpres&#39;, 140: &#39;red-backed sandpiper, dunlin, Erolia alpina&#39;, 141: &#39;redshank, Tringa totanus&#39;, 142: &#39;dowitcher&#39;, 143: &#39;oystercatcher, oyster catcher&#39;, 144: &#39;pelican&#39;, 145: &#39;king penguin, Aptenodytes patagonica&#39;, 146: &#39;albatross, mollymawk&#39;, 147: &#39;grey whale, gray whale, devilfish, Eschrichtius gibbosus, Eschrichtius robustus&#39;, 148: &#39;killer whale, killer, orca, grampus, sea wolf, Orcinus orca&#39;, 149: &#39;dugong, Dugong dugon&#39;, 150: &#39;sea lion&#39;, 151: &#39;Chihuahua&#39;, 152: &#39;Japanese spaniel&#39;, 153: &#39;Maltese dog, Maltese terrier, Maltese&#39;, 154: &#39;Pekinese, Pekingese, Peke&#39;, 155: &#39;Shih-Tzu&#39;, 156: &#39;Blenheim spaniel&#39;, 157: &#39;papillon&#39;, 158: &#39;toy terrier&#39;, 159: &#39;Rhodesian ridgeback&#39;, 160: &#39;Afghan hound, Afghan&#39;, 161: &#39;basset, basset hound&#39;, 162: &#39;beagle&#39;, 163: &#39;bloodhound, sleuthhound&#39;, 164: &#39;bluetick&#39;, 165: &#39;black-and-tan coonhound&#39;, 166: &#39;Walker hound, Walker foxhound&#39;, 167: &#39;English foxhound&#39;, 168: &#39;redbone&#39;, 169: &#39;borzoi, Russian wolfhound&#39;, 170: &#39;Irish wolfhound&#39;, 171: &#39;Italian greyhound&#39;, 172: &#39;whippet&#39;, 173: &#39;Ibizan hound, Ibizan Podenco&#39;, 174: &#39;Norwegian elkhound, elkhound&#39;, 175: &#39;otterhound, otter hound&#39;, 176: &#39;Saluki, gazelle hound&#39;, 177: &#39;Scottish deerhound, deerhound&#39;, 178: &#39;Weimaraner&#39;, 179: &#39;Staffordshire bullterrier, Staffordshire bull terrier&#39;, 180: &#39;American Staffordshire terrier, Staffordshire terrier, American pit bull terrier, pit bull terrier&#39;, 181: &#39;Bedlington terrier&#39;, 182: &#39;Border terrier&#39;, 183: &#39;Kerry blue terrier&#39;, 184: &#39;Irish terrier&#39;, 185: &#39;Norfolk terrier&#39;, 186: &#39;Norwich terrier&#39;, 187: &#39;Yorkshire terrier&#39;, 188: &#39;wire-haired fox terrier&#39;, 189: &#39;Lakeland terrier&#39;, 190: &#39;Sealyham terrier, Sealyham&#39;, 191: &#39;Airedale, Airedale terrier&#39;, 192: &#39;cairn, cairn terrier&#39;, 193: &#39;Australian terrier&#39;, 194: &#39;Dandie Dinmont, Dandie Dinmont terrier&#39;, 195: &#39;Boston bull, Boston terrier&#39;, 196: &#39;miniature schnauzer&#39;, 197: &#39;giant schnauzer&#39;, 198: &#39;standard schnauzer&#39;, 199: &#39;Scotch terrier, Scottish terrier, Scottie&#39;, 200: &#39;Tibetan terrier, chrysanthemum dog&#39;, 201: &#39;silky terrier, Sydney silky&#39;, 202: &#39;soft-coated wheaten terrier&#39;, 203: &#39;West Highland white terrier&#39;, 204: &#39;Lhasa, Lhasa apso&#39;, 205: &#39;flat-coated retriever&#39;, 206: &#39;curly-coated retriever&#39;, 207: &#39;golden retriever&#39;, 208: &#39;Labrador retriever&#39;, 209: &#39;Chesapeake Bay retriever&#39;, 210: &#39;German short-haired pointer&#39;, 211: &#39;vizsla, Hungarian pointer&#39;, 212: &#39;English setter&#39;, 213: &#39;Irish setter, red setter&#39;, 214: &#39;Gordon setter&#39;, 215: &#39;Brittany spaniel&#39;, 216: &#39;clumber, clumber spaniel&#39;, 217: &#39;English springer, English springer spaniel&#39;, 218: &#39;Welsh springer spaniel&#39;, 219: &#39;cocker spaniel, English cocker spaniel, cocker&#39;, 220: &#39;Sussex spaniel&#39;, 221: &#39;Irish water spaniel&#39;, 222: &#39;kuvasz&#39;, 223: &#39;schipperke&#39;, 224: &#39;groenendael&#39;, 225: &#39;malinois&#39;, 226: &#39;briard&#39;, 227: &#39;kelpie&#39;, 228: &#39;komondor&#39;, 229: &#39;Old English sheepdog, bobtail&#39;, 230: &#39;Shetland sheepdog, Shetland sheep dog, Shetland&#39;, 231: &#39;collie&#39;, 232: &#39;Border collie&#39;, 233: &#39;Bouvier des Flandres, Bouviers des Flandres&#39;, 234: &#39;Rottweiler&#39;, 235: &#39;German shepherd, German shepherd dog, German police dog, alsatian&#39;, 236: &#39;Doberman, Doberman pinscher&#39;, 237: &#39;miniature pinscher&#39;, 238: &#39;Greater Swiss Mountain dog&#39;, 239: &#39;Bernese mountain dog&#39;, 240: &#39;Appenzeller&#39;, 241: &#39;EntleBucher&#39;, 242: &#39;boxer&#39;, 243: &#39;bull mastiff&#39;, 244: &#39;Tibetan mastiff&#39;, 245: &#39;French bulldog&#39;, 246: &#39;Great Dane&#39;, 247: &#39;Saint Bernard, St Bernard&#39;, 248: &#39;Eskimo dog, husky&#39;, 249: &#39;malamute, malemute, Alaskan malamute&#39;, 250: &#39;Siberian husky&#39;, 251: &#39;dalmatian, coach dog, carriage dog&#39;, 252: &#39;affenpinscher, monkey pinscher, monkey dog&#39;, 253: &#39;basenji&#39;, 254: &#39;pug, pug-dog&#39;, 255: &#39;Leonberg&#39;, 256: &#39;Newfoundland, Newfoundland dog&#39;, 257: &#39;Great Pyrenees&#39;, 258: &#39;Samoyed, Samoyede&#39;, 259: &#39;Pomeranian&#39;, 260: &#39;chow, chow chow&#39;, 261: &#39;keeshond&#39;, 262: &#39;Brabancon griffon&#39;, 263: &#39;Pembroke, Pembroke Welsh corgi&#39;, 264: &#39;Cardigan, Cardigan Welsh corgi&#39;, 265: &#39;toy poodle&#39;, 266: &#39;miniature poodle&#39;, 267: &#39;standard poodle&#39;, 268: &#39;Mexican hairless&#39;, 269: &#39;timber wolf, grey wolf, gray wolf, Canis lupus&#39;, 270: &#39;white wolf, Arctic wolf, Canis lupus tundrarum&#39;, 271: &#39;red wolf, maned wolf, Canis rufus, Canis niger&#39;, 272: &#39;coyote, prairie wolf, brush wolf, Canis latrans&#39;, 273: &#39;dingo, warrigal, warragal, Canis dingo&#39;, 274: &#39;dhole, Cuon alpinus&#39;, 275: &#39;African hunting dog, hyena dog, Cape hunting dog, Lycaon pictus&#39;, 276: &#39;hyena, hyaena&#39;, 277: &#39;red fox, Vulpes vulpes&#39;, 278: &#39;kit fox, Vulpes macrotis&#39;, 279: &#39;Arctic fox, white fox, Alopex lagopus&#39;, 280: &#39;grey fox, gray fox, Urocyon cinereoargenteus&#39;, 281: &#39;tabby, tabby cat&#39;, 282: &#39;tiger cat&#39;, 283: &#39;Persian cat&#39;, 284: &#39;Siamese cat, Siamese&#39;, 285: &#39;Egyptian cat&#39;, 286: &#39;cougar, puma, catamount, mountain lion, painter, panther, Felis concolor&#39;, 287: &#39;lynx, catamount&#39;, 288: &#39;leopard, Panthera pardus&#39;, 289: &#39;snow leopard, ounce, Panthera uncia&#39;, 290: &#39;jaguar, panther, Panthera onca, Felis onca&#39;, 291: &#39;lion, king of beasts, Panthera leo&#39;, 292: &#39;tiger, Panthera tigris&#39;, 293: &#39;cheetah, chetah, Acinonyx jubatus&#39;, 294: &#39;brown bear, bruin, Ursus arctos&#39;, 295: &#39;American black bear, black bear, Ursus americanus, Euarctos americanus&#39;, 296: &#39;ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus&#39;, 297: &#39;sloth bear, Melursus ursinus, Ursus ursinus&#39;, 298: &#39;mongoose&#39;, 299: &#39;meerkat, mierkat&#39;, 300: &#39;tiger beetle&#39;, 301: &#39;ladybug, ladybeetle, lady beetle, ladybird, ladybird beetle&#39;, 302: &#39;ground beetle, carabid beetle&#39;, 303: &#39;long-horned beetle, longicorn, longicorn beetle&#39;, 304: &#39;leaf beetle, chrysomelid&#39;, 305: &#39;dung beetle&#39;, 306: &#39;rhinoceros beetle&#39;, 307: &#39;weevil&#39;, 308: &#39;fly&#39;, 309: &#39;bee&#39;, 310: &#39;ant, emmet, pismire&#39;, 311: &#39;grasshopper, hopper&#39;, 312: &#39;cricket&#39;, 313: &#39;walking stick, walkingstick, stick insect&#39;, 314: &#39;cockroach, roach&#39;, 315: &#39;mantis, mantid&#39;, 316: &#39;cicada, cicala&#39;, 317: &#39;leafhopper&#39;, 318: &#39;lacewing, lacewing fly&#39;, 319: &#34;dragonfly, darning needle, devil&#39;s darning needle, sewing needle, snake feeder, snake doctor, mosquito hawk, skeeter hawk&#34;, 320: &#39;damselfly&#39;, 321: &#39;admiral&#39;, 322: &#39;ringlet, ringlet butterfly&#39;, 323: &#39;monarch, monarch butterfly, milkweed butterfly, Danaus plexippus&#39;, 324: &#39;cabbage butterfly&#39;, 325: &#39;sulphur butterfly, sulfur butterfly&#39;, 326: &#39;lycaenid, lycaenid butterfly&#39;, 327: &#39;starfish, sea star&#39;, 328: &#39;sea urchin&#39;, 329: &#39;sea cucumber, holothurian&#39;, 330: &#39;wood rabbit, cottontail, cottontail rabbit&#39;, 331: &#39;hare&#39;, 332: &#39;Angora, Angora rabbit&#39;, 333: &#39;hamster&#39;, 334: &#39;porcupine, hedgehog&#39;, 335: &#39;fox squirrel, eastern fox squirrel, Sciurus niger&#39;, 336: &#39;marmot&#39;, 337: &#39;beaver&#39;, 338: &#39;guinea pig, Cavia cobaya&#39;, 339: &#39;sorrel&#39;, 340: &#39;zebra&#39;, 341: &#39;hog, pig, grunter, squealer, Sus scrofa&#39;, 342: &#39;wild boar, boar, Sus scrofa&#39;, 343: &#39;warthog&#39;, 344: &#39;hippopotamus, hippo, river horse, Hippopotamus amphibius&#39;, 345: &#39;ox&#39;, 346: &#39;water buffalo, water ox, Asiatic buffalo, Bubalus bubalis&#39;, 347: &#39;bison&#39;, 348: &#39;ram, tup&#39;, 349: &#39;bighorn, bighorn sheep, cimarron, Rocky Mountain bighorn, Rocky Mountain sheep, Ovis canadensis&#39;, 350: &#39;ibex, Capra ibex&#39;, 351: &#39;hartebeest&#39;, 352: &#39;impala, Aepyceros melampus&#39;, 353: &#39;gazelle&#39;, 354: &#39;Arabian camel, dromedary, Camelus dromedarius&#39;, 355: &#39;llama&#39;, 356: &#39;weasel&#39;, 357: &#39;mink&#39;, 358: &#39;polecat, fitch, foulmart, foumart, Mustela putorius&#39;, 359: &#39;black-footed ferret, ferret, Mustela nigripes&#39;, 360: &#39;otter&#39;, 361: &#39;skunk, polecat, wood pussy&#39;, 362: &#39;badger&#39;, 363: &#39;armadillo&#39;, 364: &#39;three-toed sloth, ai, Bradypus tridactylus&#39;, 365: &#39;orangutan, orang, orangutang, Pongo pygmaeus&#39;, 366: &#39;gorilla, Gorilla gorilla&#39;, 367: &#39;chimpanzee, chimp, Pan troglodytes&#39;, 368: &#39;gibbon, Hylobates lar&#39;, 369: &#39;siamang, Hylobates syndactylus, Symphalangus syndactylus&#39;, 370: &#39;guenon, guenon monkey&#39;, 371: &#39;patas, hussar monkey, Erythrocebus patas&#39;, 372: &#39;baboon&#39;, 373: &#39;macaque&#39;, 374: &#39;langur&#39;, 375: &#39;colobus, colobus monkey&#39;, 376: &#39;proboscis monkey, Nasalis larvatus&#39;, 377: &#39;marmoset&#39;, 378: &#39;capuchin, ringtail, Cebus capucinus&#39;, 379: &#39;howler monkey, howler&#39;, 380: &#39;titi, titi monkey&#39;, 381: &#39;spider monkey, Ateles geoffroyi&#39;, 382: &#39;squirrel monkey, Saimiri sciureus&#39;, 383: &#39;Madagascar cat, ring-tailed lemur, Lemur catta&#39;, 384: &#39;indri, indris, Indri indri, Indri brevicaudatus&#39;, 385: &#39;Indian elephant, Elephas maximus&#39;, 386: &#39;African elephant, Loxodonta africana&#39;, 387: &#39;lesser panda, red panda, panda, bear cat, cat bear, Ailurus fulgens&#39;, 388: &#39;giant panda, panda, panda bear, coon bear, Ailuropoda melanoleuca&#39;, 389: &#39;barracouta, snoek&#39;, 390: &#39;eel&#39;, 391: &#39;coho, cohoe, coho salmon, blue jack, silver salmon, Oncorhynchus kisutch&#39;, 392: &#39;rock beauty, Holocanthus tricolor&#39;, 393: &#39;anemone fish&#39;, 394: &#39;sturgeon&#39;, 395: &#39;gar, garfish, garpike, billfish, Lepisosteus osseus&#39;, 396: &#39;lionfish&#39;, 397: &#39;puffer, pufferfish, blowfish, globefish&#39;, 398: &#39;abacus&#39;, 399: &#39;abaya&#39;, 400: &#34;academic gown, academic robe, judge&#39;s robe&#34;, 401: &#39;accordion, piano accordion, squeeze box&#39;, 402: &#39;acoustic guitar&#39;, 403: &#39;aircraft carrier, carrier, flattop, attack aircraft carrier&#39;, 404: &#39;airliner&#39;, 405: &#39;airship, dirigible&#39;, 406: &#39;altar&#39;, 407: &#39;ambulance&#39;, 408: &#39;amphibian, amphibious vehicle&#39;, 409: &#39;analog clock&#39;, 410: &#39;apiary, bee house&#39;, 411: &#39;apron&#39;, 412: &#39;ashcan, trash can, garbage can, wastebin, ash bin, ash-bin, ashbin, dustbin, trash barrel, trash bin&#39;, 413: &#39;assault rifle, assault gun&#39;, 414: &#39;backpack, back pack, knapsack, packsack, rucksack, haversack&#39;, 415: &#39;bakery, bakeshop, bakehouse&#39;, 416: &#39;balance beam, beam&#39;, 417: &#39;balloon&#39;, 418: &#39;ballpoint, ballpoint pen, ballpen, Biro&#39;, 419: &#39;Band Aid&#39;, 420: &#39;banjo&#39;, 421: &#39;bannister, banister, balustrade, balusters, handrail&#39;, 422: &#39;barbell&#39;, 423: &#39;barber chair&#39;, 424: &#39;barbershop&#39;, 425: &#39;barn&#39;, 426: &#39;barometer&#39;, 427: &#39;barrel, cask&#39;, 428: &#39;barrow, garden cart, lawn cart, wheelbarrow&#39;, 429: &#39;baseball&#39;, 430: &#39;basketball&#39;, 431: &#39;bassinet&#39;, 432: &#39;bassoon&#39;, 433: &#39;bathing cap, swimming cap&#39;, 434: &#39;bath towel&#39;, 435: &#39;bathtub, bathing tub, bath, tub&#39;, 436: &#39;beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon&#39;, 437: &#39;beacon, lighthouse, beacon light, pharos&#39;, 438: &#39;beaker&#39;, 439: &#39;bearskin, busby, shako&#39;, 440: &#39;beer bottle&#39;, 441: &#39;beer glass&#39;, 442: &#39;bell cote, bell cot&#39;, 443: &#39;bib&#39;, 444: &#39;bicycle-built-for-two, tandem bicycle, tandem&#39;, 445: &#39;bikini, two-piece&#39;, 446: &#39;binder, ring-binder&#39;, 447: &#39;binoculars, field glasses, opera glasses&#39;, 448: &#39;birdhouse&#39;, 449: &#39;boathouse&#39;, 450: &#39;bobsled, bobsleigh, bob&#39;, 451: &#39;bolo tie, bolo, bola tie, bola&#39;, 452: &#39;bonnet, poke bonnet&#39;, 453: &#39;bookcase&#39;, 454: &#39;bookshop, bookstore, bookstall&#39;, 455: &#39;bottlecap&#39;, 456: &#39;bow&#39;, 457: &#39;bow tie, bow-tie, bowtie&#39;, 458: &#39;brass, memorial tablet, plaque&#39;, 459: &#39;brassiere, bra, bandeau&#39;, 460: &#39;breakwater, groin, groyne, mole, bulwark, seawall, jetty&#39;, 461: &#39;breastplate, aegis, egis&#39;, 462: &#39;broom&#39;, 463: &#39;bucket, pail&#39;, 464: &#39;buckle&#39;, 465: &#39;bulletproof vest&#39;, 466: &#39;bullet train, bullet&#39;, 467: &#39;butcher shop, meat market&#39;, 468: &#39;cab, hack, taxi, taxicab&#39;, 469: &#39;caldron, cauldron&#39;, 470: &#39;candle, taper, wax light&#39;, 471: &#39;cannon&#39;, 472: &#39;canoe&#39;, 473: &#39;can opener, tin opener&#39;, 474: &#39;cardigan&#39;, 475: &#39;car mirror&#39;, 476: &#39;carousel, carrousel, merry-go-round, roundabout, whirligig&#39;, 477: &#34;carpenter&#39;s kit, tool kit&#34;, 478: &#39;carton&#39;, 479: &#39;car wheel&#39;, 480: &#39;cash machine, cash dispenser, automated teller machine, automatic teller machine, automated teller, automatic teller, ATM&#39;, 481: &#39;cassette&#39;, 482: &#39;cassette player&#39;, 483: &#39;castle&#39;, 484: &#39;catamaran&#39;, 485: &#39;CD player&#39;, 486: &#39;cello, violoncello&#39;, 487: &#39;cellular telephone, cellular phone, cellphone, cell, mobile phone&#39;, 488: &#39;chain&#39;, 489: &#39;chainlink fence&#39;, 490: &#39;chain mail, ring mail, mail, chain armor, chain armour, ring armor, ring armour&#39;, 491: &#39;chain saw, chainsaw&#39;, 492: &#39;chest&#39;, 493: &#39;chiffonier, commode&#39;, 494: &#39;chime, bell, gong&#39;, 495: &#39;china cabinet, china closet&#39;, 496: &#39;Christmas stocking&#39;, 497: &#39;church, church building&#39;, 498: &#39;cinema, movie theater, movie theatre, movie house, picture palace&#39;, 499: &#39;cleaver, meat cleaver, chopper&#39;, 500: &#39;cliff dwelling&#39;, 501: &#39;cloak&#39;, 502: &#39;clog, geta, patten, sabot&#39;, 503: &#39;cocktail shaker&#39;, 504: &#39;coffee mug&#39;, 505: &#39;coffeepot&#39;, 506: &#39;coil, spiral, volute, whorl, helix&#39;, 507: &#39;combination lock&#39;, 508: &#39;computer keyboard, keypad&#39;, 509: &#39;confectionery, confectionary, candy store&#39;, 510: &#39;container ship, containership, container vessel&#39;, 511: &#39;convertible&#39;, 512: &#39;corkscrew, bottle screw&#39;, 513: &#39;cornet, horn, trumpet, trump&#39;, 514: &#39;cowboy boot&#39;, 515: &#39;cowboy hat, ten-gallon hat&#39;, 516: &#39;cradle&#39;, 517: &#39;crane&#39;, 518: &#39;crash helmet&#39;, 519: &#39;crate&#39;, 520: &#39;crib, cot&#39;, 521: &#39;Crock Pot&#39;, 522: &#39;croquet ball&#39;, 523: &#39;crutch&#39;, 524: &#39;cuirass&#39;, 525: &#39;dam, dike, dyke&#39;, 526: &#39;desk&#39;, 527: &#39;desktop computer&#39;, 528: &#39;dial telephone, dial phone&#39;, 529: &#39;diaper, nappy, napkin&#39;, 530: &#39;digital clock&#39;, 531: &#39;digital watch&#39;, 532: &#39;dining table, board&#39;, 533: &#39;dishrag, dishcloth&#39;, 534: &#39;dishwasher, dish washer, dishwashing machine&#39;, 535: &#39;disk brake, disc brake&#39;, 536: &#39;dock, dockage, docking facility&#39;, 537: &#39;dogsled, dog sled, dog sleigh&#39;, 538: &#39;dome&#39;, 539: &#39;doormat, welcome mat&#39;, 540: &#39;drilling platform, offshore rig&#39;, 541: &#39;drum, membranophone, tympan&#39;, 542: &#39;drumstick&#39;, 543: &#39;dumbbell&#39;, 544: &#39;Dutch oven&#39;, 545: &#39;electric fan, blower&#39;, 546: &#39;electric guitar&#39;, 547: &#39;electric locomotive&#39;, 548: &#39;entertainment center&#39;, 549: &#39;envelope&#39;, 550: &#39;espresso maker&#39;, 551: &#39;face powder&#39;, 552: &#39;feather boa, boa&#39;, 553: &#39;file, file cabinet, filing cabinet&#39;, 554: &#39;fireboat&#39;, 555: &#39;fire engine, fire truck&#39;, 556: &#39;fire screen, fireguard&#39;, 557: &#39;flagpole, flagstaff&#39;, 558: &#39;flute, transverse flute&#39;, 559: &#39;folding chair&#39;, 560: &#39;football helmet&#39;, 561: &#39;forklift&#39;, 562: &#39;fountain&#39;, 563: &#39;fountain pen&#39;, 564: &#39;four-poster&#39;, 565: &#39;freight car&#39;, 566: &#39;French horn, horn&#39;, 567: &#39;frying pan, frypan, skillet&#39;, 568: &#39;fur coat&#39;, 569: &#39;garbage truck, dustcart&#39;, 570: &#39;gasmask, respirator, gas helmet&#39;, 571: &#39;gas pump, gasoline pump, petrol pump, island dispenser&#39;, 572: &#39;goblet&#39;, 573: &#39;go-kart&#39;, 574: &#39;golf ball&#39;, 575: &#39;golfcart, golf cart&#39;, 576: &#39;gondola&#39;, 577: &#39;gong, tam-tam&#39;, 578: &#39;gown&#39;, 579: &#39;grand piano, grand&#39;, 580: &#39;greenhouse, nursery, glasshouse&#39;, 581: &#39;grille, radiator grille&#39;, 582: &#39;grocery store, grocery, food market, market&#39;, 583: &#39;guillotine&#39;, 584: &#39;hair slide&#39;, 585: &#39;hair spray&#39;, 586: &#39;half track&#39;, 587: &#39;hammer&#39;, 588: &#39;hamper&#39;, 589: &#39;hand blower, blow dryer, blow drier, hair dryer, hair drier&#39;, 590: &#39;hand-held computer, hand-held microcomputer&#39;, 591: &#39;handkerchief, hankie, hanky, hankey&#39;, 592: &#39;hard disc, hard disk, fixed disk&#39;, 593: &#39;harmonica, mouth organ, harp, mouth harp&#39;, 594: &#39;harp&#39;, 595: &#39;harvester, reaper&#39;, 596: &#39;hatchet&#39;, 597: &#39;holster&#39;, 598: &#39;home theater, home theatre&#39;, 599: &#39;honeycomb&#39;, 600: &#39;hook, claw&#39;, 601: &#39;hoopskirt, crinoline&#39;, 602: &#39;horizontal bar, high bar&#39;, 603: &#39;horse cart, horse-cart&#39;, 604: &#39;hourglass&#39;, 605: &#39;iPod&#39;, 606: &#39;iron, smoothing iron&#39;, 607: &#34;jack-o&#39;-lantern&#34;, 608: &#39;jean, blue jean, denim&#39;, 609: &#39;jeep, landrover&#39;, 610: &#39;jersey, T-shirt, tee shirt&#39;, 611: &#39;jigsaw puzzle&#39;, 612: &#39;jinrikisha, ricksha, rickshaw&#39;, 613: &#39;joystick&#39;, 614: &#39;kimono&#39;, 615: &#39;knee pad&#39;, 616: &#39;knot&#39;, 617: &#39;lab coat, laboratory coat&#39;, 618: &#39;ladle&#39;, 619: &#39;lampshade, lamp shade&#39;, 620: &#39;laptop, laptop computer&#39;, 621: &#39;lawn mower, mower&#39;, 622: &#39;lens cap, lens cover&#39;, 623: &#39;letter opener, paper knife, paperknife&#39;, 624: &#39;library&#39;, 625: &#39;lifeboat&#39;, 626: &#39;lighter, light, igniter, ignitor&#39;, 627: &#39;limousine, limo&#39;, 628: &#39;liner, ocean liner&#39;, 629: &#39;lipstick, lip rouge&#39;, 630: &#39;Loafer&#39;, 631: &#39;lotion&#39;, 632: &#39;loudspeaker, speaker, speaker unit, loudspeaker system, speaker system&#39;, 633: &#34;loupe, jeweler&#39;s loupe&#34;, 634: &#39;lumbermill, sawmill&#39;, 635: &#39;magnetic compass&#39;, 636: &#39;mailbag, postbag&#39;, 637: &#39;mailbox, letter box&#39;, 638: &#39;maillot&#39;, 639: &#39;maillot, tank suit&#39;, 640: &#39;manhole cover&#39;, 641: &#39;maraca&#39;, 642: &#39;marimba, xylophone&#39;, 643: &#39;mask&#39;, 644: &#39;matchstick&#39;, 645: &#39;maypole&#39;, 646: &#39;maze, labyrinth&#39;, 647: &#39;measuring cup&#39;, 648: &#39;medicine chest, medicine cabinet&#39;, 649: &#39;megalith, megalithic structure&#39;, 650: &#39;microphone, mike&#39;, 651: &#39;microwave, microwave oven&#39;, 652: &#39;military uniform&#39;, 653: &#39;milk can&#39;, 654: &#39;minibus&#39;, 655: &#39;miniskirt, mini&#39;, 656: &#39;minivan&#39;, 657: &#39;missile&#39;, 658: &#39;mitten&#39;, 659: &#39;mixing bowl&#39;, 660: &#39;mobile home, manufactured home&#39;, 661: &#39;Model T&#39;, 662: &#39;modem&#39;, 663: &#39;monastery&#39;, 664: &#39;monitor&#39;, 665: &#39;moped&#39;, 666: &#39;mortar&#39;, 667: &#39;mortarboard&#39;, 668: &#39;mosque&#39;, 669: &#39;mosquito net&#39;, 670: &#39;motor scooter, scooter&#39;, 671: &#39;mountain bike, all-terrain bike, off-roader&#39;, 672: &#39;mountain tent&#39;, 673: &#39;mouse, computer mouse&#39;, 674: &#39;mousetrap&#39;, 675: &#39;moving van&#39;, 676: &#39;muzzle&#39;, 677: &#39;nail&#39;, 678: &#39;neck brace&#39;, 679: &#39;necklace&#39;, 680: &#39;nipple&#39;, 681: &#39;notebook, notebook computer&#39;, 682: &#39;obelisk&#39;, 683: &#39;oboe, hautboy, hautbois&#39;, 684: &#39;ocarina, sweet potato&#39;, 685: &#39;odometer, hodometer, mileometer, milometer&#39;, 686: &#39;oil filter&#39;, 687: &#39;organ, pipe organ&#39;, 688: &#39;oscilloscope, scope, cathode-ray oscilloscope, CRO&#39;, 689: &#39;overskirt&#39;, 690: &#39;oxcart&#39;, 691: &#39;oxygen mask&#39;, 692: &#39;packet&#39;, 693: &#39;paddle, boat paddle&#39;, 694: &#39;paddlewheel, paddle wheel&#39;, 695: &#39;padlock&#39;, 696: &#39;paintbrush&#39;, 697: &#34;pajama, pyjama, pj&#39;s, jammies&#34;, 698: &#39;palace&#39;, 699: &#39;panpipe, pandean pipe, syrinx&#39;, 700: &#39;paper towel&#39;, 701: &#39;parachute, chute&#39;, 702: &#39;parallel bars, bars&#39;, 703: &#39;park bench&#39;, 704: &#39;parking meter&#39;, 705: &#39;passenger car, coach, carriage&#39;, 706: &#39;patio, terrace&#39;, 707: &#39;pay-phone, pay-station&#39;, 708: &#39;pedestal, plinth, footstall&#39;, 709: &#39;pencil box, pencil case&#39;, 710: &#39;pencil sharpener&#39;, 711: &#39;perfume, essence&#39;, 712: &#39;Petri dish&#39;, 713: &#39;photocopier&#39;, 714: &#39;pick, plectrum, plectron&#39;, 715: &#39;pickelhaube&#39;, 716: &#39;picket fence, paling&#39;, 717: &#39;pickup, pickup truck&#39;, 718: &#39;pier&#39;, 719: &#39;piggy bank, penny bank&#39;, 720: &#39;pill bottle&#39;, 721: &#39;pillow&#39;, 722: &#39;ping-pong ball&#39;, 723: &#39;pinwheel&#39;, 724: &#39;pirate, pirate ship&#39;, 725: &#39;pitcher, ewer&#39;, 726: &#34;plane, carpenter&#39;s plane, woodworking plane&#34;, 727: &#39;planetarium&#39;, 728: &#39;plastic bag&#39;, 729: &#39;plate rack&#39;, 730: &#39;plow, plough&#39;, 731: &#34;plunger, plumber&#39;s helper&#34;, 732: &#39;Polaroid camera, Polaroid Land camera&#39;, 733: &#39;pole&#39;, 734: &#39;police van, police wagon, paddy wagon, patrol wagon, wagon, black Maria&#39;, 735: &#39;poncho&#39;, 736: &#39;pool table, billiard table, snooker table&#39;, 737: &#39;pop bottle, soda bottle&#39;, 738: &#39;pot, flowerpot&#39;, 739: &#34;potter&#39;s wheel&#34;, 740: &#39;power drill&#39;, 741: &#39;prayer rug, prayer mat&#39;, 742: &#39;printer&#39;, 743: &#39;prison, prison house&#39;, 744: &#39;projectile, missile&#39;, 745: &#39;projector&#39;, 746: &#39;puck, hockey puck&#39;, 747: &#39;punching bag, punch bag, punching ball, punchball&#39;, 748: &#39;purse&#39;, 749: &#39;quill, quill pen&#39;, 750: &#39;quilt, comforter, comfort, puff&#39;, 751: &#39;racer, race car, racing car&#39;, 752: &#39;racket, racquet&#39;, 753: &#39;radiator&#39;, 754: &#39;radio, wireless&#39;, 755: &#39;radio telescope, radio reflector&#39;, 756: &#39;rain barrel&#39;, 757: &#39;recreational vehicle, RV, R.V.&#39;, 758: &#39;reel&#39;, 759: &#39;reflex camera&#39;, 760: &#39;refrigerator, icebox&#39;, 761: &#39;remote control, remote&#39;, 762: &#39;restaurant, eating house, eating place, eatery&#39;, 763: &#39;revolver, six-gun, six-shooter&#39;, 764: &#39;rifle&#39;, 765: &#39;rocking chair, rocker&#39;, 766: &#39;rotisserie&#39;, 767: &#39;rubber eraser, rubber, pencil eraser&#39;, 768: &#39;rugby ball&#39;, 769: &#39;rule, ruler&#39;, 770: &#39;running shoe&#39;, 771: &#39;safe&#39;, 772: &#39;safety pin&#39;, 773: &#39;saltshaker, salt shaker&#39;, 774: &#39;sandal&#39;, 775: &#39;sarong&#39;, 776: &#39;sax, saxophone&#39;, 777: &#39;scabbard&#39;, 778: &#39;scale, weighing machine&#39;, 779: &#39;school bus&#39;, 780: &#39;schooner&#39;, 781: &#39;scoreboard&#39;, 782: &#39;screen, CRT screen&#39;, 783: &#39;screw&#39;, 784: &#39;screwdriver&#39;, 785: &#39;seat belt, seatbelt&#39;, 786: &#39;sewing machine&#39;, 787: &#39;shield, buckler&#39;, 788: &#39;shoe shop, shoe-shop, shoe store&#39;, 789: &#39;shoji&#39;, 790: &#39;shopping basket&#39;, 791: &#39;shopping cart&#39;, 792: &#39;shovel&#39;, 793: &#39;shower cap&#39;, 794: &#39;shower curtain&#39;, 795: &#39;ski&#39;, 796: &#39;ski mask&#39;, 797: &#39;sleeping bag&#39;, 798: &#39;slide rule, slipstick&#39;, 799: &#39;sliding door&#39;, 800: &#39;slot, one-armed bandit&#39;, 801: &#39;snorkel&#39;, 802: &#39;snowmobile&#39;, 803: &#39;snowplow, snowplough&#39;, 804: &#39;soap dispenser&#39;, 805: &#39;soccer ball&#39;, 806: &#39;sock&#39;, 807: &#39;solar dish, solar collector, solar furnace&#39;, 808: &#39;sombrero&#39;, 809: &#39;soup bowl&#39;, 810: &#39;space bar&#39;, 811: &#39;space heater&#39;, 812: &#39;space shuttle&#39;, 813: &#39;spatula&#39;, 814: &#39;speedboat&#39;, 815: &#34;spider web, spider&#39;s web&#34;, 816: &#39;spindle&#39;, 817: &#39;sports car, sport car&#39;, 818: &#39;spotlight, spot&#39;, 819: &#39;stage&#39;, 820: &#39;steam locomotive&#39;, 821: &#39;steel arch bridge&#39;, 822: &#39;steel drum&#39;, 823: &#39;stethoscope&#39;, 824: &#39;stole&#39;, 825: &#39;stone wall&#39;, 826: &#39;stopwatch, stop watch&#39;, 827: &#39;stove&#39;, 828: &#39;strainer&#39;, 829: &#39;streetcar, tram, tramcar, trolley, trolley car&#39;, 830: &#39;stretcher&#39;, 831: &#39;studio couch, day bed&#39;, 832: &#39;stupa, tope&#39;, 833: &#39;submarine, pigboat, sub, U-boat&#39;, 834: &#39;suit, suit of clothes&#39;, 835: &#39;sundial&#39;, 836: &#39;sunglass&#39;, 837: &#39;sunglasses, dark glasses, shades&#39;, 838: &#39;sunscreen, sunblock, sun blocker&#39;, 839: &#39;suspension bridge&#39;, 840: &#39;swab, swob, mop&#39;, 841: &#39;sweatshirt&#39;, 842: &#39;swimming trunks, bathing trunks&#39;, 843: &#39;swing&#39;, 844: &#39;switch, electric switch, electrical switch&#39;, 845: &#39;syringe&#39;, 846: &#39;table lamp&#39;, 847: &#39;tank, army tank, armored combat vehicle, armoured combat vehicle&#39;, 848: &#39;tape player&#39;, 849: &#39;teapot&#39;, 850: &#39;teddy, teddy bear&#39;, 851: &#39;television, television system&#39;, 852: &#39;tennis ball&#39;, 853: &#39;thatch, thatched roof&#39;, 854: &#39;theater curtain, theatre curtain&#39;, 855: &#39;thimble&#39;, 856: &#39;thresher, thrasher, threshing machine&#39;, 857: &#39;throne&#39;, 858: &#39;tile roof&#39;, 859: &#39;toaster&#39;, 860: &#39;tobacco shop, tobacconist shop, tobacconist&#39;, 861: &#39;toilet seat&#39;, 862: &#39;torch&#39;, 863: &#39;totem pole&#39;, 864: &#39;tow truck, tow car, wrecker&#39;, 865: &#39;toyshop&#39;, 866: &#39;tractor&#39;, 867: &#39;trailer truck, tractor trailer, trucking rig, rig, articulated lorry, semi&#39;, 868: &#39;tray&#39;, 869: &#39;trench coat&#39;, 870: &#39;tricycle, trike, velocipede&#39;, 871: &#39;trimaran&#39;, 872: &#39;tripod&#39;, 873: &#39;triumphal arch&#39;, 874: &#39;trolleybus, trolley coach, trackless trolley&#39;, 875: &#39;trombone&#39;, 876: &#39;tub, vat&#39;, 877: &#39;turnstile&#39;, 878: &#39;typewriter keyboard&#39;, 879: &#39;umbrella&#39;, 880: &#39;unicycle, monocycle&#39;, 881: &#39;upright, upright piano&#39;, 882: &#39;vacuum, vacuum cleaner&#39;, 883: &#39;vase&#39;, 884: &#39;vault&#39;, 885: &#39;velvet&#39;, 886: &#39;vending machine&#39;, 887: &#39;vestment&#39;, 888: &#39;viaduct&#39;, 889: &#39;violin, fiddle&#39;, 890: &#39;volleyball&#39;, 891: &#39;waffle iron&#39;, 892: &#39;wall clock&#39;, 893: &#39;wallet, billfold, notecase, pocketbook&#39;, 894: &#39;wardrobe, closet, press&#39;, 895: &#39;warplane, military plane&#39;, 896: &#39;washbasin, handbasin, washbowl, lavabo, wash-hand basin&#39;, 897: &#39;washer, automatic washer, washing machine&#39;, 898: &#39;water bottle&#39;, 899: &#39;water jug&#39;, 900: &#39;water tower&#39;, 901: &#39;whiskey jug&#39;, 902: &#39;whistle&#39;, 903: &#39;wig&#39;, 904: &#39;window screen&#39;, 905: &#39;window shade&#39;, 906: &#39;Windsor tie&#39;, 907: &#39;wine bottle&#39;, 908: &#39;wing&#39;, 909: &#39;wok&#39;, 910: &#39;wooden spoon&#39;, 911: &#39;wool, woolen, woollen&#39;, 912: &#39;worm fence, snake fence, snake-rail fence, Virginia fence&#39;, 913: &#39;wreck&#39;, 914: &#39;yawl&#39;, 915: &#39;yurt&#39;, 916: &#39;web site, website, internet site, site&#39;, 917: &#39;comic book&#39;, 918: &#39;crossword puzzle, crossword&#39;, 919: &#39;street sign&#39;, 920: &#39;traffic light, traffic signal, stoplight&#39;, 921: &#39;book jacket, dust cover, dust jacket, dust wrapper&#39;, 922: &#39;menu&#39;, 923: &#39;plate&#39;, 924: &#39;guacamole&#39;, 925: &#39;consomme&#39;, 926: &#39;hot pot, hotpot&#39;, 927: &#39;trifle&#39;, 928: &#39;ice cream, icecream&#39;, 929: &#39;ice lolly, lolly, lollipop, popsicle&#39;, 930: &#39;French loaf&#39;, 931: &#39;bagel, beigel&#39;, 932: &#39;pretzel&#39;, 933: &#39;cheeseburger&#39;, 934: &#39;hotdog, hot dog, red hot&#39;, 935: &#39;mashed potato&#39;, 936: &#39;head cabbage&#39;, 937: &#39;broccoli&#39;, 938: &#39;cauliflower&#39;, 939: &#39;zucchini, courgette&#39;, 940: &#39;spaghetti squash&#39;, 941: &#39;acorn squash&#39;, 942: &#39;butternut squash&#39;, 943: &#39;cucumber, cuke&#39;, 944: &#39;artichoke, globe artichoke&#39;, 945: &#39;bell pepper&#39;, 946: &#39;cardoon&#39;, 947: &#39;mushroom&#39;, 948: &#39;Granny Smith&#39;, 949: &#39;strawberry&#39;, 950: &#39;orange&#39;, 951: &#39;lemon&#39;, 952: &#39;fig&#39;, 953: &#39;pineapple, ananas&#39;, 954: &#39;banana&#39;, 955: &#39;jackfruit, jak, jack&#39;, 956: &#39;custard apple&#39;, 957: &#39;pomegranate&#39;, 958: &#39;hay&#39;, 959: &#39;carbonara&#39;, 960: &#39;chocolate sauce, chocolate syrup&#39;, 961: &#39;dough&#39;, 962: &#39;meat loaf, meatloaf&#39;, 963: &#39;pizza, pizza pie&#39;, 964: &#39;potpie&#39;, 965: &#39;burrito&#39;, 966: &#39;red wine&#39;, 967: &#39;espresso&#39;, 968: &#39;cup&#39;, 969: &#39;eggnog&#39;, 970: &#39;alp&#39;, 971: &#39;bubble&#39;, 972: &#39;cliff, drop, drop-off&#39;, 973: &#39;coral reef&#39;, 974: &#39;geyser&#39;, 975: &#39;lakeside, lakeshore&#39;, 976: &#39;promontory, headland, head, foreland&#39;, 977: &#39;sandbar, sand bar&#39;, 978: &#39;seashore, coast, seacoast, sea-coast&#39;, 979: &#39;valley, vale&#39;, 980: &#39;volcano&#39;, 981: &#39;ballplayer, baseball player&#39;, 982: &#39;groom, bridegroom&#39;, 983: &#39;scuba diver&#39;, 984: &#39;rapeseed&#39;, 985: &#39;daisy&#39;, 986: &#34;yellow lady&#39;s slipper, yellow lady-slipper, Cypripedium calceolus, Cypripedium parviflorum&#34;, 987: &#39;corn&#39;, 988: &#39;acorn&#39;, 989: &#39;hip, rose hip, rosehip&#39;, 990: &#39;buckeye, horse chestnut, conker&#39;, 991: &#39;coral fungus&#39;, 992: &#39;agaric&#39;, 993: &#39;gyromitra&#39;, 994: &#39;stinkhorn, carrion fungus&#39;, 995: &#39;earthstar&#39;, 996: &#39;hen-of-the-woods, hen of the woods, Polyporus frondosus, Grifola frondosa&#39;, 997: &#39;bolete&#39;, 998: &#39;ear, spike, capitulum&#39;, 999: &#39;toilet tissue, toilet paper, bathroom tissue&#39;}
+Egyptian cat</code></pre></div>
+<blockquote>
+<p>经过转码后得json结构是一个key=pixel_values的像素数组，维度是：[批次，通道数，宽度，高度]。
+通过model.config.id2label可以看到总共1000个label。</p></blockquote>
+<h3 id="数据集">数据集</h3>
+<p>food101包含多种食物类别，数据集地址：https://huggingface.co/datasets/ethz/food101。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from datasets import load_dataset
+ds = load_dataset(&#34;food101&#34;)
+print(&#34;数据集&#34;,ds)
+#获取训练集数据
+ds = load_dataset(&#34;food101&#34;,split=&#34;train&#34;)
+print(&#34;训练集&#34;,ds)
+print(&#34;第一个数据集&#34;,ds[0])
+#获取所有label
+labels = ds.features[&#34;label&#34;].names
+print(labels)
+print(len(labels))</code></pre></div>
+<p>输出</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>数据集 DatasetDict({
+    train: Dataset({
+        features: [&#39;image&#39;, &#39;label&#39;],
+        num_rows: 75750
+    })
+    validation: Dataset({
+        features: [&#39;image&#39;, &#39;label&#39;],
+        num_rows: 25250
+    })
+})
+训练集 Dataset({
+    features: [&#39;image&#39;, &#39;label&#39;],
+    num_rows: 75750
+})
+第一个数据集 {&#39;image&#39;: &lt;PIL.Image.Image image mode=RGB size=384x512 at 0x7A1FCE415750&gt;, &#39;label&#39;: 6}
+[&#39;apple_pie&#39;, &#39;baby_back_ribs&#39;, &#39;baklava&#39;, &#39;beef_carpaccio&#39;, &#39;beef_tartare&#39;, &#39;beet_salad&#39;, &#39;beignets&#39;, &#39;bibimbap&#39;, &#39;bread_pudding&#39;, &#39;breakfast_burrito&#39;, &#39;bruschetta&#39;, &#39;caesar_salad&#39;, &#39;cannoli&#39;, &#39;caprese_salad&#39;, &#39;carrot_cake&#39;, &#39;ceviche&#39;, &#39;cheesecake&#39;, &#39;cheese_plate&#39;, &#39;chicken_curry&#39;, &#39;chicken_quesadilla&#39;, &#39;chicken_wings&#39;, &#39;chocolate_cake&#39;, &#39;chocolate_mousse&#39;, &#39;churros&#39;, &#39;clam_chowder&#39;, &#39;club_sandwich&#39;, &#39;crab_cakes&#39;, &#39;creme_brulee&#39;, &#39;croque_madame&#39;, &#39;cup_cakes&#39;, &#39;deviled_eggs&#39;, &#39;donuts&#39;, &#39;dumplings&#39;, &#39;edamame&#39;, &#39;eggs_benedict&#39;, &#39;escargots&#39;, &#39;falafel&#39;, &#39;filet_mignon&#39;, &#39;fish_and_chips&#39;, &#39;foie_gras&#39;, &#39;french_fries&#39;, &#39;french_onion_soup&#39;, &#39;french_toast&#39;, &#39;fried_calamari&#39;, &#39;fried_rice&#39;, &#39;frozen_yogurt&#39;, &#39;garlic_bread&#39;, &#39;gnocchi&#39;, &#39;greek_salad&#39;, &#39;grilled_cheese_sandwich&#39;, &#39;grilled_salmon&#39;, &#39;guacamole&#39;, &#39;gyoza&#39;, &#39;hamburger&#39;, &#39;hot_and_sour_soup&#39;, &#39;hot_dog&#39;, &#39;huevos_rancheros&#39;, &#39;hummus&#39;, &#39;ice_cream&#39;, &#39;lasagna&#39;, &#39;lobster_bisque&#39;, &#39;lobster_roll_sandwich&#39;, &#39;macaroni_and_cheese&#39;, &#39;macarons&#39;, &#39;miso_soup&#39;, &#39;mussels&#39;, &#39;nachos&#39;, &#39;omelette&#39;, &#39;onion_rings&#39;, &#39;oysters&#39;, &#39;pad_thai&#39;, &#39;paella&#39;, &#39;pancakes&#39;, &#39;panna_cotta&#39;, &#39;peking_duck&#39;, &#39;pho&#39;, &#39;pizza&#39;, &#39;pork_chop&#39;, &#39;poutine&#39;, &#39;prime_rib&#39;, &#39;pulled_pork_sandwich&#39;, &#39;ramen&#39;, &#39;ravioli&#39;, &#39;red_velvet_cake&#39;, &#39;risotto&#39;, &#39;samosa&#39;, &#39;sashimi&#39;, &#39;scallops&#39;, &#39;seaweed_salad&#39;, &#39;shrimp_and_grits&#39;, &#39;spaghetti_bolognese&#39;, &#39;spaghetti_carbonara&#39;, &#39;spring_rolls&#39;, &#39;steak&#39;, &#39;strawberry_shortcake&#39;, &#39;sushi&#39;, &#39;tacos&#39;, &#39;takoyaki&#39;, &#39;tiramisu&#39;, &#39;tuna_tartare&#39;, &#39;waffles&#39;]
+101</code></pre></div>
+<p>总共101个food总类。
+显示第二张图片和label</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import matplotlib.pyplot as plt
+plt.imshow(ds[1][&#34;image&#34;])
+plt.axis(&#39;off&#39;)  # 关闭坐标轴
+plt.show()
+print(labels[ds[1][&#34;label&#34;]])</code></pre></div>
+<p>显示
+<a href="#R-image-da16c1e616d8bc549b80d62ee83f1dea" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e8284ba07834081cdece732213b8b5d4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-da16c1e616d8bc549b80d62ee83f1dea"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e8284ba07834081cdece732213b8b5d4.png"></a>
+这里我们看到第二个数据集的label=6,也就是beignets。</p>
+<p>我们需要生成label和id关系的字典。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>labels = ds[&#34;train&#34;].features[&#34;label&#34;].names
+label2id, id2label = dict(), dict()
+for i, label in enumerate(labels):
+    label2id[label] = i
+    id2label[i] = label
+
+print(id2label)
+print(label2id)</code></pre></div>
+<p>输出：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{0: &#39;apple_pie&#39;, 1: &#39;baby_back_ribs&#39;, 2: &#39;baklava&#39;, 3: &#39;beef_carpaccio&#39;, 4: &#39;beef_tartare&#39;, 5: &#39;beet_salad&#39;, 6: &#39;beignets&#39;, 7: &#39;bibimbap&#39;, 8: &#39;bread_pudding&#39;, 9: &#39;breakfast_burrito&#39;, 10: &#39;bruschetta&#39;, 11: &#39;caesar_salad&#39;, 12: &#39;cannoli&#39;, 13: &#39;caprese_salad&#39;, 14: &#39;carrot_cake&#39;, 15: &#39;ceviche&#39;, 16: &#39;cheesecake&#39;, 17: &#39;cheese_plate&#39;, 18: &#39;chicken_curry&#39;, 19: &#39;chicken_quesadilla&#39;, 20: &#39;chicken_wings&#39;, 21: &#39;chocolate_cake&#39;, 22: &#39;chocolate_mousse&#39;, 23: &#39;churros&#39;, 24: &#39;clam_chowder&#39;, 25: &#39;club_sandwich&#39;, 26: &#39;crab_cakes&#39;, 27: &#39;creme_brulee&#39;, 28: &#39;croque_madame&#39;, 29: &#39;cup_cakes&#39;, 30: &#39;deviled_eggs&#39;, 31: &#39;donuts&#39;, 32: &#39;dumplings&#39;, 33: &#39;edamame&#39;, 34: &#39;eggs_benedict&#39;, 35: &#39;escargots&#39;, 36: &#39;falafel&#39;, 37: &#39;filet_mignon&#39;, 38: &#39;fish_and_chips&#39;, 39: &#39;foie_gras&#39;, 40: &#39;french_fries&#39;, 41: &#39;french_onion_soup&#39;, 42: &#39;french_toast&#39;, 43: &#39;fried_calamari&#39;, 44: &#39;fried_rice&#39;, 45: &#39;frozen_yogurt&#39;, 46: &#39;garlic_bread&#39;, 47: &#39;gnocchi&#39;, 48: &#39;greek_salad&#39;, 49: &#39;grilled_cheese_sandwich&#39;, 50: &#39;grilled_salmon&#39;, 51: &#39;guacamole&#39;, 52: &#39;gyoza&#39;, 53: &#39;hamburger&#39;, 54: &#39;hot_and_sour_soup&#39;, 55: &#39;hot_dog&#39;, 56: &#39;huevos_rancheros&#39;, 57: &#39;hummus&#39;, 58: &#39;ice_cream&#39;, 59: &#39;lasagna&#39;, 60: &#39;lobster_bisque&#39;, 61: &#39;lobster_roll_sandwich&#39;, 62: &#39;macaroni_and_cheese&#39;, 63: &#39;macarons&#39;, 64: &#39;miso_soup&#39;, 65: &#39;mussels&#39;, 66: &#39;nachos&#39;, 67: &#39;omelette&#39;, 68: &#39;onion_rings&#39;, 69: &#39;oysters&#39;, 70: &#39;pad_thai&#39;, 71: &#39;paella&#39;, 72: &#39;pancakes&#39;, 73: &#39;panna_cotta&#39;, 74: &#39;peking_duck&#39;, 75: &#39;pho&#39;, 76: &#39;pizza&#39;, 77: &#39;pork_chop&#39;, 78: &#39;poutine&#39;, 79: &#39;prime_rib&#39;, 80: &#39;pulled_pork_sandwich&#39;, 81: &#39;ramen&#39;, 82: &#39;ravioli&#39;, 83: &#39;red_velvet_cake&#39;, 84: &#39;risotto&#39;, 85: &#39;samosa&#39;, 86: &#39;sashimi&#39;, 87: &#39;scallops&#39;, 88: &#39;seaweed_salad&#39;, 89: &#39;shrimp_and_grits&#39;, 90: &#39;spaghetti_bolognese&#39;, 91: &#39;spaghetti_carbonara&#39;, 92: &#39;spring_rolls&#39;, 93: &#39;steak&#39;, 94: &#39;strawberry_shortcake&#39;, 95: &#39;sushi&#39;, 96: &#39;tacos&#39;, 97: &#39;takoyaki&#39;, 98: &#39;tiramisu&#39;, 99: &#39;tuna_tartare&#39;, 100: &#39;waffles&#39;}
+{&#39;apple_pie&#39;: 0, &#39;baby_back_ribs&#39;: 1, &#39;baklava&#39;: 2, &#39;beef_carpaccio&#39;: 3, &#39;beef_tartare&#39;: 4, &#39;beet_salad&#39;: 5, &#39;beignets&#39;: 6, &#39;bibimbap&#39;: 7, &#39;bread_pudding&#39;: 8, &#39;breakfast_burrito&#39;: 9, &#39;bruschetta&#39;: 10, &#39;caesar_salad&#39;: 11, &#39;cannoli&#39;: 12, &#39;caprese_salad&#39;: 13, &#39;carrot_cake&#39;: 14, &#39;ceviche&#39;: 15, &#39;cheesecake&#39;: 16, &#39;cheese_plate&#39;: 17, &#39;chicken_curry&#39;: 18, &#39;chicken_quesadilla&#39;: 19, &#39;chicken_wings&#39;: 20, &#39;chocolate_cake&#39;: 21, &#39;chocolate_mousse&#39;: 22, &#39;churros&#39;: 23, &#39;clam_chowder&#39;: 24, &#39;club_sandwich&#39;: 25, &#39;crab_cakes&#39;: 26, &#39;creme_brulee&#39;: 27, &#39;croque_madame&#39;: 28, &#39;cup_cakes&#39;: 29, &#39;deviled_eggs&#39;: 30, &#39;donuts&#39;: 31, &#39;dumplings&#39;: 32, &#39;edamame&#39;: 33, &#39;eggs_benedict&#39;: 34, &#39;escargots&#39;: 35, &#39;falafel&#39;: 36, &#39;filet_mignon&#39;: 37, &#39;fish_and_chips&#39;: 38, &#39;foie_gras&#39;: 39, &#39;french_fries&#39;: 40, &#39;french_onion_soup&#39;: 41, &#39;french_toast&#39;: 42, &#39;fried_calamari&#39;: 43, &#39;fried_rice&#39;: 44, &#39;frozen_yogurt&#39;: 45, &#39;garlic_bread&#39;: 46, &#39;gnocchi&#39;: 47, &#39;greek_salad&#39;: 48, &#39;grilled_cheese_sandwich&#39;: 49, &#39;grilled_salmon&#39;: 50, &#39;guacamole&#39;: 51, &#39;gyoza&#39;: 52, &#39;hamburger&#39;: 53, &#39;hot_and_sour_soup&#39;: 54, &#39;hot_dog&#39;: 55, &#39;huevos_rancheros&#39;: 56, &#39;hummus&#39;: 57, &#39;ice_cream&#39;: 58, &#39;lasagna&#39;: 59, &#39;lobster_bisque&#39;: 60, &#39;lobster_roll_sandwich&#39;: 61, &#39;macaroni_and_cheese&#39;: 62, &#39;macarons&#39;: 63, &#39;miso_soup&#39;: 64, &#39;mussels&#39;: 65, &#39;nachos&#39;: 66, &#39;omelette&#39;: 67, &#39;onion_rings&#39;: 68, &#39;oysters&#39;: 69, &#39;pad_thai&#39;: 70, &#39;paella&#39;: 71, &#39;pancakes&#39;: 72, &#39;panna_cotta&#39;: 73, &#39;peking_duck&#39;: 74, &#39;pho&#39;: 75, &#39;pizza&#39;: 76, &#39;pork_chop&#39;: 77, &#39;poutine&#39;: 78, &#39;prime_rib&#39;: 79, &#39;pulled_pork_sandwich&#39;: 80, &#39;ramen&#39;: 81, &#39;ravioli&#39;: 82, &#39;red_velvet_cake&#39;: 83, &#39;risotto&#39;: 84, &#39;samosa&#39;: 85, &#39;sashimi&#39;: 86, &#39;scallops&#39;: 87, &#39;seaweed_salad&#39;: 88, &#39;shrimp_and_grits&#39;: 89, &#39;spaghetti_bolognese&#39;: 90, &#39;spaghetti_carbonara&#39;: 91, &#39;spring_rolls&#39;: 92, &#39;steak&#39;: 93, &#39;strawberry_shortcake&#39;: 94, &#39;sushi&#39;: 95, &#39;tacos&#39;: 96, &#39;takoyaki&#39;: 97, &#39;tiramisu&#39;: 98, &#39;tuna_tartare&#39;: 99, &#39;waffles&#39;: 100}</code></pre></div>
+<p>加载一个图像处理器，以正确调整大小并对训练和评估图像的像素值进行归一化。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoImageProcessor
+image_processor = AutoImageProcessor.from_pretrained(&#34;google/vit-base-patch16-224-in21k&#34;)</code></pre></div>
+<p>您还可以使用图像处理器来准备一些转换函数，用于数据增强和像素缩放。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from torchvision.transforms import (
+    CenterCrop,
+    Compose,
+    Normalize,
+    RandomHorizontalFlip,
+    RandomResizedCrop,
+    Resize,
+    ToTensor,
+)
+
+normalize = Normalize(mean=image_processor.image_mean, std=image_processor.image_std)
+train_transforms = Compose(
+    [
+        RandomResizedCrop(image_processor.size[&#34;height&#34;]),
+        RandomHorizontalFlip(),
+        ToTensor(),
+        normalize,
+    ]
+)
+
+val_transforms = Compose(
+    [
+        Resize(image_processor.size[&#34;height&#34;]),
+        CenterCrop(image_processor.size[&#34;height&#34;]),
+        ToTensor(),
+        normalize,
+    ]
+)
+
+def preprocess_train(example_batch):
+    example_batch[&#34;pixel_values&#34;] = [train_transforms(image.convert(&#34;RGB&#34;)) for image in example_batch[&#34;image&#34;]]
+    return example_batch
+
+def preprocess_val(example_batch):
+    example_batch[&#34;pixel_values&#34;] = [val_transforms(image.convert(&#34;RGB&#34;)) for image in example_batch[&#34;image&#34;]]
+    return example_batch</code></pre></div>
+<p>定义训练和验证数据集，并使用set_transform函数在运行时应用转换。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>train_ds = ds[&#34;train&#34;]
+val_ds = ds[&#34;validation&#34;]
+
+train_ds.set_transform(preprocess_train)
+val_ds.set_transform(preprocess_val)</code></pre></div>
+<p>最后，您需要一个数据整理器来创建训练和评估数据的批次，并将标签转换为torch.tensor对象。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import torch
+
+def collate_fn(examples):
+    pixel_values = torch.stack([example[&#34;pixel_values&#34;] for example in examples])
+    labels = torch.tensor([example[&#34;label&#34;] for example in examples])
+    return {&#34;pixel_values&#34;: pixel_values, &#34;labels&#34;: labels}</code></pre></div>
+<h3 id="模型">模型</h3>
+<p>现在让我们加载一个预训练模型作为基础模型。本指南使用了google/vit-base-patch16-224-in21k模型，但您可以使用任何您想要的图像分类模型。将label2id和id2label字典传递给模型，以便它知道如何将整数标签映射到它们的类标签，并且如果您正在微调已经微调过的检查点，可以选择传递ignore_mismatched_sizes=True参数。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoModelForImageClassification, TrainingArguments, Trainer
+
+model = AutoModelForImageClassification.from_pretrained(
+    &#34;google/vit-base-patch16-224-in21k&#34;,
+    label2id=label2id,
+    id2label=id2label,
+    ignore_mismatched_sizes=True,
+)</code></pre></div>
+<h3 id="peft-configuration-and-model">PEFT configuration and model</h3>
+<p>每个 PEFT 方法都需要一个配置，其中包含了指定 PEFT 方法应该如何应用的所有参数。一旦配置设置好了，就将其传递给 get_peft_model() 函数，同时还要传递基础模型，以创建一个可训练的 PeftModel。</p>
+<blockquote>
+<p>调用 print_trainable_parameters() 方法来比较 PeftModel 的参数数量与基础模型的参数数量！</p></blockquote>
+<p>LoRA将权重更新矩阵分解为两个较小的矩阵。这些低秩矩阵的大小由其秩或r确定。更高的秩意味着模型有更多的参数需要训练，但也意味着模型有更大的学习能力。您还需要指定 target_modules，确定较小矩阵插入的位置。对于本指南，您将针对注意力块的查询和值矩阵进行目标指定。设置的其他重要参数包括 lora_alpha（缩放因子）、bias（是否应该训练none、all或只有 LoRA 偏置参数）、modules_to_save（除了 LoRA 层之外需要训练和保存的模块）。所有这些参数 - 以及更多 - 都可以在 <a href="https://huggingface.co/docs/peft/v0.11.0/en/package_reference/lora#peft.LoraConfig" rel="external" target="_blank">LoraConfig</a> 中找到。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from peft import LoraConfig, get_peft_model
+
+config = LoraConfig(
+    r=16,
+    lora_alpha=16,
+    target_modules=[&#34;query&#34;, &#34;value&#34;],
+    lora_dropout=0.1,
+    bias=&#34;none&#34;,
+    modules_to_save=[&#34;classifier&#34;],
+)
+model = get_peft_model(model, config)
+model.print_trainable_parameters()</code></pre></div>
+<p>输出：&ldquo;trainable params: 667,493 || all params: 86,543,818 || trainable%: 0.7712775047664294&rdquo;</p>
+<blockquote>
+<p>在LoRA中，为了简化和精简，可能只针对查询和值矩阵进行权重分解，而不对键矩阵进行处理。这样可以在一定程度上减少计算量和参数数量，同时仍然提高模型的学习能力和灵活性。</p></blockquote>
+<p>参数说明：</p>
+<ul>
+<li><code>task_type</code>：指定任务类型。如：条件生成任务（SEQ_2_SEQ_LM），因果语言建模（CAUSAL_LM）等。</li>
+<li><code>inference_mode</code>：是否在推理模式下使用Peft模型。</li>
+<li><code>r</code>： LoRA低秩矩阵的维数。关于秩的选择，通常，使用4，8，16即可。</li>
+<li><code>lora_alpha</code>： LoRA低秩矩阵的缩放系数，为一个常数超参，调整alpha与调整学习率类似。</li>
+<li><code>lora_dropout</code>：LoRA 层的丢弃（dropout）率，取值范围为<code>[0, 1)</code>。</li>
+<li><code>target_modules</code>：要替换为 LoRA 的模块名称列表或模块名称的正则表达式。针对不同类型的模型，模块名称不一样，因此，我们需要根据具体的模型进行设置，比如，LLaMa的默认模块名为<code>[q_proj, v_proj]</code>，我们也可以自行指定为：<code>[q_proj,k_proj,v_proj,o_proj]</code>。 在 PEFT 中支持的模型默认的模块名如下所示：</li>
+</ul>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>TRANSFORMERS_MODELS_TO_LORA_TARGET_MODULES_MAPPING = {
+    &#34;t5&#34;: [&#34;q&#34;, &#34;v&#34;],
+    &#34;mt5&#34;: [&#34;q&#34;, &#34;v&#34;],
+    &#34;bart&#34;: [&#34;q_proj&#34;, &#34;v_proj&#34;],
+    &#34;gpt2&#34;: [&#34;c_attn&#34;],
+    &#34;bloom&#34;: [&#34;query_key_value&#34;],
+    &#34;blip-2&#34;: [&#34;q&#34;, &#34;v&#34;, &#34;q_proj&#34;, &#34;v_proj&#34;],
+    &#34;opt&#34;: [&#34;q_proj&#34;, &#34;v_proj&#34;],
+    &#34;gptj&#34;: [&#34;q_proj&#34;, &#34;v_proj&#34;],
+    &#34;gpt_neox&#34;: [&#34;query_key_value&#34;],
+    &#34;gpt_neo&#34;: [&#34;q_proj&#34;, &#34;v_proj&#34;],
+    &#34;bert&#34;: [&#34;query&#34;, &#34;value&#34;],
+    &#34;roberta&#34;: [&#34;query&#34;, &#34;value&#34;],
+    &#34;xlm-roberta&#34;: [&#34;query&#34;, &#34;value&#34;],
+    &#34;electra&#34;: [&#34;query&#34;, &#34;value&#34;],
+    &#34;deberta-v2&#34;: [&#34;query_proj&#34;, &#34;value_proj&#34;],
+    &#34;deberta&#34;: [&#34;in_proj&#34;],
+    &#34;layoutlm&#34;: [&#34;query&#34;, &#34;value&#34;],
+    &#34;llama&#34;: [&#34;q_proj&#34;, &#34;v_proj&#34;],
+    &#34;chatglm&#34;: [&#34;query_key_value&#34;],
+    &#34;gpt_bigcode&#34;: [&#34;c_attn&#34;],
+    &#34;mpt&#34;: [&#34;Wqkv&#34;],
+}</code></pre></div>
+<h3 id="训练">训练</h3>
+<p>对于训练，让我们使用Transformers中的Trainer类。Trainer类包含一个PyTorch训练循环，当您准备好时，调用train开始训练。要自定义训练运行，请在TrainingArguments类中配置训练超参数。对于类似LoRA的方法，您可以承受更高的批量大小和学习率。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>batch_size = 128
+
+args = TrainingArguments(
+    #peft_model_id,
+    output_dir=&#34;/kaggle/working&#34;,
+    remove_unused_columns=False,
+    evaluation_strategy=&#34;epoch&#34;,
+    save_strategy=&#34;epoch&#34;,
+    learning_rate=5e-3,
+    report_to=&#34;none&#34;,
+    per_device_train_batch_size=batch_size,
+    gradient_accumulation_steps=4,
+    per_device_eval_batch_size=batch_size,
+    fp16=True,
+    num_train_epochs=5,
+    logging_steps=10,
+    load_best_model_at_end=True,
+    label_names=[&#34;labels&#34;],
+)</code></pre></div>
+<p>这里是对<code>TrainingArguments</code>中参数的解释：</p>
+<ul>
+<li><code>output_dir</code>: 指定训练过程中输出模型和日志的目录。</li>
+<li><code>remove_unused_columns</code>: 控制是否在训练过程中删除未使用的列。</li>
+<li><code>evaluation_strategy</code>: 指定评估策略，这里设置为“epoch”表示在每个epoch结束时进行评估。</li>
+<li><code>save_strategy</code>: 指定模型保存策略，这里设置为“epoch”表示在每个epoch结束时保存模型。</li>
+<li><code>learning_rate</code>: 学习率设置为5e-3，即0.005。</li>
+<li><code>report_to</code>: 控制训练过程中的报告输出，这里设置为“none”表示不输出任何报告。</li>
+<li><code>per_device_train_batch_size</code>: 每个设备上的训练批量大小。</li>
+<li><code>gradient_accumulation_steps</code>: 梯度累积步数。</li>
+<li><code>per_device_eval_batch_size</code>: 每个设备上的评估批量大小。</li>
+<li><code>fp16</code>: 控制是否使用混合精度训练。</li>
+<li><code>num_train_epochs</code>: 训练的总epoch数。</li>
+<li><code>logging_steps</code>: 控制日志输出的步数。</li>
+<li><code>load_best_model_at_end</code>: 在训练结束时是否加载最佳模型。</li>
+<li><code>label_names</code>: 标签的名称列表。</li>
+</ul>
+<p>这些参数是用来配置训练过程的，例如指定训练和评估的批量大小、学习率、训练时长等等。
+开始训练</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>trainer = Trainer(
+    model,
+    args,
+    train_dataset=train_ds,
+    eval_dataset=val_ds,
+    tokenizer=image_processor,
+    data_collator=collate_fn,
+)
+trainer.train()</code></pre></div>
+<p>使用kaggle的免费gpu T4*2(双倍时间消耗累计)，gpu基本100%，gpu是一周30hhrs免费时间的,我为了节省时间，用2epoch，batch_size=128,因为kaggle的session有效期在12hours内，越快越好，否则session断开就白训练了，简单看下效果，大概1个小时左右，也可以save session让他在后台跑。
+<a href="#R-image-6db66441e217b1c4110ac173d713541f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/129f8411fbdb06898369d25e9be5e5c6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6db66441e217b1c4110ac173d713541f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/129f8411fbdb06898369d25e9be5e5c6.png"></a>
+看下速度
+<a href="#R-image-16a40235bbf1db63713fc1537a0fc85a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/725df1cb147744bcb503719ae8705c23.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-16a40235bbf1db63713fc1537a0fc85a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/725df1cb147744bcb503719ae8705c23.png"></a>
+第一次epoch完成
+<a href="#R-image-d2538f8489d0d4f50b96e6d623d5f68c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/7be28a886c21b08fe458db8994f9aae5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d2538f8489d0d4f50b96e6d623d5f68c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/7be28a886c21b08fe458db8994f9aae5.png"></a>
+查看输出
+<a href="#R-image-4241a99a37f435c6f43baed9a0d3b460" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1bdf193e1c8a51a00bbbbd08543dc72b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4241a99a37f435c6f43baed9a0d3b460"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1bdf193e1c8a51a00bbbbd08543dc72b.png"></a>
+点击后面的三个点下载所有的文件，然后将模型下载下来，点击输入的上传-new model
+<a href="#R-image-0a50ae4376b7f0414a0ea1a446201849" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/c2cf735853631a4694f37cc05551b4fc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0a50ae4376b7f0414a0ea1a446201849"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/c2cf735853631a4694f37cc05551b4fc.png"></a>
+输入model名称，选择私有，点击create model
+<a href="#R-image-05b6ad75193294c86a627e4efb4daa36" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/f93ab54c510023710ca61a35fca8fa74.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-05b6ad75193294c86a627e4efb4daa36"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/f93ab54c510023710ca61a35fca8fa74.png"></a>
+输入平台：transformer，点击addnewvariation
+<a href="#R-image-8ae2726198cd8877e8f5259c9a9f1ebe" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/876180b771a853b6c50f855d4728f0cd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8ae2726198cd8877e8f5259c9a9f1ebe"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/876180b771a853b6c50f855d4728f0cd.png"></a>
+定义附件名称，选择协议，点击右下侧的create
+<a href="#R-image-a38adc39d5feffd26ef325ec5b977247" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/2f8a47bb4aa03c09bf450a9b1a9df820.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a38adc39d5feffd26ef325ec5b977247"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/2f8a47bb4aa03c09bf450a9b1a9df820.png"></a>
+关闭后点击return to notebook，就可以看到输入的模型了，点击右侧的复制路径即可。
+<a href="#R-image-671e3c6ee0a8150429704091df150333" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e2e2fd180ecf643706343f4ba15f7149.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-671e3c6ee0a8150429704091df150333"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e2e2fd180ecf643706343f4ba15f7149.png"></a></p>
+<blockquote>
+<p>这里input的是持久的不会丢失，output数据再页面关闭session关闭后就丢失，所以尽快保存下来，或者上传到huggingface。</p></blockquote>
+<h3 id="预测">预测</h3>
+<p>切换到p100(按分钟算，省钱)验证
+<a href="#R-image-b085007868de77445aa710bcfc3296b9" class="lightbox-link"><img alt="在这里插入代码片" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1523068cd52fa7f35a253fbe18d7e85a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b085007868de77445aa710bcfc3296b9"><img alt="在这里插入代码片" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1523068cd52fa7f35a253fbe18d7e85a.png"></a>
+代码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>model_name=&#34;/kaggle/input/image-classifity/transformers/version1/1/checkpoint-74&#34; #复制输入的路径
+from peft import PeftConfig, PeftModel
+from transformers import AutoImageProcessor, AutoModelForImageClassification
+from PIL import Image
+import requests,torch
+from datasets import load_dataset
+
+ds = load_dataset(&#34;food101&#34;)
+labels = ds[&#34;train&#34;].features[&#34;label&#34;].names
+label2id, id2label = dict(), dict()
+for i, label in enumerate(labels):
+    label2id[label] = i
+    id2label[i] = label
+    
+config = PeftConfig.from_pretrained(model_name)
+model = AutoModelForImageClassification.from_pretrained(
+    config.base_model_name_or_path,#google/vit-base-patch16-224-in21k
+    label2id=label2id,
+    id2label=id2label,
+    ignore_mismatched_sizes=True,
+)
+model = PeftModel.from_pretrained(model, model_name)
+
+url = &#34;https://huggingface.co/datasets/sayakpaul/sample-datasets/resolve/main/beignets.jpeg&#34;
+image = Image.open(requests.get(url, stream=True).raw)
+print(image)
+image_processor = AutoImageProcessor.from_pretrained(config.base_model_name_or_path)
+encoding = image_processor(image.convert(&#34;RGB&#34;), return_tensors=&#34;pt&#34;)
+with torch.no_grad():
+    outputs = model(**encoding)
+    logits = outputs.logits
+
+predicted_class_idx = logits.argmax(-1).item()
+print(&#34;Predicted class:&#34;, model.config.id2label[predicted_class_idx])</code></pre></div>
+<p>输出：beignets
+<a href="#R-image-49ccc3014ad5695d95b0ff052daad374" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e92e7f7f82d1044a6ba12454cf5c27c5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-49ccc3014ad5695d95b0ff052daad374"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e92e7f7f82d1044a6ba12454cf5c27c5.png"></a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/transformers/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/index.html">transformers</a><ul id="R-subsections-c93b786975796f9b9f81f28585ce698d" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/index.html">transformers模型详解</a></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/index.html">transformers实战</a><ul id="R-subsections-7dfd1a2fc9789505d186535459f93268" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_01/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_01/index.html">Transformers实战01-开箱即用的 pipelines</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html">Transformers实战02-BERT预训练模型微调</a></li>
+            <li class="active " data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03-copy/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03-copy/index.html">Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03/index.html">Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。</a></li></ul></li></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758265727" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758265727" defer></script>
+    <script src="/docs/js/theme.js?1758265727" defer></script>
+  </body>
+</html>

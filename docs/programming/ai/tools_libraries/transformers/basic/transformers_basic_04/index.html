@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="简介 Transformer 模型中的 Encoder 层主要负责将输入序列进行编码，将输入序列中的每个词或标记转换为其对应的向量表示，并且捕获输入序列中的语义和关系。
+具体来说，Transformer Encoder 层的作用包括：
+词嵌入（Word Embedding）：将输入序列中的每个词或标记映射为其对应的词嵌入向量。这些词嵌入向量包含了词语的语义信息，并且可以在模型中进行学习。
+位置编码（Positional Encoding）：因为 Transformer 模型不包含任何关于序列顺序的信息，为了将位置信息引入模型，需要添加位置编码。位置编码是一种特殊的向量，用于表示输入序列中每个词的位置信息，以便模型能够区分不同位置的词。
+多头自注意力机制（Multi-Head Self-Attention）：自注意力机制允许模型在处理每个词时，同时考虑到输入序列中所有其他词之间的关系。多头自注意力机制通过将输入进行多次线性变换并计算多组注意力分数，从而允许模型在不同的表示子空间中学习到不同的语义信息。
+残差连接（Residual Connection）：为了减轻梯度消失和加速训练，Transformer Encoder 层使用了残差连接。残差连接允许模型直接学习到输入序列的增量变换，而不是完全替代原始输入。
+层归一化（Layer Normalization）：在残差连接后应用层归一化，有助于提高模型的训练稳定性，加快训练速度。
+Transformer Encoder 层的主要作用是将输入序列转换为其对应的向量表示，并且捕获输入序列中的语义和位置信息，以便后续的模型能够更好地理解和处理输入序列。
+前面我们已经详解了三个点的计算过程，现在了解一下 Add &amp; Norm 和 Feed Forward 部分。
+基础知识 归一化 归一化是将数据转换为具有统一尺度的过程，常用于机器学习、数据挖掘和统计分析中。归一化可以确保不同特征或变量之间具有相似的数值范围，有助于提高模型的性能和收敛速度。
+作用 让我用一个简单的例子来说明归一化的作用。
+假设你有一个数据集，其中包含两个特征：年龄和收入。年龄的范围是 0 到 100 岁，而收入的范围是 1000 到 100000 美元。这两个特征的范围差异很大。
+现在，你想要使用这些特征来训练一个机器学习模型，比如线性回归模型，来预测一个人是否会购买某种产品。由于特征的范围差异较大，这可能会导致某些问题：
+收入的范围比年龄大得多，这可能会使得模型过度关注收入而忽略年龄，因为收入的变化可能会对预测产生更大的影响。 模型可能会受到数值范围的影响，而不是特征本身的重要性。 这时候，归一化就可以派上用场了。通过归一化，你可以将不同特征的值缩放到相似的范围内，从而消除数值范围差异带来的影响。比如，你可以将年龄和收入都缩放到 0 到 1 之间的范围内，或者使用其他归一化方法，如标准化 (standardization)。
+通过归一化，你可以确保模型不会因为特征值的范围差异而偏向某个特定的特征，而是可以更平衡地利用所有的特征信息来进行预测。
+常用归一化 下面是几种常用的归一化方式及其公式：
+Min-Max 归一化： Min-Max 归一化将数据线性映射到一个指定的范围内，通常是 [0, 1] 或 [-1, 1]。其公式如下：
+$$[X_{\text{norm}} = \frac{{X - X_{\text{min}}}}{{X_{\text{max}} - X_{\text{min}}}}]$$">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Transformer模型详解04-Encoder 结构 :: liaomin416100569博客">
+    <meta name="twitter:description" content="简介 Transformer 模型中的 Encoder 层主要负责将输入序列进行编码，将输入序列中的每个词或标记转换为其对应的向量表示，并且捕获输入序列中的语义和关系。
+具体来说，Transformer Encoder 层的作用包括：
+词嵌入（Word Embedding）：将输入序列中的每个词或标记映射为其对应的词嵌入向量。这些词嵌入向量包含了词语的语义信息，并且可以在模型中进行学习。
+位置编码（Positional Encoding）：因为 Transformer 模型不包含任何关于序列顺序的信息，为了将位置信息引入模型，需要添加位置编码。位置编码是一种特殊的向量，用于表示输入序列中每个词的位置信息，以便模型能够区分不同位置的词。
+多头自注意力机制（Multi-Head Self-Attention）：自注意力机制允许模型在处理每个词时，同时考虑到输入序列中所有其他词之间的关系。多头自注意力机制通过将输入进行多次线性变换并计算多组注意力分数，从而允许模型在不同的表示子空间中学习到不同的语义信息。
+残差连接（Residual Connection）：为了减轻梯度消失和加速训练，Transformer Encoder 层使用了残差连接。残差连接允许模型直接学习到输入序列的增量变换，而不是完全替代原始输入。
+层归一化（Layer Normalization）：在残差连接后应用层归一化，有助于提高模型的训练稳定性，加快训练速度。
+Transformer Encoder 层的主要作用是将输入序列转换为其对应的向量表示，并且捕获输入序列中的语义和位置信息，以便后续的模型能够更好地理解和处理输入序列。
+前面我们已经详解了三个点的计算过程，现在了解一下 Add &amp; Norm 和 Feed Forward 部分。
+基础知识 归一化 归一化是将数据转换为具有统一尺度的过程，常用于机器学习、数据挖掘和统计分析中。归一化可以确保不同特征或变量之间具有相似的数值范围，有助于提高模型的性能和收敛速度。
+作用 让我用一个简单的例子来说明归一化的作用。
+假设你有一个数据集，其中包含两个特征：年龄和收入。年龄的范围是 0 到 100 岁，而收入的范围是 1000 到 100000 美元。这两个特征的范围差异很大。
+现在，你想要使用这些特征来训练一个机器学习模型，比如线性回归模型，来预测一个人是否会购买某种产品。由于特征的范围差异较大，这可能会导致某些问题：
+收入的范围比年龄大得多，这可能会使得模型过度关注收入而忽略年龄，因为收入的变化可能会对预测产生更大的影响。 模型可能会受到数值范围的影响，而不是特征本身的重要性。 这时候，归一化就可以派上用场了。通过归一化，你可以将不同特征的值缩放到相似的范围内，从而消除数值范围差异带来的影响。比如，你可以将年龄和收入都缩放到 0 到 1 之间的范围内，或者使用其他归一化方法，如标准化 (standardization)。
+通过归一化，你可以确保模型不会因为特征值的范围差异而偏向某个特定的特征，而是可以更平衡地利用所有的特征信息来进行预测。
+常用归一化 下面是几种常用的归一化方式及其公式：
+Min-Max 归一化： Min-Max 归一化将数据线性映射到一个指定的范围内，通常是 [0, 1] 或 [-1, 1]。其公式如下：
+$$[X_{\text{norm}} = \frac{{X - X_{\text{min}}}}{{X_{\text{max}} - X_{\text{min}}}}]$$">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="Transformer模型详解04-Encoder 结构 :: liaomin416100569博客">
+    <meta property="og:description" content="简介 Transformer 模型中的 Encoder 层主要负责将输入序列进行编码，将输入序列中的每个词或标记转换为其对应的向量表示，并且捕获输入序列中的语义和关系。
+具体来说，Transformer Encoder 层的作用包括：
+词嵌入（Word Embedding）：将输入序列中的每个词或标记映射为其对应的词嵌入向量。这些词嵌入向量包含了词语的语义信息，并且可以在模型中进行学习。
+位置编码（Positional Encoding）：因为 Transformer 模型不包含任何关于序列顺序的信息，为了将位置信息引入模型，需要添加位置编码。位置编码是一种特殊的向量，用于表示输入序列中每个词的位置信息，以便模型能够区分不同位置的词。
+多头自注意力机制（Multi-Head Self-Attention）：自注意力机制允许模型在处理每个词时，同时考虑到输入序列中所有其他词之间的关系。多头自注意力机制通过将输入进行多次线性变换并计算多组注意力分数，从而允许模型在不同的表示子空间中学习到不同的语义信息。
+残差连接（Residual Connection）：为了减轻梯度消失和加速训练，Transformer Encoder 层使用了残差连接。残差连接允许模型直接学习到输入序列的增量变换，而不是完全替代原始输入。
+层归一化（Layer Normalization）：在残差连接后应用层归一化，有助于提高模型的训练稳定性，加快训练速度。
+Transformer Encoder 层的主要作用是将输入序列转换为其对应的向量表示，并且捕获输入序列中的语义和位置信息，以便后续的模型能够更好地理解和处理输入序列。
+前面我们已经详解了三个点的计算过程，现在了解一下 Add &amp; Norm 和 Feed Forward 部分。
+基础知识 归一化 归一化是将数据转换为具有统一尺度的过程，常用于机器学习、数据挖掘和统计分析中。归一化可以确保不同特征或变量之间具有相似的数值范围，有助于提高模型的性能和收敛速度。
+作用 让我用一个简单的例子来说明归一化的作用。
+假设你有一个数据集，其中包含两个特征：年龄和收入。年龄的范围是 0 到 100 岁，而收入的范围是 1000 到 100000 美元。这两个特征的范围差异很大。
+现在，你想要使用这些特征来训练一个机器学习模型，比如线性回归模型，来预测一个人是否会购买某种产品。由于特征的范围差异较大，这可能会导致某些问题：
+收入的范围比年龄大得多，这可能会使得模型过度关注收入而忽略年龄，因为收入的变化可能会对预测产生更大的影响。 模型可能会受到数值范围的影响，而不是特征本身的重要性。 这时候，归一化就可以派上用场了。通过归一化，你可以将不同特征的值缩放到相似的范围内，从而消除数值范围差异带来的影响。比如，你可以将年龄和收入都缩放到 0 到 1 之间的范围内，或者使用其他归一化方法，如标准化 (standardization)。
+通过归一化，你可以确保模型不会因为特征值的范围差异而偏向某个特定的特征，而是可以更平衡地利用所有的特征信息来进行预测。
+常用归一化 下面是几种常用的归一化方式及其公式：
+Min-Max 归一化： Min-Max 归一化将数据线性映射到一个指定的范围内，通常是 [0, 1] 或 [-1, 1]。其公式如下：
+$$[X_{\text{norm}} = \frac{{X - X_{\text{min}}}}{{X_{\text{max}} - X_{\text{min}}}}]$$">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="Transformer模型详解04-Encoder 结构 :: liaomin416100569博客">
+    <meta itemprop="description" content="简介 Transformer 模型中的 Encoder 层主要负责将输入序列进行编码，将输入序列中的每个词或标记转换为其对应的向量表示，并且捕获输入序列中的语义和关系。
+具体来说，Transformer Encoder 层的作用包括：
+词嵌入（Word Embedding）：将输入序列中的每个词或标记映射为其对应的词嵌入向量。这些词嵌入向量包含了词语的语义信息，并且可以在模型中进行学习。
+位置编码（Positional Encoding）：因为 Transformer 模型不包含任何关于序列顺序的信息，为了将位置信息引入模型，需要添加位置编码。位置编码是一种特殊的向量，用于表示输入序列中每个词的位置信息，以便模型能够区分不同位置的词。
+多头自注意力机制（Multi-Head Self-Attention）：自注意力机制允许模型在处理每个词时，同时考虑到输入序列中所有其他词之间的关系。多头自注意力机制通过将输入进行多次线性变换并计算多组注意力分数，从而允许模型在不同的表示子空间中学习到不同的语义信息。
+残差连接（Residual Connection）：为了减轻梯度消失和加速训练，Transformer Encoder 层使用了残差连接。残差连接允许模型直接学习到输入序列的增量变换，而不是完全替代原始输入。
+层归一化（Layer Normalization）：在残差连接后应用层归一化，有助于提高模型的训练稳定性，加快训练速度。
+Transformer Encoder 层的主要作用是将输入序列转换为其对应的向量表示，并且捕获输入序列中的语义和位置信息，以便后续的模型能够更好地理解和处理输入序列。
+前面我们已经详解了三个点的计算过程，现在了解一下 Add &amp; Norm 和 Feed Forward 部分。
+基础知识 归一化 归一化是将数据转换为具有统一尺度的过程，常用于机器学习、数据挖掘和统计分析中。归一化可以确保不同特征或变量之间具有相似的数值范围，有助于提高模型的性能和收敛速度。
+作用 让我用一个简单的例子来说明归一化的作用。
+假设你有一个数据集，其中包含两个特征：年龄和收入。年龄的范围是 0 到 100 岁，而收入的范围是 1000 到 100000 美元。这两个特征的范围差异很大。
+现在，你想要使用这些特征来训练一个机器学习模型，比如线性回归模型，来预测一个人是否会购买某种产品。由于特征的范围差异较大，这可能会导致某些问题：
+收入的范围比年龄大得多，这可能会使得模型过度关注收入而忽略年龄，因为收入的变化可能会对预测产生更大的影响。 模型可能会受到数值范围的影响，而不是特征本身的重要性。 这时候，归一化就可以派上用场了。通过归一化，你可以将不同特征的值缩放到相似的范围内，从而消除数值范围差异带来的影响。比如，你可以将年龄和收入都缩放到 0 到 1 之间的范围内，或者使用其他归一化方法，如标准化 (standardization)。
+通过归一化，你可以确保模型不会因为特征值的范围差异而偏向某个特定的特征，而是可以更平衡地利用所有的特征信息来进行预测。
+常用归一化 下面是几种常用的归一化方式及其公式：
+Min-Max 归一化： Min-Max 归一化将数据线性映射到一个指定的范围内，通常是 [0, 1] 或 [-1, 1]。其公式如下：
+$$[X_{\text{norm}} = \frac{{X - X_{\text{min}}}}{{X_{\text{max}} - X_{\text{min}}}}]$$">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="393">
+    <title>Transformer模型详解04-Encoder 结构 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758266418" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758266418" defer></script>
+    <script src="/docs/js/search-lunr.js?1758266418" defer></script>
+    <script src="/docs/js/search.js?1758266418" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758266418";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758266418" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758266418" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758266418" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758266418" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['en'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266418" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266418" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758266418" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758266418" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758266418" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/ai\/tools_libraries\/transformers\/basic\/transformers_basic_04\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758266418" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#基础知识">基础知识</a>
+      <ul>
+        <li><a href="#归一化">归一化</a>
+          <ul>
+            <li><a href="#作用">作用</a></li>
+            <li><a href="#常用归一化">常用归一化</a></li>
+          </ul>
+        </li>
+        <li><a href="#残差连接">残差连接</a></li>
+      </ul>
+    </li>
+    <li><a href="#add--norm">Add &amp; Norm</a></li>
+    <li><a href="#feed-forward">Feed Forward</a></li>
+    <li><a href="#组成-encoder">组成 Encoder</a></li>
+    <li><a href="#代码实现">代码实现</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/index.html"><span itemprop="name">人工智能</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/tools_libraries/index.html"><span itemprop="name">工具库</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/tools_libraries/transformers/index.html"><span itemprop="name">transformers</span></a><meta itemprop="position" content="5">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/tools_libraries/transformers/basic/index.html"><span itemprop="name">transformers模型详解</span></a><meta itemprop="position" content="6">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">Transformer模型详解04-Encoder 结构</span><meta itemprop="position" content="7"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_03/index.html" title="Transformer模型详解03-Self-Attention（自注意力机制） (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_05/index.html" title="Transformer模型详解05-Decoder 结构 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="transformer模型详解04-encoder-结构">Transformer模型详解04-Encoder 结构</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1 id="简介">简介</h1>
+<p>Transformer 模型中的 Encoder 层主要负责将输入序列进行编码，将输入序列中的每个词或标记转换为其对应的向量表示，并且捕获输入序列中的语义和关系。</p>
+<p>具体来说，Transformer Encoder 层的作用包括：</p>
+<ol>
+<li>
+<p><strong>词嵌入（Word Embedding）</strong>：将输入序列中的每个词或标记映射为其对应的词嵌入向量。这些词嵌入向量包含了词语的语义信息，并且可以在模型中进行学习。</p>
+</li>
+<li>
+<p><strong>位置编码（Positional Encoding）</strong>：因为 Transformer 模型不包含任何关于序列顺序的信息，为了将位置信息引入模型，需要添加位置编码。位置编码是一种特殊的向量，用于表示输入序列中每个词的位置信息，以便模型能够区分不同位置的词。</p>
+</li>
+<li>
+<p><strong>多头自注意力机制（Multi-Head Self-Attention）</strong>：自注意力机制允许模型在处理每个词时，同时考虑到输入序列中所有其他词之间的关系。多头自注意力机制通过将输入进行多次线性变换并计算多组注意力分数，从而允许模型在不同的表示子空间中学习到不同的语义信息。</p>
+</li>
+<li>
+<p><strong>残差连接（Residual Connection）</strong>：为了减轻梯度消失和加速训练，Transformer Encoder 层使用了残差连接。残差连接允许模型直接学习到输入序列的增量变换，而不是完全替代原始输入。</p>
+</li>
+<li>
+<p><strong>层归一化（Layer Normalization）</strong>：在残差连接后应用层归一化，有助于提高模型的训练稳定性，加快训练速度。</p>
+</li>
+</ol>
+<p>Transformer Encoder 层的主要作用是将输入序列转换为其对应的向量表示，并且捕获输入序列中的语义和位置信息，以便后续的模型能够更好地理解和处理输入序列。</p>
+<p>前面我们已经详解了三个点的计算过程，现在了解一下 Add &amp; Norm 和 Feed Forward 部分。</p>
+<h1 id="基础知识">基础知识</h1>
+<h2 id="归一化">归一化</h2>
+<p>归一化是将数据转换为具有统一尺度的过程，常用于机器学习、数据挖掘和统计分析中。归一化可以确保不同特征或变量之间具有相似的数值范围，有助于提高模型的性能和收敛速度。</p>
+<h3 id="作用">作用</h3>
+<p>让我用一个简单的例子来说明归一化的作用。</p>
+<p>假设你有一个数据集，其中包含两个特征：年龄和收入。年龄的范围是 0 到 100 岁，而收入的范围是 1000 到 100000 美元。这两个特征的范围差异很大。</p>
+<p>现在，你想要使用这些特征来训练一个机器学习模型，比如线性回归模型，来预测一个人是否会购买某种产品。由于特征的范围差异较大，这可能会导致某些问题：</p>
+<p>收入的范围比年龄大得多，这可能会使得模型过度关注收入而忽略年龄，因为收入的变化可能会对预测产生更大的影响。
+模型可能会受到数值范围的影响，而不是特征本身的重要性。
+这时候，归一化就可以派上用场了。通过归一化，你可以将不同特征的值缩放到相似的范围内，从而消除数值范围差异带来的影响。比如，你可以将年龄和收入都缩放到 0 到 1 之间的范围内，或者使用其他归一化方法，如标准化 (standardization)。</p>
+<p>通过归一化，你可以确保模型不会因为特征值的范围差异而偏向某个特定的特征，而是可以更平衡地利用所有的特征信息来进行预测。</p>
+<h3 id="常用归一化">常用归一化</h3>
+<p>下面是几种常用的归一化方式及其公式：</p>
+<ol>
+<li>Min-Max 归一化：</li>
+</ol>
+<p>Min-Max 归一化将数据线性映射到一个指定的范围内，通常是 [0, 1] 或 [-1, 1]。其公式如下：</p>
+<p>$$[X_{\text{norm}} = \frac{{X - X_{\text{min}}}}{{X_{\text{max}} - X_{\text{min}}}}]$$</p>
+<p>其中，$(X_{\text{norm}})$ 是归一化后的数据，(X) 是原始数据，$(X_{\text{min}})$ 和 $(X_{\text{max}})$分别是数据的最小值和最大值。</p>
+<ol start="2">
+<li>Z-Score 标准化：</li>
+</ol>
+<p>Z-Score 标准化将数据转换为均值为 0，标准差为 1 的正态分布。其公式如下：</p>
+<p>$$[X_{\text{norm}} = \frac{{X - \mu}}{{\sigma}}]$$</p>
+<p>其中，$(X_{\text{norm}})$是归一化后的数据，$(X)$ 是原始数据，$\mu$是数据的均值，$(\sigma)$是数据的标准差。</p>
+<ol start="3">
+<li>Decimal Scaling 归一化：</li>
+</ol>
+<p>Decimal Scaling 归一化将数据缩放到[-1,1]或者[0,1]的范围内，通过除以数据中的最大绝对值来实现。其公式如下：</p>
+<p>$$[X_{\text{norm}} = \frac{{X}}{{\max(|X|)}}]$$</p>
+<p>其中，$(X_{\text{norm}})$ 是归一化后的数据，$(X)$ 是原始数据，$(\max(|X|))$ 是数据中的最大绝对值。</p>
+<ol start="4">
+<li>Robust Scaling：</li>
+</ol>
+<p>Robust Scaling 是一种针对离群值鲁棒的归一化方法，通过除以数据的四分位距（IQR）来缩放数据。其公式如下：</p>
+<p>$$[X_{\text{norm}} = \frac{{X - Q_1}}{{Q_3 - Q_1}}]$$</p>
+<p>其中，$(X_{\text{norm}})$ 是归一化后的数据，$(X)$是原始数据，$(Q_1)$ 是数据的第一四分位数（25th percentile），$(Q_3)$ 是数据的第三四分位数（75th percentile）。</p>
+<p>这些是常用的归一化方式，选择适合你的数据和模型的归一化方法可以提高模型的性能和稳定性。</p>
+<h2 id="残差连接">残差连接</h2>
+<p>残差连接（Residual Connection）是一种在深度神经网络中用于解决梯度消失和梯度爆炸问题的技术。它通过将输入直接添加到神经网络的某些层的输出中，从而允许梯度直接通过残差路径传播，减轻了梯度消失的问题，加速了训练过程。</p>
+<p>具体来说，假设我们有一个包含多个层的神经网络，每个层都由输入 $x$ 经过一些变换 $F(x)$得到输出 $H(x)$。传统的神经网络会直接将 $H(x)$ 作为下一层的输入，而残差连接则是将 $x$ 与 $H(x)$ 相加，即 $H(x)+x$，然后再输入到下一层。这样做可以使得网络学习到的变换是相对于输入的增量，而不是完全替代原始输入。</p>
+<p>残差连接的作用包括：</p>
+<ol>
+<li><strong>缓解梯度消失</strong>：通过保留原始输入的信息，使得梯度可以更容易地传播到较浅层，从而减轻了梯度消失问题。</li>
+<li><strong>加速训练</strong>：残差连接可以使得神经网络更快地收敛，因为它减少了训练过程中的信息丢失。</li>
+<li><strong>提高模型性能</strong>：残差连接使得神经网络可以更深，更复杂，从而能够更好地捕捉输入数据的特征和模式。</li>
+</ol>
+<p>举个例子，考虑一个包含残差连接的深度残差网络（Residual Network，ResNet）。在这个网络中，每个残差块都由两个或多个卷积层组成，其中第一个卷积层产生特征图 $H(x)$，而第二个卷积层则对 $H(x)$ 进行进一步变换。然后，原始输入 $x$ 被添加到 $H(x)$ 上，得到 $F(x)=H(x)+x$。这样，输出 $F(x)$ 就包含了相对于输入 $x$ 的增量，网络可以更轻松地学习到残差部分，从而更有效地优化模型。</p>
+<h1 id="add--norm">Add &amp; Norm</h1>
+<p><a href="#R-image-7bcfecb0b3028792f46b66f2af630a21" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/dc10384f9e4c4321dedd2e69da70a5c9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7bcfecb0b3028792f46b66f2af630a21"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/dc10384f9e4c4321dedd2e69da70a5c9.png"></a></p>
+<p>Add &amp; Norm 层由 Add 和 Norm 两部分组成，其计算公式如下：
+<a href="#R-image-6a96c019ed1ef1442f0ee8a5a9991b9a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/02a8a45b57c0b3be8f85c4c058cd83b1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6a96c019ed1ef1442f0ee8a5a9991b9a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/02a8a45b57c0b3be8f85c4c058cd83b1.png"></a>
+第一个Add&amp;Norm中Add指 X+MultiHeadAttention(X)，是一种残差连接，通常用于解决多层网络训练的问题，可以让网络只关注当前差异的部分，在 ResNet 中经常用到：
+<a href="#R-image-d5f0c3d67eff60a4312181b733d482fe" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/8b91ce8ab64a706cca1aad31425c03a0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d5f0c3d67eff60a4312181b733d482fe"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/8b91ce8ab64a706cca1aad31425c03a0.png"></a>
+Norm指 Layer Normalization，通常用于 RNN 结构，Layer Normalization 会将每一层神经元的输入都转成均值方差都一样的，这样可以加快收敛。</p>
+<h1 id="feed-forward">Feed Forward</h1>
+<p>Feed Forward 层比较简单，是一个两层的全连接层，第一层的激活函数为 Relu，第二层不使用激活函数，对应的公式如下。
+$$\text{FFN}(x) = \text{ReLU}(xW_1 + b_1)W_2 + b_2$$
+也就是：
+<a href="#R-image-18581e35b400881844a25c037c2a91ab" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/9e89520056b61c9d6857515aee431ede.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-18581e35b400881844a25c037c2a91ab"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/9e89520056b61c9d6857515aee431ede.png"></a>
+在这个公式中：</p>
+<ul>
+<li>$(X)$ 是输入的隐藏表示，维度为 $(d_{\text{model}})$，是Add&amp;Norm输出；</li>
+<li>$(W_1)$ 和 $(W_2)$ 是权重矩阵，分别用于第一层和第二层的线性变换，维度分别为 $(d_{\text{model}} \times d_{\text{ff}})$ 和 $(d_{\text{ff}} \times d_{\text{model}})$；</li>
+<li>$(b_1)$ 和 $(b_2)$ 是偏置项；</li>
+<li>$(\text{ReLU})$ 表示修正线性单元，是一种非线性激活函数，用于引入模型的非线性性。</li>
+</ul>
+<p>Feed Forward 最终得到的输出矩阵的维度与X一致。</p>
+<p>Feed Forward 层在深度学习模型中具有重要意义，它主要有以下几个方面的作用：</p>
+<ol>
+<li>
+<p><strong>特征变换与组合：</strong> Feed Forward 层通过线性变换和非线性激活函数将输入数据进行特征变换和组合，使得模型能够学习到更高级、更复杂的特征表示。这有助于模型更好地理解数据的内在结构和规律。</p>
+</li>
+<li>
+<p><strong>引入非线性：</strong> 非线性激活函数（如 ReLU、sigmoid、tanh 等）可以引入非线性变换，从而使得模型能够学习到非线性关系，提高模型的表达能力。如果没有非线性变换，多个线性变换的组合仍然只会得到线性变换，模型的表达能力将受到限制。</p>
+</li>
+<li>
+<p><strong>增加模型的深度：</strong> Feed Forward 层通常是深度神经网络中的一个组成部分，通过堆叠多个 Feed Forward 层可以构建深度模型。深度模型能够学习到更多层次、更抽象的特征表示，从而提高模型的性能和泛化能力。</p>
+</li>
+<li>
+<p><strong>提高模型的泛化能力：</strong> Feed Forward 层通过特征变换和非线性变换有助于模型学习到数据的高级抽象表示，这有助于提高模型对新样本的泛化能力，使得模型更好地适应未见过的数据。</p>
+</li>
+</ol>
+<h1 id="组成-encoder">组成 Encoder</h1>
+<p>通过上面描述的 Multi-Head Attention, Feed Forward, Add &amp; Norm 就可以构造出一个 Encoder block，Encoder block 接收输入矩阵$X_(n<em>d)$, 并输出一个矩阵$O_(n</em>d)$,通过多个 Encoder block 叠加就可以组成 Encoder。
+第一个 Encoder block 的输入为句子单词的表示向量矩阵，后续 Encoder block 的输入是前一个 Encoder block 的输出，最后一个 Encoder block 输出的矩阵就是编码信息矩阵 C，这一矩阵后续会用到 Decoder 中。
+<a href="#R-image-1357567f417b8141c1f71d134da1a79e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/aab05f88a0c52334e3ad0a6ae8134c4a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1357567f417b8141c1f71d134da1a79e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/aab05f88a0c52334e3ad0a6ae8134c4a.png"></a></p>
+<h1 id="代码实现">代码实现</h1>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+
+class TransformerEncoderLayer(nn.Module):
+    def __init__(self, d_model, n_heads, d_ff, dropout=0.1):
+        super(TransformerEncoderLayer, self).__init__()
+        self.self_attn = nn.MultiheadAttention(d_model, n_heads, dropout=dropout)
+        self.linear1 = nn.Linear(d_model, d_ff)
+        self.linear2 = nn.Linear(d_ff, d_model)
+        self.dropout = nn.Dropout(dropout)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        
+    def forward(self, src, src_mask=None):
+        # Multi-head self-attention
+        src2 = self.self_attn(src, src, src, attn_mask=src_mask)[0]
+        src = src + self.dropout(src2)
+        src = self.norm1(src)
+        
+        # Feed Forward Layer
+        src2 = self.linear2(F.relu(self.linear1(src)))
+        src = src + self.dropout(src2)
+        src = self.norm2(src)
+        
+        return src
+
+
+class TransformerEncoder(nn.Module):
+    def __init__(self, num_layers, d_model, n_heads, d_ff, dropout=0.1):
+        super(TransformerEncoder, self).__init__()
+        self.layers = nn.ModuleList([TransformerEncoderLayer(d_model, n_heads, d_ff, dropout) for _ in range(num_layers)])
+        
+    def forward(self, src, src_mask=None):
+        for layer in self.layers:
+            src = layer(src, src_mask)
+        return src</code></pre></div>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/transformers/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/index.html">transformers</a><ul id="R-subsections-c93b786975796f9b9f81f28585ce698d" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/index.html">transformers模型详解</a><ul id="R-subsections-1e672efdff9aa37295341bdd1b243398" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_01/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_01/index.html">Transformer模型详解01-Word Embedding</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_02/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_02/index.html">Transformer模型详解02-Positional Encoding（位置编码）</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_03/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_03/index.html">Transformer模型详解03-Self-Attention（自注意力机制）</a></li>
+            <li class="active " data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html">Transformer模型详解04-Encoder 结构</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_05/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_05/index.html">Transformer模型详解05-Decoder 结构</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/index.html">transformers实战</a><ul id="R-subsections-7dfd1a2fc9789505d186535459f93268" class="collapsible-menu"></ul></li></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758266418" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758266418" defer></script>
+    <script src="/docs/js/theme.js?1758266418" defer></script>
+  </body>
+</html>

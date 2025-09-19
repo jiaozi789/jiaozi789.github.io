@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="概述 Visual Studio Code（简称 VS Code）是一款由 Microsoft 开发的开源轻量级编辑器，支持跨平台（Windows、macOS、Linux）。
+其最大的优势之一是强大的插件系统，开发者可以通过编写扩展（Extension）来增强 VS Code 的功能，比如支持新的编程语言、代码提示、调试器、界面主题等。
+VS Code 插件的主要原理是：
+插件运行在独立的进程（Extension Host）中，不会阻塞编辑器主线程。 插件通过 VS Code 提供的 API 与编辑器进行交互，比如注册命令、添加菜单、修改编辑器行为等。 插件开发语言主要是 TypeScript 或 JavaScript，并基于 Node.js 生态。 安装 VS Code 安装 打开 VS Code 官方下载页面。 选择对应操作系统（Windows、macOS 或 Linux）。 按提示进行安装，安装完成后可以通过 code 命令（需要在安装时勾选“添加到 PATH”）在命令行中启动 VS Code。 插件开发环境安装 插件开发需要以下工具：
+yo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器） vsce（VS Code Extension CLI，用于打包和发布插件） 安装步骤：
+# 安装 yo 和 generator-code npm install -g yo generator-code # 安装 vsce npm install -g @vscode/vsce 开发 生成代码 使用 Yeoman 脚手架生成插件项目：">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="vscode插件开发教程 :: liaomin416100569博客">
+    <meta name="twitter:description" content="概述 Visual Studio Code（简称 VS Code）是一款由 Microsoft 开发的开源轻量级编辑器，支持跨平台（Windows、macOS、Linux）。
+其最大的优势之一是强大的插件系统，开发者可以通过编写扩展（Extension）来增强 VS Code 的功能，比如支持新的编程语言、代码提示、调试器、界面主题等。
+VS Code 插件的主要原理是：
+插件运行在独立的进程（Extension Host）中，不会阻塞编辑器主线程。 插件通过 VS Code 提供的 API 与编辑器进行交互，比如注册命令、添加菜单、修改编辑器行为等。 插件开发语言主要是 TypeScript 或 JavaScript，并基于 Node.js 生态。 安装 VS Code 安装 打开 VS Code 官方下载页面。 选择对应操作系统（Windows、macOS 或 Linux）。 按提示进行安装，安装完成后可以通过 code 命令（需要在安装时勾选“添加到 PATH”）在命令行中启动 VS Code。 插件开发环境安装 插件开发需要以下工具：
+yo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器） vsce（VS Code Extension CLI，用于打包和发布插件） 安装步骤：
+# 安装 yo 和 generator-code npm install -g yo generator-code # 安装 vsce npm install -g @vscode/vsce 开发 生成代码 使用 Yeoman 脚手架生成插件项目：">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/plugins/vscode_cross/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="vscode插件开发教程 :: liaomin416100569博客">
+    <meta property="og:description" content="概述 Visual Studio Code（简称 VS Code）是一款由 Microsoft 开发的开源轻量级编辑器，支持跨平台（Windows、macOS、Linux）。
+其最大的优势之一是强大的插件系统，开发者可以通过编写扩展（Extension）来增强 VS Code 的功能，比如支持新的编程语言、代码提示、调试器、界面主题等。
+VS Code 插件的主要原理是：
+插件运行在独立的进程（Extension Host）中，不会阻塞编辑器主线程。 插件通过 VS Code 提供的 API 与编辑器进行交互，比如注册命令、添加菜单、修改编辑器行为等。 插件开发语言主要是 TypeScript 或 JavaScript，并基于 Node.js 生态。 安装 VS Code 安装 打开 VS Code 官方下载页面。 选择对应操作系统（Windows、macOS 或 Linux）。 按提示进行安装，安装完成后可以通过 code 命令（需要在安装时勾选“添加到 PATH”）在命令行中启动 VS Code。 插件开发环境安装 插件开发需要以下工具：
+yo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器） vsce（VS Code Extension CLI，用于打包和发布插件） 安装步骤：
+# 安装 yo 和 generator-code npm install -g yo generator-code # 安装 vsce npm install -g @vscode/vsce 开发 生成代码 使用 Yeoman 脚手架生成插件项目：">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="vscode插件开发教程 :: liaomin416100569博客">
+    <meta itemprop="description" content="概述 Visual Studio Code（简称 VS Code）是一款由 Microsoft 开发的开源轻量级编辑器，支持跨平台（Windows、macOS、Linux）。
+其最大的优势之一是强大的插件系统，开发者可以通过编写扩展（Extension）来增强 VS Code 的功能，比如支持新的编程语言、代码提示、调试器、界面主题等。
+VS Code 插件的主要原理是：
+插件运行在独立的进程（Extension Host）中，不会阻塞编辑器主线程。 插件通过 VS Code 提供的 API 与编辑器进行交互，比如注册命令、添加菜单、修改编辑器行为等。 插件开发语言主要是 TypeScript 或 JavaScript，并基于 Node.js 生态。 安装 VS Code 安装 打开 VS Code 官方下载页面。 选择对应操作系统（Windows、macOS 或 Linux）。 按提示进行安装，安装完成后可以通过 code 命令（需要在安装时勾选“添加到 PATH”）在命令行中启动 VS Code。 插件开发环境安装 插件开发需要以下工具：
+yo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器） vsce（VS Code Extension CLI，用于打包和发布插件） 安装步骤：
+# 安装 yo 和 generator-code npm install -g yo generator-code # 安装 vsce npm install -g @vscode/vsce 开发 生成代码 使用 Yeoman 脚手架生成插件项目：">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="855">
+    <title>vscode插件开发教程 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758265379" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758265379" defer></script>
+    <script src="/docs/js/search-lunr.js?1758265379" defer></script>
+    <script src="/docs/js/search.js?1758265379" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758265379";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758265379" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758265379" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758265379" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758265379" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['en'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758265379" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758265379" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758265379" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758265379" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758265379" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/plugins\/vscode_cross\/index.html';
+      window.relearn.relBasePath='..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758265379" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/plugins/vscode_cross/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#概述">概述</a></li>
+        <li><a href="#安装">安装</a>
+          <ul>
+            <li><a href="#vs-code-安装">VS Code 安装</a></li>
+            <li><a href="#插件开发环境安装">插件开发环境安装</a></li>
+          </ul>
+        </li>
+        <li><a href="#开发">开发</a>
+          <ul>
+            <li><a href="#生成代码">生成代码</a>
+              <ul>
+                <li><a href="#packagejson-核心配置">package.json 核心配置</a></li>
+                <li><a href="#extensionts-核心函数">extension.ts 核心函数</a></li>
+              </ul>
+            </li>
+            <li><a href="#hello-world-示例">Hello World 示例</a></li>
+            <li><a href="#拓展介绍">拓展介绍</a>
+              <ul>
+                <li><a href="#1-命令commands">1. 命令（Commands）</a></li>
+                <li><a href="#2-菜单menus">2. 菜单（Menus）</a></li>
+                <li><a href="#3-快捷键keybindings">3. 快捷键（Keybindings）</a></li>
+                <li><a href="#4-状态栏status-bar-items">4. 状态栏（Status Bar Items）</a></li>
+                <li><a href="#5-侧边栏视图views">5. 侧边栏视图（Views）</a></li>
+                <li><a href="#6-编辑器装饰decorations">6. 编辑器装饰（Decorations）</a></li>
+                <li><a href="#7-语言支持language-features">7. 语言支持（Language Features）</a></li>
+                <li><a href="#8-配置configuration">8. 配置（Configuration）</a></li>
+                <li><a href="#9-文件系统监听file-system-watcher">9. 文件系统监听（File System Watcher）</a></li>
+                <li><a href="#10-任务tasks">10. 任务（Tasks）</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#发布">发布</a>
+          <ul>
+            <li><a href="#打包插件">打包插件</a></li>
+            <li><a href="#发布到-vs-code-marketplace">发布到 VS Code Marketplace</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/plugins/index.html"><span itemprop="name">插件开发</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">vscode插件开发教程</span><meta itemprop="position" content="4"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/plugins/index.html" title="插件开发 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><span class="topbar-control"><i class="fa-fw fas fa-chevron-right"></i></span>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="vscode插件开发教程">vscode插件开发教程</h1>
+
+<h2 id="概述">概述</h2>
+<p>Visual Studio Code（简称 VS Code）是一款由 Microsoft 开发的开源轻量级编辑器，支持跨平台（Windows、macOS、Linux）。<br>
+其最大的优势之一是<strong>强大的插件系统</strong>，开发者可以通过编写扩展（Extension）来增强 VS Code 的功能，比如支持新的编程语言、代码提示、调试器、界面主题等。</p>
+<p>VS Code 插件的主要原理是：</p>
+<ul>
+<li>插件运行在独立的进程（Extension Host）中，不会阻塞编辑器主线程。</li>
+<li>插件通过 <strong>VS Code 提供的 API</strong> 与编辑器进行交互，比如注册命令、添加菜单、修改编辑器行为等。</li>
+<li>插件开发语言主要是 <strong>TypeScript</strong> 或 <strong>JavaScript</strong>，并基于 Node.js 生态。</li>
+</ul>
+<hr>
+<h2 id="安装">安装</h2>
+<h3 id="vs-code-安装">VS Code 安装</h3>
+<ol>
+<li>打开 <a href="https://code.visualstudio.com/Download" rel="external" target="_blank">VS Code 官方下载页面</a>。</li>
+<li>选择对应操作系统（Windows、macOS 或 Linux）。</li>
+<li>按提示进行安装，安装完成后可以通过 <code>code</code> 命令（需要在安装时勾选“添加到 PATH”）在命令行中启动 VS Code。</li>
+</ol>
+<h3 id="插件开发环境安装">插件开发环境安装</h3>
+<p>插件开发需要以下工具：</p>
+<ul>
+<li><strong>yo</strong>（Yeoman 脚手架工具）</li>
+<li><strong>generator-code</strong>（VS Code 插件项目生成器）</li>
+<li><strong>vsce</strong>（VS Code Extension CLI，用于打包和发布插件）</li>
+</ul>
+<p>安装步骤：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 安装 yo 和 generator-code</span>
+</span></span><span style="display:flex;"><span>npm install -g yo generator-code
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 安装 vsce</span>
+</span></span><span style="display:flex;"><span>npm install -g @vscode/vsce</span></span></code></pre></div>
+<h2 id="开发">开发</h2>
+<h3 id="生成代码">生成代码</h3>
+<p>使用 Yeoman 脚手架生成插件项目：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmd" data-lang="cmd"><span style="display:flex;"><span>yo code</span></span></code></pre></div>
+<p>执行后会有交互式提示，例如：</p>
+<ul>
+<li>选择插件类型（TypeScript / JavaScript）</li>
+<li>插件名称</li>
+<li>描述</li>
+<li>初始化 Git 仓库等</li>
+</ul>
+<p>生成完成后，项目目录大致结构如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>my-extension/
+├── .vscode/           # VS Code 调试配置
+├── src/               # 插件源码
+│   └── extension.ts   # 插件入口文件
+├── package.json       # 插件描述文件，配置命令、激活事件、依赖等
+├── tsconfig.json      # TypeScript 配置（如果是 TS 项目）
+└── README.md          # 插件说明文档</code></pre></div>
+<ul>
+<li>package.json：插件的核心配置文件，用来描述插件元信息和扩展点。</li>
+<li>extension.ts：插件入口文件，负责注册命令和功能。</li>
+</ul>
+<h4 id="packagejson-核心配置">package.json 核心配置</h4>
+<p>package.json 是插件的描述文件，控制插件如何被 VS Code 加载。主要字段：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+  &#34;name&#34;: &#34;my-extension&#34;,
+  &#34;displayName&#34;: &#34;My Extension&#34;,
+  &#34;description&#34;: &#34;一个简单的 VS Code 插件示例&#34;,
+  &#34;version&#34;: &#34;0.0.1&#34;,
+  &#34;publisher&#34;: &#34;your-name&#34;,
+  &#34;engines&#34;: {
+    &#34;vscode&#34;: &#34;^1.80.0&#34;
+  },
+  &#34;activationEvents&#34;: [
+    &#34;onCommand:extension.helloWorld&#34;
+  ],
+  &#34;main&#34;: &#34;./out/extension.js&#34;,
+  &#34;contributes&#34;: {
+    &#34;commands&#34;: [
+      {
+        &#34;command&#34;: &#34;extension.helloWorld&#34;,
+        &#34;title&#34;: &#34;Hello World&#34;
+      }
+    ]
+  },
+  &#34;scripts&#34;: {
+    &#34;vscode:prepublish&#34;: &#34;npm run compile&#34;,
+    &#34;compile&#34;: &#34;tsc -p ./&#34;,
+    &#34;watch&#34;: &#34;tsc -watch -p ./&#34;,
+    &#34;test&#34;: &#34;npm run compile &amp;&amp; node ./out/test/runTest.js&#34;
+  },
+  &#34;devDependencies&#34;: {
+    &#34;typescript&#34;: &#34;^5.0.0&#34;,
+    &#34;vscode&#34;: &#34;^1.1.37&#34;
+  }
+}</code></pre></div>
+<p>核心字段说明：</p>
+<ul>
+<li><strong>name</strong>：插件的唯一 ID（发布后不可更改）。</li>
+<li><strong>displayName</strong>：VS Code Marketplace 上显示的名称。</li>
+<li><strong>version</strong>：插件版本。</li>
+<li><strong>publisher</strong>：发布者名称（需与 Marketplace 发布者一致）。</li>
+<li><strong>engines.vscode</strong>：兼容的 VS Code 版本范围。</li>
+<li><strong>activationEvents</strong>：触发插件激活的事件（如 <code>onCommand</code>、<code>onLanguage</code>、<code>*</code>）。</li>
+<li><strong>main</strong>：插件的入口文件（一般是编译后的 <code>extension.js</code>）。</li>
+<li><strong>contributes</strong>：插件扩展点，例如命令、菜单、快捷键、配置等。</li>
+</ul>
+<h4 id="extensionts-核心函数">extension.ts 核心函数</h4>
+<p>extension.ts 是插件的入口文件，负责插件的生命周期和功能实现。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import * as vscode from &#39;vscode&#39;;
+
+/**
+ * 插件被激活时调用
+ * @param context 插件上下文对象，包含订阅、全局存储等
+ */
+export function activate(context: vscode.ExtensionContext) {
+    console.log(&#39;插件已激活！&#39;);
+
+    // 注册命令
+    let disposable = vscode.commands.registerCommand(&#39;extension.helloWorld&#39;, () =&gt; {
+        vscode.window.showInformationMessage(&#39;Hello World from My Extension!&#39;);
+    });
+
+    // 将命令注册到插件上下文，确保插件卸载时清理资源
+    context.subscriptions.push(disposable);
+}
+
+/**
+ * 插件被停用时调用
+ * 通常用于清理资源、保存数据
+ */
+export function deactivate() {}</code></pre></div>
+<p>核心点解释：</p>
+<ul>
+<li><strong>activate</strong>：插件激活时执行（如首次运行命令、打开特定文件类型）。</li>
+<li><strong>deactivate</strong>：插件停用时执行，用于清理资源。</li>
+<li><strong>vscode.commands.registerCommand</strong>：注册一个命令（命令 ID 必须和 <code>package.json</code> 中一致）。</li>
+<li><strong>vscode.window.showInformationMessage</strong>：在 VS Code 界面右下角弹出提示消息。</li>
+<li><strong>context.subscriptions</strong>：插件上下文，保存所有注册的资源，确保在插件停用时能正确释放。</li>
+</ul>
+<h3 id="hello-world-示例">Hello World 示例</h3>
+<ol>
+<li>编辑 <code>src/extension.ts</code>，添加一个最简单的命令：</li>
+</ol>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import * as vscode from &#39;vscode&#39;;
+
+export function activate(context: vscode.ExtensionContext) {
+    console.log(&#39;插件已激活！&#39;);
+
+    let disposable = vscode.commands.registerCommand(&#39;extension.helloWorld&#39;, () =&gt; {
+        vscode.window.showInformationMessage(&#39;Hello World from My Extension!&#39;);
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+export function deactivate() {}</code></pre></div>
+<ol start="2">
+<li>在 <code>package.json</code> 中配置命令：</li>
+</ol>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+  &#34;contributes&#34;: {
+    &#34;commands&#34;: [
+      {
+        &#34;command&#34;: &#34;extension.helloWorld&#34;,
+        &#34;title&#34;: &#34;Hello World&#34;
+      }
+    ]
+  }
+}</code></pre></div>
+<ol start="3">
+<li>运行调试：</li>
+</ol>
+<ul>
+<li>按 <code>F5</code> 启动调试，会打开一个新的 VS Code 窗口（Extension Development Host）。</li>
+<li>打开命令面板（<code>Ctrl+Shift+P</code> / <code>Cmd+Shift+P</code>），输入并运行 <strong>Hello World</strong>。</li>
+<li>会弹出消息 &ldquo;Hello World from My Extension!&quot;。</li>
+</ul>
+<h3 id="拓展介绍">拓展介绍</h3>
+<p>VS Code 插件 API 非常丰富，常见扩展能力包括：</p>
+<ul>
+<li>
+<p><strong>编辑器扩展</strong>：代码高亮、自动补全、格式化器。</p>
+</li>
+<li>
+<p><strong>UI 扩展</strong>：状态栏、活动栏、侧边栏视图。</p>
+</li>
+<li>
+<p><strong>调试扩展</strong>：调试适配器，用于支持新的调试语言。</p>
+</li>
+<li>
+<p><strong>文件系统扩展</strong>：实现虚拟文件系统。</p>
+</li>
+</ul>
+<p>常见配置示例（在 <code>package.json</code> 中添加）：</p>
+<h4 id="1-命令commands">1. 命令（Commands）</h4>
+<p>命令是最常见的扩展方式，用户可以在命令面板（Ctrl+Shift+P）或绑定快捷键来触发。</p>
+<p><strong>配置（package.json）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;contributes&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;commands&#34;</span>: [
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;command&#34;</span>: <span style="color:#e6db74">&#34;extension.helloWorld&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;Hello World&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+<p>实现（extension.ts）：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>vscode.commands.registerCommand(&#39;extension.helloWorld&#39;, () =&gt; {
+    vscode.window.showInformationMessage(&#39;Hello World!&#39;);
+});</code></pre></div>
+<h4 id="2-菜单menus">2. 菜单（Menus）</h4>
+<p>可以把命令挂载到编辑器右键菜单、资源管理器右键菜单等位置。</p>
+<p><strong>配置（package.json）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+  &#34;contributes&#34;: {
+  &#34;commands&#34;: [
+  {
+    &#34;command&#34;: &#34;extension.helloWorld&#34;,
+    &#34;title&#34;: &#34;hello&#34;
+  }，
+    &#34;menus&#34;: {
+      &#34;editor/context&#34;: [
+        {
+          &#34;command&#34;: &#34;extension.helloWorld&#34;,
+          &#34;when&#34;: &#34;editorLangId == javascript&#34;,
+          &#34;group&#34;: &#34;navigation&#34;
+        }
+      ]
+    }
+  }
+}</code></pre></div>
+<p>说明：</p>
+<ul>
+<li><code>editor/context</code> 表示编辑器内右键菜单。</li>
+<li><code>when</code> 条件限制了命令只在 JavaScript 文件中出现。</li>
+<li><code>group</code> 决定菜单项分组（navigation = 导航相关）。</li>
+<li>菜单本身没有名字，只能通过命令 title 来显示，菜单本省command会关联到commands的命令通过command的title显示菜单名称。</li>
+</ul>
+<p>菜单位置由 <code>menus</code> 的 key 决定，比如：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>菜单位置 key:
+`editor/context` 编辑器右键菜单
+`editor/title` 编辑器标题栏按钮
+`editor/title/context` 编辑器标题栏右键菜单
+`explorer/context` 资源管理器右键菜单
+`commandPalette` 命令面板（Ctrl+Shift+P）
+`view/title` 视图面板标题栏按钮
+`scm/title` 版本控制标题栏按钮</code></pre></div>
+<h4 id="3-快捷键keybindings">3. 快捷键（Keybindings）</h4>
+<p>可以为命令绑定快捷键。</p>
+<p><strong>配置（package.json）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+  &#34;contributes&#34;: {
+    &#34;keybindings&#34;: [
+      {
+        &#34;command&#34;: &#34;extension.helloWorld&#34;,
+        &#34;key&#34;: &#34;ctrl+alt+h&#34;,
+        &#34;when&#34;: &#34;editorTextFocus&#34;
+      }
+    ]
+  }
+}</code></pre></div>
+<p>说明：</p>
+<ul>
+<li><code>key</code>：快捷键组合。</li>
+<li><code>when</code>：触发条件，这里是“编辑器有焦点时”。</li>
+</ul>
+<h4 id="4-状态栏status-bar-items">4. 状态栏（Status Bar Items）</h4>
+<p>可以在底部状态栏添加一个按钮。</p>
+<p><strong>实现（extension.ts）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>let statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+statusBar.text = &#34;$(smiley) Hello&#34;;
+statusBar.command = &#34;extension.helloWorld&#34;;
+statusBar.show();
+context.subscriptions.push(statusBar);</code></pre></div>
+<p>说明：</p>
+<ul>
+<li><code>createStatusBarItem</code> 用于创建状态栏元素。</li>
+<li><code>text</code> 可以包含图标（如 <code>$(smiley)</code>）。</li>
+<li><code>command</code> 绑定点击事件。</li>
+</ul>
+<h4 id="5-侧边栏视图views">5. 侧边栏视图（Views）</h4>
+<p>可以在活动栏（左侧竖栏）添加一个自定义视图。</p>
+<p><strong>配置（package.json）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+  &#34;contributes&#34;: {
+    &#34;views&#34;: {
+      &#34;explorer&#34;: [
+        {
+          &#34;id&#34;: &#34;mySidebar&#34;,
+          &#34;name&#34;: &#34;My Sidebar&#34;
+        }
+      ]
+    }
+  }
+}</code></pre></div>
+<p>实现（extension.ts）：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>class MyTreeDataProvider implements vscode.TreeDataProvider&lt;vscode.TreeItem&gt; {
+    getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
+        return element;
+    }
+    getChildren(): vscode.TreeItem[] {
+        return [
+            new vscode.TreeItem(&#34;Item 1&#34;),
+            new vscode.TreeItem(&#34;Item 2&#34;)
+        ];
+    }
+}
+
+vscode.window.registerTreeDataProvider(&#34;mySidebar&#34;, new MyTreeDataProvider());</code></pre></div>
+<p>说明：</p>
+<ul>
+<li>
+<p>在 <strong>资源管理器面板</strong> 添加一个新视图 “My Sidebar”。</p>
+</li>
+<li>
+<p>用 <code>TreeDataProvider</code> 动态提供数据。</p>
+</li>
+</ul>
+<hr>
+<h4 id="6-编辑器装饰decorations">6. 编辑器装饰（Decorations）</h4>
+<p>可以给代码添加背景色、高亮、提示信息等。</p>
+<p><strong>实现（extension.ts）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>const decorationType = vscode.window.createTextEditorDecorationType({
+    backgroundColor: &#34;rgba(255,0,0,0.3)&#34;
+});
+
+const editor = vscode.window.activeTextEditor;
+if (editor) {
+    const range = new vscode.Range(0, 0, 0, 5);
+    editor.setDecorations(decorationType, [range]);
+}</code></pre></div>
+<p>说明：</p>
+<ul>
+<li><code>createTextEditorDecorationType</code> 定义样式。</li>
+<li><code>setDecorations</code> 应用到代码范围。</li>
+</ul>
+<hr>
+<h4 id="7-语言支持language-features">7. 语言支持（Language Features）</h4>
+<p>可以扩展某种语言的代码补全、悬浮提示等。</p>
+<p><strong>配置（package.json）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+  &#34;contributes&#34;: {
+    &#34;languages&#34;: [
+      {
+        &#34;id&#34;: &#34;mylang&#34;,
+        &#34;aliases&#34;: [&#34;MyLang&#34;],
+        &#34;extensions&#34;: [&#34;.mlg&#34;],
+        &#34;configuration&#34;: &#34;./language-configuration.json&#34;
+      }
+    ]
+  }
+}</code></pre></div>
+<p>实现补全（extension.ts）：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>vscode.languages.registerCompletionItemProvider(&#34;mylang&#34;, {
+    provideCompletionItems(document, position) {
+        return [new vscode.CompletionItem(&#34;helloWorld&#34;, vscode.CompletionItemKind.Keyword)];
+    }
+});</code></pre></div>
+<p>说明：</p>
+<ul>
+<li><code>languages</code> 定义新语言（这里是 <code>.mlg</code> 后缀）。</li>
+<li><code>registerCompletionItemProvider</code> 提供自动补全。</li>
+</ul>
+<hr>
+<h4 id="8-配置configuration">8. 配置（Configuration）</h4>
+<p>插件可以在 VS Code 设置里增加配置项。</p>
+<p><strong>配置（package.json）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+  &#34;contributes&#34;: {
+    &#34;configuration&#34;: {
+      &#34;title&#34;: &#34;My Extension&#34;,
+      &#34;properties&#34;: {
+        &#34;myExtension.enableFeature&#34;: {
+          &#34;type&#34;: &#34;boolean&#34;,
+          &#34;default&#34;: true,
+          &#34;description&#34;: &#34;是否启用我的功能&#34;
+        },
+        &#34;myExtension.apiEndpoint&#34;: {
+          &#34;type&#34;: &#34;string&#34;,
+          &#34;default&#34;: &#34;https://api.example.com&#34;,
+          &#34;description&#34;: &#34;API 接口地址&#34;
+        }
+      }
+    }
+  }
+}</code></pre></div>
+<p>读取配置（extension.ts）：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>const config = vscode.workspace.getConfiguration(&#34;myExtension&#34;);
+const enable = config.get(&#34;enableFeature&#34;, true);
+const api = config.get(&#34;apiEndpoint&#34;, &#34;&#34;);</code></pre></div>
+<h4 id="9-文件系统监听file-system-watcher">9. 文件系统监听（File System Watcher）</h4>
+<p>可以监听文件变化事件。</p>
+<p><strong>实现（extension.ts）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>const watcher = vscode.workspace.createFileSystemWatcher(&#34;**/*.js&#34;);
+watcher.onDidChange(uri =&gt; console.log(&#34;修改: &#34; + uri.fsPath));
+watcher.onDidCreate(uri =&gt; console.log(&#34;创建: &#34; + uri.fsPath));
+watcher.onDidDelete(uri =&gt; console.log(&#34;删除: &#34; + uri.fsPath));
+
+context.subscriptions.push(watcher);</code></pre></div>
+<h4 id="10-任务tasks">10. 任务（Tasks）</h4>
+<p>可以让插件在 VS Code 的“任务运行器”中提供任务。</p>
+<p><strong>配置（package.json）</strong>：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>{
+  &#34;contributes&#34;: {
+    &#34;taskDefinitions&#34;: [
+      {
+        &#34;type&#34;: &#34;myTask&#34;,
+        &#34;required&#34;: [&#34;taskName&#34;],
+        &#34;properties&#34;: {
+          &#34;taskName&#34;: {
+            &#34;type&#34;: &#34;string&#34;,
+            &#34;description&#34;: &#34;任务名称&#34;
+          }
+        }
+      }
+    ]
+  }
+}</code></pre></div>
+<p>实现（extension.ts）：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>vscode.tasks.registerTaskProvider(&#34;myTask&#34;, {
+    provideTasks: () =&gt; {
+        return [new vscode.Task(
+            { type: &#34;myTask&#34;, taskName: &#34;sayHello&#34; },
+            vscode.TaskScope.Workspace,
+            &#34;sayHello&#34;,
+            &#34;myTask&#34;,
+            new vscode.ShellExecution(&#34;echo Hello from task!&#34;)
+        )];
+    },
+    resolveTask: () =&gt; undefined
+});</code></pre></div>
+<h2 id="发布">发布</h2>
+<h3 id="打包插件">打包插件</h3>
+<p>使用 <code>vsce</code> 打包插件：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code># 在插件项目根目录执行
+vsce package</code></pre></div>
+<p>执行成功后，会生成一个 .vsix 文件，例如：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>my-extension-0.0.1.vsix</code></pre></div>
+<p>安装插件：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>code --install-extension my-extension-0.0.1.vsix</code></pre></div>
+<p>或者到vscode插件中心右侧&hellip; install from vsix选择本地文件。</p>
+<p><a href="#R-image-4cf7a2aa07b8b7173f25119e1e6cfdcb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/plugins/vscode.md.images/c98369d1aa61415c88e54daf215a50fe.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4cf7a2aa07b8b7173f25119e1e6cfdcb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/plugins/vscode.md.images/c98369d1aa61415c88e54daf215a50fe.png"></a></p>
+<h3 id="发布到-vs-code-marketplace">发布到 VS Code Marketplace</h3>
+<ol>
+<li>
+<p>前往 Azure DevOps 创建 <strong>Publisher</strong>。</p>
+</li>
+<li>
+<p>使用 <code>vsce login &lt;publisher-name&gt;</code> 登录，并输入 Personal Access Token。</p>
+</li>
+<li>
+<p>发布插件：</p>
+</li>
+</ol>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>vsce publish</code></pre></div>
+<p>或者指定版本号：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>vsce publish minor</code></pre></div>
+<p>发布成功后，你的插件就会出现在 Visual Studio Marketplace 上，供所有用户下载。</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu">
+            <li class="active " data-nav-id="/docs/programming/plugins/vscode_cross/index.html"><a class="padding" href="/docs/programming/plugins/vscode_cross/index.html">vscode插件开发教程</a></li></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758265379" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758265379" defer></script>
+    <script src="/docs/js/theme.js?1758265379" defer></script>
+  </body>
+</html>

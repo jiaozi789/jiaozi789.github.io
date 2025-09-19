@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>transformers模型详解 :: liaomin416100569博客</title>
+    <link>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Transformer模型详解01-Word Embedding</title>
+      <link>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_01/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_01/index.html</guid>
+      <description>前言 Transformer由论文《Attention is All You Need》提出，现在是谷歌云TPU推荐的参考模型。论文相关的Tensorflow的代码可以从GitHub获取，其作为Tensor2Tensor包的一部分。哈佛的NLP团队也实现了一个基于PyTorch的版本，并注释该论文。&#xA;在本文中，我们将试图把模型简化一点，并逐一介绍里面的核心概念，希望让普通读者也能轻易理解。&#xA;Attention is All You Need：Attention Is All You Need&#xA;Transformer 整体结构 首先介绍 Transformer 的整体结构，下图是 Transformer 用于中英文翻译的整体结构： 可以看到 Transformer 由 Encoder 和 Decoder 两个部分组成，Encoder 和 Decoder 都包含 6 个 block。Transformer 的工作流程大体如下：&#xA;第一步：获取输入句子的每一个单词的表示向量 X，X由单词的 Embedding（Embedding就是从原始数据提取出来的Feature） 和单词位置的 Embedding 相加得到。 第二步：将得到的单词表示向量矩阵 (如上图所示，每一行是一个单词的表示 x) 传入 Encoder 中，经过 6 个 Encoder block 后可以得到句子所有单词的编码信息矩阵 C，如下图。单词向量矩阵用 $X_{n\times d}$ 表示， n 是句子中单词个数，d 是表示向量的维度 (论文中 d=512)。每一个 Encoder block 输出的矩阵维度与输入完全一致。 第三步：将 Encoder 输出的编码信息矩阵 C传递到 Decoder 中，Decoder 依次会根据当前翻译过的单词 1~ i 翻译下一个单词 i+1，如下图所示。在使用的过程中，翻译到单词 i+1 的时候需要通过 Mask (掩盖) 操作遮盖住 i+1 之后的单词。 上图 Decoder 接收了 Encoder 的编码矩阵 C，然后首先输入一个翻译开始符 “&#34;，预测第一个单词 “I”；然后输入翻译开始符 “” 和单词 “I”，预测单词 “have”，以此类推。这是 Transformer 使用时候的大致流程，接下来是里面各个部分的细节。</description>
+    </item>
+    <item>
+      <title>Transformer模型详解02-Positional Encoding（位置编码）</title>
+      <link>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_02/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_02/index.html</guid>
+      <description>什么是位置编码 在transformer的encoder和decoder的输入层中，使用了Positional Encoding，使得最终的输入满足： $$input = input_embedding + positional_encoding $$&#xA;word embedding：理解参考&#xA;这里，input_embedding是通过常规embedding层，将每一个token的向量维度从vocab_size映射到d_model，由于是相加关系，自然而然地，这里的positional_encoding也是一个d_model维度的向量。（在原论文里，d_model = 512） 注意：在Transformer模型中，“token”（标记）是指输入序列中的每个元素，它通常是一个单词、一个子词或一个字符，假设我们有一个句子：“The cat sat on the mat.&#34;，单词级别的标记： [“The”, “cat”, “sat”, “on”, “the”, “mat”, “.&#34;]。然后被转换成词嵌入（word embeddings）和位置嵌入（position embeddings），然后这两种嵌入会被相加起来形成输入嵌入（input embeddings）。这个输入嵌入会作为模型的输入，并传递到Transformer的神经网络中进行处理,token本身不会再作为数据传递到模型中。&#xA;Input Embedding为什么解决的是语义问题，没有解决位置问题？？，语义不是有顺序才有吗？？&#xA;Input Embedding (输入嵌入):&#xA;input_embedding 主要解决的是词汇语义的表示问题。通过将单词映射为连续的低维向量空间，词嵌入技术（如Word2Vec、GloVe等）可以捕获单词之间的语义关系，比如单词的近义词、反义词等。这使得神经网络在处理文本时能够更好地理解单词的含义，从而提高了对语义的建模能力。 但是，词嵌入并没有直接解决词序的问题。即使单词被嵌入到向量空间中，神经网络在处理这些向量时仍然不知道它们在句子中的位置。这就是为什么我们需要进一步引入位置编码的原因。 Positional Encoding (位置编码):&#xA;positional_encoding 解决的是序列数据的位置信息丢失问题。在自然语言处理中，文本是由单词或字符组成的序列，这些单词的排列顺序对句子的含义至关重要。通过引入位置编码，我们可以向神经网络提供关于单词在序列中位置的信息，从而使网络能够区分不同位置的单词并更好地处理序列数据。 位置编码通常是与词嵌入相加的方式来融合位置信息和语义信息。这样，神经网络在处理输入数据时既能考虑单词的语义关系，又能考虑单词在句子中的位置关系，从而更全面地理解文本数据。 因此，input_embedding 和 positional_encoding 两者都是为了帮助神经网络更好地理解文本数据，但它们解决的是不同层面的问题：input_embedding 解决的是语义表示问题，而 positional_encoding 解决的是位置信息丢失问题。这两者结合起来能够提高神经网络对文本数据的建模能力。</description>
+    </item>
+    <item>
+      <title>Transformer模型详解03-Self-Attention（自注意力机制）</title>
+      <link>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_03/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_03/index.html</guid>
+      <description>简介 下图是论文中 Transformer 的内部结构图，左侧为 Encoder block，右侧为 Decoder block。红色圈中的部分为 Multi-Head Attention，是由多个 Self-Attention组成的，可以看到 Encoder block 包含一个 Multi-Head Attention，而 Decoder block 包含两个 Multi-Head Attention (其中有一个用到 Masked)。Multi-Head Attention 上方还包括一个 Add &amp; Norm 层，Add 表示残差连接 (Residual Connection) 用于防止网络退化，Norm 表示 Layer Normalization，用于对每一层的激活值进行归一化。&#xA;因为 Self-Attention是 Transformer 的重点，所以我们重点关注 Multi-Head Attention 以及 Self-Attention，首先详细了解一下 Self-Attention 的内部逻辑。 基础知识 向量的内积 向量的内积是什么，如何计算，最重要的，其几何意义是什么？&#xA;内积的计算方法是将两个向量对应分量相乘，然后将结果相加。 内积的几何意义是非常重要的。在二维空间中，两个向量的内积等于两个向量的模（长度）之积乘以它们之间的夹角的余弦值。具体来说，如果 θ 是两个向量之间的夹角，则它们的内积为： $$\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}| |\mathbf{b}| \cos(\theta)$$ 这个公式表明，内积可以用来衡量两个向量的相似程度。当两个向量的夹角为 0时(cos0=1)，它们的内积取得最大值，表示它们的方向相同；当夹角为 90时(cos90=0)，内积为 0，表示它们的方向垂直；当夹角为180(cos180=-1) 时，内积取得最小值，表示它们的方向相反。</description>
+    </item>
+    <item>
+      <title>Transformer模型详解04-Encoder 结构</title>
+      <link>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html</guid>
+      <description>简介 Transformer 模型中的 Encoder 层主要负责将输入序列进行编码，将输入序列中的每个词或标记转换为其对应的向量表示，并且捕获输入序列中的语义和关系。&#xA;具体来说，Transformer Encoder 层的作用包括：&#xA;词嵌入（Word Embedding）：将输入序列中的每个词或标记映射为其对应的词嵌入向量。这些词嵌入向量包含了词语的语义信息，并且可以在模型中进行学习。&#xA;位置编码（Positional Encoding）：因为 Transformer 模型不包含任何关于序列顺序的信息，为了将位置信息引入模型，需要添加位置编码。位置编码是一种特殊的向量，用于表示输入序列中每个词的位置信息，以便模型能够区分不同位置的词。&#xA;多头自注意力机制（Multi-Head Self-Attention）：自注意力机制允许模型在处理每个词时，同时考虑到输入序列中所有其他词之间的关系。多头自注意力机制通过将输入进行多次线性变换并计算多组注意力分数，从而允许模型在不同的表示子空间中学习到不同的语义信息。&#xA;残差连接（Residual Connection）：为了减轻梯度消失和加速训练，Transformer Encoder 层使用了残差连接。残差连接允许模型直接学习到输入序列的增量变换，而不是完全替代原始输入。&#xA;层归一化（Layer Normalization）：在残差连接后应用层归一化，有助于提高模型的训练稳定性，加快训练速度。&#xA;Transformer Encoder 层的主要作用是将输入序列转换为其对应的向量表示，并且捕获输入序列中的语义和位置信息，以便后续的模型能够更好地理解和处理输入序列。&#xA;前面我们已经详解了三个点的计算过程，现在了解一下 Add &amp; Norm 和 Feed Forward 部分。&#xA;基础知识 归一化 归一化是将数据转换为具有统一尺度的过程，常用于机器学习、数据挖掘和统计分析中。归一化可以确保不同特征或变量之间具有相似的数值范围，有助于提高模型的性能和收敛速度。&#xA;作用 让我用一个简单的例子来说明归一化的作用。&#xA;假设你有一个数据集，其中包含两个特征：年龄和收入。年龄的范围是 0 到 100 岁，而收入的范围是 1000 到 100000 美元。这两个特征的范围差异很大。&#xA;现在，你想要使用这些特征来训练一个机器学习模型，比如线性回归模型，来预测一个人是否会购买某种产品。由于特征的范围差异较大，这可能会导致某些问题：&#xA;收入的范围比年龄大得多，这可能会使得模型过度关注收入而忽略年龄，因为收入的变化可能会对预测产生更大的影响。 模型可能会受到数值范围的影响，而不是特征本身的重要性。 这时候，归一化就可以派上用场了。通过归一化，你可以将不同特征的值缩放到相似的范围内，从而消除数值范围差异带来的影响。比如，你可以将年龄和收入都缩放到 0 到 1 之间的范围内，或者使用其他归一化方法，如标准化 (standardization)。&#xA;通过归一化，你可以确保模型不会因为特征值的范围差异而偏向某个特定的特征，而是可以更平衡地利用所有的特征信息来进行预测。&#xA;常用归一化 下面是几种常用的归一化方式及其公式：&#xA;Min-Max 归一化： Min-Max 归一化将数据线性映射到一个指定的范围内，通常是 [0, 1] 或 [-1, 1]。其公式如下：&#xA;$$[X_{\text{norm}} = \frac{{X - X_{\text{min}}}}{{X_{\text{max}} - X_{\text{min}}}}]$$</description>
+    </item>
+    <item>
+      <title>Transformer模型详解05-Decoder 结构</title>
+      <link>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_05/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_05/index.html</guid>
+      <description>@[toc]&#xA;简介 Transformer 模型由编码器（Encoder）和解码器（Decoder）两部分组成。这里我会着重描述解码器的结构以及在预训练、输入输出和预测时的输入输出。&#xA;解码器结构：&#xA;自注意力层（Self-Attention Layers）：与编码器类似，解码器也包含多个自注意力层，用于在解码器端对输出序列的不同位置进行关注，解码器中的自注意力层被修改为接受一个遮盖（masking）向量，以便在计算注意力权重时将未来的信息屏蔽掉，只关注当前位置之前的信息。。&#xA;编码器-解码器注意力层（Encoder-Decoder Attention Layers）：除了自注意力层外，解码器还包含编码器-解码器注意力层，用于将编码器端的信息与解码器端的信息进行交互，帮助解码器更好地理解输入序列。&#xA;前馈神经网络（Feed-Forward Neural Networks）：与编码器一样，解码器也包含前馈神经网络层，用于对特征进行映射和转换。&#xA;位置编码（Positional Encoding）：解码器也需要位置编码来将位置信息融入模型中，以便模型能够理解输入序列的顺序信息。&#xA;Decoder在预训练、输入输出和预测时的输入输出：&#xA;预训练：&#xA;输入：在预训练期间，解码器的输入通常是由目标序列（target sequence）以及可选的编码器端输出的上下文信息组成。这些输入经过嵌入（embedding）和位置编码后，被送入解码器中。 输出：解码器预训练的目标是生成目标序列的下一个词的概率分布。因此，在每个时间步，解码器会生成一个预测概率分布，以便训练模型。 输入输出：&#xA;输入：在进行输入输出（Inference）时，解码器的输入通常是由上一个时间步生成的词以及编码器端的上下文信息组成。这些输入通过嵌入和位置编码后，传递给解码器。 输出：解码器在每个时间步生成的输出通常是一个概率分布，用于预测下一个词的概率。根据应用场景，可以使用不同的策略（如贪婪搜索、束搜索等）来选择最终的输出序列。 预测：&#xA;输入：在预测阶段，解码器的输入通常是由起始符号（如）以及编码器端的上下文信息组成。这些输入经过嵌入和位置编码后，传递给解码器。 输出：解码器生成的输出是一个概率分布，用于预测下一个词的概率。根据应用需求，可以根据生成的概率分布采样得到最终的预测结果。 结构 上图红色部分为 Transformer 的 Decoder block 结构，与 Encoder block 相似，但是存在一些区别：&#xA;包含两个 Multi-Head Attention 层。 第一个 Multi-Head Attention 层采用了 Masked 操作。 第二个 Multi-Head Attention 层的K, V矩阵使用 Encoder 的编码信息矩阵C进行计算，而Q使用上一个 Decoder block 的输出计算。 最后有一个 Softmax 层计算下一个翻译单词的概率。 先理解:自注意力的计算过程</description>
+    </item>
+  </channel>
+</rss>

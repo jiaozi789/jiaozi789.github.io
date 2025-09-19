@@ -7,3 +7,8 @@
 #R-body svg, #R-body img, #R-body figure > figcaption > h4, #R-body figure > figcaption > p, #R-body .video-container{
     margin-left: 0;
 }
+
+article h1:not(:first-of-type) {
+    margin-left: 0;
+    text-align:left;
+}
