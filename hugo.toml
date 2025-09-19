@@ -3,3 +3,5 @@ languageCode = 'en-us'
 publishDir = "docs"
 title = 'liaomin416100569博客'
 theme = 'relearn'
+[params]
+  custom_css = ["css/custom.css"]

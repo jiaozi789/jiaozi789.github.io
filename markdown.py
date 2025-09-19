@@ -91,7 +91,9 @@ class MarkdownImageDownloader:
     
     def format_markdown_path(self, path):
         """使用URL编码处理特殊字符"""
-        return quote(path, safe='')
+        # return "/docs/"+quote(path, safe='')
+        path = path.replace("\\", "/")
+        return "/docs/"+path
     
     def sanitize_filename(self, filename):
         """清理文件名，移除非法字符"""
@@ -99,7 +101,7 @@ class MarkdownImageDownloader:
         filename = filename.split('?')[0].split('#')[0]
         
         # 替换非法字符
-        invalid_chars = '<>:"/\\|?*'
+        invalid_chars = '<>:"/\\|?* '
         for char in invalid_chars:
             filename = filename.replace(char, '_')
         
@@ -107,10 +109,10 @@ class MarkdownImageDownloader:
         if len(filename) > 100:
             name, ext = os.path.splitext(filename)
             filename = name[:100-len(ext)] + ext
-        
         return filename
     
     def process_markdown_file(self, file_path, replace_links=True):
+        file_path = file_path.replace("\\", "/")
         """处理Markdown文件，下载所有图片并替换链接"""
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"文件不存在: {file_path}")
@@ -173,10 +175,9 @@ class MarkdownImageDownloader:
             # 本地相对路径（相对于Markdown文件）
             # relative_path = os.path.join(f"{os.path.basename(file_path)}.images", filename)
             relative_path = os.path.join(base_images_dir, f"{os.path.basename(file_path)}.images", filename)
-            replace_relative_path = os.path.join(replace_base_images_dir, f"{os.path.basename(file_path)}.images", filename)
+            replace_relative_path = os.path.join(replace_base_images_dir, f"{file_path}.images", filename)
             
             # 格式化路径（处理空格等特殊字符）
-            formatted_path = self.format_markdown_path(relative_path)
             replace_formatted_path = self.format_markdown_path(replace_relative_path)
             
             # 如果文件已存在，跳过下载但仍然记录替换映射

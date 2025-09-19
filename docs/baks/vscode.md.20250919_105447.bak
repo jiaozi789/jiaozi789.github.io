@@ -1,3 +1,10 @@
+---
+title: "vscode插件开发教程"
+date: 2025-09-18T16:55:17+08:00
+# bookComments: false
+# bookSearchExclude: false
+---
+
 # VS Code 插件开发教程
 
 ## 概述
@@ -542,6 +549,7 @@ code --install-extension my-extension-0.0.1.vsix
 ```
 或者到vscode插件中心右侧... install from vsix选择本地文件。
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/c98369d1aa61415c88e54daf215a50fe.png)
+
 
 ### 发布到 VS Code Marketplace
 

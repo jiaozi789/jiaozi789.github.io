@@ -1,0 +1,9 @@
+.markdown-body img,
+.page img {
+  display: inline-block;
+  margin: 0;
+}
+
+#R-body svg, #R-body img, #R-body figure > figcaption > h4, #R-body figure > figcaption > p, #R-body .video-container{
+    margin-left: 0;
+}
