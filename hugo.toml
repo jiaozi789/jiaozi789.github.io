@@ -1,4 +1,5 @@
-baseURL = 'https://jiaozi789.github.io/'
+baseURL = 'https://jiaozi789.github.io/docs'
 languageCode = 'en-us'
+publishDir = "docs"
 title = 'liaomin416100569博客'
 theme = 'relearn'

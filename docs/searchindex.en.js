@@ -5,7 +5,7 @@ var relearn_searchindex = [
     "description": "",
     "tags": [],
     "title": "liaomin416100569博客",
-    "uri": "/index.html"
+    "uri": "/docs/index.html"
   },
   {
     "breadcrumb": "liaomin416100569博客 \u003e 插件开发",
@@ -13,7 +13,7 @@ var relearn_searchindex = [
     "description": "VS Code 插件开发教程 概述 Visual Studio Code（简称 VS Code）是一款由 Microsoft 开发的开源轻量级编辑器，支持跨平台（Windows、macOS、Linux）。\n其最大的优势之一是强大的插件系统，开发者可以通过编写扩展（Extension）来增强 VS Code 的功能，比如支持新的编程语言、代码提示、调试器、界面主题等。\nVS Code 插件的主要原理是：\n插件运行在独立的进程（Extension Host）中，不会阻塞编辑器主线程。 插件通过 VS Code 提供的 API 与编辑器进行交互，比如注册命令、添加菜单、修改编辑器行为等。 插件开发语言主要是 TypeScript 或 JavaScript，并基于 Node.js 生态。 安装 VS Code 安装 打开 VS Code 官方下载页面。 选择对应操作系统（Windows、macOS 或 Linux）。 按提示进行安装，安装完成后可以通过 code 命令（需要在安装时勾选“添加到 PATH”）在命令行中启动 VS Code。 插件开发环境安装 插件开发需要以下工具：\nyo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器） vsce（VS Code Extension CLI，用于打包和发布插件） 安装步骤：\n# 安装 yo 和 generator-code npm install -g yo generator-code # 安装 vsce npm install -g @vscode/vsce 开发 生成代码 使用 Yeoman 脚手架生成插件项目：",
     "tags": [],
     "title": "vscode插件开发教程",
-    "uri": "/plugins/vscode/index.html"
+    "uri": "/docs/plugins/vscode/index.html"
   },
   {
     "breadcrumb": "liaomin416100569博客",
@@ -21,7 +21,7 @@ var relearn_searchindex = [
     "description": "插件开发 插件开发文档 插件使用主题：\nhttps://github.com/McShelby/hugo-theme-relearn https://github.com/88250/hugo-theme-archie 插件列表 插件列表",
     "tags": [],
     "title": "插件开发",
-    "uri": "/plugins/index.html"
+    "uri": "/docs/plugins/index.html"
   },
   {
     "breadcrumb": "liaomin416100569博客",
@@ -29,7 +29,7 @@ var relearn_searchindex = [
     "description": "",
     "tags": [],
     "title": "Categories",
-    "uri": "/categories/index.html"
+    "uri": "/docs/categories/index.html"
   },
   {
     "breadcrumb": "liaomin416100569博客",
@@ -37,6 +37,6 @@ var relearn_searchindex = [
     "description": "",
     "tags": [],
     "title": "Tags",
-    "uri": "/tags/index.html"
+    "uri": "/docs/tags/index.html"
   }
 ]

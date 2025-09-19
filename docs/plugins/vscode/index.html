@@ -20,7 +20,7 @@ VS Code 插件的主要原理是：
 插件运行在独立的进程（Extension Host）中，不会阻塞编辑器主线程。 插件通过 VS Code 提供的 API 与编辑器进行交互，比如注册命令、添加菜单、修改编辑器行为等。 插件开发语言主要是 TypeScript 或 JavaScript，并基于 Node.js 生态。 安装 VS Code 安装 打开 VS Code 官方下载页面。 选择对应操作系统（Windows、macOS 或 Linux）。 按提示进行安装，安装完成后可以通过 code 命令（需要在安装时勾选“添加到 PATH”）在命令行中启动 VS Code。 插件开发环境安装 插件开发需要以下工具：
 yo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器） vsce（VS Code Extension CLI，用于打包和发布插件） 安装步骤：
 # 安装 yo 和 generator-code npm install -g yo generator-code # 安装 vsce npm install -g @vscode/vsce 开发 生成代码 使用 Yeoman 脚手架生成插件项目：">
-    <meta property="og:url" content="https://jiaozi789.github.io/plugins/vscode/index.html">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/plugins/vscode/index.html">
     <meta property="og:site_name" content="liaomin416100569博客">
     <meta property="og:title" content="vscode插件开发教程 :: liaomin416100569博客">
     <meta property="og:description" content="VS Code 插件开发教程 概述 Visual Studio Code（简称 VS Code）是一款由 Microsoft 开发的开源轻量级编辑器，支持跨平台（Windows、macOS、Linux）。
@@ -45,34 +45,34 @@ yo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器）
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="858">
     <title>vscode插件开发教程 :: liaomin416100569博客</title>
-    <link href="/css/auto-complete/auto-complete.min.css?1758246007" rel="stylesheet">
-    <script src="/js/auto-complete/auto-complete.min.js?1758246007" defer></script>
-    <script src="/js/search-lunr.min.js?1758246007" defer></script>
-    <script src="/js/search.min.js?1758246007" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758247626" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758247626" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758247626" defer></script>
+    <script src="/docs/js/search.min.js?1758247626" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/searchindex.en.js?1758246007";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758247626";
     </script>
-    <script src="/js/lunr/lunr.min.js?1758246007" defer></script>
-    <script src="/js/lunr/lunr.stemmer.support.min.js?1758246007" defer></script>
-    <script src="/js/lunr/lunr.multi.min.js?1758246007" defer></script>
-    <script src="/js/lunr/lunr.en.min.js?1758246007" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758247626" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758247626" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758247626" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758247626" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['en'];
     </script>
-    <link href="/fonts/fontawesome/css/fontawesome-all.min.css?1758246007" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/fonts/fontawesome/css/fontawesome-all.min.css?1758246007" rel="stylesheet"></noscript>
-    <link href="/css/perfect-scrollbar/perfect-scrollbar.min.css?1758246007" rel="stylesheet">
-    <link href="/css/theme.min.css?1758246007" rel="stylesheet">
-    <link href="/css/format-html.min.css?1758246007" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758247626" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758247626" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758247626" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758247626" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758247626" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
       window.relearn.min = `.min`;
       window.relearn.path='\/plugins\/vscode\/index.html';
       window.relearn.relBasePath='..\/..';
-      window.relearn.relBaseUri='..\/..';
-      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io';
+      window.relearn.relBaseUri='..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
       window.relearn.disableAnchorCopy=false;
       window.relearn.disableAnchorScrolling=false;
       window.relearn.disableInlineCopyToClipboard=false;
@@ -119,7 +119,7 @@ yo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器）
       window.relearn.markVariant();
     </script>
   </head>
-  <body class="mobile-support html" data-url="/plugins/vscode/index.html">
+  <body class="mobile-support html" data-url="/docs/plugins/vscode/index.html">
     <div id="R-body" class="default-animation">
       <div id="R-body-overlay"></div>
       <nav id="R-topbar">
@@ -159,10 +159,10 @@ yo（Yeoman 脚手架工具） generator-code（VS Code 插件项目生成器）
               </div>
             </div>
           </div>
-          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/plugins/index.html"><span itemprop="name">插件开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">vscode插件开发教程</span><meta itemprop="position" content="3"></li>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/plugins/index.html"><span itemprop="name">插件开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">vscode插件开发教程</span><meta itemprop="position" content="3"></li>
           </ol>
           <div class="topbar-area topbar-area-end" data-area="end">
-            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/plugins/index.html" title="插件开发 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/plugins/index.html" title="插件开发 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
             </div>
             <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><span class="topbar-control"><i class="fa-fw fas fa-chevron-right"></i></span>
             </div>
@@ -621,8 +621,8 @@ vsce package</code></pre></div>
 <p>安装插件：</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>code --install-extension my-extension-0.0.1.vsix</code></pre></div>
 <p>或者到vscode插件中心右侧&hellip; install from vsix选择本地文件。
-<a href="#R-image-19000777d1d9d88b5acbdce53d441f3c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/direct/c98369d1aa61415c88e54daf215a50fe.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-19000777d1d9d88b5acbdce53d441f3c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/direct/c98369d1aa61415c88e54daf215a50fe.png"></a></p>
+<a href="#R-image-d9414934eaa7bcbf253b377ac9e95eee" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/direct/c98369d1aa61415c88e54daf215a50fe.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d9414934eaa7bcbf253b377ac9e95eee"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/direct/c98369d1aa61415c88e54daf215a50fe.png"></a></p>
 <h3 id="发布到-vs-code-marketplace">发布到 VS Code Marketplace</h3>
 <ol>
 <li>
@@ -651,11 +651,11 @@ vsce package</code></pre></div>
       <div id="R-header-topbar" class="default-animation"></div>
       <div id="R-header-wrapper" class="default-animation">
         <div id="R-header" class="default-animation">
-          <a id="R-logo" class="R-default" href="/index.html">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
             <div class="logo-title">liaomin416100569博客</div>
           </a>
         </div>
-        <search><form action="/search/index.html" method="get">
+        <search><form action="/docs/search/index.html" method="get">
           <div class="searchbox default-animation">
             <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
             <label class="a11y-only" for="R-search-by">Search</label>
@@ -670,7 +670,7 @@ vsce package</code></pre></div>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-homelinks">
           <ul class="space collapsible-menu">
-            <li class="" data-nav-id="/index.html"><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
           </ul>
         </div>
         <div class="R-menu-divider default-animation">
@@ -687,8 +687,8 @@ vsce package</code></pre></div>
       <div id="R-content-wrapper" class="highlightable">
         <div class="R-sidebarmenu R-shortcutmenu-main">
           <ul class="enlarge morespace collapsible-menu">
-            <li class="parent " data-nav-id="/plugins/index.html"><a class="padding" href="/plugins/index.html">插件开发</a><ul id="R-subsections-5a7aad28c9073c75527ee1f9166524c9" class="collapsible-menu">
-            <li class="active " data-nav-id="/plugins/vscode/index.html"><a class="padding" href="/plugins/vscode/index.html">vscode插件开发教程</a></li></ul></li>
+            <li class="parent " data-nav-id="/docs/plugins/index.html"><a class="padding" href="/docs/plugins/index.html">插件开发</a><ul id="R-subsections-5a7aad28c9073c75527ee1f9166524c9" class="collapsible-menu">
+            <li class="active " data-nav-id="/docs/plugins/vscode/index.html"><a class="padding" href="/docs/plugins/vscode/index.html">vscode插件开发教程</a></li></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -706,8 +706,8 @@ vsce package</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/js/clipboard/clipboard.min.js?1758246007" defer></script>
-    <script src="/js/perfect-scrollbar/perfect-scrollbar.min.js?1758246007" defer></script>
-    <script src="/js/theme.min.js?1758246007" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758247626" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758247626" defer></script>
+    <script src="/docs/js/theme.min.js?1758247626" defer></script>
   </body>
 </html>
