@@ -1,0 +1,4 @@
+baseURL = 'https://jiaozi789.github.io/'
+languageCode = 'en-us'
+title = 'liaomin416100569博客'
+theme = 'relearn'
