@@ -77,26 +77,26 @@ from transformers import ViTImageProcessor, FlaxViTModelfrom PIL import Imagei
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="5435">
     <title>Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758266232" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758266232" defer></script>
-    <script src="/docs/js/search-lunr.js?1758266232" defer></script>
-    <script src="/docs/js/search.js?1758266232" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758267566" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758267566" defer></script>
+    <script src="/docs/js/search-lunr.js?1758267566" defer></script>
+    <script src="/docs/js/search.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758266232";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758267566";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.en.min.js?1758266232" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['en'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/theme.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/format-html.css?1758266232" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758267566" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -150,7 +150,7 @@ from transformers import ViTImageProcessor, FlaxViTModelfrom PIL import Imagei
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758266232" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758267566" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03/index.html">
     <div id="R-body" class="default-animation">
@@ -225,6 +225,18 @@ from transformers import ViTImageProcessor, FlaxViTModelfrom PIL import Imagei
   </header>
 
 <h1 id="transformers实战03-peft库使用lora方法微调vit图像分类">Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
 
 <h1 id="简介">简介</h1>
 <h2 id="peft">PEFT</h2>
@@ -469,8 +481,8 @@ plt.axis(&#39;off&#39;)  # 关闭坐标轴
 plt.show()
 print(labels[ds[1][&#34;label&#34;]])</code></pre></div>
 <p>显示
-<a href="#R-image-57e38fd0c4d27ac7d66df8951d242591" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e8284ba07834081cdece732213b8b5d4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-57e38fd0c4d27ac7d66df8951d242591"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e8284ba07834081cdece732213b8b5d4.png"></a>
+<a href="#R-image-5365466aa049c72fac93b9665ff14e52" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e8284ba07834081cdece732213b8b5d4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5365466aa049c72fac93b9665ff14e52"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e8284ba07834081cdece732213b8b5d4.png"></a>
 这里我们看到第二个数据集的label=6,也就是beignets。</p>
 <p>我们需要生成label和id关系的字典。</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>labels = ds[&#34;train&#34;].features[&#34;label&#34;].names
@@ -649,38 +661,38 @@ args = TrainingArguments(
 )
 trainer.train()</code></pre></div>
 <p>使用kaggle的免费gpu T4*2(双倍时间消耗累计)，gpu基本100%，gpu是一周30hhrs免费时间的,我为了节省时间，用2epoch，batch_size=128,因为kaggle的session有效期在12hours内，越快越好，否则session断开就白训练了，简单看下效果，大概1个小时左右，也可以save session让他在后台跑。
-<a href="#R-image-7f77c317836c06435763534fcecfe120" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/129f8411fbdb06898369d25e9be5e5c6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7f77c317836c06435763534fcecfe120"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/129f8411fbdb06898369d25e9be5e5c6.png"></a>
+<a href="#R-image-534673384390277e4953bb872bece112" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/129f8411fbdb06898369d25e9be5e5c6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-534673384390277e4953bb872bece112"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/129f8411fbdb06898369d25e9be5e5c6.png"></a>
 看下速度
-<a href="#R-image-31c0b8c10bf8e4b6dfcbbe7bdfb12679" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/725df1cb147744bcb503719ae8705c23.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-31c0b8c10bf8e4b6dfcbbe7bdfb12679"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/725df1cb147744bcb503719ae8705c23.png"></a>
+<a href="#R-image-6dacc222797a99597d8ccae77dbc36ae" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/725df1cb147744bcb503719ae8705c23.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6dacc222797a99597d8ccae77dbc36ae"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/725df1cb147744bcb503719ae8705c23.png"></a>
 第一次epoch完成
-<a href="#R-image-820b0fe42ef1cc03f113208a97facc86" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/7be28a886c21b08fe458db8994f9aae5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-820b0fe42ef1cc03f113208a97facc86"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/7be28a886c21b08fe458db8994f9aae5.png"></a>
+<a href="#R-image-4ab0f876c9dccc506519dd275c71a440" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/7be28a886c21b08fe458db8994f9aae5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4ab0f876c9dccc506519dd275c71a440"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/7be28a886c21b08fe458db8994f9aae5.png"></a>
 查看输出
-<a href="#R-image-2a32d65d1275c344a2d4850608c904e4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1bdf193e1c8a51a00bbbbd08543dc72b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2a32d65d1275c344a2d4850608c904e4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1bdf193e1c8a51a00bbbbd08543dc72b.png"></a>
+<a href="#R-image-b0285ea568bc0e8d9d6bece13fd131e6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1bdf193e1c8a51a00bbbbd08543dc72b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b0285ea568bc0e8d9d6bece13fd131e6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1bdf193e1c8a51a00bbbbd08543dc72b.png"></a>
 点击后面的三个点下载所有的文件，然后将模型下载下来，点击输入的上传-new model
-<a href="#R-image-f1996227098ae8b96fa89e11f7e8c985" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/c2cf735853631a4694f37cc05551b4fc.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f1996227098ae8b96fa89e11f7e8c985"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/c2cf735853631a4694f37cc05551b4fc.png"></a>
+<a href="#R-image-0d9a6c859002d78462fa4db399ebe046" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/c2cf735853631a4694f37cc05551b4fc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0d9a6c859002d78462fa4db399ebe046"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/c2cf735853631a4694f37cc05551b4fc.png"></a>
 输入model名称，选择私有，点击create model
-<a href="#R-image-4bd46c33dab09d1f0f57369249528f14" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/f93ab54c510023710ca61a35fca8fa74.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4bd46c33dab09d1f0f57369249528f14"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/f93ab54c510023710ca61a35fca8fa74.png"></a>
+<a href="#R-image-8d5bf6849051c2e3bb7bac2552c9b5fe" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/f93ab54c510023710ca61a35fca8fa74.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8d5bf6849051c2e3bb7bac2552c9b5fe"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/f93ab54c510023710ca61a35fca8fa74.png"></a>
 输入平台：transformer，点击addnewvariation
-<a href="#R-image-d5def2f867dc8ad2e97846ab34d1dd5b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/876180b771a853b6c50f855d4728f0cd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d5def2f867dc8ad2e97846ab34d1dd5b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/876180b771a853b6c50f855d4728f0cd.png"></a>
+<a href="#R-image-cc47c25043e2fb140633594d6c08b8f9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/876180b771a853b6c50f855d4728f0cd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cc47c25043e2fb140633594d6c08b8f9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/876180b771a853b6c50f855d4728f0cd.png"></a>
 定义附件名称，选择协议，点击右下侧的create
-<a href="#R-image-d9ccf17579a6e5839798451d72817887" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/2f8a47bb4aa03c09bf450a9b1a9df820.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d9ccf17579a6e5839798451d72817887"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/2f8a47bb4aa03c09bf450a9b1a9df820.png"></a>
+<a href="#R-image-9f12fb8c5648454099532ee05cf0b0db" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/2f8a47bb4aa03c09bf450a9b1a9df820.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9f12fb8c5648454099532ee05cf0b0db"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/2f8a47bb4aa03c09bf450a9b1a9df820.png"></a>
 关闭后点击return to notebook，就可以看到输入的模型了，点击右侧的复制路径即可。
-<a href="#R-image-49a957de192c840beccd860f8055a1ca" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e2e2fd180ecf643706343f4ba15f7149.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-49a957de192c840beccd860f8055a1ca"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e2e2fd180ecf643706343f4ba15f7149.png"></a></p>
+<a href="#R-image-f3cc0a3d75b83680d1bdf7b4a83c6184" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e2e2fd180ecf643706343f4ba15f7149.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f3cc0a3d75b83680d1bdf7b4a83c6184"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e2e2fd180ecf643706343f4ba15f7149.png"></a></p>
 <blockquote>
 <p>这里input的是持久的不会丢失，output数据再页面关闭session关闭后就丢失，所以尽快保存下来，或者上传到huggingface。</p></blockquote>
 <h3 id="预测">预测</h3>
 <p>切换到p100(按分钟算，省钱)验证
-<a href="#R-image-19ae23d87c93956469df98728e077e98" class="lightbox-link"><img alt="在这里插入代码片" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1523068cd52fa7f35a253fbe18d7e85a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-19ae23d87c93956469df98728e077e98"><img alt="在这里插入代码片" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1523068cd52fa7f35a253fbe18d7e85a.png"></a>
+<a href="#R-image-f9d29f91201028b397eac2b0d8c995a0" class="lightbox-link"><img alt="在这里插入代码片" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1523068cd52fa7f35a253fbe18d7e85a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f9d29f91201028b397eac2b0d8c995a0"><img alt="在这里插入代码片" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/1523068cd52fa7f35a253fbe18d7e85a.png"></a>
 代码</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>model_name=&#34;/kaggle/input/image-classifity/transformers/version1/1/checkpoint-74&#34; #复制输入的路径
 from peft import PeftConfig, PeftModel
@@ -717,8 +729,8 @@ with torch.no_grad():
 predicted_class_idx = logits.argmax(-1).item()
 print(&#34;Predicted class:&#34;, model.config.id2label[predicted_class_idx])</code></pre></div>
 <p>输出：beignets
-<a href="#R-image-6aab0e1d37649bf61faa303284421fb1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e92e7f7f82d1044a6ba12454cf5c27c5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6aab0e1d37649bf61faa303284421fb1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e92e7f7f82d1044a6ba12454cf5c27c5.png"></a></p>
+<a href="#R-image-2ced8468f777b3af1ae417c1d1aaf5ad" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e92e7f7f82d1044a6ba12454cf5c27c5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2ced8468f777b3af1ae417c1d1aaf5ad"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_03.md.images/e92e7f7f82d1044a6ba12454cf5c27c5.png"></a></p>
 
   <footer class="footline">
               <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
@@ -797,8 +809,8 @@ print(&#34;Predicted class:&#34;, model.config.id2label[predicted_class_idx])</c
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758266232" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758266232" defer></script>
-    <script src="/docs/js/theme.js?1758266232" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758267566" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758267566" defer></script>
+    <script src="/docs/js/theme.js?1758267566" defer></script>
   </body>
 </html>

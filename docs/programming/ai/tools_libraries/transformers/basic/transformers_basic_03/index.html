@@ -33,26 +33,26 @@
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="896">
     <title>Transformer模型详解03-Self-Attention（自注意力机制） :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758266232" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758266232" defer></script>
-    <script src="/docs/js/search-lunr.js?1758266232" defer></script>
-    <script src="/docs/js/search.js?1758266232" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758267566" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758267566" defer></script>
+    <script src="/docs/js/search-lunr.js?1758267566" defer></script>
+    <script src="/docs/js/search.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758266232";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758267566";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.en.min.js?1758266232" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['en'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/theme.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/format-html.css?1758266232" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758267566" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -106,7 +106,7 @@
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758266232" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758267566" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_03/index.html">
     <div id="R-body" class="default-animation">
@@ -193,11 +193,23 @@
 
 <h1 id="transformer模型详解03-self-attention自注意力机制">Transformer模型详解03-Self-Attention（自注意力机制）</h1>
 
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
 <h1 id="简介">简介</h1>
 <p>下图是论文中 Transformer 的内部结构图，左侧为 Encoder block，右侧为 Decoder block。红色圈中的部分为 Multi-Head Attention，是由多个 Self-Attention组成的，可以看到 Encoder block 包含一个 Multi-Head Attention，而 Decoder block 包含两个 Multi-Head Attention (其中有一个用到 Masked)。Multi-Head Attention 上方还包括一个 Add &amp; Norm 层，Add 表示残差连接 (Residual Connection) 用于防止网络退化，Norm 表示 Layer Normalization，用于对每一层的激活值进行归一化。</p>
 <p>因为 Self-Attention是 Transformer 的重点，所以我们重点关注 Multi-Head Attention 以及 Self-Attention，首先详细了解一下 Self-Attention 的内部逻辑。
-<a href="#R-image-61d620c8ef58619569cdf0d2d034430a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/00279ac79343fc02a712529c58477977.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-61d620c8ef58619569cdf0d2d034430a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/00279ac79343fc02a712529c58477977.png"></a></p>
+<a href="#R-image-2aee25f052696a68516925cc6b4d500e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/00279ac79343fc02a712529c58477977.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2aee25f052696a68516925cc6b4d500e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/00279ac79343fc02a712529c58477977.png"></a></p>
 <h1 id="基础知识">基础知识</h1>
 <h2 id="向量的内积">向量的内积</h2>
 <p><strong>向量的内积是什么，如何计算，最重要的，其几何意义是什么？</strong></p>
@@ -264,32 +276,32 @@ attention_score(“beautiful”,“you”)</code></pre></div>
 $$C(seq) = F(0.1<em>d(我)，0.1</em>d(喜)，&hellip;，0.8<em>d(更)，0.2</em>d(喜)，&hellip;) $$
 在知道了attention在机器学习中的含义之后（下文都称之为注意力机制）。人为设计的注意力机制，是非常主观的，而且没有一个准则来评定，这个权重设置为多少才好。所以，如何让模型自己对变量的权重进行自赋值成了一个问题，这个权重自赋值的过程也就是self-attention。</p>
 <p>定义：假设有四个输入变量$a^1$，$a^2$，$a^3$，$a^4$，希望它们经过一个self-attention layer之后变为$b^1$，$b^2$，$b^3$，$b^4$
-<a href="#R-image-ca2c9fac17fe54f195948f0725768ba0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9a28d974155b3a6b9e583c74d63c3cdc.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ca2c9fac17fe54f195948f0725768ba0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9a28d974155b3a6b9e583c74d63c3cdc.png"></a>
+<a href="#R-image-5baedc0d6b07bf19da0d1381740c7a5c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9a28d974155b3a6b9e583c74d63c3cdc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5baedc0d6b07bf19da0d1381740c7a5c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9a28d974155b3a6b9e583c74d63c3cdc.png"></a>
 拿$a^1$和$b^1$做例子,$b^1$这个结果是综合了$a^1$，$a^2$，$a^3$，$a^4$而得出来的一个结果。既然得到一个b 是要综合所有的a才行，那么最直接的做法就是$a^1$与$a^2$，$a^3$，$a^4$
 都做一次运算，得到的结果就代表了这个变量的注意力系数。直接做乘法太暴力了，所以选择一个更柔和的方法：引入三个变量$W^q$,$W^k$,$W^v$这三个变量与$a^1$相乘得到$q^1$,$k^1$,$v^1$
 同样的方法对$a^2$，$a^3$，$a^4$都做一次,至于这里的q , k , v具体代表什么，下面就慢慢展开讲解。
-<a href="#R-image-dd99111987278414f1c2aa61fc2fcd60" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b1c6c752a921fc8d84c7633a59b47a51.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-dd99111987278414f1c2aa61fc2fcd60"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b1c6c752a921fc8d84c7633a59b47a51.png"></a>
+<a href="#R-image-8cd553c93e8ad1dd38ece7abf56aa875" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b1c6c752a921fc8d84c7633a59b47a51.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8cd553c93e8ad1dd38ece7abf56aa875"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b1c6c752a921fc8d84c7633a59b47a51.png"></a>
 然后拿自己的q与别人的k相乘就可以得到一个系数$\alpha$。这里$q^1$在和其他的k做内积时，可近似的看成是在做相似度计算(前面基础向量的内积)。比如：
 $$ \alpha_{1,1} =q^1\cdot k^1\ \alpha_{1,2} =q^1\cdot k^2\ \alpha_{1,3} =q^1\cdot k^3\ \alpha_{1,4} =q^1\cdot k^4\ $$</p>
 <p>在实际的神经网络计算过程中，还得除于一个缩放系数$\sqrt{d}$这个d是指q和k的维度,因为q和k会做内积，所以维度是一样的。之所以要除$\sqrt{d}$​，是因为做完内积之后，，$\alpha$会随着它们的维度增大而增大，除$\sqrt{d}$相当于标准化。
-<a href="#R-image-4127309436ab986fe0543a74d856b288" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/de0372019a7306080715494a0ff2c19c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4127309436ab986fe0543a74d856b288"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/de0372019a7306080715494a0ff2c19c.png"></a>
+<a href="#R-image-31e67a6ff11717c45986c097924fd2b2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/de0372019a7306080715494a0ff2c19c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-31e67a6ff11717c45986c097924fd2b2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/de0372019a7306080715494a0ff2c19c.png"></a>
 得到了四个$\alpha$之后，我们分别对其进行softmax，得到四个 $\hat{\alpha}_1$，增加模型的非线性。
-<a href="#R-image-287eeb39bfea027676f713ca7065666d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/1cf7059b60d0dbafa8fd26687cff1429.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-287eeb39bfea027676f713ca7065666d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/1cf7059b60d0dbafa8fd26687cff1429.png"></a>
+<a href="#R-image-903a1bd9d0ff070e79795a3d33e572b4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/1cf7059b60d0dbafa8fd26687cff1429.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-903a1bd9d0ff070e79795a3d33e572b4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/1cf7059b60d0dbafa8fd26687cff1429.png"></a>
 四个$\alpha$分别是 $\hat{\alpha}_1$,$\hat{\alpha}<em>2$,$\hat{\alpha}<em>3$,$\hat{\alpha}<em>4$,别忘了还有我们一开始计算出来的 ${v}^1$,${v}^2$,${v}^3$,${v}^4$，直接把各个$\hat{\alpha}<em>1$直接与各个a 相乘不就得出了最后的结果了吗？虽然这么说也没错，但为了增加网络深度，将a变成v也可以减少原始的a对最终注意力计算的影响。
 那么距离最后计算出$b^1$只剩最后一步，我们将所有的$\hat{\alpha}<em>1$
 与所有的v分别相乘，然后求和，就得出$b^1$啦！具体计算如下：
 $$b^1=\hat{\alpha}</em>{1,1}*v^1+\hat{\alpha}</em>{1,2}*v^2+\hat{\alpha}</em>{1,3}*v^3+\hat{\alpha}</em>{1,4}*v^4 $$
 公式简化为：
 $$b^1=\sum_i\hat{\alpha}</em>{1,i}*v^i $$
-<a href="#R-image-af855162b1cac5d2d786c13ddc04777f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/76562e272b3535eec19ca4327d82ba9b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-af855162b1cac5d2d786c13ddc04777f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/76562e272b3535eec19ca4327d82ba9b.png"></a>
+<a href="#R-image-c4bdadd745cffef4149058cac2573761" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/76562e272b3535eec19ca4327d82ba9b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c4bdadd745cffef4149058cac2573761"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/76562e272b3535eec19ca4327d82ba9b.png"></a>
 同样的计算过程，我们对剩下的a都进行一次，就可以得到$b^2$,$b^3$,$b^4$,每个b都是综合了每个a之间的相关性计算出来的，这个相关性就是我们所说的注意力机制,。那么我们将这样的计算层称为self-attention layer。
-<a href="#R-image-ce129c72e4c9c5ad8cd86ee6311c3380" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9df6d6fb906bb384454c9726c0fb773e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ce129c72e4c9c5ad8cd86ee6311c3380"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9df6d6fb906bb384454c9726c0fb773e.png"></a>
+<a href="#R-image-366837609ac18953033264b047c58e0a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9df6d6fb906bb384454c9726c0fb773e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-366837609ac18953033264b047c58e0a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9df6d6fb906bb384454c9726c0fb773e.png"></a>
 我们把一个句子中的每个字代入上图的 $x^1$，$x^2$ ,$x^3$， $x^4$</p>
 <h3 id="矩阵计算">矩阵计算</h3>
 <p>通过注意力计算出来的结果是每个位置单词的上下文表示，每个位置的上下文表示是指在自注意力机制中，通过将每个位置的词嵌入向量与注意力权重进行加权求和，得到的每个位置的语义表示。这个语义表示包含了输入序列中每个位置的语义信息，经过加权后更加全局和丰富。</p>
@@ -297,8 +309,8 @@ $$b^1=\sum_i\hat{\alpha}</em>{1,i}*v^i $$
 <p>假设我们有一个输入序列：&ldquo;The cat sat on the mat.&quot;，并且使用 Transformer 模型进行编码，其中每个单词对应一个位置。在自注意力机制中，模型会计算每个位置对其他位置的注意力权重，然后将这些权重与对应位置的词嵌入向量进行加权求和，得到每个位置的上下文表示。</p>
 <p>考虑位置 3，对应单词 &ldquo;sat&rdquo;。在计算注意力权重时，模型会考虑 &ldquo;sat&rdquo; 与其他单词之间的关联程度。假设在这个例子中，&ldquo;sat&rdquo; 与 &ldquo;cat&rdquo;、&ldquo;mat&rdquo; 之间有较高的注意力权重，而与 &ldquo;on&rdquo; 的关联较低。因此，经过加权求和后，位置 3 的上下文表示将会强调 &ldquo;sat&rdquo; 与 &ldquo;cat&rdquo;、&ldquo;mat&rdquo; 之间的语义关系。</p>
 <p>通过这种方式，每个位置的上下文表示会受到整个输入序列中所有位置的影响，从而更好地捕捉输入序列的语义结构和信息。</p>
-<p><a href="#R-image-e838f31179c58a0ad327d088ff380e1a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/562ef34ffe46a9ff285f4d2764f6c323.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e838f31179c58a0ad327d088ff380e1a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/562ef34ffe46a9ff285f4d2764f6c323.png"></a>
+<p><a href="#R-image-137401c08f4f5872f919213e2fa0df41" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/562ef34ffe46a9ff285f4d2764f6c323.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-137401c08f4f5872f919213e2fa0df41"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/562ef34ffe46a9ff285f4d2764f6c323.png"></a>
 上图是 Self-Attention 的结构，在计算的时候需要用到矩阵Q(查询),K(键值),V(值)。在实际中，Self-Attention 接收的是输入(单词的表示向量x组成的矩阵X) 或者上一个 Encoder block 的输出。而Q,K,V正是通过 Self-Attention 的输入进行线性变换得到的。</p>
 <h4 id="qkv计算">Q，K，V计算</h4>
 <blockquote>
@@ -306,33 +318,33 @@ $$b^1=\sum_i\hat{\alpha}</em>{1,i}*v^i $$
 需要知道x的格式参考：<a href="https://blog.csdn.net/liaomin416100569/article/details/138177633?spm=1001.2014.3001.5501" rel="external" target="_blank">Word2Vec实例</a></p></blockquote>
 <p>Self-Attention 的输入用矩阵X进行表示，则可以使用线性变阵矩阵WQ,WK,WV计算得到Q,K,V。计算
 如下图所示，注意 X, Q, K, V 的每一行都表示一个单词，WQ，WK，WV是一个d_model(输入矩阵的列)行的线性变阵参数，X的每一行都会都会有自己的QKV，比如$X_1$对应$Q_1,K_1,V_1$,即$X_n$对应$Q_n,K_n,V_n$，所以 X, Q, K, V 的每一行都表示一个单词。
-<a href="#R-image-a6f6cfc912bb1376f7fef6d29096743e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/50d8444794e7a5e3a4c890cd536b3271.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a6f6cfc912bb1376f7fef6d29096743e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/50d8444794e7a5e3a4c890cd536b3271.png"></a></p>
+<a href="#R-image-3602e671a94c9a49f14ac7c9907103b1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/50d8444794e7a5e3a4c890cd536b3271.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3602e671a94c9a49f14ac7c9907103b1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/50d8444794e7a5e3a4c890cd536b3271.png"></a></p>
 <blockquote>
 <p>这里通过线性变换的Q,K,V的物理意义是包含了原始数据的信息，可能关注的特征点不一样。</p></blockquote>
 <h4 id="self-attention-的输出">Self-Attention 的输出</h4>
 <p>得到矩阵 Q, K, V之后就可以计算出 Self-Attention 的输出了，计算的公式如下：
-<a href="#R-image-5a006402bdb9fec554d1669eaa740576" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/041c201225ab4b2d694b3cc0b64327d7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5a006402bdb9fec554d1669eaa740576"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/041c201225ab4b2d694b3cc0b64327d7.png"></a>
+<a href="#R-image-d03a69a520ba39753cdd5255617edaf4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/041c201225ab4b2d694b3cc0b64327d7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d03a69a520ba39753cdd5255617edaf4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/041c201225ab4b2d694b3cc0b64327d7.png"></a>
 公式中计算矩阵Q和K每一行向量的内积，为了防止内积过大，因此除以$d_k$的平方根，缩放注意力，以使得注意力分布的方差在不同维度上保持一致，从而更好地控制梯度的稳定性。。Q乘以K的转置后，得到的矩阵行列数都为 n，n 为句子单词数，这个矩阵可以表示单词之间的 attention 强度。下图为Q乘以$K^T$, 1234 表示的是句子中的单词。
-<a href="#R-image-b1a5c2f8f9e2b423a2c2e9a9e3b86751" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/314e6881f97d49ae50ce9c5e6218ee74.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b1a5c2f8f9e2b423a2c2e9a9e3b86751"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/314e6881f97d49ae50ce9c5e6218ee74.png"></a></p>
+<a href="#R-image-ee03c13886509509edb5276db8219991" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/314e6881f97d49ae50ce9c5e6218ee74.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ee03c13886509509edb5276db8219991"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/314e6881f97d49ae50ce9c5e6218ee74.png"></a></p>
 <blockquote>
 <p>$Q<em>K^T$其实终算出来的是，每一个单词与其他所有的单词的注意力系数，因为Q代表单词本身假如 我有一只猫，分词后1=我，2=有，3=一只，4=猫。 因为K代表其他单词，转至相乘最终$Q</em>K^T$矩阵的(1,1)这个各自就是标识我和我的注意力权重，(1,2)就是我和有的注意力权重，(2,4)就是有和猫的注意力权重</p></blockquote>
 <p>得到$QK^T$之后，使用 Softmax 计算每一个单词对于其他单词的 attention 系数，公式中的 Softmax 是对矩阵的每一行进行 Softmax，即每一行的和都变为 1.
-<a href="#R-image-e423ca43ffb72753520e7ffd7bbc5c14" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b5d5264febff91c511ea5aa5b15c4b8e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e423ca43ffb72753520e7ffd7bbc5c14"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b5d5264febff91c511ea5aa5b15c4b8e.png"></a>
+<a href="#R-image-ec9a98a4aefd0c40317d5b454e60f555" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b5d5264febff91c511ea5aa5b15c4b8e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ec9a98a4aefd0c40317d5b454e60f555"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b5d5264febff91c511ea5aa5b15c4b8e.png"></a>
 得到 Softmax 矩阵之后可以和V相乘，得到最终的输出Z。
-<a href="#R-image-12f4a646b7b0edad0ebd55c8e30587f1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/c767b2b3325f15042ff3d9008f8852cb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-12f4a646b7b0edad0ebd55c8e30587f1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/c767b2b3325f15042ff3d9008f8852cb.png"></a>
+<a href="#R-image-814974164100f1c5f21109963bf65252" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/c767b2b3325f15042ff3d9008f8852cb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-814974164100f1c5f21109963bf65252"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/c767b2b3325f15042ff3d9008f8852cb.png"></a>
 上图中 Softmax 矩阵的第 1 行表示单词 1 与其他所有单词的 attention 系数，最终单词 1 的输出$Z_1$等于所有单词 i 的值$V_i$根据 attention 系数的比例加在一起得到，如下图所示：
-<a href="#R-image-deeb75096d0941a28d75d8faa24df0f4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9a84ef6ae723980a224f4dfe8a6d3c88.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-deeb75096d0941a28d75d8faa24df0f4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9a84ef6ae723980a224f4dfe8a6d3c88.png"></a></p>
+<a href="#R-image-21f06bdfe738e7436fae26ff8e18693b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9a84ef6ae723980a224f4dfe8a6d3c88.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-21f06bdfe738e7436fae26ff8e18693b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/9a84ef6ae723980a224f4dfe8a6d3c88.png"></a></p>
 <blockquote>
 <p>这里算出来的$Z_1$第一行就是第一个单词和其他单词的注意力系数权重，</p></blockquote>
 <h2 id="优势">优势</h2>
-<p><a href="#R-image-739fdfd6f95bfb82dcc02edd86bf1314" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b439c926205829160dbb46dc47107785.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-739fdfd6f95bfb82dcc02edd86bf1314"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b439c926205829160dbb46dc47107785.png"></a>
+<p><a href="#R-image-c29d74b689bb915bb2d009ddbc416b97" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b439c926205829160dbb46dc47107785.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c29d74b689bb915bb2d009ddbc416b97"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/b439c926205829160dbb46dc47107785.png"></a>
 从self-attention的原理中可以看出，这一层需要学习的参数只有$W^q$ ,$W^k$, $W^v$，大部分变量来自于内部计算得出来的，所以它的参数量少但每个参数所涵盖的信息多，这是它的第一个优点。
 每个b的计算都是独立的，这一点相比之前的RNN来说很不一样，RNN是需要等前面的$a^1$算完了才能算$a^2$，是串行的。所以RNN无论是训练还是推理，都会因为不能计算并行而变慢，这是它的的第二个优点。
 RNN的一个最大的问题是：前面的变量在经过多次RNN计算后，已经失去了原有的特征。越到后面，最前面的变量占比就越小，这是一个很反人类的设计。而self-attention在每次计算中都能保证每个输入变量 a的初始占比是一样的，这样才能保证经过self-attention layer计算后他的注意力系数是可信的。
@@ -429,24 +441,24 @@ class SelfAttention(nn.Module):
 <p>这两种方式，在最后结果上都差不多。至于为啥，后面会讲一下原因。
 那么这里的图解使用第1个方式，先得到$q^{i,1}$,$k^{i,1}$,$v^{i,1}$。对$a^j$做同样的操作得到
 ,对$a^j$做同样的操作得到$q^{j,1}$,$k^{j,1}$,$v^{j,1}$。这边需要注意的一点，$q^{i,1}$是要和$k^{j,1}$做矩阵乘法，而非$k^{j,2}$，一一对应。后面计算就和single-head一样了，最后得到$b^{i,1}$
-<a href="#R-image-1950d95f0053bf6d89229242bbcfe30c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/f632d4373743df255fa6b8ad32bacf91.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1950d95f0053bf6d89229242bbcfe30c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/f632d4373743df255fa6b8ad32bacf91.png"></a>
+<a href="#R-image-3d040c905dcc6971ae106aeec9dc55fc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/f632d4373743df255fa6b8ad32bacf91.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3d040c905dcc6971ae106aeec9dc55fc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/f632d4373743df255fa6b8ad32bacf91.png"></a>
 第二步，对$q^{i,2}$,$k^{i,2}$,$v^{i,2}$做一样的操作，得到$b^{i,2}$
-<a href="#R-image-cb230aa06e10f1b630dec9a7228d6a3c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/305a71e0af123935786dc2abbf618dc5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cb230aa06e10f1b630dec9a7228d6a3c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/305a71e0af123935786dc2abbf618dc5.png"></a>
+<a href="#R-image-0ca121917b7ca8407bbfd96b0e96a106" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/305a71e0af123935786dc2abbf618dc5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0ca121917b7ca8407bbfd96b0e96a106"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/305a71e0af123935786dc2abbf618dc5.png"></a>
 这里我们算出的$b^{i,1}$,$b^{i,2}$是同维度的，我们可以将其concat在一起，再通过一个$W^0$把他转成想要的维度。这也就不难理解，为什么说multi-head的两种生成方式是一样的，因为最终决定是输出维度的是$W^o$。我们可以将multi-head的过程看成是cnn中的隐藏层，multi-head的数量也就对应着Conv2D的filter数量，每一个head各司其职，提取不同的特征。
-<a href="#R-image-85940552dfa3033a38147185511155d4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/3165ecd94c9fe68848f035ada2e2eb85.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-85940552dfa3033a38147185511155d4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/3165ecd94c9fe68848f035ada2e2eb85.png"></a></p>
+<a href="#R-image-4dc19961a333410b6e05c0c681254a08" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/3165ecd94c9fe68848f035ada2e2eb85.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4dc19961a333410b6e05c0c681254a08"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/3165ecd94c9fe68848f035ada2e2eb85.png"></a></p>
 <h3 id="矩阵计算-1">矩阵计算</h3>
 <p>我们已经知道怎么通过 Self-Attention 计算得到输出矩阵 Z，而 Multi-Head Attention 是由多个 Self-Attention 组合形成的，下图是论文中 Multi-Head Attention 的结构图。
-<a href="#R-image-2ac40477fe2751dafd9c9f9a8ffea012" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/8d199cf84adf9f7055ce4d1fa78e6053.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2ac40477fe2751dafd9c9f9a8ffea012"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/8d199cf84adf9f7055ce4d1fa78e6053.png"></a>
+<a href="#R-image-95cc5a7857a05d60d3b652c69ec62412" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/8d199cf84adf9f7055ce4d1fa78e6053.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-95cc5a7857a05d60d3b652c69ec62412"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/8d199cf84adf9f7055ce4d1fa78e6053.png"></a>
 从上图可以看到 Multi-Head Attention 包含多个 Self-Attention 层，首先将输入X分别传递到 h 个不同的 Self-Attention 中，计算得到 h 个输出矩阵Z。下图是 h=8 时候的情况，此时会得到 8 个输出矩阵Z。
-<a href="#R-image-302e4c575d61aec68eb5743d50273000" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/8bc4cd56e86c5cf56eebf3a173275ea2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-302e4c575d61aec68eb5743d50273000"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/8bc4cd56e86c5cf56eebf3a173275ea2.png"></a>
+<a href="#R-image-3c44e1fa251c1f0c0092529dcab75a82" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/8bc4cd56e86c5cf56eebf3a173275ea2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3c44e1fa251c1f0c0092529dcab75a82"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/8bc4cd56e86c5cf56eebf3a173275ea2.png"></a>
 得到 8 个输出矩阵$Z_1$到$Z_8$之后，Multi-Head Attention 将它们拼接在一起 (Concat)，然后传入一个Linear层，得到 Multi-Head Attention 最终的输出Z。
-<a href="#R-image-fbf1192d87ab50ac046e26c58ae33beb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/522a1aaa7f1b6b4ee46183b85a1da8d1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-fbf1192d87ab50ac046e26c58ae33beb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/522a1aaa7f1b6b4ee46183b85a1da8d1.png"></a>
+<a href="#R-image-0bbc0aa0b688d05df707025aa27ff817" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/522a1aaa7f1b6b4ee46183b85a1da8d1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0bbc0aa0b688d05df707025aa27ff817"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_03.md.images/522a1aaa7f1b6b4ee46183b85a1da8d1.png"></a>
 可以看到 Multi-Head Attention 输出的矩阵Z与其输入的矩阵X的维度是一样的。</p>
 <h2 id="代码实现-1">代码实现</h2>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import torch
@@ -577,8 +589,8 @@ print(&#34;Output shape:&#34;, output.shape)</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758266232" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758266232" defer></script>
-    <script src="/docs/js/theme.js?1758266232" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758267566" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758267566" defer></script>
+    <script src="/docs/js/theme.js?1758267566" defer></script>
   </body>
 </html>

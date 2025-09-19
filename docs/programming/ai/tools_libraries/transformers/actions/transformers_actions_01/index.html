@@ -85,26 +85,26 @@ conda install -c huggingface transformers
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="1621">
     <title>Transformers实战01-开箱即用的 pipelines :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758266232" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758266232" defer></script>
-    <script src="/docs/js/search-lunr.js?1758266232" defer></script>
-    <script src="/docs/js/search.js?1758266232" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758267566" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758267566" defer></script>
+    <script src="/docs/js/search-lunr.js?1758267566" defer></script>
+    <script src="/docs/js/search.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758266232";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758267566";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.en.min.js?1758266232" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['en'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/theme.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/format-html.css?1758266232" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758267566" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -158,7 +158,7 @@ conda install -c huggingface transformers
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758266232" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758267566" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_01/index.html">
     <div id="R-body" class="default-animation">
@@ -243,6 +243,18 @@ conda install -c huggingface transformers
 
 <h1 id="transformers实战01-开箱即用的-pipelines">Transformers实战01-开箱即用的 pipelines</h1>
 
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
 <h2 id="hugging-face">Hugging Face</h2>
 <p>Hugging Face是一个人工智能（AI）公司，它致力于开发和推广自然语言处理（NLP）相关的技术和工具。该公司以其开源项目和社区而闻名，其最知名的项目之一是Transformers库，它提供了一系列预训练的语言模型，包括BERT、GPT和RoBERTa等。这些模型已经在各种NLP任务中取得了显著的成功，并成为了许多研究和工业应用的基础。</p>
 <p>除了提供预训练的模型之外，Hugging Face还开发了一系列工具和平台，使得使用和部署这些模型变得更加简单。其中包括：</p>
@@ -291,8 +303,8 @@ conda install -c huggingface transformers
 </ol>
 <p>NLP模型的选择取决于任务的性质和复杂度，以及可用的训练数据和计算资源。随着技术的进步和研究的深入，NLP模型不断演进和改进，为语言处理领域带来了许多创新和新的应用可能性。</p>
 <h2 id="文件结构">文件结构</h2>
-<p><a href="#R-image-53bfe60e7312e14f89c6054e61b93459" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/cb01bc2b8c0ac0a386ef1f6692400079.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-53bfe60e7312e14f89c6054e61b93459"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/cb01bc2b8c0ac0a386ef1f6692400079.png"></a>
+<p><a href="#R-image-81e4d1b7ef7ee99b20875b273eb6d4b6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/cb01bc2b8c0ac0a386ef1f6692400079.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-81e4d1b7ef7ee99b20875b273eb6d4b6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/cb01bc2b8c0ac0a386ef1f6692400079.png"></a>
 训练模型通常具有以下常见的目录文件结构和文件：</p>
 <ol>
 <li>
@@ -367,8 +379,8 @@ conda install -c huggingface transformers
 下面我们以常见的几个 NLP 任务为例，展示如何调用这些 pipeline 模型。</p>
 <h2 id="图片转文本">图片转文本</h2>
 <p>教程参考自官网：https://huggingface.co/docs/transformers/v4.40.2/en/main_classes/pipelines#transformers.ImageToTextPipeline
-<a href="#R-image-aeed94a1b0309f79fa76faef8c550e23" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/43243b59a8fc0d9921d012e1d256d51f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-aeed94a1b0309f79fa76faef8c550e23"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/43243b59a8fc0d9921d012e1d256d51f.png"></a></p>
+<a href="#R-image-f600404a0c8adf65310d4f7ce9a97eaa" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/43243b59a8fc0d9921d012e1d256d51f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f600404a0c8adf65310d4f7ce9a97eaa"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/43243b59a8fc0d9921d012e1d256d51f.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
 itt=pipeline(&#34;image-to-text&#34;,model=&#34;ydshieh/vit-gpt2-coco-en&#34;) #model不指定会使用默认模型。
 rtn=itt(&#34;https://huggingface.co/datasets/Narsil/image_dummy/raw/main/parrots.png&#34;)
@@ -380,11 +392,11 @@ To support symlinks on Windows, you either need to activate Developer Mode or to
 <p>最后输出：[{&lsquo;generated_text&rsquo;: &rsquo;two birds are standing next to each other &lsquo;}]</p>
 <p>如果希望使用其他的image-to-text模型可以在官网搜索
 <a href="https://huggingface.co/models?pipeline_tag=image-to-text&sort=trending" rel="external" target="_blank">https://huggingface.co/models?pipeline_tag=image-to-text&sort=trending</a>
-<a href="#R-image-6afa3869bc109614ddd93f7bd257e109" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/0af97dd5cd118a9c950b925c53ac28b9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6afa3869bc109614ddd93f7bd257e109"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/0af97dd5cd118a9c950b925c53ac28b9.png"></a>
+<a href="#R-image-0ff15516e7f2acb499645c020a7b5103" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/0af97dd5cd118a9c950b925c53ac28b9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0ff15516e7f2acb499645c020a7b5103"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/0af97dd5cd118a9c950b925c53ac28b9.png"></a>
 比如选择image-to-text右侧文本框输入chinese，看下是不是有中文描述的
-<a href="#R-image-5d6d1d163b83f832b3be988a38aa3798" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/f99868b1909dd9c7de04e569b0d941e1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5d6d1d163b83f832b3be988a38aa3798"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/f99868b1909dd9c7de04e569b0d941e1.png"></a>
+<a href="#R-image-528cccf04d7113bc095d7a073064fdcb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/f99868b1909dd9c7de04e569b0d941e1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-528cccf04d7113bc095d7a073064fdcb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/f99868b1909dd9c7de04e569b0d941e1.png"></a>
 使用这个模型来测试下</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>image_path=&#34;https://huggingface.co/datasets/Narsil/image_dummy/raw/main/parrots.png&#34;
 from transformers import pipeline
@@ -403,8 +415,8 @@ print(generator(&#34;I can&#39;t believe you did such a &#34;))</code></pre></di
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[{&#39;generated_text&#39;: &#39;I can\&#39;t believe you did such a _____t!&#34;\n\n&#34;You know I\&#39;m kind of an asshole to you, I mean?&#34;\n\n&#34;Just because I had one thing to do doesn\&#39;t mean I hate you. I know you&#39;}]</code></pre></div>
 <p>在huggerface上搜索一个古诗词生成的模型，
 左侧选择tag Text Generation ，搜索poem，选择最多人喜欢。
-<a href="#R-image-bbbffdbe9b1e49f9b603cbf3ad2eb70f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/8dfa39301693265aea3f46b80d5a3641.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bbbffdbe9b1e49f9b603cbf3ad2eb70f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/8dfa39301693265aea3f46b80d5a3641.png"></a></p>
+<a href="#R-image-9543e19836317c33ceba95aa79d8b0de" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/8dfa39301693265aea3f46b80d5a3641.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9543e19836317c33ceba95aa79d8b0de"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/8dfa39301693265aea3f46b80d5a3641.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import pipeline
 generator = pipeline(&#34;text-generation&#34;,model=&#34;uer/gpt2-chinese-poem&#34;)
 print(generator(&#34;[CLS] 离 离 原 上 草 ，&#34;))</code></pre></div>
@@ -550,8 +562,8 @@ print(result)</code></pre></div>
 <li>预处理 (preprocessing)，将原始文本转换为模型可以接受的输入格式；</li>
 <li>将处理好的输入送入模型；</li>
 <li>对模型的输出进行后处理 (postprocessing)，将其转换为人类方便阅读的格式。
-<a href="#R-image-79d2398ef56b1b07a2b11fbbf58395be" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/e992d68b8636797327a618cd9236a749.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-79d2398ef56b1b07a2b11fbbf58395be"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/e992d68b8636797327a618cd9236a749.png"></a></li>
+<a href="#R-image-db1f719e0f8b3d8f662a7f3224d7660c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/e992d68b8636797327a618cd9236a749.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-db1f719e0f8b3d8f662a7f3224d7660c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/e992d68b8636797327a618cd9236a749.png"></a></li>
 </ol>
 <h2 id="使用分词器进行预处理">使用分词器进行预处理</h2>
 <p>因为神经网络模型无法直接处理文本，因此首先需要通过<strong>预处理</strong>环节将文本转换为模型可以理解的数字。具体地，我们会使用每个模型对应的分词器 (tokenizer) 来进行：</p>
@@ -596,8 +608,8 @@ model = AutoModel.from_pretrained(checkpoint)</code></pre></div>
 <p>预训练模型的本体只包含基础的 Transformer 模块，对于给定的输入，它会输出一些神经元的值，称为 hidden states 或者特征 (features)。对于 NLP 模型来说，可以理解为是文本的高维语义表示。这些 hidden states 通常会被输入到其他的模型部分（称为 head），以完成特定的任务，例如送入到分类头中完成文本分类任务。</p>
 <blockquote>
 <p>其实前面我们举例的所有 pipelines 都具有类似的模型结构，只是模型的最后一部分会使用不同的 head 以完成对应的任务。
-<a href="#R-image-ced85095359c311538a9add7ef190a41" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/06666f31d707e8ca43c2b24b7263dfc8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ced85095359c311538a9add7ef190a41"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/06666f31d707e8ca43c2b24b7263dfc8.png"></a></p></blockquote>
+<a href="#R-image-5ec1122b4b20f816f0ed56b44459ae9a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/06666f31d707e8ca43c2b24b7263dfc8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5ec1122b4b20f816f0ed56b44459ae9a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_01.md.images/06666f31d707e8ca43c2b24b7263dfc8.png"></a></p></blockquote>
 <h3 id="transformers库结构">Transformers库结构</h3>
 <p>Transformers 库封装了很多不同的结构，常见的有：</p>
 <ul>
@@ -760,8 +772,8 @@ print(predictions)</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758266232" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758266232" defer></script>
-    <script src="/docs/js/theme.js?1758266232" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758267566" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758267566" defer></script>
+    <script src="/docs/js/theme.js?1758267566" defer></script>
   </body>
 </html>

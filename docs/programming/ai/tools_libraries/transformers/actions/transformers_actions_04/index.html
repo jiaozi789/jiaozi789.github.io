@@ -69,26 +69,26 @@ Transformer架构：GPT-2基于Transformer模型架构，这是一种使用自�
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="2543">
     <title>Transformers实战04-微调gpt-2生成python代码。 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758266232" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758266232" defer></script>
-    <script src="/docs/js/search-lunr.js?1758266232" defer></script>
-    <script src="/docs/js/search.js?1758266232" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758267566" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758267566" defer></script>
+    <script src="/docs/js/search-lunr.js?1758267566" defer></script>
+    <script src="/docs/js/search.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758266232";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758267566";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.en.min.js?1758266232" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['en'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/theme.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/format-html.css?1758266232" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758267566" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -142,7 +142,7 @@ Transformer架构：GPT-2基于Transformer模型架构，这是一种使用自�
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758266232" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758267566" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_04/index.html">
     <div id="R-body" class="default-animation">
@@ -224,6 +224,18 @@ Transformer架构：GPT-2基于Transformer模型架构，这是一种使用自�
 
 <h1 id="transformers实战04-微调gpt-2生成python代码">Transformers实战04-微调gpt-2生成python代码。</h1>
 
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
 <h1 id="简介">简介</h1>
 <p>GPT-2（Generative Pre-trained Transformer 2）是由OpenAI开发的一种基于Transformer架构的自然语言处理模型。以下是关于GPT-2的一些关键特点和信息：</p>
 <ol>
@@ -257,11 +269,11 @@ Transformer架构：GPT-2基于Transformer模型架构，这是一种使用自�
 <p>我们将构建一个缩减版的代码生成模型：我们将专注于一行补全，而不是完整的函数或类，使用Python代码的一个子集。在Python中处理数据时，您会频繁接触到Python数据科学栈，包括matplotlib、seaborn、pandas和scikit-learn库。在使用这些框架时，经常需要查找特定的命令，因此如果我们可以使用一个模型来为我们完成这些调用，那将是很好的。</p>
 <h2 id="收集数据">收集数据</h2>
 <p>我们使用huggingface收集得content包含：&ldquo;pandas&rdquo;, &ldquo;sklearn&rdquo;, &ldquo;matplotlib&rdquo;, &ldquo;seaborn&rdquo; 这些关键字python代码
-<a href="#R-image-e36bf76c56fe5625e9e4494277912a63" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/5289affa0aab4eec9ffcb5c434146b7d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e36bf76c56fe5625e9e4494277912a63"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/5289affa0aab4eec9ffcb5c434146b7d.png"></a>
+<a href="#R-image-06ed33b8cd24bb8cb694c7f7ce918eb2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/5289affa0aab4eec9ffcb5c434146b7d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-06ed33b8cd24bb8cb694c7f7ce918eb2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/5289affa0aab4eec9ffcb5c434146b7d.png"></a>
 这个数据集是从github公共仓库爬取，比如
-<a href="#R-image-be66cca668eedb46880e798cb773a902" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3bd924ccf8e941efa901ec62731eb0f4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-be66cca668eedb46880e798cb773a902"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3bd924ccf8e941efa901ec62731eb0f4.png"></a></p>
+<a href="#R-image-c78a50b4e380c7b143c5a91e1c36546d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3bd924ccf8e941efa901ec62731eb0f4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c78a50b4e380c7b143c5a91e1c36546d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3bd924ccf8e941efa901ec62731eb0f4.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from datasets import load_dataset, DatasetDict
 
 ds_train = load_dataset(&#34;huggingface-course/codeparrot-ds-train&#34;, split=&#34;train&#34;)
@@ -595,8 +607,8 @@ Map: 100%
 预处理后的数据集： {&#39;input_ids&#39;: [[101, 2023, 2003, 1996, 2034, 6251, 1012, 102], [101, 2182, 1005, 1055, 1996, 2117, 6251, 102], [101, 1998, 2023, 2003, 1996, 2353, 2028, 102]], &#39;token_type_ids&#39;: [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]], &#39;attention_mask&#39;: [[1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1]]}</code></pre></div>
 <h3 id="预处理">预处理</h3>
 <p>大多数文档的标记数远超过 128 个，因此简单地将输入截断到最大长度会消除我们数据集的很大一部分。相反，我们将使用 return_overflowing_tokens 选项来对整个输入进行标记，并将其拆分为几个块。我们还将使用 return_length 选项自动返回每个创建块的长度。通常，最后一个块会小于上下文大小，我们将去掉这些部分以避免填充问题；实际上我们不需要它们，因为我们有很多数据。
-<a href="#R-image-c38e83611408c2205abaa159bb4121d9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3f5c55e1611842b7a9e191ecc1305279.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c38e83611408c2205abaa159bb4121d9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3f5c55e1611842b7a9e191ecc1305279.png"></a>
+<a href="#R-image-1756b964553bf9d585fc50938c02f31c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3f5c55e1611842b7a9e191ecc1305279.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1756b964553bf9d585fc50938c02f31c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_04.md.images/3f5c55e1611842b7a9e191ecc1305279.png"></a>
 让我们通过查看前两个例子来看看这到底是如何工作的：</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoTokenizer
 
@@ -1003,8 +1015,8 @@ rf</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758266232" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758266232" defer></script>
-    <script src="/docs/js/theme.js?1758266232" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758267566" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758267566" defer></script>
+    <script src="/docs/js/theme.js?1758267566" defer></script>
   </body>
 </html>

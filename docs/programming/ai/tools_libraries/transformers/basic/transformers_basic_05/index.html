@@ -73,26 +73,26 @@ Decoder在预训练、输入输出和预测时的输入输出：
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="314">
     <title>Transformer模型详解05-Decoder 结构 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758266418" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758266418" defer></script>
-    <script src="/docs/js/search-lunr.js?1758266418" defer></script>
-    <script src="/docs/js/search.js?1758266418" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758267566" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758267566" defer></script>
+    <script src="/docs/js/search-lunr.js?1758267566" defer></script>
+    <script src="/docs/js/search.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758266418";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758267566";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758266418" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758266418" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758266418" defer></script>
-    <script src="/docs/js/lunr/lunr.en.min.js?1758266418" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['en'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266418" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266418" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758266418" rel="stylesheet">
-    <link href="/docs/css/theme.css?1758266418" rel="stylesheet">
-    <link href="/docs/css/format-html.css?1758266418" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758267566" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -146,7 +146,7 @@ Decoder在预训练、输入输出和预测时的输入输出：
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758266418" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758267566" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_05/index.html">
     <div id="R-body" class="default-animation">
@@ -259,8 +259,8 @@ window.MathJax = {
 </li>
 </ol>
 <h1 id="结构">结构</h1>
-<p><a href="#R-image-78c5bef2aa2e305def161a2eac02e70f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/64bc5e25cb14338b03c57963ace38219.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-78c5bef2aa2e305def161a2eac02e70f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/64bc5e25cb14338b03c57963ace38219.png"></a>
+<p><a href="#R-image-74f104eba43f766a1da64ce2b974b192" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/64bc5e25cb14338b03c57963ace38219.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-74f104eba43f766a1da64ce2b974b192"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/64bc5e25cb14338b03c57963ace38219.png"></a>
 上图红色部分为 Transformer 的 Decoder block 结构，与 Encoder block 相似，但是存在一些区别：</p>
 <ul>
 <li>包含两个 Multi-Head Attention 层。</li>
@@ -274,22 +274,22 @@ window.MathJax = {
 <h2 id="第一个-multi-head-attention">第一个 Multi-Head Attention</h2>
 <p>Decoder block 的第一个 Multi-Head Attention 采用了 Masked 操作，因为在翻译的过程中是顺序翻译的，即翻译完第 i 个单词，才可以翻译第 i+1 个单词。通过 Masked 操作可以防止第 i 个单词知道 i+1 个单词之后的信息。下面以 &ldquo;我有一只猫&rdquo; 翻译成 &ldquo;I have a cat&rdquo; 为例，了解一下 Masked 操作。</p>
 <p>下面的描述中使用了类似 Teacher Forcing 的概念，不熟悉 Teacher Forcing 的童鞋可以参考以下上一篇文章Seq2Seq 模型详解。在 Decoder 的时候，是需要根据之前的翻译，求解当前最有可能的翻译，如下图所示。首先根据输入 &ldquo;<!-- raw HTML omitted -->&rdquo; 预测出第一个单词为 &ldquo;I&rdquo;，然后根据输入 &ldquo;<!-- raw HTML omitted --> I&rdquo; 预测下一个单词 &ldquo;have&rdquo;。
-<a href="#R-image-370877b02f6c277322b67e609c04c762" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/e7ba56a157418a3c9ef558c224b055e7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-370877b02f6c277322b67e609c04c762"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/e7ba56a157418a3c9ef558c224b055e7.png"></a>
+<a href="#R-image-25c1b31e782b1a75ecdc37c9e91531de" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/e7ba56a157418a3c9ef558c224b055e7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-25c1b31e782b1a75ecdc37c9e91531de"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/e7ba56a157418a3c9ef558c224b055e7.png"></a>
 Decoder 可以在训练的过程中使用 Teacher Forcing 并且并行化训练，即将正确的单词序列 (<!-- raw HTML omitted --> I have a cat) 和对应输出 (I have a cat <!-- raw HTML omitted -->) 传递到 Decoder。那么在预测第 i 个输出时，就要将第 i+1 之后的单词掩盖住，注意 Mask 操作是在 Self-Attention 的 Softmax 之前使用的，下面用 0 1 2 3 4 5 分别表示 &ldquo;<!-- raw HTML omitted --> I have a cat <!-- raw HTML omitted -->&quot;。</p>
 <p>第一步：是 Decoder 的输入矩阵和 Mask 矩阵，输入矩阵包含 &ldquo;<!-- raw HTML omitted --> I have a cat&rdquo; (0, 1, 2, 3, 4) 五个单词的表示向量，Mask 是一个 5×5 的矩阵。在 Mask 可以发现单词 0 只能使用单词 0 的信息，而单词 1 可以使用单词 0, 1 的信息，即只能使用之前的信息。
-<a href="#R-image-6a776e67a33a2a11e5adf848191a8b5a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/a2e9a4a8dedda17943cc0d4a775c5251.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6a776e67a33a2a11e5adf848191a8b5a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/a2e9a4a8dedda17943cc0d4a775c5251.png"></a>
+<a href="#R-image-a05ae6c9fbfdfa76d58fb93a6035456e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/a2e9a4a8dedda17943cc0d4a775c5251.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a05ae6c9fbfdfa76d58fb93a6035456e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/a2e9a4a8dedda17943cc0d4a775c5251.png"></a>
 第二步：接下来的操作和之前的 Self-Attention 一样，通过输入矩阵X计算得到Q,K,V矩阵。然后计算Q和$K^T$的乘积$QK^T$
-<a href="#R-image-bea48f8a90614ca9c5afdc5523cc5504" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/543d5c07a9aa58c23063205e8c90ccbe.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bea48f8a90614ca9c5afdc5523cc5504"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/543d5c07a9aa58c23063205e8c90ccbe.png"></a>
+<a href="#R-image-0eff79949f1b63529d227b61feff16b2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/543d5c07a9aa58c23063205e8c90ccbe.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0eff79949f1b63529d227b61feff16b2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/543d5c07a9aa58c23063205e8c90ccbe.png"></a>
 第三步：在得到 $QK^T$之后需要进行 Softmax，计算 attention score，我们在 Softmax 之前需要使用Mask矩阵遮挡住每一个单词之后的信息，遮挡操作如下：
-<a href="#R-image-2102b1c794229612a268483f447307ea" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/6200a6ae26f46296a7b88179ddb13c91.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2102b1c794229612a268483f447307ea"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/6200a6ae26f46296a7b88179ddb13c91.png"></a>
+<a href="#R-image-ba9d234bb86dc7b03ee0fa585712dee3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/6200a6ae26f46296a7b88179ddb13c91.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ba9d234bb86dc7b03ee0fa585712dee3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/6200a6ae26f46296a7b88179ddb13c91.png"></a>
 得到 Mask  $QK^T$之后在 Mask$QK^T$上进行 Softmax，每一行的和都为 1。但是单词 0 在单词 1, 2, 3, 4 上的 attention score 都为 0。
 第四步：使用 Mask $QK^T$与矩阵 V相乘，得到输出 Z，则单词 1 的输出向量 $Z_1$是只包含单词 1 信息的。
-<a href="#R-image-d1636b91372bb4e50815eb5d769e5f3e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/805f7d90e99c2ad1d83c2c8c56f52b33.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d1636b91372bb4e50815eb5d769e5f3e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/805f7d90e99c2ad1d83c2c8c56f52b33.png"></a>
+<a href="#R-image-3dbaa0a696f724c66e73413c374254d2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/805f7d90e99c2ad1d83c2c8c56f52b33.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3dbaa0a696f724c66e73413c374254d2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/805f7d90e99c2ad1d83c2c8c56f52b33.png"></a>
 第五步：通过上述步骤就可以得到一个 Mask Self-Attention 的输出矩阵  $Z_i$，然后和 Encoder 类似，通过 Multi-Head Attention 拼接多个输出$Z_i$然后计算得到第一个 Multi-Head Attention 的输出Z，Z与输入X维度一样。</p>
 <h2 id="第二个-multi-head-attention">第二个 Multi-Head Attention</h2>
 <p>Decoder block 第二个 Multi-Head Attention 变化不大， 主要的区别在于其中 Self-Attention 的 K, V矩阵不是使用 上一个 Decoder block 的输出计算的，而是使用 Encoder 的编码信息矩阵 C 计算的。</p>
@@ -311,11 +311,11 @@ Decoder 可以在训练的过程中使用 Teacher Forcing 并且并行化训练�
 <p>总之，通过在解码器中使用编码器的键和值，以及使用解码器的查询，Transformer 模型能够更好地利用编码器端对输入序列的理解，并在解码器端根据当前正在生成的序列来做出决策，从而提高了生成序列的质量和连贯性。</p>
 <h2 id="softmax-预测输出单词">Softmax 预测输出单词</h2>
 <p>Decoder block 最后的部分是利用 Softmax 预测下一个单词，在之前的网络层我们可以得到一个最终的输出 Z，因为 Mask 的存在，使得单词 0 的输出 Z0 只包含单词 0 的信息，如下：
-<a href="#R-image-77c180fa28ba84e87fcf11d0d19e5479" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/aa5363ab6402913b30db167a86948ae8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-77c180fa28ba84e87fcf11d0d19e5479"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/aa5363ab6402913b30db167a86948ae8.png"></a>
+<a href="#R-image-013c6bace30a099c2a5cf1c0929593ab" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/aa5363ab6402913b30db167a86948ae8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-013c6bace30a099c2a5cf1c0929593ab"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/aa5363ab6402913b30db167a86948ae8.png"></a>
 Softmax 根据输出矩阵的每一行预测下一个单词：
-<a href="#R-image-16225d129228cdf85532f303c889fe03" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/0928ed4787adec8ff430bb6d27ee4376.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-16225d129228cdf85532f303c889fe03"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/0928ed4787adec8ff430bb6d27ee4376.png"></a>
+<a href="#R-image-3a6a9dee1ff59045f2c56d04042440b3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/0928ed4787adec8ff430bb6d27ee4376.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3a6a9dee1ff59045f2c56d04042440b3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_05.md.images/0928ed4787adec8ff430bb6d27ee4376.png"></a>
 这就是 Decoder block 的定义，与 Encoder 一样，Decoder 是由多个 Decoder block 组合而成。</p>
 
   <footer class="footline">
@@ -395,8 +395,8 @@ Softmax 根据输出矩阵的每一行预测下一个单词：
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758266418" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758266418" defer></script>
-    <script src="/docs/js/theme.js?1758266418" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758267566" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758267566" defer></script>
+    <script src="/docs/js/theme.js?1758267566" defer></script>
   </body>
 </html>

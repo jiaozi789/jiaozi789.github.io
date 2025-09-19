@@ -6,18 +6,6 @@ theme = 'relearn'
 [params]
   custom_css = ["css/custom.css"]
 
-[menu]
-  [[menu.sidebar]]
-    identifier = "guide"
-    name = "指南"
-    url = "/guide/"
-    weight = 1
-
-  [[menu.sidebar]]
-    identifier = "tutorial"
-    name = "教程"
-    url = "/tutorial/"
-    weight = 2
 [markup.tableOfContents]
 startLevel = 1
 endLevel = 4   # 默认是 3，你可以改成 4 或更高

@@ -101,26 +101,26 @@ BERT的基本原理 BERT基于的是Transformer模型，并且仅使用Transform
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="1657">
     <title>Transformers实战02-BERT预训练模型微调 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758266232" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758266232" defer></script>
-    <script src="/docs/js/search-lunr.js?1758266232" defer></script>
-    <script src="/docs/js/search.js?1758266232" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758267566" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758267566" defer></script>
+    <script src="/docs/js/search-lunr.js?1758267566" defer></script>
+    <script src="/docs/js/search.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758266232";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758267566";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758266232" defer></script>
-    <script src="/docs/js/lunr/lunr.en.min.js?1758266232" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.en.min.js?1758267566" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['en'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758266232" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/theme.css?1758266232" rel="stylesheet">
-    <link href="/docs/css/format-html.css?1758266232" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758267566" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -174,7 +174,7 @@ BERT的基本原理 BERT基于的是Transformer模型，并且仅使用Transform
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758266232" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758267566" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html">
     <div id="R-body" class="default-animation">
@@ -248,6 +248,18 @@ BERT的基本原理 BERT基于的是Transformer模型，并且仅使用Transform
 
 <h1 id="transformers实战02-bert预训练模型微调">Transformers实战02-BERT预训练模型微调</h1>
 
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
 <p>BERT（Bidirectional Encoder Representations from Transformers）是一种基于 Transformer 模型的预训练语言表示方法，由Google研究团队于2018年提出。BERT 通过在大规模文本语料上进行无监督的预训练，学习了通用的语言表示，并且在各种自然语言处理任务中取得了显著的性能提升。</p>
 <p>BERT仅使用了Transformer架构的Encoder部分。BERT自2018年由谷歌发布后，在多种NLP任务中（例如QA、文本生成、情感分析等等）都实现了更好的结果。</p>
 <p>“Word2vec与GloVe都有一个特点，就是它们是上下文无关（context-free）的词嵌入。所以它们没有解决：一个单词在不同上下文中代表不同的含义的问题。例如，对于单词bank，它在不同的上下文中，有银行、河畔这种差别非常大的含义。BERT的出现，解决了这个问题。</p>
@@ -300,8 +312,8 @@ BERT的基本原理 BERT基于的是Transformer模型，并且仅使用Transform
 <h1 id="bert的基本原理">BERT的基本原理</h1>
 <p>BERT基于的是Transformer模型，并且仅使用Transformer模型的Encoder部分。在Transformer模型中，Encoder的输入是一串序列，输出的是对序列中每个字符的表示。同样，在BERT中，输入的是一串序列，输出的是也是对应序列中每个单词的编码。
 以“He got bit by Python”为例，BERT的输入输出如下图所示：
-<a href="#R-image-b79a3f7cb7d9c8084bc3cfb25114d683" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/77d14abf55fea6c76269fcdeb93bb7c0.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b79a3f7cb7d9c8084bc3cfb25114d683"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/77d14abf55fea6c76269fcdeb93bb7c0.png"></a>
+<a href="#R-image-0e9f19891051d8c6d0773723fab76702" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/77d14abf55fea6c76269fcdeb93bb7c0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0e9f19891051d8c6d0773723fab76702"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/77d14abf55fea6c76269fcdeb93bb7c0.png"></a>
 其中输入为序列“He got bit by Python”，输出的是对每个单词的编码$R_{word}$。这样在经过了BERT处理后，即得到了对每个单词包含的上下文表示$R_{word}$。</p>
 <h2 id="分词">分词</h2>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoModel, BertTokenizer
@@ -615,8 +627,8 @@ for item in range(10):
      #更新一次,其实就是进度条加上： 1/len(range(10))
      tdm.update(1)</code></pre></div>
 <p>效果
-<a href="#R-image-b56e84a5e142ae610f77f0a1549509c0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/b1881dfe947372cd773bd9c2f1ad131b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b56e84a5e142ae610f77f0a1549509c0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/b1881dfe947372cd773bd9c2f1ad131b.png"></a></p>
+<a href="#R-image-6c52db65c56a4bcb19667eb6d2aea525" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/b1881dfe947372cd773bd9c2f1ad131b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6c52db65c56a4bcb19667eb6d2aea525"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/b1881dfe947372cd773bd9c2f1ad131b.png"></a></p>
 <h3 id="训练模型-1">训练模型</h3>
 <p>在训练模型时，我们将每一轮 Epoch 分为训练循环和验证/测试循环。在训练循环中计算损失、优化模型的参数，在验证/测试循环中评估模型的性能，与 Pytorch 类似，Transformers 库同样实现了很多的优化器，并且相比 Pytorch 固定学习率，Transformers 库的优化器会随着训练过程逐步减小学习率（通常会产生更好的效果）。例如我们前面使用过的 AdamW 优化器
 完整的训练过程，可与使用colab来进行训练。</p>
@@ -793,8 +805,8 @@ print(pred.argmax(1) == y)</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758266232" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758266232" defer></script>
-    <script src="/docs/js/theme.js?1758266232" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758267566" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758267566" defer></script>
+    <script src="/docs/js/theme.js?1758267566" defer></script>
   </body>
 </html>
