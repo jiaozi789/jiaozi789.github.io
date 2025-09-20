@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="1.引言 在互联网大数据场景下，我们经常需要面对高维数据，在对这些数据做分析和可视化的时候，我们通常会面对「高维」这个障碍。在数据挖掘和建模的过程中，高维数据也同样带来大的计算量，占据更多的资源，而且许多变量之间可能存在相关性，从而增加了分析与建模的复杂性。
+我们希望找到一种方法，在对数据完成降维「压缩」的同时，尽量减少信息损失。由于各变量之间存在一定的相关关系，因此可以考虑将关系紧密的变量变成尽可能少的新变量，使这些新变量是两两不相关的，那么就可以用较少的综合指标分别代表存在于各个变量中的各类信息。机器学习中的降维算法就是这样的一类算法。
+主成分分析（Principal Components Analysis，简称PCA）是最重要的数据降维方法之一。在数据压缩消除冗余和数据噪音消除等领域都有广泛的应用。本篇我们来展开讲解一下这个算法。
+2.相关概念 协方差矩阵 协方差(Covariance)目的是度量两个变量(只能为两个)线性相关的程度。 cov=0为可以说明两个变量线性无关，但不能证明两个变量相互独立，当cov&gt;0时，二者呈正相关，cov&lt;0时，二者呈负相关。
+协方差矩阵可以处理多维度问题。 协方差矩阵是一个对称的矩阵，而且对角线是各个维度上的方差。 协方差矩阵计算的是不同维度之间的协方差，而不是不同样本之间的。 样本矩阵中若每行是一个样本，则每列为一个维度。 假设数据是3维的，那么对应协方差矩阵为： 这里简要概括一下协方差矩阵是怎么求得的，假设一个数据集有3维特征、每个特征有m个变量，这个数据集对应的数据矩阵如下： 若假设他们的均值都为0，可以得到下面等式： 可以看到对角线上为每个特征方差，其余位置为两个特征之间的协方差， 求得的就为协方差矩阵。 推导： 如果列是特征，公式为： &#39;&#39;&#39;假设列是矩阵特征，代数里面是行表示特征[[x1,y2][x2，y2]]求协方差是[[cov(x,x),cov(x,y)],[cov(y,x),cov(y,y)],]&#39;&#39;&#39;pc=np.array([[-1,4],[-2,8],[-7,2]]);mean_pa=np.mean(pc,axis=0)print(&#34;均值&#34;,mean_pa)pc_zero=pc-mean_paprint(pc_zero)print(pc_zero.T.dot(pc_zero)/(len(pc_zero)-1)) #注意样本的话是n-1啊，全部数据集是n，否则和np.cov对不上print(&#34;conv&#34;,np.cov(pc,rowvar=False)) #rowvar=False表示列是特征，默认行是特征 结果为：">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="机器学习实战教程（⑤）：使用PCA实战人脸降维 :: liaomin416100569博客">
+    <meta name="twitter:description" content="1.引言 在互联网大数据场景下，我们经常需要面对高维数据，在对这些数据做分析和可视化的时候，我们通常会面对「高维」这个障碍。在数据挖掘和建模的过程中，高维数据也同样带来大的计算量，占据更多的资源，而且许多变量之间可能存在相关性，从而增加了分析与建模的复杂性。
+我们希望找到一种方法，在对数据完成降维「压缩」的同时，尽量减少信息损失。由于各变量之间存在一定的相关关系，因此可以考虑将关系紧密的变量变成尽可能少的新变量，使这些新变量是两两不相关的，那么就可以用较少的综合指标分别代表存在于各个变量中的各类信息。机器学习中的降维算法就是这样的一类算法。
+主成分分析（Principal Components Analysis，简称PCA）是最重要的数据降维方法之一。在数据压缩消除冗余和数据噪音消除等领域都有广泛的应用。本篇我们来展开讲解一下这个算法。
+2.相关概念 协方差矩阵 协方差(Covariance)目的是度量两个变量(只能为两个)线性相关的程度。 cov=0为可以说明两个变量线性无关，但不能证明两个变量相互独立，当cov&gt;0时，二者呈正相关，cov&lt;0时，二者呈负相关。
+协方差矩阵可以处理多维度问题。 协方差矩阵是一个对称的矩阵，而且对角线是各个维度上的方差。 协方差矩阵计算的是不同维度之间的协方差，而不是不同样本之间的。 样本矩阵中若每行是一个样本，则每列为一个维度。 假设数据是3维的，那么对应协方差矩阵为： 这里简要概括一下协方差矩阵是怎么求得的，假设一个数据集有3维特征、每个特征有m个变量，这个数据集对应的数据矩阵如下： 若假设他们的均值都为0，可以得到下面等式： 可以看到对角线上为每个特征方差，其余位置为两个特征之间的协方差， 求得的就为协方差矩阵。 推导： 如果列是特征，公式为： &#39;&#39;&#39;假设列是矩阵特征，代数里面是行表示特征[[x1,y2][x2，y2]]求协方差是[[cov(x,x),cov(x,y)],[cov(y,x),cov(y,y)],]&#39;&#39;&#39;pc=np.array([[-1,4],[-2,8],[-7,2]]);mean_pa=np.mean(pc,axis=0)print(&#34;均值&#34;,mean_pa)pc_zero=pc-mean_paprint(pc_zero)print(pc_zero.T.dot(pc_zero)/(len(pc_zero)-1)) #注意样本的话是n-1啊，全部数据集是n，否则和np.cov对不上print(&#34;conv&#34;,np.cov(pc,rowvar=False)) #rowvar=False表示列是特征，默认行是特征 结果为：">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/ai/machine_learning/algorithms/action_05_pcaface-copy/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="机器学习实战教程（⑤）：使用PCA实战人脸降维 :: liaomin416100569博客">
+    <meta property="og:description" content="1.引言 在互联网大数据场景下，我们经常需要面对高维数据，在对这些数据做分析和可视化的时候，我们通常会面对「高维」这个障碍。在数据挖掘和建模的过程中，高维数据也同样带来大的计算量，占据更多的资源，而且许多变量之间可能存在相关性，从而增加了分析与建模的复杂性。
+我们希望找到一种方法，在对数据完成降维「压缩」的同时，尽量减少信息损失。由于各变量之间存在一定的相关关系，因此可以考虑将关系紧密的变量变成尽可能少的新变量，使这些新变量是两两不相关的，那么就可以用较少的综合指标分别代表存在于各个变量中的各类信息。机器学习中的降维算法就是这样的一类算法。
+主成分分析（Principal Components Analysis，简称PCA）是最重要的数据降维方法之一。在数据压缩消除冗余和数据噪音消除等领域都有广泛的应用。本篇我们来展开讲解一下这个算法。
+2.相关概念 协方差矩阵 协方差(Covariance)目的是度量两个变量(只能为两个)线性相关的程度。 cov=0为可以说明两个变量线性无关，但不能证明两个变量相互独立，当cov&gt;0时，二者呈正相关，cov&lt;0时，二者呈负相关。
+协方差矩阵可以处理多维度问题。 协方差矩阵是一个对称的矩阵，而且对角线是各个维度上的方差。 协方差矩阵计算的是不同维度之间的协方差，而不是不同样本之间的。 样本矩阵中若每行是一个样本，则每列为一个维度。 假设数据是3维的，那么对应协方差矩阵为： 这里简要概括一下协方差矩阵是怎么求得的，假设一个数据集有3维特征、每个特征有m个变量，这个数据集对应的数据矩阵如下： 若假设他们的均值都为0，可以得到下面等式： 可以看到对角线上为每个特征方差，其余位置为两个特征之间的协方差， 求得的就为协方差矩阵。 推导： 如果列是特征，公式为： &#39;&#39;&#39;假设列是矩阵特征，代数里面是行表示特征[[x1,y2][x2，y2]]求协方差是[[cov(x,x),cov(x,y)],[cov(y,x),cov(y,y)],]&#39;&#39;&#39;pc=np.array([[-1,4],[-2,8],[-7,2]]);mean_pa=np.mean(pc,axis=0)print(&#34;均值&#34;,mean_pa)pc_zero=pc-mean_paprint(pc_zero)print(pc_zero.T.dot(pc_zero)/(len(pc_zero)-1)) #注意样本的话是n-1啊，全部数据集是n，否则和np.cov对不上print(&#34;conv&#34;,np.cov(pc,rowvar=False)) #rowvar=False表示列是特征，默认行是特征 结果为：">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="机器学习实战教程（⑤）：使用PCA实战人脸降维 :: liaomin416100569博客">
+    <meta itemprop="description" content="1.引言 在互联网大数据场景下，我们经常需要面对高维数据，在对这些数据做分析和可视化的时候，我们通常会面对「高维」这个障碍。在数据挖掘和建模的过程中，高维数据也同样带来大的计算量，占据更多的资源，而且许多变量之间可能存在相关性，从而增加了分析与建模的复杂性。
+我们希望找到一种方法，在对数据完成降维「压缩」的同时，尽量减少信息损失。由于各变量之间存在一定的相关关系，因此可以考虑将关系紧密的变量变成尽可能少的新变量，使这些新变量是两两不相关的，那么就可以用较少的综合指标分别代表存在于各个变量中的各类信息。机器学习中的降维算法就是这样的一类算法。
+主成分分析（Principal Components Analysis，简称PCA）是最重要的数据降维方法之一。在数据压缩消除冗余和数据噪音消除等领域都有广泛的应用。本篇我们来展开讲解一下这个算法。
+2.相关概念 协方差矩阵 协方差(Covariance)目的是度量两个变量(只能为两个)线性相关的程度。 cov=0为可以说明两个变量线性无关，但不能证明两个变量相互独立，当cov&gt;0时，二者呈正相关，cov&lt;0时，二者呈负相关。
+协方差矩阵可以处理多维度问题。 协方差矩阵是一个对称的矩阵，而且对角线是各个维度上的方差。 协方差矩阵计算的是不同维度之间的协方差，而不是不同样本之间的。 样本矩阵中若每行是一个样本，则每列为一个维度。 假设数据是3维的，那么对应协方差矩阵为： 这里简要概括一下协方差矩阵是怎么求得的，假设一个数据集有3维特征、每个特征有m个变量，这个数据集对应的数据矩阵如下： 若假设他们的均值都为0，可以得到下面等式： 可以看到对角线上为每个特征方差，其余位置为两个特征之间的协方差， 求得的就为协方差矩阵。 推导： 如果列是特征，公式为： &#39;&#39;&#39;假设列是矩阵特征，代数里面是行表示特征[[x1,y2][x2，y2]]求协方差是[[cov(x,x),cov(x,y)],[cov(y,x),cov(y,y)],]&#39;&#39;&#39;pc=np.array([[-1,4],[-2,8],[-7,2]]);mean_pa=np.mean(pc,axis=0)print(&#34;均值&#34;,mean_pa)pc_zero=pc-mean_paprint(pc_zero)print(pc_zero.T.dot(pc_zero)/(len(pc_zero)-1)) #注意样本的话是n-1啊，全部数据集是n，否则和np.cov对不上print(&#34;conv&#34;,np.cov(pc,rowvar=False)) #rowvar=False表示列是特征，默认行是特征 结果为：">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="623">
+    <title>机器学习实战教程（⑤）：使用PCA实战人脸降维 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758336264" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758336264" defer></script>
+    <script src="/docs/js/search-lunr.js?1758336264" defer></script>
+    <script src="/docs/js/search.js?1758336264" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758336264";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758336264" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758336264" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758336264" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758336264" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758336264" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758336264" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758336264" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758336264" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758336264" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/ai\/machine_learning\/algorithms\/action_05_pcaface-copy\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758336264" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface-copy/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#1引言">1.引言</a></li>
+    <li><a href="#2相关概念">2.相关概念</a>
+      <ul>
+        <li><a href="#协方差矩阵">协方差矩阵</a></li>
+        <li><a href="#矩阵的行列式">矩阵的行列式</a></li>
+        <li><a href="#特征向量和特征值">特征向量和特征值</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-降维实现">3. 降维实现</a>
+      <ul>
+        <li><a href="#公式手推">公式手推</a></li>
+        <li><a href="#numpy实现降维">numpy实现降维</a></li>
+        <li><a href="#sklean实现降维">sklean实现降维</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-pca人脸数据降维">4. pca人脸数据降维</a></li>
+    <li><a href="#4-pcaknn识别手写数据">4. pca+knn识别手写数据</a>
+      <ul>
+        <li><a href="#knn预测">knn预测</a></li>
+        <li><a href="#pca降维">pca降维</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/index.html"><span itemprop="name">人工智能</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/machine_learning/index.html"><span itemprop="name">机器学习</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/machine_learning/algorithms/index.html"><span itemprop="name">核心算法</span></a><meta itemprop="position" content="5">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">机器学习实战教程（⑤）：使用PCA实战人脸降维</span><meta itemprop="position" content="6"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/machine_learning/algorithms/index.html" title="核心算法 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface/index.html" title="机器学习实战教程（⑤）：使用PCA实战人脸降维 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="机器学习实战教程使用pca实战人脸降维">机器学习实战教程（⑤）：使用PCA实战人脸降维</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1 id="1引言">1.引言</h1>
+<p>在互联网大数据场景下，我们经常需要面对高维数据，在对这些数据做分析和可视化的时候，我们通常会面对「高维」这个障碍。在数据挖掘和建模的过程中，高维数据也同样带来大的计算量，占据更多的资源，而且许多变量之间可能存在相关性，从而增加了分析与建模的复杂性。</p>
+<p>我们希望找到一种方法，在对数据完成降维「压缩」的同时，尽量减少信息损失。由于各变量之间存在一定的相关关系，因此可以考虑将关系紧密的变量变成尽可能少的新变量，使这些新变量是两两不相关的，那么就可以用较少的综合指标分别代表存在于各个变量中的各类信息。机器学习中的降维算法就是这样的一类算法。</p>
+<p>主成分分析（Principal Components Analysis，简称PCA）是最重要的数据降维方法之一。在数据压缩消除冗余和数据噪音消除等领域都有广泛的应用。本篇我们来展开讲解一下这个算法。</p>
+<h1 id="2相关概念">2.相关概念</h1>
+<h2 id="协方差矩阵">协方差矩阵</h2>
+<p>协方差(Covariance)目的是度量两个变量(只能为两个)线性相关的程度。
+<a href="#R-image-825a7a350d8ce00329ba9e914ee25c2a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/06c81cfe75e433be4d817ce657e3ab8c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-825a7a350d8ce00329ba9e914ee25c2a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/06c81cfe75e433be4d817ce657e3ab8c.png"></a>
+cov=0为可以说明两个变量线性无关，但不能证明两个变量相互独立，当cov&gt;0时，二者呈正相关，cov&lt;0时，二者呈负相关。</p>
+<ul>
+<li>协方差矩阵可以处理多维度问题。</li>
+<li>协方差矩阵是一个对称的矩阵，而且对角线是各个维度上的方差。</li>
+<li>协方差矩阵计算的是不同维度之间的协方差，而不是不同样本之间的。</li>
+<li>样本矩阵中若每行是一个样本，则每列为一个维度。</li>
+<li>假设数据是3维的，那么对应协方差矩阵为：
+<a href="#R-image-383057f6153227aeea8c06d5cbc1dde7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/520ad5dd2016715674d16d5acbebd273.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-383057f6153227aeea8c06d5cbc1dde7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/520ad5dd2016715674d16d5acbebd273.png"></a>
+这里简要概括一下协方差矩阵是怎么求得的，假设一个数据集有3维特征、每个特征有m个变量，这个数据集对应的数据矩阵如下：
+<a href="#R-image-cd1cfd6285a3911bf2e1dbd1dec4948d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/5ca89a2c3b07babedb4cee0c0f38606f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cd1cfd6285a3911bf2e1dbd1dec4948d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/5ca89a2c3b07babedb4cee0c0f38606f.png"></a>若假设他们的均值都为0，可以得到下面等式：
+<a href="#R-image-8f76403be755cad74503447c657e1764" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/68440142804af44fd7f7106a9af7fba5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8f76403be755cad74503447c657e1764"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/68440142804af44fd7f7106a9af7fba5.png"></a>
+可以看到对角线上为每个特征方差，其余位置为两个特征之间的协方差，<a href="#R-image-2ea248957b7277287f0a52ba9ce1bdeb" class="lightbox-link"><img alt="\\frac{1}{m}XX^T" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/472fe6cf437e9dfd0a58797fdcc5cba3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2ea248957b7277287f0a52ba9ce1bdeb"><img alt="\\frac{1}{m}XX^T" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/472fe6cf437e9dfd0a58797fdcc5cba3.png"></a>
+求得的就为协方差矩阵。
+推导：
+<a href="#R-image-eeecad0c94e467334acbe505cfe0748c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/6249b2df5ef325cf7d9c7cb1be6e2216.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-eeecad0c94e467334acbe505cfe0748c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/6249b2df5ef325cf7d9c7cb1be6e2216.png"></a>
+如果列是特征，公式为：
+<a href="#R-image-6222cb1e85d16396980382c1e1b9e154" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/5acf0562f3e84096680fed634c0582c4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6222cb1e85d16396980382c1e1b9e154"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/5acf0562f3e84096680fed634c0582c4.png"></a></li>
+</ul>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>&#39;&#39;&#39;
+假设列是矩阵特征，代数里面是行表示特征
+[
+ [x1,y2]
+ [x2，y2]
+]
+求协方差是
+[
+[cov(x,x),cov(x,y)],
+[cov(y,x),cov(y,y)],
+]
+
+&#39;&#39;&#39;
+pc=np.array([[-1,4],
+            [-2,8],
+            [-7,2]
+            ]);
+mean_pa=np.mean(pc,axis=0)
+print(&#34;均值&#34;,mean_pa)
+pc_zero=pc-mean_pa
+print(pc_zero)
+print(pc_zero.T.dot(pc_zero)/(len(pc_zero)-1))  #注意样本的话是n-1啊，全部数据集是n，否则和np.cov对不上
+print(&#34;conv&#34;,np.cov(pc,rowvar=False)) #rowvar=False表示列是特征，默认行是特征</code></pre></div>
+<p>结果为：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>均值 [-3.33333333  4.66666667]
+[[ 2.33333333 -0.66666667]
+ [ 1.33333333  3.33333333]
+ [-3.66666667 -2.66666667]]
+[[10.33333333  6.33333333]
+ [ 6.33333333  9.33333333]]
+conv [[10.33333333  6.33333333]
+ [ 6.33333333  9.33333333]]</code></pre></div>
+<blockquote>
+<p>协方差矩阵一定是方形矩阵，第一矩阵列数n（特征数）决定了是（n,n）方形矩阵。</p></blockquote>
+<h2 id="矩阵的行列式">矩阵的行列式</h2>
+<!-- raw HTML omitted -->
+<p>行列式等于零可以得出结论</p>
+<ol>
+<li>A的行向量线性相关；</li>
+<li>A的列向量线性相关；</li>
+<li>方程组Ax=0有非零解；</li>
+<li>A的秩小于n。（n是A的阶数）</li>
+<li>A不可逆</li>
+</ol>
+<p>比如，如果行列式=0，说明x1<em>y2-x2</em>y1=0,  x1=y1/y2 * x2 说明行线性相关。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[x1,x2      
+y1,y2]</code></pre></div>
+<p>[1,5
+3,15]   该矩阵就是行列式=0例子。</p>
+<p>矩阵的行列式是一个可以从方形矩阵（方阵）计算出来的特别的数。
+<a href="#R-image-4ff04c081fb7dd40b4f8b15d8a8e6133" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/a279744775bc3457f45a456d68a790dc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4ff04c081fb7dd40b4f8b15d8a8e6133"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/a279744775bc3457f45a456d68a790dc.png"></a>
+这矩阵的行列式是（待会儿会解释计算方法）：</p>
+<blockquote>
+<p>3×6 − 8×4 = 18 − 32 = −14</p></blockquote>
+<p>行列式告诉我们矩阵的一些特性，这些特性对解线性方程组很有用，也可以帮我们找逆矩阵，并且在微积分及其他领域都很有用.
+<strong>2×2 矩阵</strong>
+2×2 矩阵 （2行和2列）：
+<a href="#R-image-88f40418217667950af8e292a806eb3b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/d9f772ab77940885afa514e9e09262ba.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-88f40418217667950af8e292a806eb3b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/d9f772ab77940885afa514e9e09262ba.png"></a>
+行列式是：</p>
+<p>|A| = ad - bc
+&ldquo;A 的行列式等于 a 乘 d 减 b 乘 c&rdquo;</p>
+<p>3×3 矩阵
+<a href="#R-image-40da2b2463f91fd0142c322513923338" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/fdbe6bce5da1f956822bd1ef141fdf29.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-40da2b2463f91fd0142c322513923338"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/fdbe6bce5da1f956822bd1ef141fdf29.png"></a>
+行列式是：</p>
+<p>|A| = a(ei - fh) - b(di - fg) + c(dh - eg)
+&ldquo;A 的行列式等于。。。。。。&rdquo;</p>
+<p>乍看很复杂，但这是有规律的：</p>
+<p><a href="#R-image-fad79495b509ef5112e176cdc6271dc5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/43adc1e5bb566aec58b6a8702911f4ca.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fad79495b509ef5112e176cdc6271dc5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/43adc1e5bb566aec58b6a8702911f4ca.png"></a>
+求 3×3 矩阵的行列式：</p>
+<ul>
+<li>把 a 乘以不在 a 的行或列上的 2×2 矩阵的行列式。</li>
+<li>以 b 和 c 也做相同的计算</li>
+<li>把结果加在一起，不过 b 前面有个负号！
+公式是（记着两边的垂直线 || 代表 &ldquo;的行列式&rdquo;）：
+<a href="#R-image-abc7da8821bd0a41b5b6f8aac71facc0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/8c57f4bee0bb02e2b4cf60fc80c64793.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-abc7da8821bd0a41b5b6f8aac71facc0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/8c57f4bee0bb02e2b4cf60fc80c64793.png"></a>
+更多维计算参考：
+<a href="https://www.shuxuele.com/algebra/matrix-determinant.html" rel="external" target="_blank">shuxuele</a>
+<a href="https://github.com/lzeqian/machinelearn/blob/master/learn_algorithm/%E7%9F%A9%E9%98%B5%E7%9A%84%E8%A1%8C%E5%88%97%E5%BC%8F.png" rel="external" target="_blank">github</a></li>
+</ul>
+<p>numpy求行列式</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#行列式一定是个方形矩阵
+p_pet=np.array([[-1,4],
+            [-2,8]
+            ]);
+print(np.linalg.det(p_pet))</code></pre></div>
+<p>输出：0</p>
+<h2 id="特征向量和特征值">特征向量和特征值</h2>
+<p>得到了数据矩阵的协方差矩阵，下面就应该求协方差矩阵的特征值和特征向量，先了解一下这两个概念，如果一个向量v是矩阵A的特征向量，那么一定存在下列等式：</p>
+<p><a href="#R-image-9dd6341321fd4604df1ce11d81a6a066" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/fd3fdf014ec1e733305bde28605ca628.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9dd6341321fd4604df1ce11d81a6a066"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/fd3fdf014ec1e733305bde28605ca628.png"></a></p>
+<p>其中A可视为数据矩阵对应的协方差矩阵，是特征向量v的特征值。数据矩阵的主成分就是由其对应的协方差矩阵的特征向量，按照对应的特征值由大到小排序得到的。最大的特征值对应的特征向量就为第一主成分，第二大的特征值对应的特征向量就为第二主成分，依次类推，如果由n维映射至k维就截取至第k主成分。</p>
+<p>求矩阵特征值的例子
+<a href="#R-image-661337288eb47cdfd9fafa01663cb517" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/637a34d06cbdf11c242d3bd4c260915f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-661337288eb47cdfd9fafa01663cb517"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/637a34d06cbdf11c242d3bd4c260915f.png"></a></p>
+<p>如果入=4
+<a href="#R-image-7ae5f1242fa7522ca5587d2e9c2672c3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/b19056dde1c95feeb9a039bbeed488e6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7ae5f1242fa7522ca5587d2e9c2672c3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/b19056dde1c95feeb9a039bbeed488e6.png"></a>
+numpy</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#求特征值和特征向量
+p_eig=np.array([[1.2,0.8],
+            [0.8,1.2]
+            ]);
+eigenvalue, featurevector =(np.linalg.eig(p_eig))
+print(eigenvalue)
+# 这里特征向量是进行单位化（除以所有元素的平方和的开方）的形式
+# 比如入=0.4时特征向量是[-1,1],单位化[-1/开根(1**2+1**2)=-0.70710678 , -1/开根(1**2+1**2)=0.70710678]
+# 比如入=2时特征向量是[1,1],单位化[1/开根(1**2+1**2)=0.70710678 , 1/开根(1**2+1**2)=0.70710678]
+# 所以注意特征值2是第一列，对应的是特征向量第一列的值作为向量
+print(featurevector)
+#组合特征值和特征向量
+eig=[(eigenvalue[i],featurevector[:,i])for i in range(len(eigenvalue))]
+print(eig)    </code></pre></div>
+<p>输出</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[2.  0.4]
+[[ 0.70710678 -0.70710678]
+ [ 0.70710678  0.70710678]]
+[(2.0, array([0.70710678, 0.70710678])), (0.3999999999999997, array([-0.70710678,  0.70710678]))]</code></pre></div>
+<blockquote>
+<p>可以理解为特征向量就是原始特征的一个基础向量，最后生成一个和原始数据相同维度，行是降维维度值的矩阵，比如一个50行60列（特征）的矩阵需要降维到30个特征，特征向量会是一个(30,60)的矩阵</p></blockquote>
+<h1 id="3-降维实现">3. 降维实现</h1>
+<p>通过上述部分总结一下PCA降维操作的步骤：</p>
+<ol>
+<li>去均值化</li>
+<li>依据数据矩阵计算协方差矩阵</li>
+<li>计算协方差矩阵的特征值和特征向量</li>
+<li>将特征值从大到小排序</li>
+<li>保留前k个特征值对应的特征向量</li>
+<li>将原始数据的n维映射至k维中</li>
+</ol>
+<h2 id="公式手推">公式手推</h2>
+<p>原始数据集矩阵，每行代表一个特征:
+<a href="#R-image-86396a61f12ca0cd2e1a24f795815599" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/451f145ea1a981173537205edbaa2599.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-86396a61f12ca0cd2e1a24f795815599"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/451f145ea1a981173537205edbaa2599.png"></a>
+对每个特征去均值化：
+<a href="#R-image-84a3d14ee69fcf0ab029cd6b0eb712a6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/3f14dc7e7b5783db37f01f673330f701.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-84a3d14ee69fcf0ab029cd6b0eb712a6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/3f14dc7e7b5783db37f01f673330f701.png"></a></p>
+<p>计算对应的协方差矩阵：
+<a href="#R-image-86cb920b958ae11c98381b19024b1872" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/2436502ce64d20f5aa4869a49c721f82.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-86cb920b958ae11c98381b19024b1872"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/2436502ce64d20f5aa4869a49c721f82.png"></a></p>
+<p>依据协方差矩阵计算特征值和特征向量，套入公式：
+<a href="#R-image-95c88e8d5f4b56a1ebafcc2dcfca2531" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/34ce389beaccf69a84d279d906cd6245.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-95c88e8d5f4b56a1ebafcc2dcfca2531"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/34ce389beaccf69a84d279d906cd6245.png"></a></p>
+<p>拆开计算如下：
+<a href="#R-image-f1434c40c6bb59f2dca2e55ac1044e4c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/273f2cf1eda3dea0ef1ce21b24a91925.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f1434c40c6bb59f2dca2e55ac1044e4c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/273f2cf1eda3dea0ef1ce21b24a91925.png"></a></p>
+<p>可以求得两特征值：
+<a href="#R-image-41b0eaf5a36626c3f27bb83a593f9a02" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/4103d4485619ac84c7a10a782b7007c0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-41b0eaf5a36626c3f27bb83a593f9a02"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/4103d4485619ac84c7a10a782b7007c0.png"></a></p>
+<p>当<a href="#R-image-dc00ef70003c608054d38b02a50b4f53" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/469b62866c6c26ed06c258b42b5e074d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dc00ef70003c608054d38b02a50b4f53"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/469b62866c6c26ed06c258b42b5e074d.png"></a>
+时，对应向量应该满足如下等式：
+<a href="#R-image-d920faf319d109c2a7bc142028eea59c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/eb5bb05e99220526debab134b61d768a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d920faf319d109c2a7bc142028eea59c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/eb5bb05e99220526debab134b61d768a.png"></a></p>
+<p>对应的特征向量可取为：
+<a href="#R-image-61209d37122860ea1e8fe6d06becacc2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/142bece53858483206e6ac9e92595ca2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-61209d37122860ea1e8fe6d06becacc2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/142bece53858483206e6ac9e92595ca2.png"></a></p>
+<p>同理当<a href="#R-image-c9e77bc04dc6c0b22c7267aa495a79a5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/c1368ec0fba1982117bfed0628c13efb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c9e77bc04dc6c0b22c7267aa495a79a5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/c1368ec0fba1982117bfed0628c13efb.png"></a>
+时，对应特征向量可取为：
+<a href="#R-image-1dc236e42b662c08c1a31fdf523cc5c2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/ed3f30d2a9779f151469e0d050e8b082.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1dc236e42b662c08c1a31fdf523cc5c2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/ed3f30d2a9779f151469e0d050e8b082.png"></a></p>
+<p>这里我就不对两个特征向量进行标准化处理了，直接合并两个特征向量可以得到矩阵P：
+<a href="#R-image-62d847de4b770a7e2549f07381b8e0f3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/0c947ef40c1bcd57d89fba3cb5b1e6e8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-62d847de4b770a7e2549f07381b8e0f3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/0c947ef40c1bcd57d89fba3cb5b1e6e8.png"></a></p>
+<p>选取大的特征值对应的特征向量乘以原数据矩阵后可得到降维后的矩阵A：
+<a href="#R-image-aa0ffd9c5579cc7395f642da2ac6fd81" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/2f2d391b7a5d0a9852c0fbdec30a796b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-aa0ffd9c5579cc7395f642da2ac6fd81"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/2f2d391b7a5d0a9852c0fbdec30a796b.png"></a></p>
+<p>综上步骤就是通过PCA手推公式实现二维降为一维的操作。</p>
+<p>手推转自：https://juejin.cn/post/6844904177571758088</p>
+<h2 id="numpy实现降维">numpy实现降维</h2>
+<p>输出结果，查看<a href="https://github.com/lzeqian/machinelearn/blob/master/sklean_pca/pca1.ipynb" rel="external" target="_blank">gitlab</a></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+import numpy as np;
+import matplotlib.pyplot as plot;
+# 数学中行是表示特征
+X=np.array([
+    [1,1,2,4,2],
+    [1,3,3,4,4]
+])
+# 转置为列为特征
+X=X.T
+print(X)
+#%%
+
+#均值归零
+x_demean=np.mean(X,axis=0)
+X_Zero=X-x_demean
+print(&#34;均值：&#34;,x_demean)
+print(X_Zero)
+
+#%%
+
+#计算对应的协方差矩阵,手撕或者使用np.conv
+con=X_Zero.T.dot(X_Zero)/(len(X_Zero)-1)
+con1=np.cov(X_Zero,rowvar=False)
+print(&#34;协方差：&#34;,con,&#34;\n&#34;,con1)
+#%%
+
+#依据协方差矩阵计算特征值和特征向量,转换参考 矩阵计算.ipynb
+f_value,f_vector=np.linalg.eig(con)
+eig=[(f_value[i],f_vector[:,i])for i in range(len(f_value))]
+print(&#34;特征值-特征向量&#34;,eig)
+#%%
+#获取最大值的索引
+max_f_value_index=np.argsort(f_value)[::-1][0]
+print(np.array([eig[max_f_value_index][1]]).dot(X_Zero.T))
+print(X_Zero.dot(np.array([eig[max_f_value_index][1]]).T))</code></pre></div>
+<p>代码部分是公式的套用，每一步后都有注释，不再过多解释。可以看到得到的结果和上面手推公式得到的有些出入，上文曾提过特征向量是可以随意缩放的，这也是导致两个结果不同的原因，eig方法计算的特征向量是归一化后的。</p>
+<h2 id="sklean实现降维">sklean实现降维</h2>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+
+from sklearn.decomposition import PCA
+import numpy as np
+
+X = [[1, 1], [1, 3], [2, 3], [4, 4], [2, 4]]
+X = np.array(X)
+pca = PCA(n_components=1)
+PCA_mat = pca.fit_transform(X)
+print(PCA_mat)</code></pre></div>
+<p>这里只说一下参数n_components，如果输入的是整数，代表数据集需要映射的维数，比如输入3代表最后要映射至3维；如果输入的是小数，则代表映射的维数为原数据维数的占比，比如输入0.3，如果原数据20维，就将其映射至6维。</p>
+<h1 id="4-pca人脸数据降维">4. pca人脸数据降维</h1>
+<p>fetch_lfw_people人脸识别数据集是由n个人不同时间、不同角度、不同表情等图像组成的数据集；
+从我这统计目录结构有5760个人
+<a href="#R-image-79ade35d6c82eb83eeffb5399d5ee3dd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/01be8bd306b0c981dba80c25e4800a86.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-79ade35d6c82eb83eeffb5399d5ee3dd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/01be8bd306b0c981dba80c25e4800a86.png"></a>
+这是小布什部分图(530个）<a href="#R-image-58dc4f6a7422d4b7d06619e9c3d9a06a" class="lightbox-link"><img alt="530" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/25e63c0159a28368f0bb3c2b9aa5b841.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-58dc4f6a7422d4b7d06619e9c3d9a06a"><img alt="530" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/25e63c0159a28368f0bb3c2b9aa5b841.png"></a>
+下载并抓取图库</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#读取人脸数据
+from sklearn.decomposition import PCA
+from sklearn.datasets import fetch_lfw_people
+import matplotlib.pyplot as plt
+
+faces=fetch_lfw_people(data_home=&#34;d:/test/face&#34;,min_faces_per_person=60)
+print(&#34;图片数据维度：&#34;,faces.images.shape) #数据维度：1348张照片，每张照片是一个62*47=2914的矩阵
+print(&#34;图片二维数据维度：&#34;,faces.data.shape)
+X=faces.data #sklearn降维算法只接受二维特征矩阵，把数据换成特征矩阵，维度是1348*2914，
+X = faces.data</code></pre></div>
+<blockquote>
+<p>min_faces_per_person 提取的数据集将仅保留具有至少min_faces_per_person不同图片的人的图片
+比如小布什的图片超过了60就加载出来，比如Abdullah只有3张该用户就不会加载。</p></blockquote>
+<p>如果数据403无法下载请百度，下载其他用户上传到类似百度盘数据解压到data_home指定的目录即可
+输出</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>图片数据维度： (1348, 62, 47)
+图片二维数据维度： (1348, 2914)</code></pre></div>
+<p>绘制原始图片，绘制前32个</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code># 在matplotlib中，整个图像为一个Figure对象。在Figure对象中可以包含一个或者多个Axes对象
+# figsize代表画布的大小 3行8列表示子图axes大小
+fig, axes = plt.subplots(3,8 #创建一个画布有3*8个子图
+                         ,figsize = (8,4) #创建一个大小为8*4的黄布
+                         ,subplot_kw = {&#34;xticks&#34;:[],&#34;yticks&#34;:[]} # 每个子图都不显示坐标轴
+                        )
+for i,ax in enumerate(axes.flat):
+    ax.imshow(faces.images[i,:,:], cmap = &#34;gray&#34;)</code></pre></div>
+<p><a href="#R-image-58b88c83c74c89e94ccb034a0417f4bc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/d5be5fcaf7018096a59dce451a4f62f7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-58b88c83c74c89e94ccb034a0417f4bc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/d5be5fcaf7018096a59dce451a4f62f7.png"></a>
+pca降维到150维</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>pca=PCA(n_components=150)
+V1 = pca.fit_transform(X)
+x_inv = pca.inverse_transform(V1)
+print(&#34;逆转升维维度：&#34;,x_inv.shape)
+V = pca.components_
+print(&#34;降维后特征向量：&#34;,V.shape)
+print(&#34;降维后数据：&#34;,V1.shape)</code></pre></div>
+<p>显示特征向量</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>fig, axes = plt.subplots(3,8 #创建一个画布有3*8个子图
+                         ,figsize = (8,4) #创建一个大小为8*4的黄布
+                         ,subplot_kw = {&#34;xticks&#34;:[],&#34;yticks&#34;:[]} # 每个子图都不显示坐标轴
+                        )
+for i,ax in enumerate(axes.flat):
+    ax.imshow(V[i,:].reshape(62,47), cmap = &#34;gray&#34;)</code></pre></div>
+<p><a href="#R-image-6a9bfe6e4618764884f22ae17ca32026" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/951341a3a7f05840d7fc3db70863d664.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6a9bfe6e4618764884f22ae17ca32026"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/951341a3a7f05840d7fc3db70863d664.png"></a>
+显示降维数据</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>fig, axes = plt.subplots(3,8 #创建一个画布有3*8个子图
+                         ,figsize = (8,4) #创建一个大小为8*4的黄布
+                         ,subplot_kw = {&#34;xticks&#34;:[],&#34;yticks&#34;:[]} # 每个子图都不显示坐标轴
+                        )
+for i,ax in enumerate(axes.flat):
+    ax.imshow(x_inv[i].reshape(62, 47), cmap=&#39;binary_r&#39;) </code></pre></div>
+<p><a href="#R-image-caf525eab23d4acf1c06db111b216fdf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/efee651c9091f264bddb1f51c4a3bdec.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-caf525eab23d4acf1c06db111b216fdf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/efee651c9091f264bddb1f51c4a3bdec.png"></a></p>
+<h1 id="4-pcaknn识别手写数据">4. pca+knn识别手写数据</h1>
+<p>MNIST是一个手写体数字的图片数据集，该数据集来由美国国家标准与技术研究所（National Institute of Standards and Technology (NIST)）发起整理，一共统计了来自250个不同的人手写数字图片，其中50%是高中生，50%来自人口普查局的工作人员。该数据集的收集目的是希望通过算法，实现对手写数字的识别。
+sklearn.datasets中提供了fetch_openml的方法抓取：https://www.openml.org/search?type=data&amp;sort=runs&amp;status=active
+免费的数据，其中mnist_784就是手写数据。
+<a href="#R-image-84882ed52a8b9527315e3b402006449c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/cdde0b12ef6409d3660168c2bded6184.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-84882ed52a8b9527315e3b402006449c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/cdde0b12ef6409d3660168c2bded6184.png"></a></p>
+<h2 id="knn预测">knn预测</h2>
+<p>抓取数据集</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+
+from sklearn.decomposition import PCA
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import fetch_openml
+## https://www.openml.org/可以搜索到对应数据集
+mnist = fetch_openml(data_home=&#34;d:/test/face&#34;,name=&#39;mnist_784&#39;)
+X, y = mnist[&#39;data&#39;], mnist[&#39;target&#39;]
+X_train, X_test, y_train, y_test=train_test_split(X,y,train_size=0.9)
+#共有7万张图片，每张图片有784个特征 784开方是：28*28。
+print(X.shape, y.shape)</code></pre></div>
+<p>输出：(70000, 784) (70000,)
+绘制25张图片</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>fig, axes = plt.subplots(5,5 #创建一个画布有3*8个子图
+                         ,figsize = (8,4) #创建一个大小为8*4的黄布
+                         ,subplot_kw = {&#34;xticks&#34;:[],&#34;yticks&#34;:[]} # 每个子图都不显示坐标轴
+                        )
+for i,ax in enumerate(axes.flat):
+    ax.imshow(X[i].reshape(28, 28), cmap = &#34;gray&#34;)</code></pre></div>
+<p><a href="#R-image-73c95d6b70a3019b0ff8044c69322a04" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/d3e417752cdd4ab3612d4846ec0fe191.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-73c95d6b70a3019b0ff8044c69322a04"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/d3e417752cdd4ab3612d4846ec0fe191.png"></a>
+使用knn训练后进行预测</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+
+from sklearn.neighbors import KNeighborsClassifier
+
+knn=KNeighborsClassifier()
+#导入time模块 训练数据将近一分钟左右
+%time knn.fit(X_train,y_train)
+
+#%%
+#获取第几个模型的测试数据，用来预测
+preindex=101;
+plt.imshow(X_test[preindex,].reshape(28, 28), cmap = &#34;gray&#34;);
+%time print(&#34;预测的数字：&#34;,knn.predict(X_test[preindex:preindex+1,]))
+plt.show()</code></pre></div>
+<p>注意由于knn计算量大，fit使用时间为：
+Wall time: 1min 2s
+计算准确率</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+#通过测试数据获取该模型的得分。
+%time print(knn.score(X_test,y_test))</code></pre></div>
+<p>输出：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>0.9738571428571429   准确率
+Wall time: 9min 9s 用时  </code></pre></div>
+<p>用于score是使用剩余的测试数据来测试准确性，用时很长</p>
+<h2 id="pca降维">pca降维</h2>
+<p>使用pca从784降维成100，会发现训练和求score时间大幅下降
+完整代码参考：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from sklearn.neighbors import KNeighborsClassifier
+from sklearn.decomposition import PCA
+#保留多少个主成分维度，如果是数组是保留多少个 如果是比例 用0-1的数字，比如0.9保留90%主成分
+pca = PCA(n_components=100)
+#注意要transform多个 一定要调用fit方法，而不是调用两次fit_transform否则导致两次的维度不一致，fit会根据数据行算出特征的。
+pca.fit(X_train,y_train)
+PCA_trainmat = pca.transform(X_train)
+PCA_testmat = pca.transform(X_test)
+print(PCA_trainmat.shape,PCA_testmat.shape)
+knn1=KNeighborsClassifier()
+%time knn1.fit(PCA_trainmat,y_train)
+preindex1=101;
+x_inv = pca.inverse_transform(PCA_testmat) 
+plt.imshow(x_inv[preindex1,].reshape(28, 28), cmap = &#34;gray&#34;);
+plt.show()
+
+%time print(&#34;预测的数字：&#34;,knn1.predict(PCA_testmat[preindex1:preindex1+1,]))
+#%%
+
+%time print(knn1.score(PCA_testmat,y_test))</code></pre></div>
+<p><a href="#R-image-8a9ee6fd1ca622491286eac3e636226d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/96797e754aa1fe951951c28f4f71da09.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8a9ee6fd1ca622491286eac3e636226d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="https://i-blog.csdnimg.cn/blog_migrate/96797e754aa1fe951951c28f4f71da09.png"></a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/index.html">机器学习</a><ul id="R-subsections-d3b98ca0beda96811b8c41829d886d7f" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/basic/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/basic/index.html">基础理论</a><ul id="R-subsections-2f18a18645b7652a148815c1a6786b18" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/algorithms/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/index.html">核心算法</a><ul id="R-subsections-921418d1d7190828278c689c88df6881" class="collapsible-menu">
+            <li class="active " data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface-copy/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface-copy/index.html">机器学习实战教程（⑤）：使用PCA实战人脸降维</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface/index.html">机器学习实战教程（⑤）：使用PCA实战人脸降维</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html">机器学习实战教程（一）：K-近邻（KNN）算法</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html">机器学习实战教程（四）：从特征分解到协方差矩阵：详细剖析和实现PCA算法</a></li></ul></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/tools/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/tools/index.html">实践工具</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/evaluation/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/evaluation/index.html">模型评估</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758336264" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758336264" defer></script>
+    <script src="/docs/js/theme.js?1758336264" defer></script>
+  </body>
+</html>

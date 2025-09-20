@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="@TOC
+梯度下降简介 梯度下降的场景假设 梯度下降法的基本思想可以类比为一个下山的过程。假设这样一个场景：一个人被困在山上，需要从山上下来(i.e. 找到山的最低点，也就是山谷)。但此时山上的浓雾很大，导致可视度很低。因此，下山的路径就无法确定，他必须利用自己周围的信息去找到下山的路径。这个时候，他就可以利用梯度下降算法来帮助自己下山。具体来说就是，以他当前的所处的位置为基准，寻找这个位置最陡峭的地方，然后朝着山的高度下降的地方走，同理，如果我们的目标是上山，也就是爬到山顶，那么此时应该是朝着最陡峭的方向往上走。然后每走一段距离，都反复采用同一个方法，最后就能成功的抵达山谷。 梯度下降原理 梯度下降的基本过程就和下山的场景很类似。 首先，我们有一个可微分的函数。这个函数就代表着一座山。我们的目标就是找到这个函数的最小值，也就是山底。根据之前的场景假设，最快的下山的方式就是找到当前位置最陡峭的方向，然后沿着此方向向下走，对应到函数中，就是找到给定点的梯度 ，然后朝着梯度相反的方向，就能让函数值下降的最快！因为梯度的方向就是函数之变化最快的方向(在后面会详细解释) 所以，我们重复利用这个方法，反复求取梯度，最后就能到达局部的最小值，这就类似于我们下山的过程。而求取梯度就确定了最陡峭的方向，也就是场景中测量方向的手段。那么为什么梯度的方向就是最陡峭的方向呢？ 其中部分文字图片来自 教程
+微分（导数|斜率） 看待微分的意义，可以有不同的角度，最常用的两种是： 函数图像中，某点的切线的斜率（导数） 导数（Derivative），也叫导函数值。又名微商，是微积分中的重要基础概念。当函数y=f（x）的自变量x在一点x0上产生一个增量Δx时，函数输出值的增量Δy与自变量增量Δx的比值在Δx趋于0时的极限a如果存在，a即为在x0处的导数，记作f’（x0）或df（x0）/dx。其实这样就是斜率。 比如函数 y=2x&#43;1 假设有两个相邻的点 （x1,y1）,(x2,y2) Δy/Δx=(2x1&#43;1)-(2x2&#43;1)/x1-x2=2(x1-x2)/(x1-x2)=2 所有一元一次函数的斜率其实就是自变量x的系数 斜率你可以说他代表线的倾斜度 值越大倾斜度越大 斜率&gt;0表示是正向相关，&lt;0表示父向相关 几个微分的例子： 指数函数： 其他总结 关于单变量微分的求导 比较简单 一个复合函数的导数必须使用链式法则 所谓的复合函数，是指以一个函数作为另一个函数的自变量。 如f(x)=3x，g(x)=x&#43;3，g(f(x))就是一个复合函数，并且g(f(x))=3x&#43;3 链式法则(chain rule)：
+若h(x)=f(g(x))，则h&#39;(x)=f&#39;(g(x))g&#39;(x)链式法则用文字描述，就是“由两个函数凑起来的复合函数，其导数等于里边函数代入外边函数的值之导数，乘以里边函数的导数 比如:">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="机器学习实战教程（三）：梯度下降 :: liaomin416100569博客">
+    <meta name="twitter:description" content="@TOC
+梯度下降简介 梯度下降的场景假设 梯度下降法的基本思想可以类比为一个下山的过程。假设这样一个场景：一个人被困在山上，需要从山上下来(i.e. 找到山的最低点，也就是山谷)。但此时山上的浓雾很大，导致可视度很低。因此，下山的路径就无法确定，他必须利用自己周围的信息去找到下山的路径。这个时候，他就可以利用梯度下降算法来帮助自己下山。具体来说就是，以他当前的所处的位置为基准，寻找这个位置最陡峭的地方，然后朝着山的高度下降的地方走，同理，如果我们的目标是上山，也就是爬到山顶，那么此时应该是朝着最陡峭的方向往上走。然后每走一段距离，都反复采用同一个方法，最后就能成功的抵达山谷。 梯度下降原理 梯度下降的基本过程就和下山的场景很类似。 首先，我们有一个可微分的函数。这个函数就代表着一座山。我们的目标就是找到这个函数的最小值，也就是山底。根据之前的场景假设，最快的下山的方式就是找到当前位置最陡峭的方向，然后沿着此方向向下走，对应到函数中，就是找到给定点的梯度 ，然后朝着梯度相反的方向，就能让函数值下降的最快！因为梯度的方向就是函数之变化最快的方向(在后面会详细解释) 所以，我们重复利用这个方法，反复求取梯度，最后就能到达局部的最小值，这就类似于我们下山的过程。而求取梯度就确定了最陡峭的方向，也就是场景中测量方向的手段。那么为什么梯度的方向就是最陡峭的方向呢？ 其中部分文字图片来自 教程
+微分（导数|斜率） 看待微分的意义，可以有不同的角度，最常用的两种是： 函数图像中，某点的切线的斜率（导数） 导数（Derivative），也叫导函数值。又名微商，是微积分中的重要基础概念。当函数y=f（x）的自变量x在一点x0上产生一个增量Δx时，函数输出值的增量Δy与自变量增量Δx的比值在Δx趋于0时的极限a如果存在，a即为在x0处的导数，记作f’（x0）或df（x0）/dx。其实这样就是斜率。 比如函数 y=2x&#43;1 假设有两个相邻的点 （x1,y1）,(x2,y2) Δy/Δx=(2x1&#43;1)-(2x2&#43;1)/x1-x2=2(x1-x2)/(x1-x2)=2 所有一元一次函数的斜率其实就是自变量x的系数 斜率你可以说他代表线的倾斜度 值越大倾斜度越大 斜率&gt;0表示是正向相关，&lt;0表示父向相关 几个微分的例子： 指数函数： 其他总结 关于单变量微分的求导 比较简单 一个复合函数的导数必须使用链式法则 所谓的复合函数，是指以一个函数作为另一个函数的自变量。 如f(x)=3x，g(x)=x&#43;3，g(f(x))就是一个复合函数，并且g(f(x))=3x&#43;3 链式法则(chain rule)：
+若h(x)=f(g(x))，则h&#39;(x)=f&#39;(g(x))g&#39;(x)链式法则用文字描述，就是“由两个函数凑起来的复合函数，其导数等于里边函数代入外边函数的值之导数，乘以里边函数的导数 比如:">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/ai/machine_learning/basic/action_03_gradient-copy/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="机器学习实战教程（三）：梯度下降 :: liaomin416100569博客">
+    <meta property="og:description" content="@TOC
+梯度下降简介 梯度下降的场景假设 梯度下降法的基本思想可以类比为一个下山的过程。假设这样一个场景：一个人被困在山上，需要从山上下来(i.e. 找到山的最低点，也就是山谷)。但此时山上的浓雾很大，导致可视度很低。因此，下山的路径就无法确定，他必须利用自己周围的信息去找到下山的路径。这个时候，他就可以利用梯度下降算法来帮助自己下山。具体来说就是，以他当前的所处的位置为基准，寻找这个位置最陡峭的地方，然后朝着山的高度下降的地方走，同理，如果我们的目标是上山，也就是爬到山顶，那么此时应该是朝着最陡峭的方向往上走。然后每走一段距离，都反复采用同一个方法，最后就能成功的抵达山谷。 梯度下降原理 梯度下降的基本过程就和下山的场景很类似。 首先，我们有一个可微分的函数。这个函数就代表着一座山。我们的目标就是找到这个函数的最小值，也就是山底。根据之前的场景假设，最快的下山的方式就是找到当前位置最陡峭的方向，然后沿着此方向向下走，对应到函数中，就是找到给定点的梯度 ，然后朝着梯度相反的方向，就能让函数值下降的最快！因为梯度的方向就是函数之变化最快的方向(在后面会详细解释) 所以，我们重复利用这个方法，反复求取梯度，最后就能到达局部的最小值，这就类似于我们下山的过程。而求取梯度就确定了最陡峭的方向，也就是场景中测量方向的手段。那么为什么梯度的方向就是最陡峭的方向呢？ 其中部分文字图片来自 教程
+微分（导数|斜率） 看待微分的意义，可以有不同的角度，最常用的两种是： 函数图像中，某点的切线的斜率（导数） 导数（Derivative），也叫导函数值。又名微商，是微积分中的重要基础概念。当函数y=f（x）的自变量x在一点x0上产生一个增量Δx时，函数输出值的增量Δy与自变量增量Δx的比值在Δx趋于0时的极限a如果存在，a即为在x0处的导数，记作f’（x0）或df（x0）/dx。其实这样就是斜率。 比如函数 y=2x&#43;1 假设有两个相邻的点 （x1,y1）,(x2,y2) Δy/Δx=(2x1&#43;1)-(2x2&#43;1)/x1-x2=2(x1-x2)/(x1-x2)=2 所有一元一次函数的斜率其实就是自变量x的系数 斜率你可以说他代表线的倾斜度 值越大倾斜度越大 斜率&gt;0表示是正向相关，&lt;0表示父向相关 几个微分的例子： 指数函数： 其他总结 关于单变量微分的求导 比较简单 一个复合函数的导数必须使用链式法则 所谓的复合函数，是指以一个函数作为另一个函数的自变量。 如f(x)=3x，g(x)=x&#43;3，g(f(x))就是一个复合函数，并且g(f(x))=3x&#43;3 链式法则(chain rule)：
+若h(x)=f(g(x))，则h&#39;(x)=f&#39;(g(x))g&#39;(x)链式法则用文字描述，就是“由两个函数凑起来的复合函数，其导数等于里边函数代入外边函数的值之导数，乘以里边函数的导数 比如:">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="机器学习实战教程（三）：梯度下降 :: liaomin416100569博客">
+    <meta itemprop="description" content="@TOC
+梯度下降简介 梯度下降的场景假设 梯度下降法的基本思想可以类比为一个下山的过程。假设这样一个场景：一个人被困在山上，需要从山上下来(i.e. 找到山的最低点，也就是山谷)。但此时山上的浓雾很大，导致可视度很低。因此，下山的路径就无法确定，他必须利用自己周围的信息去找到下山的路径。这个时候，他就可以利用梯度下降算法来帮助自己下山。具体来说就是，以他当前的所处的位置为基准，寻找这个位置最陡峭的地方，然后朝着山的高度下降的地方走，同理，如果我们的目标是上山，也就是爬到山顶，那么此时应该是朝着最陡峭的方向往上走。然后每走一段距离，都反复采用同一个方法，最后就能成功的抵达山谷。 梯度下降原理 梯度下降的基本过程就和下山的场景很类似。 首先，我们有一个可微分的函数。这个函数就代表着一座山。我们的目标就是找到这个函数的最小值，也就是山底。根据之前的场景假设，最快的下山的方式就是找到当前位置最陡峭的方向，然后沿着此方向向下走，对应到函数中，就是找到给定点的梯度 ，然后朝着梯度相反的方向，就能让函数值下降的最快！因为梯度的方向就是函数之变化最快的方向(在后面会详细解释) 所以，我们重复利用这个方法，反复求取梯度，最后就能到达局部的最小值，这就类似于我们下山的过程。而求取梯度就确定了最陡峭的方向，也就是场景中测量方向的手段。那么为什么梯度的方向就是最陡峭的方向呢？ 其中部分文字图片来自 教程
+微分（导数|斜率） 看待微分的意义，可以有不同的角度，最常用的两种是： 函数图像中，某点的切线的斜率（导数） 导数（Derivative），也叫导函数值。又名微商，是微积分中的重要基础概念。当函数y=f（x）的自变量x在一点x0上产生一个增量Δx时，函数输出值的增量Δy与自变量增量Δx的比值在Δx趋于0时的极限a如果存在，a即为在x0处的导数，记作f’（x0）或df（x0）/dx。其实这样就是斜率。 比如函数 y=2x&#43;1 假设有两个相邻的点 （x1,y1）,(x2,y2) Δy/Δx=(2x1&#43;1)-(2x2&#43;1)/x1-x2=2(x1-x2)/(x1-x2)=2 所有一元一次函数的斜率其实就是自变量x的系数 斜率你可以说他代表线的倾斜度 值越大倾斜度越大 斜率&gt;0表示是正向相关，&lt;0表示父向相关 几个微分的例子： 指数函数： 其他总结 关于单变量微分的求导 比较简单 一个复合函数的导数必须使用链式法则 所谓的复合函数，是指以一个函数作为另一个函数的自变量。 如f(x)=3x，g(x)=x&#43;3，g(f(x))就是一个复合函数，并且g(f(x))=3x&#43;3 链式法则(chain rule)：
+若h(x)=f(g(x))，则h&#39;(x)=f&#39;(g(x))g&#39;(x)链式法则用文字描述，就是“由两个函数凑起来的复合函数，其导数等于里边函数代入外边函数的值之导数，乘以里边函数的导数 比如:">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="315">
+    <title>机器学习实战教程（三）：梯度下降 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758334532" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758334532" defer></script>
+    <script src="/docs/js/search-lunr.js?1758334532" defer></script>
+    <script src="/docs/js/search.js?1758334532" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758334532";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758334532" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758334532" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758334532" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758334532" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758334532" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758334532" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758334532" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758334532" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758334532" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/ai\/machine_learning\/basic\/action_03_gradient-copy\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758334532" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/basic/action_03_gradient-copy/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#梯度下降简介">梯度下降简介</a>
+      <ul>
+        <li><a href="#梯度下降的场景假设">梯度下降的场景假设</a></li>
+        <li><a href="#梯度下降原理">梯度下降原理</a>
+          <ul>
+            <li><a href="#微分导数斜率">微分（导数|斜率）</a></li>
+            <li><a href="#梯度相反的方向">梯度相反的方向</a></li>
+            <li><a href="#梯度下降算法的数学解释">梯度下降算法的数学解释</a></li>
+            <li><a href="#梯度下降算法的实例">梯度下降算法的实例</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#梯度下降解决线性回归实例">梯度下降解决线性回归实例</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/index.html"><span itemprop="name">人工智能</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/machine_learning/index.html"><span itemprop="name">机器学习</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/machine_learning/basic/index.html"><span itemprop="name">基础理论</span></a><meta itemprop="position" content="5">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">机器学习实战教程（三）：梯度下降</span><meta itemprop="position" content="6"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/machine_learning/basic/action_02_linear/index.html" title="机器学习实战教程（二）：线性回归 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/machine_learning/basic/action_03_gradient/index.html" title="机器学习实战教程（三）：梯度下降 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="机器学习实战教程三梯度下降">机器学习实战教程（三）：梯度下降</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p>@<a href="%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D">TOC</a></p>
+<h1 id="梯度下降简介">梯度下降简介</h1>
+<h2 id="梯度下降的场景假设">梯度下降的场景假设</h2>
+<p>梯度下降法的基本思想可以类比为一个下山的过程。假设这样一个场景：一个人被困在山上，需要从山上下来(i.e. 找到山的最低点，也就是山谷)。但此时山上的浓雾很大，导致可视度很低。因此，下山的路径就无法确定，他必须利用自己周围的信息去找到下山的路径。这个时候，他就可以利用梯度下降算法来帮助自己下山。具体来说就是，以他当前的所处的位置为基准，寻找这个位置最陡峭的地方，然后朝着山的高度下降的地方走，同理，如果我们的目标是上山，也就是爬到山顶，那么此时应该是朝着最陡峭的方向往上走。然后每走一段距离，都反复采用同一个方法，最后就能成功的抵达山谷。
+<a href="#R-image-efe052279d90d4cfd42cef877d64435e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/c4bcf37d0ca9ec73575147a48b6a26d8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-efe052279d90d4cfd42cef877d64435e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/c4bcf37d0ca9ec73575147a48b6a26d8.png"></a></p>
+<h2 id="梯度下降原理">梯度下降原理</h2>
+<p>梯度下降的基本过程就和下山的场景很类似。
+首先，我们有一个可微分的函数。这个函数就代表着一座山。我们的目标就是找到这个函数的最小值，也就是山底。根据之前的场景假设，最快的下山的方式就是找到当前位置最陡峭的方向，然后沿着此方向向下走，对应到函数中，就是找到给定点的梯度 ，然后朝着梯度相反的方向，就能让函数值下降的最快！因为梯度的方向就是函数之变化最快的方向(在后面会详细解释)
+所以，我们重复利用这个方法，反复求取梯度，最后就能到达局部的最小值，这就类似于我们下山的过程。而求取梯度就确定了最陡峭的方向，也就是场景中测量方向的手段。那么为什么梯度的方向就是最陡峭的方向呢？
+其中部分文字图片来自 <a href="https://www.jianshu.com/p/c7e642877b0e" rel="external" target="_blank">教程</a></p>
+<h3 id="微分导数斜率">微分（导数|斜率）</h3>
+<p>看待微分的意义，可以有不同的角度，最常用的两种是：
+函数图像中，某点的切线的斜率（导数）
+导数（Derivative），也叫导函数值。又名微商，是微积分中的重要基础概念。当函数y=f（x）的自变量x在一点x0上产生一个增量Δx时，函数输出值的增量Δy与自变量增量Δx的比值在Δx趋于0时的极限a如果存在，a即为在x0处的导数，记作f&rsquo;（x0）或df（x0）/dx。其实这样就是斜率。
+比如函数 y=2x+1 假设有两个相邻的点  （x1,y1）,(x2,y2)
+Δy/Δx=(2<em>x1+1)-(2</em>x2+1)/x1-x2=2(x1-x2)/(x1-x2)=2 所有一元一次函数的斜率其实就是自变量x的系数
+斜率你可以说他代表线的倾斜度  值越大倾斜度越大
+斜率&gt;0表示是正向相关，&lt;0表示父向相关
+几个微分的例子：
+<a href="#R-image-99061f422d4e70dfefc8785c17f15e04" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6cb6d65e9950910d144ef4e48d1029ef.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-99061f422d4e70dfefc8785c17f15e04"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6cb6d65e9950910d144ef4e48d1029ef.png"></a>
+指数函数：
+<a href="#R-image-3aa441cbf212a82febf97c5e33381da3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/82ff8ea245f4ed7ccddaad23f84713b8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3aa441cbf212a82febf97c5e33381da3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/82ff8ea245f4ed7ccddaad23f84713b8.png"></a>
+其他总结
+<a href="#R-image-98c2752af8650cee07b9078e06cdea95" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/680f00587e8827df29c195a8d90aa5fd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-98c2752af8650cee07b9078e06cdea95"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/680f00587e8827df29c195a8d90aa5fd.png"></a></p>
+<p>关于单变量微分的求导  比较简单
+一个复合函数的导数必须使用链式法则
+所谓的复合函数，是指以一个函数作为另一个函数的自变量。
+如f(x)=3x，g(x)=x+3，g(f(x))就是一个复合函数，并且g(f(x))=3x+3
+链式法则(chain rule)：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code> 若h(x)=f(g(x))，则h&#39;(x)=f&#39;(g(x))g&#39;(x)
+链式法则用文字描述，就是“由两个函数凑起来的复合函数，
+其导数等于里边函数代入外边函数的值之导数，乘以里边函数的导数</code></pre></div>
+<p>比如:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>f(x)=x²,g(x)=2x＋1, 则 
+f(g(x))&#39;
+=((2x+1)²)&#39; ×(2x+1)&#39;
+=2(2x＋1)×2
+=8x＋4</code></pre></div>
+<p>上面的例子都是单变量的微分，当一个函数有多个变量的时候，就有了多变量的微分，即分别对每个变量进行求微分
+<a href="#R-image-955d4f0ee5e4222129ffe088e95ffc0a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/5b4e42559fb0198da4b54ebaadd483b4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-955d4f0ee5e4222129ffe088e95ffc0a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/5b4e42559fb0198da4b54ebaadd483b4.png"></a>
+梯度实际上就是多变量微分的一般化。
+<a href="#R-image-9ff1665a63f28f3281413f93a22cf4f0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/caf9d68e8735ad875e3fd1722eca3cc0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9ff1665a63f28f3281413f93a22cf4f0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/caf9d68e8735ad875e3fd1722eca3cc0.png"></a>
+我们可以看到，梯度就是分别对每个变量进行微分，然后用逗号分割开，梯度是用&lt;&gt;包括起来，说明梯度其实一个向量。</p>
+<h3 id="梯度相反的方向">梯度相反的方向</h3>
+<p>为什么算出函数的微分后 往相反的方向走了 用示例来说话
+y=5-x 明显导数是 -1 -1表示往左侧增大  python绘图</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#设置出现四个象限</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">setXY</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 获取当前坐标轴对象</span>
+</span></span><span style="display:flex;"><span>    ax <span style="color:#f92672">=</span> plot<span style="color:#f92672">.</span>gca()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 将垂直坐标刻度置于左边框</span>
+</span></span><span style="display:flex;"><span>    ax<span style="color:#f92672">.</span>yaxis<span style="color:#f92672">.</span>set_ticks_position(<span style="color:#e6db74">&#39;left&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 将水平坐标刻度置于底边框</span>
+</span></span><span style="display:flex;"><span>    ax<span style="color:#f92672">.</span>xaxis<span style="color:#f92672">.</span>set_ticks_position(<span style="color:#e6db74">&#39;bottom&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 将左边框置于数据坐标原点</span>
+</span></span><span style="display:flex;"><span>    ax<span style="color:#f92672">.</span>spines[<span style="color:#e6db74">&#39;left&#39;</span>]<span style="color:#f92672">.</span>set_position((<span style="color:#e6db74">&#39;data&#39;</span>, <span style="color:#ae81ff">0</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 将底边框置于数据坐标原点</span>
+</span></span><span style="display:flex;"><span>    ax<span style="color:#f92672">.</span>spines[<span style="color:#e6db74">&#39;bottom&#39;</span>]<span style="color:#f92672">.</span>set_position((<span style="color:#e6db74">&#39;data&#39;</span>, <span style="color:#ae81ff">0</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 将右边框和顶边框设置成无色</span>
+</span></span><span style="display:flex;"><span>    ax<span style="color:#f92672">.</span>spines[<span style="color:#e6db74">&#39;right&#39;</span>]<span style="color:#f92672">.</span>set_color(<span style="color:#e6db74">&#39;none&#39;</span>)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#f92672">.</span>spines[<span style="color:#e6db74">&#39;top&#39;</span>]<span style="color:#f92672">.</span>set_color(<span style="color:#e6db74">&#39;none&#39;</span>)
+</span></span><span style="display:flex;"><span>setXY()
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#创建 -10到10的10个线性数据</span>
+</span></span><span style="display:flex;"><span>darr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>linspace(<span style="color:#f92672">-</span><span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>plot(darr,<span style="color:#ae81ff">5</span><span style="color:#f92672">-</span>darr);
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>show();    </span></span></code></pre></div>
+<p>图像显示
+<a href="#R-image-eaf474ebf06327604d9ce3295e2eb72c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/bf24bc40e2db8f9cee32f449597ee8e6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-eaf474ebf06327604d9ce3295e2eb72c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/bf24bc40e2db8f9cee32f449597ee8e6.png"></a>
+明显微分是-1， 明显梯度下降就需要往右侧走x坐标应该加大 x-(-1)=x+1。
+再比如：
+y=5+x ，明显导数是 1 1表示往右侧增大 。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>setXY()
+</span></span><span style="display:flex;"><span>darr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>linspace(<span style="color:#f92672">-</span><span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>plot(darr,<span style="color:#ae81ff">5</span><span style="color:#f92672">+</span>darr);
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>show();</span></span></code></pre></div>
+<p>图像显示效果：
+<a href="#R-image-bc7ef434fc452abd738bae665626b266" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6d738cda79aef99df1a9878ce02ad18d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bc7ef434fc452abd738bae665626b266"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6d738cda79aef99df1a9878ce02ad18d.png"></a>
+明显梯度下降就需要往左侧走， x-(1)=x-1。
+<!-- raw HTML omitted -->总结： 梯度下降走的方向往反方向也就是 x-(导数)走<!-- raw HTML omitted -->。</p>
+<h3 id="梯度下降算法的数学解释">梯度下降算法的数学解释</h3>
+<p>介绍梯度下降的数学公式
+<a href="#R-image-15899826a10dd69dc8914a8df71c1f58" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/cb30b733081354473cdb42a45c08c477.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-15899826a10dd69dc8914a8df71c1f58"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/cb30b733081354473cdb42a45c08c477.png"></a>
+此公式的意义是：J是关于Θ的一个函数，我们当前所处的位置为Θ0点，要从这个点走到J的最小值点，也就是山底。首先我们先确定前进的方向，也就是梯度的反向（前面讲过-梯度），然后走一段距离的步长，也就是α，走完这个段步长，就到达了Θ1这个点！
+<a href="#R-image-7bbed44a936ea3718a4a979184849437" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/bc3ffc168bccf41f5f9231d8659be8c4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7bbed44a936ea3718a4a979184849437"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/bc3ffc168bccf41f5f9231d8659be8c4.png"></a>
+面就这个公式的几个常见的疑问：
+α是什么含义？
+α在梯度下降算法中被称作为学习率或者步长，意味着我们可以通过α来控制每一步走的距离，以保证不要步子跨的太大扯着蛋，哈哈，其实就是不要走太快，错过了最低点。同时也要保证不要走的太慢，导致太阳下山了，还没有走到山下。所以α的选择在梯度下降法中往往是很重要的！α不能太大也不能太小，太小的话，可能导致迟迟走不到最低点，太大的话，会导致错过最低点！
+<a href="#R-image-ed53e85fa8770327d4167a715beeca20" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/32febe0a18f4d279d75daef7aa1e2ff1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ed53e85fa8770327d4167a715beeca20"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/32febe0a18f4d279d75daef7aa1e2ff1.png"></a></p>
+<h3 id="梯度下降算法的实例">梯度下降算法的实例</h3>
+<p>演示 计算函数 y=(x-2)**2+2的 最小值y所在x的位置。
+可以知道的是，任何数的平方都应该大于0 所有 x=2时 y最小=2。
+通过t度下降法来预算。
+定义梯度函数</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> 获取每一个点的梯度 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gradient</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>(x<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>);</span></span></code></pre></div>
+<p>定义获取每个x点对应的y值</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">获取每个点的dy值
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dy</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (x<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span><span style="color:#ae81ff">2</span></span></span></code></pre></div>
+<p>接下来产生一些线性随即数据</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>setXY();
+</span></span><span style="display:flex;"><span>x<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>linspace(<span style="color:#f92672">-</span><span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">100</span>);</span></span></code></pre></div>
+<p>绘制图形</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>plot(x,(x<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>show();</span></span></code></pre></div>
+<p>图像效果
+<a href="#R-image-1a7bf77675d7c1d779ddf4c6fa0d2c7c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/ad1a82facdd46144c545d5f0bd906d52.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1a7bf77675d7c1d779ddf4c6fa0d2c7c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/ad1a82facdd46144c545d5f0bd906d52.png"></a>
+接下来随便选择一个点 比如 -7.5开始做梯度下降</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">模拟梯度下降
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>theta<span style="color:#f92672">=-</span><span style="color:#ae81ff">7.5</span>  <span style="color:#75715e">#表示梯度下降开始的点</span>
+</span></span><span style="display:flex;"><span>dyv<span style="color:#f92672">=</span><span style="color:#ae81ff">0.0</span>;  <span style="color:#75715e">#表示当前最小theta的y</span>
+</span></span><span style="display:flex;"><span>eta<span style="color:#f92672">=</span><span style="color:#ae81ff">0.1</span> <span style="color:#75715e">#表示下降步长</span>
+</span></span><span style="display:flex;"><span>arr<span style="color:#f92672">=</span>[] <span style="color:#75715e">#记录所有下降的theta的点 方便绘图</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    gradi<span style="color:#f92672">=</span>gradient(theta) <span style="color:#75715e">#获取梯度</span>
+</span></span><span style="display:flex;"><span>    dyv<span style="color:#f92672">=</span>dy(theta);  <span style="color:#75715e">#获取当前点的y值</span>
+</span></span><span style="display:flex;"><span>    arr<span style="color:#f92672">.</span>append(theta);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> np<span style="color:#f92672">.</span>abs(gradi)<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1e-8</span>:<span style="color:#75715e">#如果到了水平梯度就是0 基本上如果梯度到了 1e-8=0.00000001基本可以理解为平缓了</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    theta <span style="color:#f92672">=</span> theta <span style="color:#f92672">-</span> eta <span style="color:#f92672">*</span> gradi;<span style="color:#75715e">#得到下一个点</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;最小y值的x点的坐标：&#34;</span>,theta);
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;最小的y值：&#34;</span>,dyv);
+</span></span><span style="display:flex;"><span>arr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array(arr);
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>plot(x,(x<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>plot(arr,(arr<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#34;or&#34;</span>,marker<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;*&#34;</span>)
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>show();</span></span></code></pre></div>
+<p>最后效果图
+<a href="#R-image-18061b3d356f93faba9bf92f63bfebf5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/26be13869ad4fdc1c289d57962fea1e3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-18061b3d356f93faba9bf92f63bfebf5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/26be13869ad4fdc1c289d57962fea1e3.png"></a>
+红点表示所有下坡的theta点，可以理解坡度越陡 走的越快。
+最后输出的结果（和预测结果基本一致）：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>最小y值的x点的坐标： 1.9999999952754293
+最小的y值： 2.0</code></pre></div>
+<h1 id="梯度下降解决线性回归实例">梯度下降解决线性回归实例</h1>
+<p>使用正态分布模拟在某个线附近上下波动的数据</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plot
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">100</span>);<span style="color:#75715e">#设置一个随机种子 让产生的随机数每次运行都想听</span>
+</span></span><span style="display:flex;"><span>x<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>rand(<span style="color:#ae81ff">100</span>); <span style="color:#75715e">#产生100个随机的点0-1之间</span>
+</span></span><span style="display:flex;"><span>X<span style="color:#f92672">=</span>x<span style="color:#f92672">.</span>reshape(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>);<span style="color:#75715e">#转换成矩阵只有一列 [0.2,0.3]转换成 [[0.2],[0.3]]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#print(X)</span>
+</span></span><span style="display:flex;"><span>y<span style="color:#f92672">=</span>x<span style="color:#f92672">*</span><span style="color:#ae81ff">3</span><span style="color:#f92672">+</span><span style="color:#ae81ff">4</span><span style="color:#f92672">+</span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>rand(<span style="color:#ae81ff">100</span>); <span style="color:#75715e">#将x值*3+4+一个随机值</span>
+</span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>plot(x,y,<span style="color:#e6db74">&#34;o&#34;</span>); <span style="color:#75715e">#绘制图形</span></span></span></code></pre></div>
+<p>显示效果:
+<a href="#R-image-4aa4649c1e680e5b3b4ab85ce8598b7c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6eb0ede97c2e9b88075bf34dd6a6060b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4aa4649c1e680e5b3b4ab85ce8598b7c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6eb0ede97c2e9b88075bf34dd6a6060b.png"></a></p>
+<p>我们将用梯度下降法来拟合出这条直线！
+首先，我们需要定义一个代价函数，在此我们选用均方误差代价函数
+<a href="#R-image-f919177cb49b81615cbe254c439ec3e3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/955f85e59aa67778616c499283f6ee7d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f919177cb49b81615cbe254c439ec3e3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/955f85e59aa67778616c499283f6ee7d.png"></a>
+其中
+<a href="#R-image-d017cfe7989923251c84ec25a6f7d8c7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/695eb5010bf611611f929d032adb8c75.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d017cfe7989923251c84ec25a6f7d8c7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/695eb5010bf611611f929d032adb8c75.png"></a>
+此公示中</p>
+<ul>
+<li>m是数据集中点的个数</li>
+<li>½是一个常量，这样是为了在求梯度的时候，二次方乘下来就和这里的½抵消了，自然就没有多余的常数系数，-  方便后续的计算，同时对结果不会有影响</li>
+<li>y 是数据集中每个点的真实y坐标的值</li>
+<li>h 是我们的预测函数，根据每一个输入x，根据Θ 计算得到预测的y值，即</li>
+</ul>
+<p>我们可以根据代价函数看到，代价函数中的变量有两个，分别为theta0和theta1，x和y是已知量，所以是一个多变量的梯度下降问题，求解出代价函数的梯度，也就是分别对两个变量theta0和theta1进行微分
+<a href="#R-image-f82a687b7e9a0fe01fadcecc9e0eee8c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/0b951cabca0e68d2b91efb133444a827.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f82a687b7e9a0fe01fadcecc9e0eee8c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/0b951cabca0e68d2b91efb133444a827.png"></a>
+开始使用python进行实现正太分布模拟数据的梯度下降
+获取损失函数的y值：
+参考图
+<a href="#R-image-984abb47bc84561b594c7f1262372e00" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/955f85e59aa67778616c499283f6ee7d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-984abb47bc84561b594c7f1262372e00"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/955f85e59aa67778616c499283f6ee7d.png"></a>
+<a href="#R-image-9f65dff84d57ba01b48a81c8ceefbbfb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/695eb5010bf611611f929d032adb8c75.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9f65dff84d57ba01b48a81c8ceefbbfb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/695eb5010bf611611f929d032adb8c75.png"></a></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> 获取损失函数的y值 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">(y1-(theta0+theta1*x1)**2)+(y2-(theta0+theta1*x2)**2)+....+(ym-(theta0+theta1*xm)**2)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">j</span>(x,y,theta):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> np<span style="color:#f92672">.</span>sum((y<span style="color:#f92672">-</span>(theta[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span>theta[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>x[:,<span style="color:#ae81ff">1</span>]))<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">/</span>len(y);</span></span></code></pre></div>
+<p>计算所有theta的梯度 我么知道有theta0和theta1两个梯度
+参考图
+<a href="#R-image-201fc834258ba83cbd8d194a652a880d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/0b951cabca0e68d2b91efb133444a827.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-201fc834258ba83cbd8d194a652a880d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/0b951cabca0e68d2b91efb133444a827.png"></a>
+计算theta0和theta1在每一个点的梯度(注意theta0和theta1是未知数 所有theta0和theta1是自变量  损失函数式因变量)
+代码：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">#dj(theta0)=(y1-(theta0+theta1*x1)+(y2-(theta0+theta1*x2)+....+(ym-(theta0+theta1*xm))/m
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">#   为了简单 将theta0*x0    x0=1 即可本来每个x是一个矩阵 比如
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  [[0.5],
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">   [0.5]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  ]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> 修改为
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  [[1,0.5],
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">   [1,0.5]]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> 假设传入的theta是一个向量
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> [2,1]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> 点乘就是行和列
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> 1*2+0.5*1=theta0+theta1*x1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">#dj(theta0)=np.sum((theta.*x)-yi)/m
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">#dj(theta1)=((y1-(theta0+theta1*x1)*x1+(y2-(theta0+theta1*x2)*x2+....+(ym-(theta0+theta1*xm)*xm))/m
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">#dj(theta1)=np.sum((theta.*x)-yi)*xi/m
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dj</span>(x,y,theta):
+</span></span><span style="display:flex;"><span>   djArr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>empty((len(theta)))
+</span></span><span style="display:flex;"><span>   djArr[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>sum(<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>(x<span style="color:#f92672">.</span>dot(theta)<span style="color:#f92672">-</span>y));
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,len(theta)):
+</span></span><span style="display:flex;"><span>       djArr[i] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sum(<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> (x<span style="color:#f92672">.</span>dot(theta) <span style="color:#f92672">-</span> y)<span style="color:#f92672">*</span>x[:,i]);
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">/</span>len(x)<span style="color:#f92672">*</span>djArr;</span></span></code></pre></div>
+<p>初始化一个theta值，模拟梯度下降。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>&#34;&#34;&#34;
+梯度下降获取最佳的值
+&#34;&#34;&#34;
+x_b=np.hstack((np.ones((len(x),1)),X));
+init_theta=np.array([0.1,0.5]);
+eta=0.01;
+while True:
+    jr=j(x_b,y,init_theta) #获取损失函数的y值
+    djr=dj(x_b,y,init_theta) #获取梯度值
+    init_theta=init_theta-eta*djr;#让theta按梯度下降
+    if(np.all(np.abs(djr)&lt;=1e-5)):
+        break;
+#打印获取到的两个的theta的值
+print(init_theta);
+#打印图x和通过theta获取的y值
+plot.plot(x,init_theta[0]+init_theta[1]*x)
+plot.show();</code></pre></div>
+<p>最后输出结果
+[4.54437998 2.94672834]
+最后拟合线图
+<a href="#R-image-e683ae05680ed5ec8b2dbcaac107d301" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/376ed92bace8a57a375d9a5fe0c59383.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e683ae05680ed5ec8b2dbcaac107d301"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/376ed92bace8a57a375d9a5fe0c59383.png"></a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/index.html">机器学习</a><ul id="R-subsections-d3b98ca0beda96811b8c41829d886d7f" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/basic/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/basic/index.html">基础理论</a><ul id="R-subsections-2f18a18645b7652a148815c1a6786b18" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/basic/action_02_linear/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/basic/action_02_linear/index.html">机器学习实战教程（二）：线性回归</a></li>
+            <li class="active " data-nav-id="/docs/programming/ai/machine_learning/basic/action_03_gradient-copy/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/basic/action_03_gradient-copy/index.html">机器学习实战教程（三）：梯度下降</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/basic/action_03_gradient/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/basic/action_03_gradient/index.html">机器学习实战教程（三）：梯度下降</a></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758334532" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758334532" defer></script>
+    <script src="/docs/js/theme.js?1758334532" defer></script>
+  </body>
+</html>

@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一 简介 朴素贝叶斯算法是有监督的学习算法，解决的是分类问题，如客户是否流失、是否值得投资、信用等级评定等多分类问题。该算法的优点在于简单易懂、学习效率高、在某些领域的分类问题中能够与决策树、神经网络相媲美。但由于该算法以自变量之间的独立（条件特征独立）性和连续变量的正态性假设为前提，就会导致算法精度在某种程度上受影响。
+二 朴素贝叶斯理论 把样本空间划分成容易研究的几种情况。
+全概率公式（由原因到结果）考察在每一种情况下事件B发生的概率，计算B的概率。 Bayes公式（由结果到原因）在事件B发生的条件下，考察每种情况出现的条件概率。 条件概率 公式推导 我们需要了解什么是条件概率(Conditional probability)，就是指在事件B发生的情况下，事件A发生的概率，用P(A|B)来表示。 根据文氏图，可以很清楚地看到在事件B发生的情况下，事件A发生的概率就是P(A∩B)除以P(B)。 因此， 同理根据条件概率知道A发生时B的概率 转换下 所以 即 这就是条件概率的计算公式。">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="机器学习实战教程（七）：朴素贝叶斯 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一 简介 朴素贝叶斯算法是有监督的学习算法，解决的是分类问题，如客户是否流失、是否值得投资、信用等级评定等多分类问题。该算法的优点在于简单易懂、学习效率高、在某些领域的分类问题中能够与决策树、神经网络相媲美。但由于该算法以自变量之间的独立（条件特征独立）性和连续变量的正态性假设为前提，就会导致算法精度在某种程度上受影响。
+二 朴素贝叶斯理论 把样本空间划分成容易研究的几种情况。
+全概率公式（由原因到结果）考察在每一种情况下事件B发生的概率，计算B的概率。 Bayes公式（由结果到原因）在事件B发生的条件下，考察每种情况出现的条件概率。 条件概率 公式推导 我们需要了解什么是条件概率(Conditional probability)，就是指在事件B发生的情况下，事件A发生的概率，用P(A|B)来表示。 根据文氏图，可以很清楚地看到在事件B发生的情况下，事件A发生的概率就是P(A∩B)除以P(B)。 因此， 同理根据条件概率知道A发生时B的概率 转换下 所以 即 这就是条件概率的计算公式。">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_07_bays/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="机器学习实战教程（七）：朴素贝叶斯 :: liaomin416100569博客">
+    <meta property="og:description" content="一 简介 朴素贝叶斯算法是有监督的学习算法，解决的是分类问题，如客户是否流失、是否值得投资、信用等级评定等多分类问题。该算法的优点在于简单易懂、学习效率高、在某些领域的分类问题中能够与决策树、神经网络相媲美。但由于该算法以自变量之间的独立（条件特征独立）性和连续变量的正态性假设为前提，就会导致算法精度在某种程度上受影响。
+二 朴素贝叶斯理论 把样本空间划分成容易研究的几种情况。
+全概率公式（由原因到结果）考察在每一种情况下事件B发生的概率，计算B的概率。 Bayes公式（由结果到原因）在事件B发生的条件下，考察每种情况出现的条件概率。 条件概率 公式推导 我们需要了解什么是条件概率(Conditional probability)，就是指在事件B发生的情况下，事件A发生的概率，用P(A|B)来表示。 根据文氏图，可以很清楚地看到在事件B发生的情况下，事件A发生的概率就是P(A∩B)除以P(B)。 因此， 同理根据条件概率知道A发生时B的概率 转换下 所以 即 这就是条件概率的计算公式。">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="机器学习实战教程（七）：朴素贝叶斯 :: liaomin416100569博客">
+    <meta itemprop="description" content="一 简介 朴素贝叶斯算法是有监督的学习算法，解决的是分类问题，如客户是否流失、是否值得投资、信用等级评定等多分类问题。该算法的优点在于简单易懂、学习效率高、在某些领域的分类问题中能够与决策树、神经网络相媲美。但由于该算法以自变量之间的独立（条件特征独立）性和连续变量的正态性假设为前提，就会导致算法精度在某种程度上受影响。
+二 朴素贝叶斯理论 把样本空间划分成容易研究的几种情况。
+全概率公式（由原因到结果）考察在每一种情况下事件B发生的概率，计算B的概率。 Bayes公式（由结果到原因）在事件B发生的条件下，考察每种情况出现的条件概率。 条件概率 公式推导 我们需要了解什么是条件概率(Conditional probability)，就是指在事件B发生的情况下，事件A发生的概率，用P(A|B)来表示。 根据文氏图，可以很清楚地看到在事件B发生的情况下，事件A发生的概率就是P(A∩B)除以P(B)。 因此， 同理根据条件概率知道A发生时B的概率 转换下 所以 即 这就是条件概率的计算公式。">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="1971">
+    <title>机器学习实战教程（七）：朴素贝叶斯 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/programming\/ai\/machine_learning\/algorithms\/action_07_bays\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_07_bays/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#一-简介">一 简介</a></li>
+    <li><a href="#二-朴素贝叶斯理论">二 朴素贝叶斯理论</a>
+      <ul>
+        <li><a href="#条件概率">条件概率</a>
+          <ul>
+            <li><a href="#公式推导">公式推导</a></li>
+            <li><a href="#计算案例">计算案例</a></li>
+          </ul>
+        </li>
+        <li><a href="#全概率公式">全概率公式</a>
+          <ul>
+            <li><a href="#公式推导-1">公式推导</a></li>
+            <li><a href="#计算案例-1">计算案例</a></li>
+          </ul>
+        </li>
+        <li><a href="#贝叶斯">贝叶斯</a>
+          <ul>
+            <li><a href="#贝叶斯决策">贝叶斯决策</a></li>
+            <li><a href="#贝叶斯推导">贝叶斯推导</a></li>
+            <li><a href="#计算案例-2">计算案例</a></li>
+          </ul>
+        </li>
+        <li><a href="#朴素贝叶斯">朴素贝叶斯</a>
+          <ul>
+            <li><a href="#公式推导-2">公式推导</a></li>
+            <li><a href="#计算案例-3">计算案例</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#三-实践言论过滤器">三 实践言论过滤器</a>
+      <ul>
+        <li><a href="#tf-idf特征向量">TF-IDF特征向量</a>
+          <ul>
+            <li><a href="#tf-idf原理">TF-IDF原理</a></li>
+            <li><a href="#tfidfvectorizer和countvectorizer区别">TfidfVectorizer和CountVectorizer区别</a></li>
+            <li><a href="#tfidfvectorizer和countvectorizer实例">TfidfVectorizer和CountVectorizer实例</a></li>
+          </ul>
+        </li>
+        <li><a href="#训练朴素贝叶斯分类器">训练朴素贝叶斯分类器</a></li>
+        <li><a href="#使用训练数据分类">使用训练数据分类</a></li>
+      </ul>
+    </li>
+    <li><a href="#四-朴素贝叶斯之数据归类sklearn">四 朴素贝叶斯之数据归类（sklearn）</a>
+      <ul>
+        <li><a href="#使用skearn分类新浪新闻">使用skearn分类新浪新闻</a>
+          <ul>
+            <li><a href="#数据加载">数据加载</a></li>
+            <li><a href="#分词整理">分词整理</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/index.html"><span itemprop="name">人工智能</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/machine_learning/index.html"><span itemprop="name">机器学习</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/machine_learning/algorithms/index.html"><span itemprop="name">核心算法</span></a><meta itemprop="position" content="5">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">机器学习实战教程（七）：朴素贝叶斯</span><meta itemprop="position" content="6"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/machine_learning/algorithms/action_06_decidetree/index.html" title="机器学习实战教程（六）：决策树 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/machine_learning/algorithms/action_08_multinomial/index.html" title="机器学习实战教程（八）：多项式回归 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="机器学习实战教程七朴素贝叶斯">机器学习实战教程（七）：朴素贝叶斯</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1 id="一-简介">一 简介</h1>
+<p>朴素贝叶斯算法是有监督的学习算法，解决的是分类问题，如客户是否流失、是否值得投资、信用等级评定等多分类问题。该算法的优点在于简单易懂、学习效率高、在某些领域的分类问题中能够与决策树、神经网络相媲美。但由于该算法以自变量之间的独立（条件特征独立）性和连续变量的正态性假设为前提，就会导致算法精度在某种程度上受影响。</p>
+<h1 id="二-朴素贝叶斯理论">二 朴素贝叶斯理论</h1>
+<p>把样本空间划分成容易研究的几种情况。</p>
+<ul>
+<li>全概率公式（由原因到结果）考察在每一种情况下事件B发生的概率，计算B的概率。</li>
+<li>Bayes公式（由结果到原因）在事件B发生的条件下，考察每种情况出现的条件概率。</li>
+</ul>
+<h2 id="条件概率">条件概率</h2>
+<h3 id="公式推导">公式推导</h3>
+<p>我们需要了解什么是条件概率(Conditional probability)，就是指在事件B发生的情况下，事件A发生的概率，用P(A|B)来表示。
+<a href="#R-image-464f9361dc0e19226d048ba991a2e973" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/cbac2fcb0e27e395f90008294bb08eaf.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-464f9361dc0e19226d048ba991a2e973"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/cbac2fcb0e27e395f90008294bb08eaf.png"></a>
+根据文氏图，可以很清楚地看到在事件B发生的情况下，事件A发生的概率就是P(A∩B)除以P(B)。
+<a href="#R-image-a84e726efe5134b62c152f60a9d400e7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/760cb4d82851ce62e803c33e2f0f476e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a84e726efe5134b62c152f60a9d400e7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/760cb4d82851ce62e803c33e2f0f476e.png"></a>
+因此，
+<a href="#R-image-ef7f6b7f102f5b4978f5b5bba4fd1936" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/fde9c9da60877f69d4918af80b51e13e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef7f6b7f102f5b4978f5b5bba4fd1936"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/fde9c9da60877f69d4918af80b51e13e.png"></a>
+同理根据条件概率知道A发生时B的概率
+<a href="#R-image-100fd76f24e944c1203646eafe16b9bd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/17ef069ed5e2e6008096855b0c2a425b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-100fd76f24e944c1203646eafe16b9bd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/17ef069ed5e2e6008096855b0c2a425b.png"></a>
+转换下
+<a href="#R-image-6ddc37b1d226feb1e377ec979db3d98f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/41c604b5d00f58f028022cb469eb2bc4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6ddc37b1d226feb1e377ec979db3d98f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/41c604b5d00f58f028022cb469eb2bc4.png"></a>
+所以
+<a href="#R-image-efaa85d8e436e82b1cb26a61cda63ebc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5659ca2a6eb1e691ad0b627c48d8c4a7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-efaa85d8e436e82b1cb26a61cda63ebc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5659ca2a6eb1e691ad0b627c48d8c4a7.png"></a>
+即
+<a href="#R-image-050ede956fefa3eb226898ee2c4337d7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/275c645ffcd144d46ee23aa91649bb98.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-050ede956fefa3eb226898ee2c4337d7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/275c645ffcd144d46ee23aa91649bb98.png"></a>
+这就是条件概率的计算公式。</p>
+<h3 id="计算案例">计算案例</h3>
+<p>引例.掷一枚质地均匀的骰子，</p>
+<ol>
+<li>向上的点数是偶数”的概率是多少?</li>
+<li>向上的点数是偶数并且大于4”的概率是多少?
+<a href="#R-image-7924b3920cdb2bafe246fe19222bcc34" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/66a3d085c4c9ed799f4fa7b84d997f9e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7924b3920cdb2bafe246fe19222bcc34"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/66a3d085c4c9ed799f4fa7b84d997f9e.png"></a>
+例2.某种动物出生之后活到20岁的概率为0.7，活到25岁的概率为0.56求现年为20岁的这种动物活到25岁的概率。
+<a href="#R-image-9b9776a2a607400c1f27fcb477c3cfa2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/80e37a98c32f979d7acc2566b00965b9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9b9776a2a607400c1f27fcb477c3cfa2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/80e37a98c32f979d7acc2566b00965b9.png"></a></li>
+</ol>
+<h2 id="全概率公式">全概率公式</h2>
+<p>首先要理解什么是“样本空间的划分”【又称“完备事件群”。】
+我们将满足（假定样本空间Ω，是两个事件A与A&rsquo;的和）</p>
+<ol>
+<li>A1,A2,…,An是一组两两互斥的事件</li>
+<li>A1 U A2 U,…,An=Ω</li>
+</ol>
+<p>这样的一组事件称为一个“完备事件群”。简而言之，就是事件之间两两互斥，所有事件的并集是整个样本空间（必然事件）。
+<a href="#R-image-516e560b7cce38e9392bf04dda89a915" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b896e75504f23e7a0e71c948d974d8ee.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-516e560b7cce38e9392bf04dda89a915"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b896e75504f23e7a0e71c948d974d8ee.png"></a>
+B在整个Ω中发生的概率是：
+<a href="#R-image-dc2486813d5e6129a7f6ca0aa29ebb86" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/be92dc2e738ac1d36391e45d87b12e77.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dc2486813d5e6129a7f6ca0aa29ebb86"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/be92dc2e738ac1d36391e45d87b12e77.png"></a></p>
+<h3 id="公式推导-1">公式推导</h3>
+<p>假定样本空间S，是两个事件A与A&rsquo;的和。
+<a href="#R-image-2450e1ac7c785a03a25c5a97406a224c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b3f184face0ce7f30539a911b76b24dd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2450e1ac7c785a03a25c5a97406a224c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b3f184face0ce7f30539a911b76b24dd.png"></a>
+上图中，红色部分是事件A，绿色部分是事件A&rsquo;，它们共同构成了样本空间S。
+在这种情况下，事件B可以划分成两个部分。
+<a href="#R-image-1b1523208082cddaf2b9efefcd4e5a31" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06c4d5d03162732f7bee0369e67a1664.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1b1523208082cddaf2b9efefcd4e5a31"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06c4d5d03162732f7bee0369e67a1664.png"></a>
+即
+<a href="#R-image-6967b86a861c8b32a669b7a8f709fc84" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8835f185cc9470fb111007d0612b8682.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6967b86a861c8b32a669b7a8f709fc84"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8835f185cc9470fb111007d0612b8682.png"></a>
+在上一节的推导当中，我们已知
+<a href="#R-image-c3c0b16b822416eec76b8acff1703b0f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c0d96379828f80f32e20dc9f92a5273a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c3c0b16b822416eec76b8acff1703b0f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c0d96379828f80f32e20dc9f92a5273a.png"></a>
+所以，
+<a href="#R-image-01f4a24d8b296be7f5a1b6a5ab2b86ea" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5812365c5cbaef8bfecad21f17c77da5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-01f4a24d8b296be7f5a1b6a5ab2b86ea"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5812365c5cbaef8bfecad21f17c77da5.png"></a>
+就是全概率公式。它的含义是，如果A和A&rsquo;构成样本空间的一个划分，那么事件B的概率，就等于A和A&rsquo;的概率分别乘以B对这两个事件的条件概率之和。</p>
+<h3 id="计算案例-1">计算案例</h3>
+<p>例1：有一批同一型号的产品，已知其中由一厂生产的占30%，二厂生产的占50%，三厂生产的占20%，又知这三个厂的产品次品率分别为2%，1%，1%，问从这批产品中任取一件是次品的概率是多少？
+<a href="#R-image-7bfd9d22abcb1ea8de2d86b76e7966ac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f71ff3d4963a2a57bc89741e52801e5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7bfd9d22abcb1ea8de2d86b76e7966ac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f71ff3d4963a2a57bc89741e52801e5.png"></a>
+<a href="#R-image-65db10a904ace96e21706931a5937a61" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8326452dd31cacade61e3b741a40340e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-65db10a904ace96e21706931a5937a61"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8326452dd31cacade61e3b741a40340e.png"></a>
+例2：有某电子设备制造厂所用的元件是由三家元件制造厂提供的。根据以往的记录，有以下的数据：
+<a href="#R-image-7c63a05dcba4b6246a4a01dee2c1d4e0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/3c2e9d5ab286a1a6246eddcfcebd82c8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7c63a05dcba4b6246a4a01dee2c1d4e0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/3c2e9d5ab286a1a6246eddcfcebd82c8.png"></a>
+设这三家工厂的产品在仓库中是均匀混合的，且无区别的标志。</p>
+<ol>
+<li>在仓库中随机地取一只元件，求它是次品的概率；</li>
+<li>在仓库中随机地取一只元件，若已知取到的是次品，分析此次品出自何厂，需求出此次品有三家工厂生产的概率分别是多少。试求这些概率。
+<a href="#R-image-d1e16486e64ad31da3ae0808ea5bbcbc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/2b16e7dd2f53d8e56465dce0b01ddee8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d1e16486e64ad31da3ae0808ea5bbcbc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/2b16e7dd2f53d8e56465dce0b01ddee8.png"></a></li>
+</ol>
+<h2 id="贝叶斯">贝叶斯</h2>
+<h3 id="贝叶斯决策">贝叶斯决策</h3>
+<p>假设现在我们有一个数据集，它由两类数据组成，数据分布如下图所示：
+<a href="#R-image-98060ac29466db1fdbe2c99b5a52e7a3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c37eacb3d2562b941ec75592af9c400b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-98060ac29466db1fdbe2c99b5a52e7a3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c37eacb3d2562b941ec75592af9c400b.png"></a>
+我们现在用p1(x,y)表示数据点(x,y)属于类别1(图中红色圆点表示的类别)的概率，用p2(x,y)表示数据点(x,y)属于类别2(图中蓝色三角形表示的类别)的概率，那么对于一个新数据点(x,y)，可以用下面的规则来判断它的类别：</p>
+<ol>
+<li>如果p1(x,y)&gt;p2(x,y)，那么类别为1</li>
+<li>如果p1(x,y)&lt;p2(x,y)，那么类别为2
+也就是说，我们会选择高概率对应的类别。这就是贝叶斯决策理论的核心思想，即选择具有最高概率的决策。已经了解了贝叶斯决策理论的核心思想，贝叶斯的实现就是如何计算p1和p2概率。</li>
+</ol>
+<h3 id="贝叶斯推导">贝叶斯推导</h3>
+<p>对条件概率公式进行变形，可以得到如下形式：
+<a href="#R-image-3062c15a0de161ee99adb46132410f3f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3062c15a0de161ee99adb46132410f3f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png"></a>
+通过全概率公式
+<a href="#R-image-bbf3a2934fb9eec1890a849bba770109" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9753bd2604890cc42032990fe8baf50d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bbf3a2934fb9eec1890a849bba770109"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9753bd2604890cc42032990fe8baf50d.png"></a>
+得到条件概率的另外一种变形
+<a href="#R-image-5687b6e92b7ef4d5163a538caadb0d50" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f02544e66d571d05b9bdffcc4f7803d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5687b6e92b7ef4d5163a538caadb0d50"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f02544e66d571d05b9bdffcc4f7803d.png"></a>
+在条件概率
+<a href="#R-image-6c83fc0e09b1219971af261d575fc154" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6c83fc0e09b1219971af261d575fc154"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png"></a>
+我们把P(A)称为&quot;先验概率&quot;（Prior probability），即在B事件发生之前，我们对A事件概率的一个判断。
+P(A|B)称为&quot;后验概率&quot;（Posterior probability），即在B事件发生之后，我们对A事件概率的重新评估。
+P(B|A)/P(B)称为&quot;可能性函数&quot;（Likelyhood），这是一个调整因子，使得预估概率更接近真实概率。
+所以，条件概率可以理解成下面的式子：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>后验概率　＝　先验概率 ｘ 调整因子</code></pre></div>
+<p>这就是贝叶斯推断的含义。我们先预估一个&quot;先验概率&quot;，然后加入实验结果，看这个实验到底是增强还是削弱了&quot;先验概率&quot;，由此得到更接近事实的&quot;后验概率&quot;。</p>
+<p>在这里，如果&quot;可能性函数&quot;P(B|A)/P(B)&gt;1，意味着&quot;先验概率&quot;被增强，事件A的发生的可能性变大；如果&quot;可能性函数&quot;=1，意味着B事件无助于判断事件A的可能性；如果&quot;可能性函数&quot;&lt;1，意味着&quot;先验概率&quot;被削弱，事件A的可能性变小。</p>
+<h3 id="计算案例-2">计算案例</h3>
+<p>为了加深对贝叶斯推断的理解，我们举一个例子。
+<a href="#R-image-97619c1a4e8ac1ed28e76cd56185d987" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c6138631b03d118ffda6bb3b627afc3c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-97619c1a4e8ac1ed28e76cd56185d987"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c6138631b03d118ffda6bb3b627afc3c.png"></a>
+两个一模一样的碗，一号碗有30颗水果糖和10颗巧克力糖，二号碗有水果糖和巧克力糖各20颗。现在随机选择一个碗，从中摸出一颗糖，发现是水果糖。请问这颗水果糖来自一号碗的概率有多大？</p>
+<p>我们假定，H1表示一号碗，H2表示二号碗。由于这两个碗是一样的，所以P(H1)=P(H2)，也就是说，在取出水果糖之前，这两个碗被选中的概率相同。因此，P(H1)=0.5，我们把这个概率就叫做&quot;先验概率&quot;，即没有做实验之前，来自一号碗的概率是0.5。</p>
+<p>再假定，E表示水果糖，所以问题就变成了在已知E的情况下，来自一号碗的概率有多大，即求P(H1|E)。我们把这个概率叫做&quot;后验概率&quot;，即在E事件发生之后，对P(H1)的修正。</p>
+<p>根据条件概率公式，得到
+<a href="#R-image-b9b7dbd662bed50218e1baf670d30013" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b72c5af2e6ac7d00a6f14a6c69a142ac.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b9b7dbd662bed50218e1baf670d30013"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b72c5af2e6ac7d00a6f14a6c69a142ac.png"></a>
+已知，P(H1)等于0.5，P(E|H1)为一号碗中取出水果糖的概率，等于30÷(30+10)=0.75，那么求出P(E)就可以得到答案。根据全概率公式，
+<a href="#R-image-4f084155b4cb6e0e92bca1ea3ba008dc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/a79128723ef9bbd98b5fa979a0b20bd7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4f084155b4cb6e0e92bca1ea3ba008dc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/a79128723ef9bbd98b5fa979a0b20bd7.png"></a>
+所以，
+<a href="#R-image-aaa7ff7e312c301c8756c01786b5d514" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/72ca5c8181d7f0721c8f4791852c3b21.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-aaa7ff7e312c301c8756c01786b5d514"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/72ca5c8181d7f0721c8f4791852c3b21.png"></a>
+将数字代入原方程，得到
+<a href="#R-image-9ccb13334c72c1c846fea8cb998ece34" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/bbd6163e119c113b77f839c5d07710a9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9ccb13334c72c1c846fea8cb998ece34"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/bbd6163e119c113b77f839c5d07710a9.png"></a>
+这表明，来自一号碗的概率是0.6。也就是说，取出水果糖之后，H1事件的可能性得到了增强。</p>
+<blockquote>
+<p><!-- raw HTML omitted -->同时再思考一个问题，在使用该算法的时候，如果不需要知道具体的类别概率，即上面P(H1|E)=0.6，只需要知道所属类别，即来自一号碗，我们有必要计算P(E)这个全概率吗？要知道我们只需要比较 P(H1|E)和P(H2|E)的大小，找到那个最大的概率就可以。既然如此，两者的分母都是相同的，那我们只需要比较分子即可。即比较P(E|H1)P(H1)和P(E|H2)P(H2)的大小，所以为了减少计算量，全概率公式在实际编程中可以不使用。
+<!-- raw HTML omitted --></p></blockquote>
+<p>对以往数据分析结果表明，当机器调整得良好时，产品的合格率为90%，而当机器发生某一故障时，其合格率为30%。每天早上机器开动时，机器调整良好的概率为75%，试求已知某日早上第一件产品是合格品时，机器调整良好的概率是多少？</p>
+<p><a href="#R-image-71c5e4fb9b6abe8cd1f6b445c444eebf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/167782d4be699706f6cd765ec3bb693b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-71c5e4fb9b6abe8cd1f6b445c444eebf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/167782d4be699706f6cd765ec3bb693b.png"></a>
+某地区居民的肝癌发病率为0.0004，现用甲胎蛋白法进行普查。医学研究表明，化验结果是有错检的可能的。已知患有肝癌的人其化验结果99%呈阳性（有病），而没患肝癌的人其化验结果99.9%呈阴性（无病）    现某人的检查结果呈阳性，问他真的患有肝癌的概率是多少？。
+<a href="#R-image-e6b4e716e5e4e78ee50599930041d682" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f0de5961ad41d1ede3a3d71baaeabe7e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e6b4e716e5e4e78ee50599930041d682"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f0de5961ad41d1ede3a3d71baaeabe7e.png"></a></p>
+<h2 id="朴素贝叶斯">朴素贝叶斯</h2>
+<p>朴素贝叶斯是一种简单但极为强大的预测建模算法，之所以称为朴素贝叶斯，是因为他假设的每个特征都是独立的。
+如果有多个特征条件下预测某个分类，因为假设是每个特征都是独立的所以可以分解为单个特征下分类的概率计算的结果。
+比如，收到了一份垃圾邮件，</p>
+<ul>
+<li>是房地产的概率，</li>
+<li>是贷款的概率</li>
+<li>是房地产和贷款的概率
+<a href="#R-image-00301c3abe25f38a5d309f787d2cd7d0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b5e3788c2404a40764601d92ca8d3fe4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-00301c3abe25f38a5d309f787d2cd7d0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b5e3788c2404a40764601d92ca8d3fe4.png"></a>
+简化为：
+<a href="#R-image-0514a2f44fc356f3956710ed5a28a352" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e744cda39dec994802fcce5f03946553.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0514a2f44fc356f3956710ed5a28a352"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e744cda39dec994802fcce5f03946553.png"></a>
+朴素贝叶斯模型由两种类型的概率组成
+1、每个类别的概率P(CJ)
+2、每个属性的条件概率P(AI|CJ)</li>
+</ul>
+<h3 id="公式推导-2">公式推导</h3>
+<p>根据贝叶斯公式(假设特征X（多个X1,X2&hellip;.Xn）,对应的分类结果Y)
+<strong>P(Y|X)=P(Y)  * (P(X|Y) / P(X))</strong>
+因为特征X是多维
+<strong>P(Y|X)=P(Y)  * (P((X1,X2,&hellip;.Xn)|Y) / P(X1,X2,&hellip;.Xn))</strong>
+独立性拆分
+<strong>P(Y|(X1,X2&hellip;Xn))=P(Y)  * (P(X1|Y)<em>P(X2|Y)</em>&hellip;.P(Xn|Y) / P(X1)<em>P(X2)</em>&hellip;.P(Xn))</strong>
+假设 某个分类的结果Y=男|女，X特征表示（身高，体重）
+此时如果给出某个人的X特征要判断到底是男和女，实际上就是比较
+给出的具体身高和体重对应是男和女的概率谁大 即可
+由于公式
+<strong>P(Y|(X1,X2&hellip;Xn))=P(Y)  * (P(X1|Y)<em>P(X2|Y)</em>&hellip;.P(Xn|Y) / P(X1)<em>P(X2)</em>&hellip;.P(Xn))</strong>
+男或者女情况下 P(Y) 【男和女的概率预测的就是0.5和0.5】 和 P(X1)<em>P(X2)</em>&hellip;.P(Xn))都是相同的，实际上就只需要比较
+<strong>P(X1|Y)<em>P(X2|Y)</em>&hellip;.P(Xn|Y）</strong>
+的概率大小即可，谁大就是谁的分类结果。</p>
+<h3 id="计算案例-3">计算案例</h3>
+<p>离散数据如下：
+<a href="#R-image-6c4c03d836dca792dd14a8413b8ef841" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e97b3c5f3d8d255a46296c5b46df7c3d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6c4c03d836dca792dd14a8413b8ef841"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e97b3c5f3d8d255a46296c5b46df7c3d.png"></a>
+计算：身高为高，体重为中，鞋码为中这个人是男还是女？
+X1:表示身高
+X2:表示体重
+X3:表示鞋码
+Y:代表类别 Y1表示男，Y2表示女。未知表示Yj
+<strong>P(Yj|X1,X2,X3) = P(Yj)  * (P(X1|Yj)<em>P(X2|Yj)</em>&hellip;.P(Xn|Yj) / P(X1)<em>P(X2)</em>&hellip;.P(Xn))</strong>
+由于先验概率和分母两个分类都相同，只比较分子</p>
+<p><strong>P(X1X2X3|Yj) = P(X1|Yj)<em>P(X2|Yj)</em>&hellip;.P(Xn|Yj)</strong></p>
+<p>假设类别为j=1  Y1是男</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>P(X1|Y1) = 2/4     就是男生（1-4行）中身高是高（1-2行）的概率
+P(X2|Y1) = 2/4
+P(X3|Y1) = 1/4
+P(X1|Y1)P(X2|Y1) P(X3|Y1) = 2/4*2/4*1/4 = 1/16</code></pre></div>
+<p>假设类别为j=2 Y1是女</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>P(X1|Y2) = 0        就是女生（5-8行）中身高是高（没有）的概率
+P(X2|Y2) = 2/4
+P(X3|Y2) = 2/4
+P(X1|Y2) P(X2|Y2)P(X3|Y2)) = 0*2/4*2/4 = 0
+C1&gt;C2</code></pre></div>
+<p>由此推论：身高为高，体重为中，鞋码为中这个人是男
+该案例中由于给定的身高都是确定的数据，判断起来比较简单，如果是连续性数据</p>
+<blockquote>
+<p>1、离散型：有些随机变量它全部可能取到的不相同的值是有限个或可列无限多个，也可以说概率1以一定的规律分布在各个可能值上。
+2、连续型：随机变量X的取值不可以逐个列举，只可取数轴某一区间内的任一点。</p></blockquote>
+<p><a href="#R-image-fa48a04c0c2b429b2a4c1274b763f7cd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f6f43aa7d2ab5afbea77dc337456f4f8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fa48a04c0c2b429b2a4c1274b763f7cd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f6f43aa7d2ab5afbea77dc337456f4f8.png"></a>
+需求：身高180，体重120，鞋码41该人是男还是女？
+公式还是上面的公式，但身高，体重，鞋码是连续变量，不能采用离散型方法计算概率。假设身高，体重，鞋码是正态分布通过样本计算出均值和方差，也就得到了正态分布的密度函数，有了密度函数，可以算出一点的密度涵数值。如男性平均身高179.5,标准差3.697正态分布，高180的概率是0.1069</p>
+<p>python实现</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+import numpy as np
+import pandas as pd
+df = pd.read_excel(&#39;连续性.xlsx&#39;,sheet_name=&#34;Sheet1&#34;,index_col=0)
+# 计算男女在每个特征维度的方差和均值
+df2 = df.groupby(&#34;性别&#34;).agg([np.mean, np.var])
+print(df2)
+
+#%%
+
+male_high_mean = df2.loc[&#34;男&#34;,&#34;身高&#34;][&#34;mean&#34;]
+male_high_var = df2.loc[&#34;男&#34;,&#34;身高&#34;][&#34;var&#34;]
+
+male_weight_mean = df2.loc[&#34;男&#34;,&#34;体重&#34;][&#34;mean&#34;]
+male_weight_var = df2.loc[&#34;男&#34;,&#34;体重&#34;][&#34;var&#34;]
+
+male_code_mean = df2.loc[&#34;男&#34;,&#34;鞋码&#34;][&#34;mean&#34;]
+male_code_var = df2.loc[&#34;男&#34;,&#34;鞋码&#34;][&#34;var&#34;]
+from scipy import stats
+
+# pdf ——概率密度函数标准形式是,算出在男性中身高180的概率
+male_high = stats.norm.pdf(180,male_high_mean,male_high_var)
+# 算出在男性中体重120的概率
+male_weight = stats.norm.pdf(120, male_weight_mean, male_weight_var)
+# 算出在男性中鞋码41的概率
+male_code = stats.norm.pdf(41, male_code_mean, male_code_var)
+fz=(male_high*male_weight*male_code)
+print(fz)
+
+female_high_mean = df2.loc[&#34;女&#34;,&#34;身高&#34;][&#34;mean&#34;]
+female_high_var = df2.loc[&#34;女&#34;,&#34;身高&#34;][&#34;var&#34;]
+
+female_weight_mean = df2.loc[&#34;女&#34;,&#34;体重&#34;][&#34;mean&#34;]
+female_weight_var = df2.loc[&#34;女&#34;,&#34;体重&#34;][&#34;var&#34;]
+
+female_code_mean = df2.loc[&#34;女&#34;,&#34;鞋码&#34;][&#34;mean&#34;]
+female_code_var = df2.loc[&#34;女&#34;,&#34;鞋码&#34;][&#34;var&#34;]
+
+
+#计算在女性分类中的三种特征的概率
+female_high = stats.norm.pdf(180, female_high_mean, female_high_var)
+female_weight = stats.norm.pdf(120, female_weight_mean, female_weight_var)
+female_code = stats.norm.pdf(41, female_code_mean, female_code_var)
+ffz=female_high*female_weight*female_code
+print(ffz)
+if fz&gt;ffz:
+    print(&#34;男性&#34;)
+else :
+    print(&#34;女性&#34;)</code></pre></div>
+<h1 id="三-实践言论过滤器">三 实践言论过滤器</h1>
+<h2 id="tf-idf特征向量">TF-IDF特征向量</h2>
+<h3 id="tf-idf原理">TF-IDF原理</h3>
+<p>F-IDF特征向量是一种将文本数据转换为数值型表示的方式，其中每个维度代表一个单词，每个样本（也即一个文本）都被表示为一个向量。</p>
+<p>TF-IDF是一种用于信息检索与文本挖掘的常用加权技术</p>
+<p>TF-IDF（Term Frequency-Inverse Document Frequency）是一种常用于信息检索与文本数据分析的算法，用于衡量一个词语对于一个文档或一个文本集合中的其中一份文本的重要程度。</p>
+<p>TF（Term Frequency）指的是词频，代表该词在某个文本中出现的次数。IDF（Inverse Document Frequency）指的是逆文档频率，用于衡量该词在整个文本集合中出现的频率，即该词在多少份文本中出现过。如果一个词在文本集合中越常见，它的逆文档频率就越低，说明该词对于区分不同文本的重要性就越小。</p>
+<p>因此，TF-IDF值是通过将词频（TF）与逆文档频率（IDF）相乘得到的。<!-- raw HTML omitted -->对于单个文本而言，TF-IDF值越高，则代表该词对于该文本的重要性越大，越能够代表该文本所表示的主题<!-- raw HTML omitted -->；而在整个文本集合中，TF-IDF值越高，则代表该词能够很好地区分不同的文本，越能够代表该文本集合所表示的主题。</p>
+<p>TF-IDF算法在信息检索、文本分类、关键词提取等领域有着广泛的应用</p>
+<p>假设有以下两个文本：</p>
+<ol>
+<li>The quick brown fox jumps over the lazy dog.</li>
+<li>The brown fox is quick and the blue dog is lazy.</li>
+</ol>
+<p>首先，需要将这些文本进行预处理，包括去除标点符号、停用词（the ，is  and）等，并将每个文本转换为词语列表。针对这两个文本，可能得到以下词语列表：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[&#39;quick&#39;, &#39;brown&#39;, &#39;fox&#39;, &#39;jumps&#39;, &#39;lazy&#39;, &#39;dog&#39;]
+[&#39;brown&#39;, &#39;fox&#39;, &#39;quick&#39;, &#39;blue&#39;, &#39;dog&#39;, &#39;lazy&#39;]</code></pre></div>
+<p>接下来，需要计算每个词语在每个样本中出现的次数，即词频（TF, term frequency）。这个过程可以使用CountVectorizer类实现。以第一个样本为例，其词频向量为：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[1, 1, 1, 1, 1, 1]</code></pre></div>
+<p>即&rsquo;quick&rsquo;、&lsquo;brown&rsquo;、&lsquo;fox&rsquo;、&lsquo;jumps&rsquo;、&rsquo;lazy&rsquo;、&lsquo;dog&rsquo;在第一个样本中均出现了1次。
+接着，需要计算逆文档频率（IDF, inverse document frequency），用于衡量每个词语的重要性。IDF的计算公式为：
+<a href="#R-image-d47bd57b7eca3f88419a18cf36e7529e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/585411c6deccc46fd4c97fc14ddfccd4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d47bd57b7eca3f88419a18cf36e7529e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/585411c6deccc46fd4c97fc14ddfccd4.png"></a>
+其中，N表示文档总数，这里就是2个文本，df(t)表示包含词语t的文档数量。将以上面两个文本为例进行计算，得到各个词语的IDF值：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[0.0, 0.0, 0.0, 0.6931471805599453, 0.0, 0.0]
+[0.0, 0.0, 0.0, 0.6931471805599453, 0.0, 0.0]</code></pre></div>
+<p>其中，&lsquo;jumps&rsquo;在第一个样本中只出现了1次，在所有文档中也只出现了1次，因此其IDF值为
+log（2/1）=0.6931。而&rsquo;quick&rsquo;、&lsquo;brown&rsquo;、&lsquo;fox&rsquo;、&rsquo;lazy&rsquo;、&lsquo;dog&rsquo;在两个文档中都出现了，因此它们的IDF值为0。</p>
+<p>最后，需要将每个文本的TF向量与对应的IDF向量相乘，得到TF-IDF特征向量。以第一个文本为例，其TF-IDF向量为：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[0.0, 0.0, 0.0, 0.6931471805599453, 0.0, 0.0]</code></pre></div>
+<p>是因为&rsquo;jumps&rsquo;在第一个文本中出现了1次，而且在所有文档中也只出现了1次，因此其TF-IDF值为
+1*log(2/1)其他词语的TF-IDF值均为0。</p>
+<p>以此类推，可以得到所有文本的TF-IDF特征向量。需要注意的是，每个文本的特征向量维度通常是一样的，因此在计算TF-IDF时需要遍历所有文本。</p>
+<h3 id="tfidfvectorizer和countvectorizer区别">TfidfVectorizer和CountVectorizer区别</h3>
+<p>TfidfVectorizer计算的是词语在文本中的重要程度，即TF-IDF值。
+CountVectorizer只计算词语在文本中出现的次数。</p>
+<p>以下是使用实际数据来说明 TfidfVectorizer 和 CountVectorizer 的区别：</p>
+<p>假设我们有以下三篇文档：</p>
+<ul>
+<li>文档A：天气晴朗，温度适宜，阳光明媚。</li>
+<li>文档B：天气多云，温度适宜，偶有小雨。</li>
+<li>文档C：天气阴天，温度偏低，有雨。</li>
+</ul>
+<p>我们可以使用 TfidfVectorizer 和 CountVectorizer 对这三篇文档进行特征向量化，得到它们的词频矩阵。</p>
+<p>具体来说，使用 CountVectorizer 可以得到以下的词频矩阵：</p>
+<table>
+  <thead>
+      <tr>
+          <th>词汇</th>
+          <th>文档A</th>
+          <th>文档B</th>
+          <th>文档C</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>天气</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>温度</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>适宜</td>
+          <td>1</td>
+          <td>1</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>阳光明媚</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>多云</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>偶有小雨</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>阴天</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>偏低</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>有雨</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+      </tr>
+  </tbody>
+</table>
+<p>而使用 TfidfVectorizer 可以得到以下的词频矩阵：</p>
+<table>
+  <thead>
+      <tr>
+          <th>词汇</th>
+          <th>文档A</th>
+          <th>文档B</th>
+          <th>文档C</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>天气</td>
+          <td>0.00</td>
+          <td>0.00</td>
+          <td>0.58</td>
+      </tr>
+      <tr>
+          <td>温度</td>
+          <td>0.42</td>
+          <td>0.42</td>
+          <td>0.42</td>
+      </tr>
+      <tr>
+          <td>适宜</td>
+          <td>0.58</td>
+          <td>0.58</td>
+          <td>0.00</td>
+      </tr>
+      <tr>
+          <td>阳光明媚</td>
+          <td>0.81</td>
+          <td>0.00</td>
+          <td>0.00</td>
+      </tr>
+      <tr>
+          <td>多云</td>
+          <td>0.00</td>
+          <td>0.81</td>
+          <td>0.00</td>
+      </tr>
+      <tr>
+          <td>偶有小雨</td>
+          <td>0.00</td>
+          <td>0.81</td>
+          <td>0.00</td>
+      </tr>
+      <tr>
+          <td>阴天</td>
+          <td>0.00</td>
+          <td>0.00</td>
+          <td>0.58</td>
+      </tr>
+      <tr>
+          <td>偏低</td>
+          <td>0.00</td>
+          <td>0.00</td>
+          <td>0.81</td>
+      </tr>
+      <tr>
+          <td>有雨</td>
+          <td>0.00</td>
+          <td>0.00</td>
+          <td>0.58</td>
+      </tr>
+  </tbody>
+</table>
+<p>从上面的词频矩阵可以看出，CountVectorizer 只考虑了每种词汇在当前文档中出现的频率，而 TfidfVectorizer 则同时考虑了某一词汇在当前训练文本中出现的频率以及包含这个词汇的其它训练文本数目的倒数，因此 TfidfVectorizer 更能够反映出不同文档之间的差异性。</p>
+<h3 id="tfidfvectorizer和countvectorizer实例">TfidfVectorizer和CountVectorizer实例</h3>
+<p><!-- raw HTML omitted -->CountVectorizer统计词频<!-- raw HTML omitted --></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+
+postingList=[&#39;my my dog has flea problems help please&#39;,                #切分的词条
+            &#39;maybe not take him to dog park stupid&#39;,
+             &#39;my dalmation is so cute I love him&#39;,
+             &#39;stop posting stupid worthless garbage&#39;,
+             &#39;mr licks ate my steak how to stop him&#39;,
+             &#39;quit buying worthless dog food stupid&#39;]
+classVec = [0,1,0,1,0,1]                                                                   #类别标签向量，1代表侮辱性词汇，0代表不是
+
+from sklearn.feature_extraction.text import CountVectorizer
+# 初始化CountVectorizer并进行文本特征提取
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(postingList)
+
+# 显示特征向量和对应的单词
+print(X.toarray())
+print(vectorizer.get_feature_names())</code></pre></div>
+<p>输出</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[[0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 2 0 0 1 0 1 0 0 0 0 0 0 0 0]
+ [0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 1 1 0 0 0 0 0 0 0 1 1 1 0]
+ [0 0 1 1 0 0 0 0 0 0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 1]
+ [1 0 0 0 0 0 0 0 0 0 1 1 0 1 0 0 1 1 0 0 0 0 0 0 0 1 1 0 0 1 0]
+ [0 1 0 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 1]]
+[&#39;ate&#39;, &#39;buying&#39;, &#39;cute&#39;, &#39;dalmation&#39;, &#39;dog&#39;, &#39;flea&#39;, &#39;food&#39;, &#39;garbage&#39;, &#39;has&#39;, &#39;help&#39;, &#39;him&#39;, &#39;how&#39;, &#39;is&#39;, &#39;licks&#39;, &#39;love&#39;, &#39;maybe&#39;, &#39;mr&#39;, &#39;my&#39;, &#39;not&#39;, &#39;park&#39;, &#39;please&#39;, &#39;posting&#39;, &#39;problems&#39;, &#39;quit&#39;, &#39;so&#39;, &#39;steak&#39;, &#39;stop&#39;, &#39;stupid&#39;, &#39;take&#39;, &#39;to&#39;, &#39;worthless&#39;]
+12</code></pre></div>
+<blockquote>
+<p>注意，是将所有的单词去重复后作为特征列，数据行就是当前的文档，行中的数据就是在这个特征单词上出现的次数</p></blockquote>
+<p><!-- raw HTML omitted -->TfidfVectorizer统计tf-idf<!-- raw HTML omitted --></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# 初始化TfidfVectorizer
+tvectorizer = TfidfVectorizer(stop_words=&#39;english&#39;)
+
+# 转换文本数据到词袋模型
+X_train = tvectorizer.fit_transform(postingList)
+# 显示特征向量和对应的单词
+print(X_train.toarray())
+print(vectorizer.get_feature_names())</code></pre></div>
+<p>输出</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[[0.         0.         0.         0.         0.37115593 0.53611046
+  0.         0.         0.53611046 0.         0.         0.
+  0.         0.         0.         0.53611046 0.         0.
+  0.         0.         0.        ]
+ [0.         0.         0.         0.         0.40249409 0.
+  0.         0.         0.         0.         0.         0.58137639
+  0.         0.58137639 0.         0.         0.         0.
+  0.         0.40249409 0.        ]
+ [0.         0.         0.57735027 0.57735027 0.         0.
+  0.         0.         0.         0.         0.57735027 0.
+  0.         0.         0.         0.         0.         0.
+  0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.51136725 0.         0.         0.         0.
+  0.         0.         0.51136725 0.         0.         0.
+  0.41932846 0.3540259  0.41932846]
+ [0.46262479 0.         0.         0.         0.         0.
+  0.         0.         0.         0.46262479 0.         0.
+  0.46262479 0.         0.         0.         0.         0.46262479
+  0.37935895 0.         0.        ]
+ [0.         0.46468841 0.         0.         0.32170956 0.
+  0.46468841 0.         0.         0.         0.         0.
+  0.         0.         0.         0.         0.46468841 0.
+  0.         0.32170956 0.38105114]]
+[&#39;ate&#39;, &#39;buying&#39;, &#39;cute&#39;, &#39;dalmation&#39;, &#39;dog&#39;, &#39;flea&#39;, &#39;food&#39;, &#39;garbage&#39;, &#39;has&#39;, &#39;help&#39;, &#39;him&#39;, &#39;how&#39;, &#39;is&#39;, &#39;licks&#39;, &#39;love&#39;, &#39;maybe&#39;, &#39;mr&#39;, &#39;my&#39;, &#39;not&#39;, &#39;park&#39;, &#39;please&#39;, &#39;posting&#39;, &#39;problems&#39;, &#39;quit&#39;, &#39;so&#39;, &#39;steak&#39;, &#39;stop&#39;, &#39;stupid&#39;, &#39;take&#39;, &#39;to&#39;, &#39;worthless&#39;]</code></pre></div>
+<h2 id="训练朴素贝叶斯分类器">训练朴素贝叶斯分类器</h2>
+<p>我们先得到词条向量</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import numpy as np
+postingList=[&#39;my dog has flea problems help please&#39;,                #切分的词条
+            &#39;maybe not take him to dog park stupid&#39;,
+             &#39;my dalmation is so cute I love him&#39;,
+             &#39;stop posting stupid worthless garbage&#39;,
+             &#39;mr licks ate my steak how to stop him&#39;,
+             &#39;quit buying worthless dog food stupid&#39;]
+classVec = np.array([0,1,0,1,0,1])    
+
+from sklearn.feature_extraction.text import CountVectorizer
+# 初始化CountVectorizer并进行文本特征提取
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(postingList)
+
+# 显示特征向量和对应的单词
+v=np.array(X.toarray())
+print(v)
+fn=np.array(vectorizer.get_feature_names())
+print(fn)</code></pre></div>
+<p>输出</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[[0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 0]
+ [0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 1 1 0 0 0 0 0 0 0 1 1 1 0]
+ [0 0 1 1 0 0 0 0 0 0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 1]
+ [1 0 0 0 0 0 0 0 0 0 1 1 0 1 0 0 1 1 0 0 0 0 0 0 0 1 1 0 0 1 0]
+ [0 1 0 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 1]]
+[&#39;ate&#39; &#39;buying&#39; &#39;cute&#39; &#39;dalmation&#39; &#39;dog&#39; &#39;flea&#39; &#39;food&#39; &#39;garbage&#39; &#39;has&#39;
+ &#39;help&#39; &#39;him&#39; &#39;how&#39; &#39;is&#39; &#39;licks&#39; &#39;love&#39; &#39;maybe&#39; &#39;mr&#39; &#39;my&#39; &#39;not&#39; &#39;park&#39;
+ &#39;please&#39; &#39;posting&#39; &#39;problems&#39; &#39;quit&#39; &#39;so&#39; &#39;steak&#39; &#39;stop&#39; &#39;stupid&#39; &#39;take&#39;
+ &#39;to&#39; &#39;worthless&#39;]</code></pre></div>
+<p>接下来，我们就可以通过词条向量训练朴素贝叶斯分类器。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>&#34;&#34;&#34;
+  通过传入单词向量和分类结果训练数据集获取到每个特征在不同分类下的条件概率，以及对应分类的先验概率。
+  利用贝叶斯分类器对文档进行分类时，要计算多个概率的乘积以获得文档属于某个类别的概率，
+  即计算p(w0|1)p(w1|1)p(w2|1)。
+  如果其中有一个概率值为0，那么最后相乘的结果也为0
+  这样是不合理的，为了降低这种影响，可以将所有词的出现数初始化为1，并将分母初始化为2。这种做法就叫做拉普拉斯平滑(Laplace Smoothing)又被称为加1平滑，
+  是比较常用的平滑方法，它就是为了解决0概率问题，具体参考拉普拉斯平滑目录。
+&#34;&#34;&#34;
+def trainData(vecList,classVec):
+    #获取先验概率P(侮辱类),    P(非侮辱类)=1-P(侮辱类)
+    PϹ侮辱类先验Ͻ=np.sum(classVec)/len(classVec)
+    #找到所有classVec==0非侮辱类索引行并取得数据行。
+    vec0=vecList[np.where(classVec==0)]
+    #找到所有classVec==1侮辱类索引行并取得数据行。
+    vec1=vecList[np.where(classVec==1)]
+    #设置拉普拉斯平滑因子为1: ,分类的种类是2中所有分子+1，分母+2
+    a=1
+    #让分子都加上1
+    vec0=np.add(vec0,a)
+    vec1=np.add(vec1,a)
+    #计算每个特征在对应分类下的条件概率，分母加上2
+    PϹ特征l非侮辱类Ͻ=np.sum(vec0,axis=0)/(np.sum(vec0)+a*2)
+    PϹ特征l侮辱类Ͻ=np.sum(vec1,axis=0)/(np.sum(vec1)+a*2)
+    return PϹ特征l侮辱类Ͻ,PϹ特征l非侮辱类Ͻ,PϹ侮辱类先验Ͻ
+
+PϹ特征l侮辱类Ͻ,PϹ特征l非侮辱类Ͻ,PϹ侮辱类先验Ͻ=(trainData(v,classVec))
+print(PϹ特征l非侮辱类Ͻ,PϹ特征l侮辱类Ͻ,PϹ侮辱类先验Ͻ)</code></pre></div>
+<p>输出：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[0.03389831 0.02542373 0.03389831 0.03389831 0.03389831 0.03389831
+ 0.02542373 0.02542373 0.03389831 0.03389831 0.04237288 0.03389831
+ 0.03389831 0.03389831 0.03389831 0.02542373 0.03389831 0.05084746
+ 0.02542373 0.02542373 0.03389831 0.02542373 0.03389831 0.02542373
+ 0.03389831 0.03389831 0.03389831 0.02542373 0.02542373 0.03389831
+ 0.02542373]
+
+ [0.02631579 0.03508772 0.02631579 0.02631579 0.04385965 0.02631579
+ 0.03508772 0.03508772 0.02631579 0.02631579 0.03508772 0.02631579
+ 0.02631579 0.02631579 0.02631579 0.03508772 0.02631579 0.02631579
+ 0.03508772 0.03508772 0.02631579 0.03508772 0.02631579 0.03508772
+ 0.02631579 0.02631579 0.03508772 0.05263158 0.03508772 0.03508772
+ 0.04385965] 
+0.5</code></pre></div>
+<blockquote>
+<p>拉普拉斯平滑概念和例子参考：https://github.com/lzeqian/machinelearntry/tree/master/sklearn_bayes/%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E5%B9%B3%E6%BB%91</p></blockquote>
+<ul>
+<li>P(特征l非侮辱类) 是非侮辱类下某个特征的概率，也就是P(非侮辱类)条件概率的分子，其中第五个特征是dog,也就是P(dog|非侮辱类) 概率是0.03389831 。</li>
+<li>P(特征l侮辱类) 是侮辱类下某个特征的概率，也就是P(非侮辱类)条件概率的分子，其中第五个特征是dog,也就是P(dog|侮辱类) 概率是0.04385965 。</li>
+<li>P(侮辱类先验)就是侮辱类的先验概率。</li>
+</ul>
+<h2 id="使用训练数据分类">使用训练数据分类</h2>
+<p>获取到P(特征l非侮辱类) ， P(特征l侮辱类) 和P(侮辱类先验)，P(非侮辱类先验)=1-P(侮辱类先验)，后就可以使用这些数据和传入的新词汇来判断归属的分类了。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>&#39;&#39;&#39;
+  注意求条件概率是找到对应的单词下在对应的分类的乘积，比如
+  you    are     a     dog       as               b
+  0.001 0.0005  0.03   0.666     0.3             0.99
+  
+  传入的矩阵就是
+  1       1      1      1        0               0
+   
+  实际条件侮辱类概率就是
+  P(you|侮辱类)*P(are|侮辱类)*P(a|侮辱类)*P(dog|侮辱类)
+  乘积小数位太多就可能导致小数位溢出，需要使用两个乘数的log来防止溢出
+  log(P(you|侮辱类)*P(are|侮辱类)*P(a|侮辱类)*P(dog|侮辱类))=log(P(you|侮辱类))+log(P(are|侮辱类))+log(P(a|侮辱类))+log(P(dog|侮辱类))
+  为了通过计算直接获取到对应的这些特征单词的和，可以先求出所有特征的log值和传入的矩阵乘积在求和就是上面的结果
+&#39;&#39;&#39;
+def classResult(wordVec,PϹ特征l侮辱类Ͻ,PϹ特征l非侮辱类Ͻ,PϹ侮辱类先验Ͻ):
+    PϹ侮辱类Ͻ=np.sum(np.log(PϹ特征l侮辱类Ͻ)*wordVec)+np.log(PϹ侮辱类先验Ͻ)
+    PϹ非侮辱类Ͻ=np.sum(np.log(PϹ特征l非侮辱类Ͻ)*wordVec)+np.log(1-PϹ侮辱类先验Ͻ)
+    return 1 if PϹ侮辱类Ͻ&gt;PϹ非侮辱类Ͻ else 0
+#测试的词汇
+text=[&#34;you are a dog&#34;]
+testX = vectorizer.transform(text)
+testV=np.array(testX.toarray())
+print(classResult(testV,PϹ特征l侮辱类Ͻ,PϹ特征l非侮辱类Ͻ,PϹ侮辱类先验Ͻ))</code></pre></div>
+<blockquote>
+<p>注意多个小数相乘，使用log函数防止小数位溢出理论参考：https://github.com/lzeqian/machinelearntry/blob/master/sklearn_bayes/%E4%B8%8B%E6%BA%A2%E5%87%BA/%E4%B9%98%E7%A7%AF%E7%BB%93%E6%9E%9C%E5%8F%96%E8%87%AA%E7%84%B6%E5%AF%B9%E6%95%B0%E9%98%B2%E6%AD%A2%E4%B8%8B%E6%BA%A2%E5%87%BA.png</p></blockquote>
+<h1 id="四-朴素贝叶斯之数据归类sklearn">四 朴素贝叶斯之数据归类（sklearn）</h1>
+<p>朴素贝叶斯分类器是对于特征维数较小而训练样本数比较多的分类问题而使用的分类器，其假设所有特征在类别已知的条件下相互独立。在构建分类器时，只需要逐个估计出每个类别的训练样本在每一维特征上的分布，就可以得到每个类别的条件概率密度，大大减少了需要估计参数的数量。也就是说，在给定样本的目标特征值的情况下观察到特征x1,x2,…,xn的联合概率等于每个单独的特征的概率的乘积。</p>
+<p>scikit-learn中，一共有3个朴素贝叶斯的分类算法类。分别是GaussianNB，MultinomialNB和BernoulliNB。</p>
+<ul>
+<li>GaussianNB就是先验为高斯分布的朴素贝叶斯，</li>
+<li>MultinomialNB就是先验为多项式分布的朴素贝叶斯，</li>
+<li>BernoulliNB就是先验为伯努利分布的朴素贝叶斯。</li>
+</ul>
+<p>如果样本特征的分布大部分是连续值，使用GaussianNB会比较好。
+如果如果样本特征的分大部分是多元离散值，使用MultinomialNB比较合适。
+如果样本特征是二元离散值或者很稀疏的多元离散值，应该使用BernoulliNB。
+<!-- raw HTML omitted -->前面讲解的先验概率模型就是先验概率为多项式分布的朴素贝叶斯。<!-- raw HTML omitted --></p>
+<p>对于新闻分类，属于多分类问题。我们可以使用MultinamialNB()完成我们的新闻分类问题。另外两个函数的使用暂且不再进行扩展，可以自行学习。MultinomialNB假设特征的先验概率为多项式分布，即如下式：
+<a href="#R-image-888097fb04899e4a7f80b9e31379329c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/ef728b44f2bd7de469500ad3d38f792c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-888097fb04899e4a7f80b9e31379329c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/ef728b44f2bd7de469500ad3d38f792c.png"></a>
+其中， P(Xj = Xjl | Y = Ck)是第k个类别的第j维特征的第l个取值条件概率。mk是训练集中输出为第k类的样本个数。λ为一个大于0的常数，常常取值为1，即拉普拉斯平滑，也可以取其他值。</p>
+<p>接下来，我们看下MultinamialNB这个函数，只有3个参数：</p>
+<p><a href="#R-image-6dbc13e1279aa70efa0cf92135177125" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9e5cb233e5a68ba84ae689f4950031e8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6dbc13e1279aa70efa0cf92135177125"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9e5cb233e5a68ba84ae689f4950031e8.png"></a></p>
+<p>参数说明如下：</p>
+<ul>
+<li>alpha：浮点型可选参数，默认为1.0，其实就是添加拉普拉斯平滑，即为上述公式中的λ ，如果这个参数设置为0，就是不添加平滑；</li>
+<li>fit_prior：布尔型可选参数，默认为True。布尔参数fit_prior表示是否要考虑先验概率，如果是false,则所有的样本类别输出都有相同的类别先验概率。否则可以自己用第三个参数class_prior输入先验概率，或者不输入第三个参数class_prior让MultinomialNB自己从训练集样本来计算先验概率，此时的先验概率为P(Y=Ck)=mk/m。其中m为训练集样本总数量，mk为输出为第k类别的训练集样本数。</li>
+<li>class_prior：可选参数，默认为None。
+总结如下：
+<a href="#R-image-3abfd756a1ebfcc9ca7d008e02928366" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/03fd10c23cf122048bb2aa6d91f988f7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3abfd756a1ebfcc9ca7d008e02928366"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/03fd10c23cf122048bb2aa6d91f988f7.png"></a>
+除此之外，MultinamialNB也有一些方法供我们使用：
+<a href="#R-image-cdc2082ffcbf434d80bd535ff6a4e20a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06b11b9e21c748505c9caab6c7838aed.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cdc2082ffcbf434d80bd535ff6a4e20a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06b11b9e21c748505c9caab6c7838aed.png"></a></li>
+</ul>
+<p>MultinomialNB一个重要的功能是有partial_fit方法，这个方法的一般用在如果训练集数据量非常大，一次不能全部载入内存的时候。这时我们可以把训练集分成若干等分，重复调用partial_fit来一步步的学习训练集，非常方便。GaussianNB和BernoulliNB也有类似的功能。 在使用MultinomialNB的fit方法或者partial_fit方法拟合数据后，我们可以进行预测。此时预测有三种方法，包括predict，predict_log_proba和predict_proba。predict方法就是我们最常用的预测方法，直接给出测试集的预测类别输出。predict_proba则不同，它会给出测试集样本在各个类别上预测的概率。容易理解，predict_proba预测出的各个类别概率里的最大值对应的类别，也就是predict方法得到类别。predict_log_proba和predict_proba类似，它会给出测试集样本在各个类别上预测的概率的一个对数转化。转化后predict_log_proba预测出的各个类别对数概率里的最大值对应的类别，也就是predict方法得到类别。具体细节不再讲解，可参照官网手册。</p>
+<h2 id="使用skearn分类新浪新闻">使用skearn分类新浪新闻</h2>
+<h3 id="数据加载">数据加载</h3>
+<p>例子来源于：https://cuijiahua.com/blog/2017/11/ml_5_bayes_2.html
+以下是新闻分类的类别</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>C000008	财经
+C000010	IT
+C000013	健康
+C000014	体育
+C000016	旅游
+C000020	教育
+C000022	招聘
+C000023	文化
+C000024	军事</code></pre></div>
+<p>文章数据位于每个分类目录下的多篇文章
+<a href="#R-image-1afacf9c85ce1825c8fb3d3b00785b1c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/52a0e8fee1afbcd830a846c05fc8f95a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1afacf9c85ce1825c8fb3d3b00785b1c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/52a0e8fee1afbcd830a846c05fc8f95a.png"></a></p>
+<blockquote>
+<p>数据集下载：https://github.com/lzeqian/machinelearntry/tree/master/sklearn_bayes/%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB%E6%95%B0%E6%8D%AE
+加载数据集（文章中的单词需要单独作为特征，需要分词，这里使用jieba）</p></blockquote>
+<h3 id="分词整理">分词整理</h3>
+<p>数据集已经准备好，接下来，让我们直接进入正题。切分中文语句，编写如下代码：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import os
+import jieba
+&#39;&#39;&#39;
+  判断字符串是否为数字，清理包括:1,1.5,023,34%等特别的数字字符串
+&#39;&#39;&#39;
+def isNumber(num):
+    if(num.isdigit() or num.isnumeric() or num.isdecimal()):
+        return True
+    if num.endswith(&#39;%&#39;):
+        num_str = num[:-1]  # 去掉百分号
+        return isNumber(num_str)
+    try:
+        _ = float(num)
+        return True
+    except ValueError:
+        return False
+    return False
+&#39;&#39;&#39;
+  将某个字符串通过jieba分词后通过空格拼接，因为CountVectorizer统计词频传入的是带空格的字符串
+&#39;&#39;&#39;
+def wordToVec(word):
+        word_cut = jieba.cut(word, cut_all = False) 
+        filtered_words = filter(lambda w: w is not None and len(w.strip()) &gt; 0 and not isNumber(w.strip()), list(word_cut))  # 过滤掉空字符串
+        word_list=&#34; &#34;.join(filtered_words)
+        return word_list
+&#39;&#39;&#39;
+ 读取新闻分类数据/Sample目录下的所有数据
+&#39;&#39;&#39;
+def TextProcessing(folder_path):
+    folder_list = os.listdir(folder_path)                        #查看folder_path下的文件
+    data_list = []                                                #训练集
+    class_list = []
+ 
+    #遍历每个子文件夹
+    for folder in folder_list:
+        new_folder_path = os.path.join(folder_path, folder)        #根据子文件夹，生成新的路径
+        files = os.listdir(new_folder_path)                        #存放子文件夹下的txt文件的列表
+        j = 1
+        #遍历每个txt文件
+        for file in files:
+            if j &gt; 100:                                            #每类txt样本数最多100个
+                break
+            with open(os.path.join(new_folder_path, file), &#39;r&#39;, encoding = &#39;utf-8&#39;) as f:    #打开txt文件
+                raw = f.read()
+            word_list=wordToVec(raw)
+            data_list.append(word_list)
+            class_list.append(folder)
+            j += 1
+    print(&#34;词条行:&#34;,data_list)
+    print(&#34;分类：&#34;,class_list)
+    return data_list,class_list
+    </code></pre></div>
+<p>使用CountVectorizer向量化，并且打印出现次数最多的此的前50</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+if __name__ == &#39;__main__&#39;:
+    #文本预处理
+    folder_path = &#39;./新闻分类数据/Sample&#39;                #训练集存放地址
+    data_list1,class_list1=TextProcessing(folder_path)
+    stop_words=&#34;&#34;;
+    with open(os.path.join(&#34;./新闻分类数据&#34;, &#34;stopwords_cn.txt&#34;), &#39;r&#39;, encoding = &#39;utf-8&#39;) as f:    #打开txt文件
+                stop_words = f.read()
+    stop_words_array=stop_words.split(&#34;\n&#34;) 
+    #除了停止词外，单个字母的都会被自动过滤掉
+    vectorizer = CountVectorizer(stop_words=stop_words_array)
+    X = vectorizer.fit_transform(data_list1)
+    fn=np.array(vectorizer.get_feature_names())
+    print(&#34;特征列：&#34;,fn)
+    v=np.array(X.toarray())
+    print(&#34;词条向量：\n&#34;,v)
+    
+    top=50
+    wordcount=v.sum(axis=0)[0:top]
+    print(&#34;获取单词出现次数:&#34;,wordcount)
+    print(&#34;排序索引:&#34;,np.argsort(wordcount)[::-1])
+    print(&#34;排序特征:&#34;,fn[np.argsort(wordcount)[::-1]])
+    print(&#34;排序词频:&#34;,wordcount[np.argsort(wordcount)[::-1]])</code></pre></div>
+<p>输出：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>特征列： [&#39;04vs&#39; &#39;110min&#39; &#39;125min&#39; ... &#39;龙岗&#39; &#39;龙江&#39; &#39;龙珠&#39;]
+词条向量：
+ [[0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]
+ ...
+ [0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]]
+获取单词出现次数: [ 1  1  1  1  1  1  2  1  1  1  1  1  3  2  1  2  6  6  5  1  1  1  1  1
+  3  1  1  1  1  2  4  2  1  1  1  7  2  1  1  1  2  1  1  1  1  1  1  1
+ 10  5]
+排序索引: [48 35 16 17 49 18 30 12 24 40  6 15 13 31 29 36  4  5  3  7 44  8  9 10
+ 11 47  2 14  1 46 45 20 19 39 38 37 41 34 33 32 42 28 27 26 25 43 23 22
+ 21  0]
+排序特征: [&#39;ceo&#39; &#39;bbc&#39; &#39;ak&#39; &#39;an&#39; &#39;cfo&#39; &#39;and&#39; &#39;ax&#39; &#39;ac&#39; &#39;armed&#39; &#39;bittorrent&#39; &#39;3g&#39;
+ &#39;ah&#39; &#39;academic&#39; &#39;a股&#39; &#39;aw&#39; &#39;bbn&#39; &#39;3d&#39; &#39;3dmax&#39; &#39;16i&#39; &#39;5140i&#39; &#39;brings&#39;
+ &#39;80mb&#39; &#39;95min&#39; &#39;ab&#39; &#39;abc&#39; &#39;cbs&#39; &#39;125min&#39; &#39;adj&#39; &#39;110min&#39; &#39;career&#39;
+ &#39;brothers&#39; &#39;anti&#39; &#39;answer&#39; &#39;bennett&#39; &#39;begins&#39; &#39;be&#39; &#39;bjeea&#39; &#39;band&#39; &#39;b09&#39;
+ &#39;b06&#39; &#39;bot&#39; &#39;availwidth&#39; &#39;availheight&#39; &#39;assessment&#39; &#39;army&#39; &#39;bravo&#39; &#39;area&#39;
+ &#39;are&#39; &#39;applications&#39; &#39;04vs&#39;]
+排序词频: [10  7  6  6  5  5  4  3  3  2  2  2  2  2  2  2  1  1  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+  1  1]</code></pre></div>
+<p>将数据拆分成训练集和测试集（注意数据集要先打乱，因为现在的数据集都是通过分类读取的，就是按分配来排序的，可能抽取的20%的数据集把某个分类下的所有数据都抽走了，就导致这个分类下没有训练，导致准确性不高）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>    from sklearn.utils import shuffle
+    from sklearn.model_selection import train_test_split
+    X, y = shuffle(v, class_list1, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)</code></pre></div>
+<p>测试下 该训练器的准确率</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>classifier = MultinomialNB().fit(X_train, y_train)
+    test_accuracy = classifier.score(X_test, y_test)
+    print(test_accuracy)</code></pre></div>
+<p>输出：0.7222222222222222</p>
+<p>随便输入一个某个字符串预测下</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>v1=vectorizer.transform([wordToVec(&#34;身体是革命的本钱&#34;)]).toarray();
+print(classifier.predict(v1))</code></pre></div>
+<p>输出：[&lsquo;C000020&rsquo;]  也就是：教育</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/index.html">机器学习</a><ul id="R-subsections-d3b98ca0beda96811b8c41829d886d7f" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/basic/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/basic/index.html">基础理论</a><ul id="R-subsections-2f18a18645b7652a148815c1a6786b18" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/algorithms/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/index.html">核心算法</a><ul id="R-subsections-921418d1d7190828278c689c88df6881" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html">机器学习实战教程（一）：K-近邻（KNN）算法</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html">机器学习实战教程（四）：从特征分解到协方差矩阵：详细剖析和实现PCA算法</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface/index.html">机器学习实战教程（五）：使用PCA实战人脸降维</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_06_decidetree/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_06_decidetree/index.html">机器学习实战教程（六）：决策树</a></li>
+            <li class="active " data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_07_bays/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_07_bays/index.html">机器学习实战教程（七）：朴素贝叶斯</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_08_multinomial/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_08_multinomial/index.html">机器学习实战教程（八）：多项式回归</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_10_logic/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_10_logic/index.html">机器学习实战教程（十）：逻辑回归</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_11_vectormachine/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_11_vectormachine/index.html">机器学习实战教程（十一）：支持向量机SVM</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_12_cluster/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_12_cluster/index.html">机器学习实战教程（十二）：聚类算法Kmeans</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_13_intelearn/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_13_intelearn/index.html">机器学习实战教程（十三）：集成学习</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/evaluation/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/evaluation/index.html">模型评估</a><ul id="R-subsections-d83b378e097742dc59073d128d99d653" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/tools/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/tools/index.html">实践工具</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
+    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+  </body>
+</html>

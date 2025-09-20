@@ -69,26 +69,26 @@ word embedding的一个基本思路就是，我们把一个词映射到语义空
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="1455">
     <title>深度学习05-RNN循环神经网络 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758332784" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758332784" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758332784" defer></script>
-    <script src="/docs/js/search.min.js?1758332784" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/search.min.js?1758337673" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758332784";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758332784" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758332784" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758332784" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -142,7 +142,7 @@ word embedding的一个基本思路就是，我们把一个词映射到语义空
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/deep_learning/rnn/dl_05_rnn/index.html">
     <div id="R-body" class="default-animation">
@@ -262,13 +262,13 @@ window.MathJax = {
 <h1 id="基本循环神经网络">基本循环神经网络</h1>
 <h2 id="原理">原理</h2>
 <p>基本的 循环神经网络，结构由 输入层、一个隐藏层和输出层 组成。</p>
-<p><a href="#R-image-d549d90f283c96a3856f5c882e32a3f1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/23631a90b14714665d4b6b38289580d5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d549d90f283c96a3856f5c882e32a3f1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/23631a90b14714665d4b6b38289580d5.png"></a>
+<p><a href="#R-image-aa52323bb694c8a58c9544decd5acea9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/23631a90b14714665d4b6b38289580d5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-aa52323bb694c8a58c9544decd5acea9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/23631a90b14714665d4b6b38289580d5.png"></a>
 　　$x$是输入向量，$o$是输出向量，$s$表示隐藏层的值；$U$是输入层到隐藏层的权重矩阵，$V$是隐藏层到输出层的权重矩阵。循环神经网络的隐藏层的值s不仅仅取决于当前这次的输入$x$，还取决于上一次隐藏层的值$s$。权重矩阵W就是隐藏层上一次的值作为这一次的输入的权重。
 　　
 将上图的基本RNN结构在时间维度展开(RNN是一个链式结构，每个时间片使用的是相同的参数,t表示t时刻)：
-<a href="#R-image-085298ac39ebf1bad466dc135b6bc9ed" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/8e1f770a216d32d7f99a8494bae8ab87.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-085298ac39ebf1bad466dc135b6bc9ed"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/8e1f770a216d32d7f99a8494bae8ab87.png"></a>
+<a href="#R-image-4ced4d41e78d7d4aecdaba72d78714ed" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/8e1f770a216d32d7f99a8494bae8ab87.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4ced4d41e78d7d4aecdaba72d78714ed"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/8e1f770a216d32d7f99a8494bae8ab87.png"></a>
 现在看上去就会清楚许多，这个网络在t时刻接收到输入$x_t$之后，隐藏层的值是$s_t$，输出值是$o_t$。关键一点是$s_t$的值不仅仅取决于$x_t$，还取决于$s_{t−1}$。
 公式1：$s_t=f(U∗x_t+W∗s_{t−1}+B1)$
 公式2：$o_t=g(V∗s_t+B2)$</p>
@@ -278,8 +278,8 @@ window.MathJax = {
 </ul>
 <p>隐含层有两个输入，第一是U与$x_t$向量的乘积，第二是上一隐含层输出的状态$s_t−1$和W的乘积。等于上一个时刻计算的$s_t−1$需要缓存一下，在本次输入$x_t$一起计算，共同输出最后的$o_t$。</p>
 <p>如果反复把式1带入式2，我们将得到：
-<a href="#R-image-55d406dffa3449058024540311c608b8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/422195cdda5a463e8671778b395c0ced.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-55d406dffa3449058024540311c608b8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/422195cdda5a463e8671778b395c0ced.png"></a>
+<a href="#R-image-8093da2328420dd0d6f4658f9ac9337d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/422195cdda5a463e8671778b395c0ced.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8093da2328420dd0d6f4658f9ac9337d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/422195cdda5a463e8671778b395c0ced.png"></a>
 从上面可以看出，循环神经网络的输出值ot，是受前面历次输入值、、、、、、、、$x_t$、$x_{t−1}$、$x_{t−2}$、$x_{t−3}$、&hellip;影响的，这就是为什么循环神经网络可以往前看任意多个输入值的原因。这样其实不好，因为如果太前面的值和后面的值已经没有关系了，循环神经网络还考虑前面的值的话，就会影响后面值的判断。</p>
 <blockquote>
 <p>上面是整个单向单层NN的前向传播过程</p></blockquote>
@@ -287,12 +287,12 @@ window.MathJax = {
 <h3 id="word-embedding">Word Embedding</h3>
 <p>首先我们需要对输入文本x进行编码，使之成为计算机可以读懂的语言，在编码时，我们期望句子之间保持词语间的相似行，词的向量表示是进行机器学习和深度学习的基础。</p>
 <p>word embedding的一个基本思路就是，我们把一个词映射到语义空间的一个点，把一个词映射到低维的稠密空间，这样的映射使得语义上比较相似的词，他在语义空间的距离也比较近，如果两个词的关系不是很接近，那么在语义空间中向量也会比较远。</p>
-<p><a href="#R-image-0255758bbf3ff4ff2131181baa081365" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/c0fad21fa129f8508c434e2eb9bb48c2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0255758bbf3ff4ff2131181baa081365"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/c0fad21fa129f8508c434e2eb9bb48c2.png"></a>
+<p><a href="#R-image-b08ee9d6c5e02862cdb6731a9cfe4fa2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/c0fad21fa129f8508c434e2eb9bb48c2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b08ee9d6c5e02862cdb6731a9cfe4fa2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/c0fad21fa129f8508c434e2eb9bb48c2.png"></a>
 如上图英语和西班牙语映射到语义空间，语义相同的数字他们在语义空间分布的位置是相同的
 简单回顾一下word embedding,对于nlp来说，我们输入的是一个个离散的符号，对于神经网络来说，它处理的都是向量或者矩阵。所以第一步，我们需要把一个词编码成向量。最简单的就是one-hot的表示方法。如下图所示：
-<a href="#R-image-c9c7d1ac149b3b56fa32ed3248513c6a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9597a0d083db05e918ffcb98cc43f646.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c9c7d1ac149b3b56fa32ed3248513c6a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9597a0d083db05e918ffcb98cc43f646.png"></a>
+<a href="#R-image-ad45a3f582242532f7295052e50c2aea" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9597a0d083db05e918ffcb98cc43f646.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ad45a3f582242532f7295052e50c2aea"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9597a0d083db05e918ffcb98cc43f646.png"></a>
 python代码（one-hot），比如</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import numpy as np
 
@@ -471,8 +471,8 @@ for name, param in rnn.named_parameters():
 <p>输出</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>最后一个隐藏层 torch.Size([1, 3, 20])
 输出所有隐藏层 torch.Size([5, 3, 20])</code></pre></div>
-<p><a href="#R-image-5806fa2704ed3e85d4c4507b4c43616b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/3aa8c999ba3c7d145db2ac2f49bba2af.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5806fa2704ed3e85d4c4507b4c43616b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/3aa8c999ba3c7d145db2ac2f49bba2af.png"></a></p>
+<p><a href="#R-image-9dcbc59fdbbf39f260e5750b293d6f9e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/3aa8c999ba3c7d145db2ac2f49bba2af.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9dcbc59fdbbf39f260e5750b293d6f9e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/3aa8c999ba3c7d145db2ac2f49bba2af.png"></a></p>
 <blockquote>
 <p>权重为什么是10行20列参数<a href="https://blog.csdn.net/liaomin416100569/article/details/130572559?spm=1001.2014.3001.5501" rel="external" target="_blank">卷积神经网络的原理</a>
 数据最外层的行的长度决定了前向传播时间序列的个数。
@@ -498,14 +498,14 @@ num_layer中是堆叠的多层隐藏层。</p></blockquote>
 </ol>
 <blockquote>
 <p>线性回归是一种简单的机器学习模型，它的输入可以是多个特征，但是输出只有一个。<!-- raw HTML omitted -->这里的“单输入单输出”是指模型的输入是一个向量（多个特征的组合），输出是一个标量（一个预测值）。<!-- raw HTML omitted -->在线性回归中，我们通过对输入特征进行线性组合，得到一个预测值。因此，尽管输入可以是多个元素，但输出只有一个。</p></blockquote>
-<p><a href="#R-image-26ecdea96c8f2549a8b4233c2fad6026" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/ffff2225499aa2448f25d94f17decd0b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-26ecdea96c8f2549a8b4233c2fad6026"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/ffff2225499aa2448f25d94f17decd0b.png"></a></p>
+<p><a href="#R-image-cbaf021b5c3752bea8648baa79b79fb6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/ffff2225499aa2448f25d94f17decd0b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cbaf021b5c3752bea8648baa79b79fb6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/ffff2225499aa2448f25d94f17decd0b.png"></a></p>
 <h1 id="双向循环神经网络">双向循环神经网络</h1>
 <p>普通的RNN只能依据之前时刻的时序信息来预测下一时刻的输出，但在有些问题中，当前时刻的输出不仅和之前的状态有关，还可能和未来的状态有关系。</p>
 <p>比如预测一句话中缺失的单词不仅需要根据前文来判断，还需要考虑它后面的内容，真正做到基于上下文判断。</p>
 <p>BRNN有两个RNN上下叠加在一起组成的，输出由这两个RNN的状态共同决定。
-<a href="#R-image-3d4ac160b42611d6b34fd3470786f446" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/334ca39b86013ff6b68bac9390a5493b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3d4ac160b42611d6b34fd3470786f446"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/334ca39b86013ff6b68bac9390a5493b.png"></a>
+<a href="#R-image-05484f46f9384ade3be338a0d209fcfa" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/334ca39b86013ff6b68bac9390a5493b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-05484f46f9384ade3be338a0d209fcfa"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/334ca39b86013ff6b68bac9390a5493b.png"></a>
 先对图片和公式中的符号集中说明，需要时方便查看：</p>
 <ul>
 <li>$h_t^1$表示t 时刻，Cell1 中从左到右获得的 memory(信息);</li>
@@ -519,14 +519,14 @@ num_layer中是堆叠的多层隐藏层。</p></blockquote>
 <li>$y_t$ 是 t 时刻的输出值；</li>
 </ul>
 <p>在图1-1中，对于 t 时刻的输入$x_t$ ，可以结合从左到右的 memory $h^1_{t-1}$ , 获得当前时刻的 memory $h^1_t$:
-<a href="#R-image-85e3b9a364a775bb7ebac4a63558b3a9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/4edd85dd05720e1c2560aa1d9d08484e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-85e3b9a364a775bb7ebac4a63558b3a9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/4edd85dd05720e1c2560aa1d9d08484e.png"></a>
+<a href="#R-image-34f32623f8a04cf43bfbf633a0da7c45" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/4edd85dd05720e1c2560aa1d9d08484e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-34f32623f8a04cf43bfbf633a0da7c45"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/4edd85dd05720e1c2560aa1d9d08484e.png"></a>
 同理也可以结合从右到左的 memory $h^2_{t−1}$ , 获得当前时刻的 memory $h^2_t$:
-<a href="#R-image-c7fb397c79b2d5e147c31dfb4c53c463" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/62195a24003393ff11958232a65fdc9f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c7fb397c79b2d5e147c31dfb4c53c463"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/62195a24003393ff11958232a65fdc9f.png"></a>
+<a href="#R-image-34a9d8878536a852bec2c839104bf324" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/62195a24003393ff11958232a65fdc9f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-34a9d8878536a852bec2c839104bf324"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/62195a24003393ff11958232a65fdc9f.png"></a>
 然后将 $h^1_t$ 和 $h^2_t$ 首尾级联在一起通过输出层网络 $V$ 得到输出 $y_t$ :
-<a href="#R-image-beb5b83359beabec8804bfaeb7d27415" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/fc494d9dc121f2f7acca2c6889f2bca4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-beb5b83359beabec8804bfaeb7d27415"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/fc494d9dc121f2f7acca2c6889f2bca4.png"></a>
+<a href="#R-image-3b11aceae03bc7a1ef9203eaf38a23fe" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/fc494d9dc121f2f7acca2c6889f2bca4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3b11aceae03bc7a1ef9203eaf38a23fe"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/fc494d9dc121f2f7acca2c6889f2bca4.png"></a>
 这样对于任何一个时刻 t 可以看到从不同方向获得的 memory, 使模型更容易优化，加速了模型的收敛速度。</p>
 <h2 id="pytorch-rnn-1">pytorch rnn</h2>
 <p>下面是一个使用PyTorch中nn.RNN模块实现双向RNN的最简单例子：</p>
@@ -562,17 +562,17 @@ print(&#34;最后一个时间步的隐藏状态大小：&#34;, hidden.size())</c
 双向rnn的最后的隐藏层大小是(2,, batch_size, hidden_size)</p></blockquote>
 <h1 id="deep-rnn多层-rnn">Deep RNN(多层 RNN)</h1>
 <p>前文我们介绍的 RNN，是数据在时间维度上的变换。不论时间维度多长，只有一个 RNN 模块, 即只有一组待学习参数 (W, U)，属于单层 RNN。deep RNN 也叫做多层 RNN，顾名思义它由多个 RNN 级联组成，是输入数据在空间维度上变换。如图, 这是 L 层的 RNN 架构。每一层是一个单独的RNN，共有L个RNN。
-<a href="#R-image-7194f4101ea136c62b2f015efec16063" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/ba7cdd9f744ffafa4085bd6117503b8b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7194f4101ea136c62b2f015efec16063"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/ba7cdd9f744ffafa4085bd6117503b8b.png"></a></p>
+<a href="#R-image-fc267f4fae10a6cd258e5b1a231a8d9b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/ba7cdd9f744ffafa4085bd6117503b8b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fc267f4fae10a6cd258e5b1a231a8d9b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/ba7cdd9f744ffafa4085bd6117503b8b.png"></a></p>
 <p>在每一层的水平方向，只有一组可学习参数，如第 $l$ 层的参数$W^lU^l$。水平方向是数据沿着时间维度变换，变换机制与单个 RNN 的机制一致,具体参考式上一篇文章。在每个时刻 t 的垂直方向，共有 L 组可学习参数( $W^i,U^i$) i = 1, 2, &hellip;, L。在第 $l$ 层的第 t 时刻 Cell 的输入数据来自 2 个方向：一个是来自上一层的输出 $h^{l−1}<em>t$ :
-<a href="#R-image-7f3e47fb6865fed4e92b8aa735fb9e00" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1a1bd03768cd0f8ad80448facfe77a64.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7f3e47fb6865fed4e92b8aa735fb9e00"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1a1bd03768cd0f8ad80448facfe77a64.png"></a>
+<a href="#R-image-2f2f404dec0b90a9ec9ba426f76cbe52" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1a1bd03768cd0f8ad80448facfe77a64.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2f2f404dec0b90a9ec9ba426f76cbe52"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1a1bd03768cd0f8ad80448facfe77a64.png"></a>
 一个是来自第 $l$ 层，$t − 1$ 时刻的 memory 数据 $h^l</em>{t−1}$ :
-<a href="#R-image-608cd44defeeaa899e129bcf832ec59a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/02373b67607b75a8311db2c650194661.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-608cd44defeeaa899e129bcf832ec59a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/02373b67607b75a8311db2c650194661.png"></a>
+<a href="#R-image-fc7b1ec81f701a2afb223d44163973ba" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/02373b67607b75a8311db2c650194661.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fc7b1ec81f701a2afb223d44163973ba"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/02373b67607b75a8311db2c650194661.png"></a>
 所以 Cell 的输出 $h^l_t$：
-<a href="#R-image-e22f3616cde295dfcd3cc99c09eeaded" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/58c62d7ea906bdfaffba65cf83d31746.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e22f3616cde295dfcd3cc99c09eeaded"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/58c62d7ea906bdfaffba65cf83d31746.png"></a>
+<a href="#R-image-098161eebb8ab9a5c9f3b8440af06198" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/58c62d7ea906bdfaffba65cf83d31746.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-098161eebb8ab9a5c9f3b8440af06198"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/58c62d7ea906bdfaffba65cf83d31746.png"></a>
 本质上，Deep RNN 在单个 RNN 的基础上，将当前时刻的输入修改为上层的输出。这样 RNN 便完成了空间上的数据变换。额外提一下：DeepRNN的每一层也可以是一个双向RNN。</p>
 <h2 id="pytorch-rnn-2">pytorch rnn</h2>
 <p>下面是一个使用nn.RNN模块实现多层RNN的最简单例子：</p>
@@ -610,24 +610,24 @@ print(&#34;Hidden state shape:&#34;, hidden.shape)</code></pre></div>
 <p>3、使用其他结构的RNNs，比如长短时记忆网络（LTSM）和Gated Recurrent Unit（GRU），这是最流行的做法</p>
 <h2 id="短期记忆">短期记忆</h2>
 <p>假如需要判断用户的说话意图（问天气、问时间、设置闹钟…），用户说了一句“what time is it？”我们需要先对这句话进行分词：
-<a href="#R-image-9d7ce7e774a07d76e0912539bef3c868" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/398a48c392bbbd06ee4cd500b79b5d49.gif" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9d7ce7e774a07d76e0912539bef3c868"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/398a48c392bbbd06ee4cd500b79b5d49.gif"></a>
+<a href="#R-image-8115ec63fdd3bb9b4818e8d55887ae58" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/398a48c392bbbd06ee4cd500b79b5d49.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8115ec63fdd3bb9b4818e8d55887ae58"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/398a48c392bbbd06ee4cd500b79b5d49.gif"></a>
 然后按照顺序输入 RNN ，我们先将 “what”作为 RNN 的输入，得到输出「01」
-<a href="#R-image-5b4c08747533b534d765b3b97b70c98a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/bf611369ffb619b86ab7d576973a2d7f.gif" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5b4c08747533b534d765b3b97b70c98a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/bf611369ffb619b86ab7d576973a2d7f.gif"></a>
+<a href="#R-image-842713167f51af585debad291b2c019f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/bf611369ffb619b86ab7d576973a2d7f.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-842713167f51af585debad291b2c019f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/bf611369ffb619b86ab7d576973a2d7f.gif"></a>
 然后，我们按照顺序，将“time”输入到 RNN 网络，得到输出「02」。</p>
 <p>这个过程我们可以看到，输入 “time” 的时候，前面 “what” 的输出也产生了影响（隐藏层中有一半是黑色的）。
-<a href="#R-image-4ae1cb7c558a9b3689d85c14c257f6da" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9db6572a86373ccc188a092aa73804d1.gif" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4ae1cb7c558a9b3689d85c14c257f6da"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9db6572a86373ccc188a092aa73804d1.gif"></a>
+<a href="#R-image-b914e7d7dab853584b4656fcb4a2c921" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9db6572a86373ccc188a092aa73804d1.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b914e7d7dab853584b4656fcb4a2c921"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9db6572a86373ccc188a092aa73804d1.gif"></a>
 以此类推，前面所有的输入都对未来的输出产生了影响，大家可以看到圆形隐藏层中包含了前面所有的颜色。如下图所示：
-<a href="#R-image-ffa7a369ed0f2dd9bb1e17ef949a7497" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/dd0a591ba30685814c88ef2eb0b6c572.gif" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ffa7a369ed0f2dd9bb1e17ef949a7497"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/dd0a591ba30685814c88ef2eb0b6c572.gif"></a>
+<a href="#R-image-1a63d36cec00401e72cf66c3e5f03a7d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/dd0a591ba30685814c88ef2eb0b6c572.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1a63d36cec00401e72cf66c3e5f03a7d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/dd0a591ba30685814c88ef2eb0b6c572.gif"></a>
 当我们判断意图的时候，只需要最后一层的输出「05」，如下图所示：
-<a href="#R-image-72c813bcd558030c93075b00b0ac4a6b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9ada78e57bd32d08a467a9b85149d5d5.gif" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-72c813bcd558030c93075b00b0ac4a6b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9ada78e57bd32d08a467a9b85149d5d5.gif"></a>
+<a href="#R-image-4e5669b787a98325e72aa1a1f697c9ca" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9ada78e57bd32d08a467a9b85149d5d5.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4e5669b787a98325e72aa1a1f697c9ca"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/9ada78e57bd32d08a467a9b85149d5d5.gif"></a>
 RNN 的缺点也比较明显
-<a href="#R-image-413735b96f1a03431ef6f5ece458bbac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1513552a6413ba7d93e7e279960ca0a6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-413735b96f1a03431ef6f5ece458bbac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1513552a6413ba7d93e7e279960ca0a6.png"></a>
+<a href="#R-image-a342958786a0853c2ff384bfa1ef81a3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1513552a6413ba7d93e7e279960ca0a6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a342958786a0853c2ff384bfa1ef81a3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1513552a6413ba7d93e7e279960ca0a6.png"></a>
 通过上面的例子，我们已经发现，短期的记忆影响较大（如橙色区域），但是长期的记忆影响就很小（如黑色和绿色区域），这就是 RNN 存在的短期记忆问题。</p>
 <ol>
 <li>RNN 有短期记忆问题，无法处理很长的输入序列</li>
@@ -638,44 +638,44 @@ RNN 的缺点也比较明显
 <p>RNN 是一种死板的逻辑，越晚的输入影响越大，越早的输入影响越小，且无法改变这个逻辑。
 LSTM 做的最大的改变就是打破了这个死板的逻辑，而改用了一套灵活了逻辑——只保留重要的信息。
 简单说就是：抓重点！
-<a href="#R-image-8fc3d15c4b9d6dca58e7ab0f59b6f40c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/cfc1e9e3b5dc68ebc3f827066a122a0e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8fc3d15c4b9d6dca58e7ab0f59b6f40c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/cfc1e9e3b5dc68ebc3f827066a122a0e.png"></a>
+<a href="#R-image-c264afb465a3ab00fc4fa70394dc9d36" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/cfc1e9e3b5dc68ebc3f827066a122a0e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c264afb465a3ab00fc4fa70394dc9d36"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/cfc1e9e3b5dc68ebc3f827066a122a0e.png"></a>
 举个例子，我们先快速的阅读下面这段话：
-<a href="#R-image-165edbe4051bec4de1b7f394f313b5bd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/a2d8648f8cbabc8373f454bdefb5983d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-165edbe4051bec4de1b7f394f313b5bd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/a2d8648f8cbabc8373f454bdefb5983d.png"></a>
+<a href="#R-image-ef41e1a31541b62ea19719c1986a263f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/a2d8648f8cbabc8373f454bdefb5983d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef41e1a31541b62ea19719c1986a263f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/a2d8648f8cbabc8373f454bdefb5983d.png"></a>
 当我们快速阅读完之后，可能只会记住下面几个重点：
-<a href="#R-image-2f452d3768dcbad7dbbec86f01ef287c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/16fdf5b68c37652d253a2a7e40ffc31c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2f452d3768dcbad7dbbec86f01ef287c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/16fdf5b68c37652d253a2a7e40ffc31c.png"></a>
+<a href="#R-image-229eea7060c238d64c5989c7ad47a48b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/16fdf5b68c37652d253a2a7e40ffc31c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-229eea7060c238d64c5989c7ad47a48b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/16fdf5b68c37652d253a2a7e40ffc31c.png"></a>
 LSTM 类似上面的划重点，他可以保留较长序列数据中的「重要信息」，忽略不重要的信息。这样就解决了 RNN 短期记忆的问题。</p>
 <h3 id="原理-1">原理</h3>
 <p>原始RNN的隐藏层只有一个状态，即h，它对于短期的输入非常敏感。那么如果我们再增加一个门（gate）机制用于控制特征的流通和损失，即c，让它来保存长期的状态，这就是长短时记忆网络(Long Short Term Memory，LSTM)。
-<a href="#R-image-79b1426ff51b624c91b6fc15f7e3110c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1719e05f43c411614d2feeeb026cb8fc.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-79b1426ff51b624c91b6fc15f7e3110c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1719e05f43c411614d2feeeb026cb8fc.png"></a>
+<a href="#R-image-089dab988917cfdb749af3200618ff90" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1719e05f43c411614d2feeeb026cb8fc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-089dab988917cfdb749af3200618ff90"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/1719e05f43c411614d2feeeb026cb8fc.png"></a>
 新增加的状态c，称为单元状态。我们把LSTM按照时间维度展开：
 其中图像上的标识$\sigma$标识使用sigmod激活到[0-1],$\tanh$激活到[-1,1]
 ⨀ 是一个数学符号，表示逐元素乘积（element-wise product）或哈达玛积（Hadamard product）。当两个相同维度的矩阵、向量或张量进行逐元素相乘时，可以使用 ⨀ 符号来表示。</p>
 <p>例如，对于两个向量 [a1,a2,a3] ⨀ [b1, b2, b3]=[a1<em>b1,a2</em>b2,a3*b3]，它们的逐元素乘积可以表示
-<a href="#R-image-917c2e72e007adad91914bcfe086d806" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/c07fdc65407d6c8ba8484186bdb8778a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-917c2e72e007adad91914bcfe086d806"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/c07fdc65407d6c8ba8484186bdb8778a.png"></a>
+<a href="#R-image-617ce9784375d7652e5992a0f7aceb02" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/c07fdc65407d6c8ba8484186bdb8778a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-617ce9784375d7652e5992a0f7aceb02"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/c07fdc65407d6c8ba8484186bdb8778a.png"></a>
 可以看到在t时刻，</p>
 <p>LSTM的输入有三个：当前时刻网络的输出值$x_t$、上一时刻LSTM的输出值$h_{t−1}$、以及上一时刻的记忆单元向量$c_{t−1}$；</p>
 <p>LSTM的输出有两个：当前时刻LSTM输出值$h_t$、当前时刻的隐藏状态向量$h_t$、和当前时刻的记忆单元状态向量$c_t$。</p>
 <p>注意：记忆单元c在LSTM 层内部结束工作，不向其他层输出。LSTM的输出仅有隐藏状态向量h。</p>
 <p>　LSTM 的关键是单元状态，即贯穿图表顶部的水平线，有点像传送带。这一部分一般叫做单元状态（cell state）它自始至终存在于LSTM的整个链式系统中。
-<a href="#R-image-65e63e99dc1076d877cbcaa206a781db" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/2388b743cccf845eb44d236d42032ffa.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-65e63e99dc1076d877cbcaa206a781db"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/2388b743cccf845eb44d236d42032ffa.png"></a></p>
+<a href="#R-image-d213f671b8b5980a3b1316e079b750b1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/2388b743cccf845eb44d236d42032ffa.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d213f671b8b5980a3b1316e079b750b1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/2388b743cccf845eb44d236d42032ffa.png"></a></p>
 <h4 id="遗忘门">遗忘门</h4>
 <p>　$f_t$叫做<strong>遗忘门</strong>，表示$C_{t−1}$的哪些特征被用于计算$C_t$。$f_t$是一个向量，向量的每个元素均位于(0<del>1)范围内。通常我们使用 sigmoid 作为激活函数，sigmoid 的输出是一个介于于(0</del>1)区间内的值，但是当你观察一个训练好的LSTM时，你会发现门的值绝大多数都非常接近0或者1，其余的值少之又少。
-<a href="#R-image-e338e320322c1dc793ed734add9bae33" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/043a883f1df7483503cc7a7bd9d72157.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e338e320322c1dc793ed734add9bae33"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/043a883f1df7483503cc7a7bd9d72157.png"></a></p>
+<a href="#R-image-268085b3d6886952b79b90f4a787c5c8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/043a883f1df7483503cc7a7bd9d72157.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-268085b3d6886952b79b90f4a787c5c8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/043a883f1df7483503cc7a7bd9d72157.png"></a></p>
 <h4 id="输入门">输入门</h4>
 <p>$C_t$ 表示单元状态更新值，由输入数据$x_t$和隐节点$h_{t−1}$经由一个神经网络层得到，单元状态更新值的激活函数通常使用tanh。 $i_t$叫做输入门，同 $f_t$ 一样也是一个元素介于(0~1)区间内的向量，同样由$x_t$和$h_{t−1}$经由sigmoid激活函数计算而成
-<a href="#R-image-7871d1fe73ce9d2335adc0f64e72b851" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/730915a761240d806240c77e1f195f00.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7871d1fe73ce9d2335adc0f64e72b851"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/730915a761240d806240c77e1f195f00.png"></a></p>
+<a href="#R-image-9fa5c5b8e74d18c77c6f1902562ba709" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/730915a761240d806240c77e1f195f00.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9fa5c5b8e74d18c77c6f1902562ba709"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/730915a761240d806240c77e1f195f00.png"></a></p>
 <h4 id="输出门">输出门</h4>
 <p>最后，为了计算预测值$y^t$和生成下个时间片完整的输入，我们需要计算隐节点的输出 $h_t$。
-<a href="#R-image-82cbf4164e6fde94ba52112e1a269bf0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/cb0486f27f4e6e2afe2790789f144bec.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-82cbf4164e6fde94ba52112e1a269bf0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/cb0486f27f4e6e2afe2790789f144bec.png"></a></p>
+<a href="#R-image-93d73bfa667647f3eb9f7835693f198b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/cb0486f27f4e6e2afe2790789f144bec.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-93d73bfa667647f3eb9f7835693f198b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/cb0486f27f4e6e2afe2790789f144bec.png"></a></p>
 <h3 id="lstm写诗">lstm写诗</h3>
 <p>首先我们研究下pytorch中lstm的用法
 单层lstm</p>
@@ -715,8 +715,8 @@ print(&#34;2层LSTM隐藏层最后一个时间步细胞状态&#34;,c.shape)</cod
 <p>2层的话输出的是最后一层的隐藏层的输出，h，c是一个时间步就有两层的隐藏层和记忆细胞</p></blockquote>
 <p>开始写诗的例子
 这是项目的目录结构
-<a href="#R-image-eeb301229f124231c53d55b360aa38ea" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/a2aee9cf47e6b2a7e3d977c715f3dc5f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-eeb301229f124231c53d55b360aa38ea"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/a2aee9cf47e6b2a7e3d977c715f3dc5f.png"></a></p>
+<a href="#R-image-93c8812b835b93e905d017f0f16837e6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/a2aee9cf47e6b2a7e3d977c715f3dc5f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-93c8812b835b93e905d017f0f16837e6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/a2aee9cf47e6b2a7e3d977c715f3dc5f.png"></a></p>
 <h4 id="加载数据">加载数据</h4>
 <p>实验数据来自Github上中文爱好者收集的5万多首唐诗，作者在此基础上进行了一些数据处理，由于数据处理很耗时间，且不是pytorch学习的重点，这里省略。作者提供了一个numpy的压缩包tang.npz，<a href="https://github.com/lzeqian/deeplearn/raw/master/learn_rnn/pytorch/4.nn%E6%A8%A1%E5%9D%97/%E6%A1%88%E4%BE%8B/%E7%94%9F%E6%88%90%E5%8F%A4%E8%AF%97/tang/data/tang.npz" rel="external" target="_blank">下载地址</a>
 数据具体结构可参考，以下代码main部分</p>
@@ -892,14 +892,14 @@ if __name__==&#34;__main__&#34;:
 <p>Gated Recurrent Unit – GRU 是 LSTM 的一个变体。他保留了 LSTM 划重点，遗忘不重要信息的特点，在long-term 传播的时候也不会被丢失。</p>
 <p>LSTM 的参数太多，计算需要很长时间。因此，最近业界又提出了 GRU（Gated RecurrentUnit，门控循环单元）。GRU 保留了 LSTM使用门的理念，但是减少了参数，缩短了计算时间。</p>
 <p>相对于 LSTM 使用隐藏状态和记忆单元两条线，GRU只使用隐藏状态。异同点如下：
-<a href="#R-image-0fa871f28f0ceeda7479a91000d401a8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/d5742f7312b0d668dd0ebe40ae615187.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0fa871f28f0ceeda7479a91000d401a8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/d5742f7312b0d668dd0ebe40ae615187.png"></a>
+<a href="#R-image-c113239a041d283e474b33427a1d0d6a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/d5742f7312b0d668dd0ebe40ae615187.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c113239a041d283e474b33427a1d0d6a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/d5742f7312b0d668dd0ebe40ae615187.png"></a>
 GRU的计算图
-<a href="#R-image-8e45428fb988ad9731a2bb8a925a9ce0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/e83583f24e0c6c83cbcfbbc58b88617b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8e45428fb988ad9731a2bb8a925a9ce0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/e83583f24e0c6c83cbcfbbc58b88617b.png"></a>
+<a href="#R-image-ed45d3463635eaa5ee5f927b679a2073" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/e83583f24e0c6c83cbcfbbc58b88617b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ed45d3463635eaa5ee5f927b679a2073"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/e83583f24e0c6c83cbcfbbc58b88617b.png"></a>
 GRU计算图，σ节点和tanh节点有专用的权重，节点内部进行仿射变换（“1−”节点输入x，输出1 − x）
-<a href="#R-image-aaf6f0ab5262224e9ba9cd3add7efda0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/2b2dc5d4f17c76fd349717ae8922e9da.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-aaf6f0ab5262224e9ba9cd3add7efda0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/2b2dc5d4f17c76fd349717ae8922e9da.png"></a>
+<a href="#R-image-5385106f29c2b706418b50a702c5fb5d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/2b2dc5d4f17c76fd349717ae8922e9da.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5385106f29c2b706418b50a702c5fb5d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/rnn/dl_05_rnn.md.images/2b2dc5d4f17c76fd349717ae8922e9da.png"></a>
 GRU 中进行的计算由上述 4 个式子表示（这里 xt和 ht−1 都是行向量），如图所示，GRU 没有记忆单元，只有一个隐藏状态h在时间方向上传播。这里使用r和z共两个门（LSTM 使用 3 个门），r称为 reset 门，z称为 update 门。</p>
 <p>　　r（reset门）**决定在多大程度上“忽略”过去的隐藏状态。根据公式2.3，如果r是 0，则新的隐藏状态h~仅取决于输入$x_t$。也就是说，此时过去的隐藏状态将完全被忽略。</p>
 <p>　　z（update门）**是更新隐藏状态的门，它扮演了 LSTM 的 forget 门和input 门两个角色。公式2.4 的(1−z)⊙$h_{t−1}$部分充当 forget 门的功能，从过去的隐藏状态中删除应该被遗忘的信息。z⊙$h^~$的部分充当 input 门的功能，对新增的信息进行加权。</p>
@@ -955,13 +955,15 @@ GRU 中进行的计算由上述 4 个式子表示（这里 xt和 ht−1 都是�
             <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
             <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/index.html">机器学习</a><ul id="R-subsections-d3b98ca0beda96811b8c41829d886d7f" class="collapsible-menu"></ul></li>
             <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu">
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/basic/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/basic/index.html">深度基础</a><ul id="R-subsections-82d91c326db2e74346572c248dd5a837" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/frameworks/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/frameworks/index.html">框架学习</a><ul id="R-subsections-bc6c627c1fa57b86d2660d273634c1d2" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/cnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/cnn/index.html">卷积神经网络</a><ul id="R-subsections-7bacfefef24ae5de2e950bd8fb081ec1" class="collapsible-menu"></ul></li>
             <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/rnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/rnn/index.html">循环神经网络</a><ul id="R-subsections-addeb8e29ffecb1f809f271ff170a522" class="collapsible-menu">
             <li class="active " data-nav-id="/docs/programming/ai/deep_learning/rnn/dl_05_rnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/rnn/dl_05_rnn/index.html">深度学习05-RNN循环神经网络</a></li></ul></li>
-            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/index.html">生成对抗网络</a><ul id="R-subsections-2787239befb1b0643d0f03fc48340180" class="collapsible-menu"></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/index.html">生成对抗网络</a><ul id="R-subsections-2787239befb1b0643d0f03fc48340180" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
           </ul>
         </div>
@@ -980,8 +982,8 @@ GRU 中进行的计算由上述 4 个式子表示（这里 xt和 ht−1 都是�
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758332784" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758332784" defer></script>
-    <script src="/docs/js/theme.min.js?1758332784" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
+    <script src="/docs/js/theme.min.js?1758337673" defer></script>
   </body>
 </html>

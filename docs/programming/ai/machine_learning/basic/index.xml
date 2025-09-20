@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>基础理论 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>机器学习实战教程（二）：线性回归</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_02_linear/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_02_linear/index.html</guid>
+      <description>@TOC&#xA;1.线性回归简介 线性回归是利用数理统计中回归分析，来确定两种或两种以上变量间相互依赖的定量关系的一种统计分析方法，运用十分广泛。其表达形式为y = w’x+e，e为误差服从均值为0的正态分布。 回归分析中，只包括一个自变量和一个因变量，且二者的关系可用一条直线近似表示，这种回归分析称为一元线性回归分析。如果回归分析中包括两个或两个以上的自变量，且因变量和自变量之间是线性关系，则称为多元线性回归分析。&#xA;1.1 正态分布 正态分布（Normal distribution），也称“常态分布”，又名高斯分布（Gaussian distribution），最早由A.棣莫弗在求二项分布的渐近公式中得到。C.F.高斯在研究测量误差时从另一个角度导出了它。P.S.拉普拉斯和高斯研究了它的性质。是一个在数学、物理及工程等领域都非常重要的概率分布，在统计学的许多方面有着重大的影响力。 以下两图来自网络 对于正态分布的理解更加简单： 高斯函数是一种常见的概率密度函数，也被称为正态分布函数。具体地说，高斯函数描述了随机变量在某个区间内取值的概率密度，其形式为： $f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$ 其中， μ 是均值，σ 是标准差。这个函数的图像呈钟形，且左右对称，最高点位于均值处，随着距离均值越远，函数值逐渐减小。&#xA;概率密度函数是用来描述随机变量分布情况的函数，而高斯函数是其中的一种形式。当随机变量服从正态分布时，其概率密度函数就是高斯函数。因此，可以将高斯函数看作是概率密度函数的一种特殊形式。&#xA;1.2 Linear Regression线性回归 它是最为人熟知的建模技术之一。线性回归通常是人们在学习预测模型时首选的技术之一。在这种技术中，因变量是连续的，自变量可以是连续的也可以是离散的，回归线的性质是线性的。 线性回归使用最佳的拟合直线（也就是回归线）在因变量（Y）和一个或多个自变量（X）之间建立一种关系。 多元线性回归可表示为Y=a+b1X +b2X2+ e，其中a表示截距，b表示直线的斜率，e是误差项。多元线性回归可以根据给定的预测变量（s）来预测目标变量的值。&#xA;1.2.1 一元线程回归（简单线性回归） 在统计学中，线性回归是利用称为线性回归方程的最小二乘函数对一个或多个自变量和因变量之间关系进行建模的一种回归分析。这种函数是一个或多个称为回归系数的模型参数的线性组合。一个带有一个自变量的线性回归方程代表一条直线。我们需要对线性回归结果进行统计分析 回归线其实可以理解为一条直线，数学表示方式为： Y=b0 + b1X+e 在统计学中，假设有一系列的自变量和因变量的统计数据，可以推算出最佳拟合的b0和b1</description>
+    </item>
+    <item>
+      <title>机器学习实战教程（三）：梯度下降</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_03_gradient/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_03_gradient/index.html</guid>
+      <description>@TOC&#xA;梯度下降简介 梯度下降的场景假设 梯度下降法的基本思想可以类比为一个下山的过程。假设这样一个场景：一个人被困在山上，需要从山上下来(i.e. 找到山的最低点，也就是山谷)。但此时山上的浓雾很大，导致可视度很低。因此，下山的路径就无法确定，他必须利用自己周围的信息去找到下山的路径。这个时候，他就可以利用梯度下降算法来帮助自己下山。具体来说就是，以他当前的所处的位置为基准，寻找这个位置最陡峭的地方，然后朝着山的高度下降的地方走，同理，如果我们的目标是上山，也就是爬到山顶，那么此时应该是朝着最陡峭的方向往上走。然后每走一段距离，都反复采用同一个方法，最后就能成功的抵达山谷。 梯度下降原理 梯度下降的基本过程就和下山的场景很类似。 首先，我们有一个可微分的函数。这个函数就代表着一座山。我们的目标就是找到这个函数的最小值，也就是山底。根据之前的场景假设，最快的下山的方式就是找到当前位置最陡峭的方向，然后沿着此方向向下走，对应到函数中，就是找到给定点的梯度 ，然后朝着梯度相反的方向，就能让函数值下降的最快！因为梯度的方向就是函数之变化最快的方向(在后面会详细解释) 所以，我们重复利用这个方法，反复求取梯度，最后就能到达局部的最小值，这就类似于我们下山的过程。而求取梯度就确定了最陡峭的方向，也就是场景中测量方向的手段。那么为什么梯度的方向就是最陡峭的方向呢？ 其中部分文字图片来自 教程&#xA;微分（导数|斜率） 看待微分的意义，可以有不同的角度，最常用的两种是： 函数图像中，某点的切线的斜率（导数） 导数（Derivative），也叫导函数值。又名微商，是微积分中的重要基础概念。当函数y=f（x）的自变量x在一点x0上产生一个增量Δx时，函数输出值的增量Δy与自变量增量Δx的比值在Δx趋于0时的极限a如果存在，a即为在x0处的导数，记作f’（x0）或df（x0）/dx。其实这样就是斜率。 比如函数 y=2x+1 假设有两个相邻的点 （x1,y1）,(x2,y2) Δy/Δx=(2x1+1)-(2x2+1)/x1-x2=2(x1-x2)/(x1-x2)=2 所有一元一次函数的斜率其实就是自变量x的系数 斜率你可以说他代表线的倾斜度 值越大倾斜度越大 斜率&gt;0表示是正向相关，&lt;0表示父向相关 几个微分的例子： 指数函数： 其他总结 关于单变量微分的求导 比较简单 一个复合函数的导数必须使用链式法则 所谓的复合函数，是指以一个函数作为另一个函数的自变量。 如f(x)=3x，g(x)=x+3，g(f(x))就是一个复合函数，并且g(f(x))=3x+3 链式法则(chain rule)：&#xA;若h(x)=f(g(x))，则h&#39;(x)=f&#39;(g(x))g&#39;(x)&#xD;链式法则用文字描述，就是“由两个函数凑起来的复合函数，&#xD;其导数等于里边函数代入外边函数的值之导数，乘以里边函数的导数 比如:</description>
+    </item>
+    <item>
+      <title>深度学习06-pytorch从入门到精通</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_06_pytorch/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_06_pytorch/index.html</guid>
+      <description>@[toc]&#xA;概述 PyTorch是一个基于Python的开源机器学习框架，由Facebook的人工智能研究团队开发并维护。它提供了丰富的工具和接口，用于构建和训练深度神经网络模型。&#xA;PyTorch的主要特点和优势包括：&#xA;动态图：PyTorch使用动态图机制，即在运行时构建计算图。这使得模型的构建和调试更加直观和灵活，能够更好地处理复杂的计算流程和动态控制流。&#xA;简洁明了：PyTorch的API设计简洁明了，易于学习和使用。它提供了一系列高级接口，使得模型的构建、训练和评估变得更加简单和高效。&#xA;强大的GPU加速支持：PyTorch能够利用GPU进行张量运算和模型训练，从而加快计算速度。它提供了简单易用的接口，使得在GPU上进行加速变得更加方便。&#xA;灵活扩展：PyTorch支持自定义操作符和扩展，使得用户可以方便地实现和使用自己的模型组件和功能。&#xA;相比之下，TensorFlow是由Google开发的另一个流行的深度学习框架。与PyTorch相比，TensorFlow的主要特点和优势包括：&#xA;静态图：TensorFlow使用静态图机制，即在编译时构建计算图。这使得TensorFlow在模型运行时能够进行更多的优化和性能提升，适用于大规模的、计算密集型的任务。&#xA;跨平台支持：TensorFlow可以在多种硬件和操作系统上运行，并且具有广泛的部署支持。它提供了TensorFlow Serving、TensorFlow Lite和TensorFlow.js等工具，使得模型的部署和移植更加方便。&#xA;分布式训练支持：TensorFlow提供了分布式训练的功能，可以在多个设备和计算节点上进行模型训练，从而加快训练速度。&#xA;生态系统和社区：TensorFlow具有庞大的生态系统和活跃的社区，提供了丰富的资源和支持，包括模型库、教程和论坛等。&#xA;总的来说，PyTorch和TensorFlow都是优秀的深度学习框架，各有其特点和适用场景。PyTorch适合于快速原型开发、动态计算流程和小规模任务，而TensorFlow适合于大规模、计算密集型的任务和分布式训练。选择哪个框架取决于具体的需求和个人偏好。&#xA;对于初学接触神经网络，建议先学pytorch，它提供的api接近理论概念，有动态图，方便调试，适合做研究使用，，由于最近chargpt的大火，Hugging Face的transforms是使用PyTorch的。Hugging Face是一个提供自然语言处理（NLP）模型和工具的平台，他们的Transformers库主要基于PyTorch实现，他的入门pytorch必须要有基础。这个库提供了一系列用于数据预处理和后处理的函数，可以方便地对文本数据进行转换和处理。&#xA;环境准备 安装cuda和cudnn 一般pc电脑或者服务器都有nvida显卡，可以通过nvidia-smi命令查看。 其中python环境（3.8+版本），cuda和cudnn安装请参考：https://blog.csdn.net/liaomin416100569/article/details/130532993 安装后可以看到我的cuda version是11.2&#xA;安装pytorch 考虑到版本向下兼容，不一定非要下载cuda=11.2对应的那个版本的torch，或许低于这个版本就可以。所以我就选择下载cuda11.1的版本。 以下是pytorch对应的稳定版的网址下载链接，可以根据需要找到对应的torch版本下载。cu版本就是gpu版本，不带cu的是cpu版本，https://download.pytorch.org/whl/torch_stable.html，搜索cu111 直接选择&#xA;pip install torch==1.9.1+cu111 torchvision==0.10.1+cu111 torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html 编写测试代码&#xA;import torch&#xD;print(torch.__version__)&#xD;#cuda是否可用，如果返回True，表示正常可用gpu&#xD;print(torch.cuda.is_available())&#xD;print(torch.cuda.device_count())&#xD;x1=torch.rand(5,3)&#xD;#把x1转换gpu0的tensor&#xD;x1=x1.cuda(0)&#xD;print(x1) 测试运行</description>
+    </item>
+  </channel>
+</rss>

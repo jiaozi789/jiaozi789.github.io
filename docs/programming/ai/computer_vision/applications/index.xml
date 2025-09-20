@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>应用案例 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/programming/ai/computer_vision/applications/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/computer_vision/applications/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>图像处理实战02-yolov5目标检测</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/computer_vision/applications/action_02_yolov5/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/computer_vision/applications/action_02_yolov5/index.html</guid>
+      <description>yolov5 YOLOv5 是一种目标检测算法，它是 YOLO (You Only Look Once) 系列算法的最新版本。YOLOv5 采用了一种新的架构，它包括一个基于 CSPNet (Cross Stage Partial Network) 的主干网络以及一系列改进的技巧，如多尺度训练、数据增强、网络混合精度训练等，从而实现了更快的检测速度和更好的检测精度。&#xA;YOLOv5 支持多种类型的目标检测任务，如物体检测、人脸检测、车辆检测等，可以应用于各种实际场景，如智能安防、自动驾驶、机器人视觉等。同时，YOLOv5 还提供了预训练的模型和开源代码，方便开发者进行模型的训练和应用。&#xA;github地址：https://github.com/ultralytics/yolov5/blob/master/README.zh-CN.md 官网：https://ultralytics.com/&#xA;发展历程 YOLO（You Only Look Once）是一系列的目标检测模型，由Joseph Redmon等人开发。以下是YOLO系列的发展历程：&#xA;YOLOv1：于2015年首次提出，是YOLO系列的第一个版本。YOLOv1通过将目标检测任务转化为回归问题，将图像划分为网格并预测每个网格的边界框和类别概率。然而，YOLOv1存在定位不准确和对小目标敏感的问题。&#xA;YOLOv2（YOLO9000）：于2016年提出，是YOLO系列的第二个版本。YOLOv2通过引入Darknet-19网络结构、使用anchor boxes和多尺度预测来改进检测性能。同时，YOLOv2还引入了目标类别的语义分割，可以检测更多类别的目标。&#xA;YOLOv3：于2018年提出，是YOLO系列的第三个版本。YOLOv3针对YOLOv2存在的问题进行了改进，引入了多尺度预测、使用FPN结构和使用更小的anchor boxes等技术，提高了检测精度和对小目标的检测能力。&#xA;YOLOv4：于2020年提出，是YOLO系列的第四个版本。YOLOv4在YOLOv3的基础上引入了一系列改进，包括CSPDarknet53作为主干网络、使用SAM和PANet模块来提取特征、使用YOLOv3和YOLOv4的预训练权重进行初始化等，提高了检测性能和速度。&#xA;YOLOv5：于2020年提出，是YOLO系列的第五个版本。YOLOv5采用了轻量化的网络结构，提高了检测的速度，并引入了一些新功能，如YOLOv5-seg分割模型、Paddle Paddle导出功能、YOLOv5 AutoCache自动缓存功能和Comet日志记录和可视化集成功能。&#xA;总体而言，YOLO系列模型通过不断的改进和优化，提高了目标检测的性能和速度，并在计算机视觉领域取得了重要的突破。&#xA;yolov8 YOLOv8是YOLO系列模型的一个变种，它在YOLOv5的基础上进行了改进和优化。YOLOv8模型包含了检测（Detect）、分割（Segment）和姿态估计（Pose）、跟踪（Track）以及分类（Classify）等功能。下面是对这些功能的简要说明：&#xA;检测（Detect）：YOLOv8模型能够对图像或视频中的目标进行实时的物体检测。它通过预测目标的边界框和类别信息来完成检测任务。&#xA;分割（Segment）：YOLOv8模型还支持目标分割的功能，即将图像中的每个像素进行分类，将不同的目标区域进行分割。这个功能可以用于识别图像中的不同物体，并进行更精确的定位和分析。&#xA;姿态估计（Pose）：YOLOv8模型还可以对检测到的目标进行姿态估计，即推断目标在三维空间中的姿态信息。这对于一些需要了解目标的方向和位置的应用非常有用，比如人体姿态分析、机器人导航等。&#xA;跟踪（Track）：YOLOv8模型还具有目标跟踪的功能，即在视频中连续追踪相同目标的位置和轨迹。这对于视频监控、自动驾驶等应用非常重要。&#xA;分类（Classify）：除了目标检测和分割功能之外，YOLOv8模型还可以对检测到的目标进行分类，即给出目标的类别信息。这对于了解目标的属性和进行更细粒度的分析非常重要。&#xA;总而言之，YOLOv8模型综合了多种功能，包括检测、分割、姿态估计、跟踪和分类等，使其具备了更广泛的应用领域和更强大的功能。 github地址：https://github.com/ultralytics/ultralytics&#xA;v5入门示例 安装 克隆 repo，并要求在 Python&gt;=3.7.0 环境中安装 requirements.txt ，且要求 PyTorch&gt;=1.7 。&#xA;micromamba create prefix=d:/python380 python=3.8 #创建3.8的虚拟环境&#xD;micromamba activate d:/python380&#xD;git clone https://github.com/ultralytics/yolov5 # clone&#xD;cd yolov5&#xD;pip install -r requirements.txt # install 源代码目录结构</description>
+    </item>
+  </channel>
+</rss>

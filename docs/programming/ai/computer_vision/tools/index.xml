@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工具与框架 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/programming/ai/computer_vision/tools/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/computer_vision/tools/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>图像处理实战01-OpenCV 入门指南</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/computer_vision/tools/action_01_opencv/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/computer_vision/tools/action_01_opencv/index.html</guid>
+      <description>@[toc]&#xA;Python OpenCV 入门指南 OpenCV是一个强大的计算机视觉库，它可以用于处理图像和视频数据，以及进行目标检测和跟踪等任务。，将学会如何使用Python编写OpenCV代码来进行基础和进阶的图像处理和分析。&#xA;学习OpenCV可以帮助你掌握基本的图像处理技术，包括图像读取和处理、阈值处理、形态学函数、模板匹配、滤波器、图形处理、视频处理和人脸检测等方面的内容。这些技术都是计算机视觉和图像处理领域的基本内容，也是卷积神经网络的基础。通过学习OpenCV，你可以更好地理解卷积神经网络的工作原理和应用。同时，OpenCV也是一个非常流行的图像处理库，掌握它可以帮助你更好地处理和分析图像数据。&#xA;参考书籍：Python Opencv从入门到精通&#xA;安装OpenCV 在开始编写OpenCV代码之前，我们需要先安装OpenCV库。我们可以通过pip包管理器来安装：&#xA;pip install opencv-python&#xA;你可以使用conda或者micromamba来安装虚拟环境,安装好notebook环境&#xA;打印opencv版本&#xA;import cv2&#xD;print(&#34;OpenCV version:&#34;)&#xD;print(cv2.__version__) 输出 OpenCV version: 4.7.0&#xA;基础篇 图像读取和显示 在开始处理图像之前，我们需要学习如何读取和显示图像。下面的代码演示了如何使用OpenCV库读取和显示图像：&#xA;import cv2 读取图像 img = cv2.imread(&#39;image.jpg&#39;) 显示图像 opencv显示&#xA;cv2.imshow(&#39;Image&#39;, img)&#xD;cv2.waitKey(0)&#xD;cv2.destroyAllWindows()` 在上面的代码中，我们首先使用cv2.imread()函数读取了一个名为image.jpg的图像文件。然后，我们使用cv2.imshow()函数来显示这个图像，并使用cv2.waitKey()和cv2.destroyAllWindows()函数来等待用户按下任意键，然后关闭显示窗口。&#xA;注意如果是使用notebook执行waitKey(0)显示，会存在第二次运行无法显示的问题，可以cv2.waitKey(3)设置指定时间自动结束，&#xA;import matplotlib&#xD;import matplotlib.pyplot as plt&#xD;matplotlib.rcParams[&#39;font.sans-serif&#39;] = [&#39;SimHei&#39;] # 设置中文字体为黑体&#xD;matplotlib.rcParams[&#39;axes.unicode_minus&#39;] = False # 解决负号显示问题&#xD;img = cv2.imread(&#39;image.jpg&#39;)&#xD;rgbimg = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) #opencv像素顺序是bgr&#xD;plt.title(title)&#xD;plt.imshow(img, cmap=cmap)&#xD;plt.show() 裁剪图像 从左上角坐标为(200, 100)的位置开始，裁剪一个宽为400像素、高为400像素的矩形区域。</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>模型评估 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/evaluation/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/machine_learning/evaluation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>机器学习实战教程（九）：模型泛化</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/evaluation/action_09_generalize/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/evaluation/action_09_generalize/index.html</guid>
+      <description>泛化能力 模型泛化是指机器学习模型对新的、未见过的数据的适应能力。在机器学习中，我们通常会将已有的数据集划分为训练集和测试集，使用训练集训练模型，然后使用测试集来评估模型的性能。模型在训练集上表现得好，并不一定能在测试集或实际应用中表现得好。因此，我们需要保证模型具有良好的泛化能力，才能确保其在实际场景中的效果。&#xA;为了提高模型的泛化能力，我们通常需要采取一系列措施，例如增加数据集的大小、特征选择、特征缩放、正则化、交叉验证等。通过这些方法可以减少模型的过拟合，提高对新数据的预测能力。&#xA;总之，模型泛化是机器学习中非常重要的一个概念。它直接关系到模型在实际应用中的效果，并且也是评估机器学习算法和模型的重要指标之一。&#xA;模型评价与选择 差错分析 机器预测时就好像在投飞镖，越接近靶心则预测越准。可以把差错分为两类：偏差（bias）和方差（variance）。可以用下图来形象描绘： 具体到学习任务上，若假设函数取得不够好，拟合结果可能会出现两种问题：&#xA;欠拟合（underfit）：参数过少，假设函数太不自由，过于简单，连样本集都拟合不好，预测时容易偏向一侧，偏差大。 过拟合（overfit）：参数过多，假设函数太自由，不抗干扰，对样本集拟合得很好，但是假设函数过于畸形，预测时忽左忽右，方差大。 欠拟合与过拟合可用下图来形象地说明： 在改变模型的复杂度和训练集大小时，训练集和测试集的误差的函数图（改变模型复杂度时的误差）： 改变数据集时的误差 解决欠拟合比较简单，增加参数或增加特征就行了，麻烦的是过拟合。 解决过拟合的办法有：&#xA;减少该模型的参数，或者改为更简单的模型。 正则化。 增大训练集，减少噪音成分等。 泛化误差 $\theta$代表超参数，$J_{未知}$${$ $\theta$$}$代表训练出模型$\theta$参数后对于未知数据的误差，越小泛化能力越强，$J_{test}$${$ $\theta$$}$代表模型对测试机的误差，越小泛化能力越强。&#xA;我们希望我们的模型有泛化能力，即面对未训练到的、未知的情景也能发挥作用。泛化误差（generalization error）指的是模型在处理未知数据时的代价函数：$J_{未知}$${$ $\theta$$}$ 的值，它可以量化模型的泛化能力。 然而，我们训练和测试模型时，并没有未知的数据。我们会根据模型在训练集上的表现改进模型，再进行训练与测试。但在测试集上最终算出的：$J_{test}$${$ $\theta$$}$已经对测试集进行优化了，它明显对泛化误差的估计过于乐观，会偏低。也就是说，把模型放在实际应用中的效果，会比预想的差很多。 为了解决这个问题，人们提出了交叉验证（cross validation）的方法&#xA;交叉验证 交叉验证的步骤 把训练集进一步分为子训练集与交叉验证集。把测试集藏好，先不用它。（测试集是对未知数据的模拟） 使用各种不同的模型在子训练集上训练，并测出各模型在交叉验证集上的 $J_{cv}$${$ $\theta$$}$ 选择 $J_{cv}$${$ $\theta$$}$最小的模型，认为它最佳。把子训练集和交叉验证集合并为训练集，训练出最终的模型。 交叉验证的改进方法是K折（K-fold）交叉验证（图6）：把训练集分为许多小块，每一种情况取其中一小块作为交叉验证集，其余部分合并作为子训练集，求出该模型的 $J_{cv}$${$ $\theta$$}$，把每一种情况算遍，求出该模型的平均 $J_{cv}$${$ $\theta$$}$，认为平均最小的模型为最佳模型。最终仍然是用整个训练集训练最佳模型，在测试集上估计泛化误差。</description>
+    </item>
+  </channel>
+</rss>

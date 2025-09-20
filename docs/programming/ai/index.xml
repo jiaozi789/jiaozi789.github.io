@@ -16,10 +16,24 @@
       <description></description>
     </item>
     <item>
+      <title>机器学习</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/index.html</guid>
+      <description></description>
+    </item>
+    <item>
       <title>深度学习</title>
       <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/index.html</link>
       <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
       <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>计算机视觉</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/computer_vision/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/computer_vision/index.html</guid>
       <description></description>
     </item>
   </channel>

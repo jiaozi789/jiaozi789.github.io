@@ -69,26 +69,26 @@
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="2049">
     <title>深度学习02-神经网络(MLP多层感知器) :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758332784" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758332784" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758332784" defer></script>
-    <script src="/docs/js/search.min.js?1758332784" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/search.min.js?1758337673" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758332784";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758332784" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758332784" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758332784" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -142,7 +142,7 @@
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/deep_learning/basic/dl_02_mlp/index.html">
     <div id="R-body" class="default-animation">
@@ -303,15 +303,15 @@ window.MathJax = {
 <h2 id="神经网络认识">神经网络认识</h2>
 <p>我们以一个简单的例子来认识神经网络，只是为了理解其中的一些概念。
 我们已知四个数据点(1,1)(-1,1)(-1,-1)(1,-1)，这四个点分别对应I~IV象限（也就是数据属于的类别），如果这时候给我们一个新的坐标点（比如(2,2)），那么它应该属于哪个象限呢？（没错，当然是第I象限，但我们的任务是要让机器知道，机器不知道有象限这个东西啊，他只能根据历史数据的经验推断），如果机器只是知道一堆数据 比如(-2,3)属于2象限，机器就需要通过这些数据总结出一个特征，这个特征可能就是根据x和y坐标的正负来判断象限了。
-<a href="#R-image-480eeddb48982b3809f99750131d464b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ce0306ba6a16e1940b5dd5ea5ea7573d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-480eeddb48982b3809f99750131d464b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ce0306ba6a16e1940b5dd5ea5ea7573d.png"></a></p>
+<a href="#R-image-e44082e1dde46945c4793bdd399f421c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ce0306ba6a16e1940b5dd5ea5ea7573d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e44082e1dde46945c4793bdd399f421c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ce0306ba6a16e1940b5dd5ea5ea7573d.png"></a></p>
 <h2 id="两层神经网络">两层神经网络</h2>
 <p>这里我们构建一个两层神经网络，理论上两层神经网络已经可以拟合任意函数。这个神经网络的结构如下图：
-<a href="#R-image-47c88c917f527cfeef2e5b09ccdbe725" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/b99f5e9c69435ed576affdf6f6b8cb44.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-47c88c917f527cfeef2e5b09ccdbe725"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/b99f5e9c69435ed576affdf6f6b8cb44.png"></a>
+<a href="#R-image-6e5d2b7c3809d8993ced16df49aeb8ae" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/b99f5e9c69435ed576affdf6f6b8cb44.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6e5d2b7c3809d8993ced16df49aeb8ae"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/b99f5e9c69435ed576affdf6f6b8cb44.png"></a>
 首先我们去掉途中难懂的东西
-<a href="#R-image-e39b7fdcddec191a43efb97a41826ee7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ace7457066b3f51dbf5e87b32bb6efb2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e39b7fdcddec191a43efb97a41826ee7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ace7457066b3f51dbf5e87b32bb6efb2.png"></a></p>
+<a href="#R-image-bc89ca3d7377b617f135e3f3375e98a3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ace7457066b3f51dbf5e87b32bb6efb2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bc89ca3d7377b617f135e3f3375e98a3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ace7457066b3f51dbf5e87b32bb6efb2.png"></a></p>
 <h3 id="输入层">输入层</h3>
 <p>在我们的例子中，输入层是坐标值，例如（1,1），这是一个包含两个元素的数组，也可以看作是一个1<em>2的矩阵。输入层的元素维度与输入量的特征息息相关，如果输入的是一张32</em>32像素的灰度图像，那么输入层的维度就是32*32。
 <!-- raw HTML omitted -->因为整个神经网络的目的是为了训练出一个模型，所以输入的是历史数据，历史数据有一个确定的输出label，模型出来后，直接使用模型就可以分类出输入的数据的输出<!-- raw HTML omitted -->
@@ -326,17 +326,17 @@ window.MathJax = {
 <p>连接输入层和隐藏层的是W1和b1。由X计算得到H十分简单，就是矩阵运算：
 $H=w<em>x+b$
 果你学过线性代数，对这个式子一定不陌生,可以理解为w是一个权重(权重越高，这个特征也就越重要)，b是一个偏置，如果有多个特征那么就有个w，还记得<a href="https://blog.csdn.net/liaomin416100569/article/details/130362121?spm=1001.2014.3001.5501" rel="external" target="_blank">$w^T*x$</a>。
-<a href="#R-image-8a3a38d74c08640e8b1a27e8b066472a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ace7457066b3f51dbf5e87b32bb6efb2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8a3a38d74c08640e8b1a27e8b066472a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ace7457066b3f51dbf5e87b32bb6efb2.png"></a>
+<a href="#R-image-d0fa54d6233446cca26bf05931af6e72" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ace7457066b3f51dbf5e87b32bb6efb2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d0fa54d6233446cca26bf05931af6e72"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/ace7457066b3f51dbf5e87b32bb6efb2.png"></a>
 如上图中所示，在设定隐藏层为50维（也可以理解成50个神经元）之后，矩阵H的大小为（4</em>50）的矩阵。
-<a href="#R-image-278836120bfa772c1594f4b1243777b8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/14b2e6bdf6e5714a52f9d1ce50b289d9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-278836120bfa772c1594f4b1243777b8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/14b2e6bdf6e5714a52f9d1ce50b289d9.png"></a></p>
+<a href="#R-image-28a046e42e97d6a046d3fe1875d38c5c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/14b2e6bdf6e5714a52f9d1ce50b289d9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-28a046e42e97d6a046d3fe1875d38c5c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/14b2e6bdf6e5714a52f9d1ce50b289d9.png"></a></p>
 <p>也就是说50个神经元就是一个矩阵50个特征，每一行就是他的w值，这里输入层总共两个维度，所有只有w1和w2，b值这里就不说了，假设为0
-<a href="#R-image-1ef0f1ed6909e0f936c9f574017fecba" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/84cae8864c216fd1cd84bdf7b8cc2671.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1ef0f1ed6909e0f936c9f574017fecba"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/84cae8864c216fd1cd84bdf7b8cc2671.png"></a>
+<a href="#R-image-618963198525048334f68414046044db" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/84cae8864c216fd1cd84bdf7b8cc2671.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-618963198525048334f68414046044db"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/84cae8864c216fd1cd84bdf7b8cc2671.png"></a>
 这里我们可以简化最终得到4*50的意义
-<a href="#R-image-388103d21395adb827698ef9d6a933db" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/3d0b86b1f1ae2fe3ee9cc8048ee4d0fd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-388103d21395adb827698ef9d6a933db"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/3d0b86b1f1ae2fe3ee9cc8048ee4d0fd.png"></a></p>
+<a href="#R-image-0d941dfa1550444ad2b3063b6ad6e387" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/3d0b86b1f1ae2fe3ee9cc8048ee4d0fd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0d941dfa1550444ad2b3063b6ad6e387"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/3d0b86b1f1ae2fe3ee9cc8048ee4d0fd.png"></a></p>
 <h3 id="从隐藏层到输出层">从隐藏层到输出层</h3>
 <p>连接隐藏层和输出层的是W2和b2,输入就是隐藏层输入的H值。同样是通过矩阵运算进行的：
 $Y=w2<em>H+b2$
@@ -354,8 +354,8 @@ H是4</em>50的矩阵，输出层的w2矩阵就是个50<em>4,最终得到一个4
 具体为什么需要，请view：https://blog.csdn.net/liaomin416100569/article/details/130597944?spm=1001.2014.3001.5501</p>
 <p>激活层是神经网络中的一种层，其作用是在输入信号和输出信号之间添加一个非线性的转换函数，使得网络可以更好地学习和表示复杂的非线性关系。激活层的意义在于增加模型的非线性表达能力，使得神经网络可以更好地处理复杂的输入数据，例如图像、文本和语音等。激活函数的选择也非常重要，不同的激活函数具有不同的特点。
 激活层常用的激活函数三种，分别是阶跃函数、Sigmoid和ReLU，如下图：
-<a href="#R-image-62b35d6c8f618f39c0bd47091f284a65" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/12e440c3a65c976cad0599a5e05a858f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-62b35d6c8f618f39c0bd47091f284a65"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/12e440c3a65c976cad0599a5e05a858f.png"></a></p>
+<a href="#R-image-dffe92c60b4e184cfe7fb3814e6f4f07" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/12e440c3a65c976cad0599a5e05a858f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dffe92c60b4e184cfe7fb3814e6f4f07"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/12e440c3a65c976cad0599a5e05a858f.png"></a></p>
 <ul>
 <li>阶跃函数：当输入小于等于0时，输出0；当输入大于0时，输出1。</li>
 <li>Sigmoid：当输入趋近于正无穷/负无穷时，输出无限接近于1/0。</li>
@@ -366,21 +366,21 @@ H是4</em>50的矩阵，输出层的w2矩阵就是个50<em>4,最终得到一个4
 假如经过公式H=X*W1+b1计算得到的H值为：(1,-2,3,-4,7&hellip;)，那么经过阶跃函数激活层后就会变为(1,0,1,0,1&hellip;)，经过ReLU激活层之后会变为(1,0,3,0,7&hellip;)。</p>
 <p>需要注意的是，每个隐藏层计算（矩阵线性运算）之后，都需要加一层激活层，要不然该层线性计算是没有意义的。
 此时的神经网络变成了如下图所示的形式：
-<a href="#R-image-50b570379f4b795c36b5c3a474236633" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/aac9ed823391f1de263821731d37f805.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-50b570379f4b795c36b5c3a474236633"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/aac9ed823391f1de263821731d37f805.png"></a>
+<a href="#R-image-2d0b795173c4aa15b4e3122e069048f6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/aac9ed823391f1de263821731d37f805.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2d0b795173c4aa15b4e3122e069048f6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/aac9ed823391f1de263821731d37f805.png"></a>
 我们都知道（？）神经网络是分为“训练”和“使用”两个步骤的。如果是在“使用”的步骤，图4就已经完成整个过程了，在求得的Y（大小为4*4）矩阵中，当前样本数值最大的就代表着当前分类。</p>
 <p>但是对于用于“训练”的网络，上图还远远不够。起码当前的输出Y，还不够“漂亮”。</p>
 <h3 id="输出的正规化">输出的正规化</h3>
 <p>假设某个样本输出Y的值可能会是(3,1,0.1,0.5)这样的矩阵，诚然我们可以找到里边的最大值“3”，从而找到对应的分类为I，但是这并不直观。我们想让最终的输出为概率，也就是说可以生成像(90%,5%,2%,3%)这样的结果，这样做不仅可以找到最大概率的分类，而且可以知道各个分类计算的概率值。
 具体是怎么计算的呢？
 计算公式如下：
-<a href="#R-image-60a689c90170d422ee7eafb56be8f914" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/c7040b35c664e79d595ed94f895abd2f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-60a689c90170d422ee7eafb56be8f914"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/c7040b35c664e79d595ed94f895abd2f.png"></a>
+<a href="#R-image-8528f87fafc3bc3e698f09c9cf4ce8e4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/c7040b35c664e79d595ed94f895abd2f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8528f87fafc3bc3e698f09c9cf4ce8e4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/c7040b35c664e79d595ed94f895abd2f.png"></a>
 简单来说分三步进行：（1）以e为底对所有元素求指数幂；（2）将所有指数幂求和；（3）分别将这些指数幂与该和做商。</p>
 <p>这样求出的结果中，所有元素的和一定为1，而每个元素可以代表概率值。</p>
 <p>我们将使用这个计算公式做输出结果正规化处理的层叫做“Softmax”层。此时的神经网络将变成如下图所示：
-<a href="#R-image-3b7d60ad6212466a6be9228b9f893705" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/2751fb29578621358528e9fe8c9f7d8d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3b7d60ad6212466a6be9228b9f893705"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/2751fb29578621358528e9fe8c9f7d8d.png"></a></p>
+<a href="#R-image-0022fb76d10559b219760c9f5edc86a9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/2751fb29578621358528e9fe8c9f7d8d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0022fb76d10559b219760c9f5edc86a9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/2751fb29578621358528e9fe8c9f7d8d.png"></a></p>
 <h3 id="如何衡量输出的好坏">如何衡量输出的好坏</h3>
 <p>通过Softmax层之后，我们得到了I，II，III和IV这四个类别分别对应的概率，但是要注意，这是神经网络计算得到的概率值结果，而非真实的情况。</p>
 <p>比如，Softmax输出的结果是(90%,5%,3%,2%)，真实的结果是(100%,0,0,0)。虽然输出的结果可以正确分类，但是与真实结果之间是有差距的，一个优秀的网络对结果的预测要无限接近于100%，为此，我们需要将Softmax输出结果的好坏程度做一个“量化”。</p>
@@ -388,8 +388,8 @@ H是4</em>50的矩阵，输出层的w2矩阵就是个50<em>4,最终得到一个4
 <p>还是用90%举例，对数的负数就是：-log0.9=0.046</p>
 <p>可以想见，概率越接近100%，该计算结果值越接近于0，说明结果越准确，该输出叫做“交叉熵损失（Cross Entropy Error）”。</p>
 <p>我们训练神经网络的目的，就是尽可能地减少这个“交叉熵损失”。
-<a href="#R-image-94a54808d05bf37e3260808a7d64ea6e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d6922c4a22cfab022a036e87309efab3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-94a54808d05bf37e3260808a7d64ea6e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d6922c4a22cfab022a036e87309efab3.png"></a></p>
+<a href="#R-image-d5fb802318ba1d1e9800d4caa99f4493" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d6922c4a22cfab022a036e87309efab3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d5fb802318ba1d1e9800d4caa99f4493"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d6922c4a22cfab022a036e87309efab3.png"></a></p>
 <h3></h3>
 <h3 id="反向传播与参数优化">反向传播与参数优化</h3>
 <p>上面的过程其实就是神经网络的正向传播过程 ，一句话复习一下：神经网络的传播都是形如Y=WX+b的矩阵运算；为了给矩阵运算加入非线性，需要在隐藏层中加入激活层；输出层结果需要经过Softmax层处理为概率值，并通过交叉熵损失来量化当前网络的优劣。</p>
@@ -413,63 +413,63 @@ H是4</em>50的矩阵，输出层的w2矩阵就是个50<em>4,最终得到一个4
 注：下图的确是反向传播算法，但不是深度学习中的backprop，不过backward的大体思想是一样的，毕竟误差没法从前往后计算啊。（在深度学习中操作的是计算图—Computational graph），如果暂时不理解上面那句话，你可以当我没说过，不要紧~（手动?）</p>
 <p>下面通过两组图来进行神经网络前向传播和反向传播算法的讲解，第一组图来自国外某网站，配图生动形象。如果对你来说，单纯的讲解理解起来比较费劲，那么可以参考第二组图——一个具体的前向传播和反向传播算法的例子。相信就算是刚刚入门的小白（只要有一点点高等数学基础知识），也一定可以理解反向传播算法！</p>
 <p>首先拿一个简单的三层神经网络来举例，如下：
-<a href="#R-image-208b59f8470dbd9f1b32d7fed6e2b700" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/8ca07945a8ddd2f6334e32a5dee95b88.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-208b59f8470dbd9f1b32d7fed6e2b700"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/8ca07945a8ddd2f6334e32a5dee95b88.png"></a>
+<a href="#R-image-82106f9eaf1a69b5abeaa3d6f6d17d3e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/8ca07945a8ddd2f6334e32a5dee95b88.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-82106f9eaf1a69b5abeaa3d6f6d17d3e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/8ca07945a8ddd2f6334e32a5dee95b88.png"></a>
 每个神经元由两部分组成，第一部分（e）是输入值和权重系数乘积的和，第二部分（f(e)）是一个激活函数（非线性函数）的输出， y=f(e)即为某个神经元的输出，如下：
-<a href="#R-image-f5771ff58fc6cc9ae82d92dae86433e4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/a0c439f52fe8b45ccd85d60b9e49f3ec.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f5771ff58fc6cc9ae82d92dae86433e4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/a0c439f52fe8b45ccd85d60b9e49f3ec.png"></a></p>
+<a href="#R-image-382acc1a01991a7077d8b16e7ccb5421" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/a0c439f52fe8b45ccd85d60b9e49f3ec.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-382acc1a01991a7077d8b16e7ccb5421"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/a0c439f52fe8b45ccd85d60b9e49f3ec.png"></a></p>
 <h4 id="前向传播">前向传播</h4>
 <p>第一层神经网络传播</p>
 <blockquote>
 <p>其中$w_{x1}1$表示x1对应第一个神经元的w值，$w_{x2}1$，表示x2对应对一个神经元的w值。</p></blockquote>
-<p><a href="#R-image-8f6e781edba8a5f616a718299962d11e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/7bf0782ee01f1fd29ad80a5319a8141a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8f6e781edba8a5f616a718299962d11e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/7bf0782ee01f1fd29ad80a5319a8141a.png"></a>
+<p><a href="#R-image-96f573d3e9609bf5ca396034b352c5d8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/7bf0782ee01f1fd29ad80a5319a8141a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-96f573d3e9609bf5ca396034b352c5d8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/7bf0782ee01f1fd29ad80a5319a8141a.png"></a>
 第二层神经网络传播
-<a href="#R-image-01b357e9f51e6e29bc301bbf861958eb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/fd0be01b49aa9a33c21a3367e3d21c6a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-01b357e9f51e6e29bc301bbf861958eb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/fd0be01b49aa9a33c21a3367e3d21c6a.png"></a>
+<a href="#R-image-7e80887886615bbaf4d28a08bf338433" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/fd0be01b49aa9a33c21a3367e3d21c6a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7e80887886615bbaf4d28a08bf338433"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/fd0be01b49aa9a33c21a3367e3d21c6a.png"></a>
 第三层神经网络传播
-<a href="#R-image-b1a4dfda61d15a7240b355d32c2f98dd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/35902aac57a0b16b4b2bb9346c3a76c8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b1a4dfda61d15a7240b355d32c2f98dd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/35902aac57a0b16b4b2bb9346c3a76c8.png"></a></p>
+<a href="#R-image-df35bd22b1c68250152d3d1f3732821b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/35902aac57a0b16b4b2bb9346c3a76c8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-df35bd22b1c68250152d3d1f3732821b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/35902aac57a0b16b4b2bb9346c3a76c8.png"></a></p>
 <h4 id="反向传播">反向传播</h4>
 <p>到这里为止，神经网络的前向传播已经完成，最后输出的y就是本次前向传播神经网络计算出来的结果（预测结果），但这个预测结果不一定是正确的，要和真实的标签（z）相比较，计算预测结果和真实标签的误差（$\delta$），如下：
-<a href="#R-image-2115dc0a4c9e59b7214b8f7d5fe61d17" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d513a818f7bf8a835c35b7ccd28770e7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2115dc0a4c9e59b7214b8f7d5fe61d17"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d513a818f7bf8a835c35b7ccd28770e7.png"></a>
+<a href="#R-image-d365412b194718d2b8e2fafecd900fa1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d513a818f7bf8a835c35b7ccd28770e7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d365412b194718d2b8e2fafecd900fa1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d513a818f7bf8a835c35b7ccd28770e7.png"></a>
 下面开始计算每个神经元的误差（$\delta$）
-<a href="#R-image-7c9ed1eb282c8fd9eeacf68550ddf723" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/68d9b04e6558e3bb5c3c6d57851ee769.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7c9ed1eb282c8fd9eeacf68550ddf723"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/68d9b04e6558e3bb5c3c6d57851ee769.png"></a>
+<a href="#R-image-c505c7ec95bef8ddd8b11b8fe706156c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/68d9b04e6558e3bb5c3c6d57851ee769.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c505c7ec95bef8ddd8b11b8fe706156c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/68d9b04e6558e3bb5c3c6d57851ee769.png"></a>
 计算第一层误差
-<a href="#R-image-b85ba2f07e3048ee9d6a1c8174f6590d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/74f07e9562928028f09e00916990c1ed.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b85ba2f07e3048ee9d6a1c8174f6590d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/74f07e9562928028f09e00916990c1ed.png"></a>
+<a href="#R-image-c006304100739b3c12ade5ac173038ac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/74f07e9562928028f09e00916990c1ed.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c006304100739b3c12ade5ac173038ac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/74f07e9562928028f09e00916990c1ed.png"></a>
 下面开始利用反向传播的误差，计算各个神经元（权重）的导数，开始反向传播修改权重
-<a href="#R-image-29179d25bd5a97b34ea5f358e28ad08a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d42f378d56bf36ddacf62a79bd2b8e43.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-29179d25bd5a97b34ea5f358e28ad08a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d42f378d56bf36ddacf62a79bd2b8e43.png"></a>
-<a href="#R-image-46727185ed95f09a9e66e793399af2ef" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/f031883c0df8d407cf50d030de0f6ce2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-46727185ed95f09a9e66e793399af2ef"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/f031883c0df8d407cf50d030de0f6ce2.png"></a>
+<a href="#R-image-a4d047212e29d33960f4a2bc32f8cda8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d42f378d56bf36ddacf62a79bd2b8e43.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a4d047212e29d33960f4a2bc32f8cda8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/d42f378d56bf36ddacf62a79bd2b8e43.png"></a>
+<a href="#R-image-9264a0a84d67083f335182937548cf7b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/f031883c0df8d407cf50d030de0f6ce2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9264a0a84d67083f335182937548cf7b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/f031883c0df8d407cf50d030de0f6ce2.png"></a>
 计算第二次的w
-<a href="#R-image-9e758d04f2d27f9ca8e86c923065653c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/f60344e7e9bc805c5ce277fc3312d4e2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9e758d04f2d27f9ca8e86c923065653c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/f60344e7e9bc805c5ce277fc3312d4e2.png"></a>
+<a href="#R-image-6b543c77e02e8c0125f94c514417aba4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/f60344e7e9bc805c5ce277fc3312d4e2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6b543c77e02e8c0125f94c514417aba4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/f60344e7e9bc805c5ce277fc3312d4e2.png"></a>
 计算第三层
-<a href="#R-image-8edfee901cc2bd3f4eb69c5cb87af166" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/c210c6b4fc279dddad9e005a6fc4f236.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8edfee901cc2bd3f4eb69c5cb87af166"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/c210c6b4fc279dddad9e005a6fc4f236.png"></a>
+<a href="#R-image-55d979a774932ad319b2bc1e75564dd9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/c210c6b4fc279dddad9e005a6fc4f236.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-55d979a774932ad319b2bc1e75564dd9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/c210c6b4fc279dddad9e005a6fc4f236.png"></a>
 到此为止，整个网络的前向，反向传播和权重更新已经完成</p>
 <h3 id="具体实例">具体实例</h3>
 <p>就算上面的所有东西你都看的迷迷糊糊，通过下面的例子，相信绝大多数人也能很轻松的理解BP算法。如图是一个简单的神经网络用来举例：
-<a href="#R-image-8e8e80d4aa5b521af2f61af9ca96515c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/61e1de4d735cea9de4bafbe1d61f1ae7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8e8e80d4aa5b521af2f61af9ca96515c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/61e1de4d735cea9de4bafbe1d61f1ae7.png"></a>
+<a href="#R-image-45534c70751bc7dfdba002c4ce671beb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/61e1de4d735cea9de4bafbe1d61f1ae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-45534c70751bc7dfdba002c4ce671beb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/61e1de4d735cea9de4bafbe1d61f1ae7.png"></a>
 下面是前向（前馈）运算（激活函数为sigmoid）：
-<a href="#R-image-b799e792d324fa40b911d0f70741169d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/6735b99079934d81215e58dbf10fd49b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b799e792d324fa40b911d0f70741169d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/6735b99079934d81215e58dbf10fd49b.png"></a>
+<a href="#R-image-67f1ddd9c1eadfc1e50b1ec4b21b460b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/6735b99079934d81215e58dbf10fd49b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-67f1ddd9c1eadfc1e50b1ec4b21b460b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/6735b99079934d81215e58dbf10fd49b.png"></a>
 下面是反向传播（求网络误差对各个权重参数的梯度）：</p>
 <p>我们先来求最简单的，求误差E对w5的导数。首先明确这是一个“链式求导”过程，要求误差E对w5的导数，需要先求误差E对out o1的导数，再求out o1对net o1的导数，最后再求net o1对w5的导数，经过这个链式法则，我们就可以求出误差E对w5的导数（偏导），如下图所示：
-<a href="#R-image-e69cbc9f042825f03ad2eb20826e6f42" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/161b75d6ad4640998cffa4d6bdf0d653.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e69cbc9f042825f03ad2eb20826e6f42"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/161b75d6ad4640998cffa4d6bdf0d653.png"></a>
+<a href="#R-image-171f10cba931d820aebd90737d59be43" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/161b75d6ad4640998cffa4d6bdf0d653.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-171f10cba931d820aebd90737d59be43"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/161b75d6ad4640998cffa4d6bdf0d653.png"></a>
 导数（梯度）已经计算出来了，下面就是反向传播与参数更新过程：
-<a href="#R-image-c194fab3436328798f66e968392109ec" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/a2998cdb814362f5c2a06157b6afe1ab.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c194fab3436328798f66e968392109ec"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/a2998cdb814362f5c2a06157b6afe1ab.png"></a>
+<a href="#R-image-0dd7d3879db4ce63caa9c9f32e506d69" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/a2998cdb814362f5c2a06157b6afe1ab.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0dd7d3879db4ce63caa9c9f32e506d69"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/a2998cdb814362f5c2a06157b6afe1ab.png"></a>
 上面的图已经很显然了，如果还看不懂真的得去闭门思过了（开玩笑~），耐心看一下上面的几张图，一定能看懂的。</p>
 <p>如果要想求误差E对w1的导数，误差E对w1的求导路径不止一条，这会稍微复杂一点，但换汤不换药，计算过程如下所示：
-<a href="#R-image-892629c8d3a3161a838a2f032111111f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/5fa6eda140530f8b310a61c052461ae7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-892629c8d3a3161a838a2f032111111f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/5fa6eda140530f8b310a61c052461ae7.png"></a></p>
+<a href="#R-image-69bc4a67bad775f2a93c60412b0d625b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/5fa6eda140530f8b310a61c052461ae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-69bc4a67bad775f2a93c60412b0d625b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/5fa6eda140530f8b310a61c052461ae7.png"></a></p>
 <blockquote>
 <p>bp推导参考：https://blog.csdn.net/ft_sunshine/article/details/90221691</p></blockquote>
 <h2 id="tensorflow实战">tensorflow实战</h2>
@@ -506,8 +506,8 @@ plt.show()</code></pre></div>
 训练集标签数据形状： (60000,)
 测试集图像数据形状： (10000, 28, 28)
 测试集标签数据形状： (10000,)</code></pre></div>
-<p><a href="#R-image-9bfbe118453b27150ab1cd744dcaa631" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/382c3231801af5e5b73b238551be3201.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9bfbe118453b27150ab1cd744dcaa631"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/382c3231801af5e5b73b238551be3201.png"></a></p>
+<p><a href="#R-image-8c69b9e4a3ba07f93dc5d9399ae61fd9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/382c3231801af5e5b73b238551be3201.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8c69b9e4a3ba07f93dc5d9399ae61fd9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/382c3231801af5e5b73b238551be3201.png"></a></p>
 <blockquote>
 <p>默认图片下载路径在  ~/.keras/datasets  ，window下：C:\Users\当前用户名.keras\datasets,大小估计10MB左右。</p></blockquote>
 <h3 id="数据预处理">数据预处理</h3>
@@ -738,8 +738,8 @@ print(&#34;预测结果：&#34;, np.argmax(predictions))
 # 绘制第10个测试数据的图形
 plt.imshow(x_test_ori[9], cmap=plt.cm.binary)
 plt.show()</code></pre></div>
-<p><a href="#R-image-ae2772ce5113a5acd483cca7bf840268" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/e241ed696113c899c4d0ab45a8f7d182.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ae2772ce5113a5acd483cca7bf840268"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/e241ed696113c899c4d0ab45a8f7d182.png"></a></p>
+<p><a href="#R-image-92285dfe993354235d7126c3c49811b7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/e241ed696113c899c4d0ab45a8f7d182.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-92285dfe993354235d7126c3c49811b7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/e241ed696113c899c4d0ab45a8f7d182.png"></a></p>
 <h3 id="完整运行">完整运行</h3>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
 
@@ -1016,13 +1016,13 @@ canvas.bind(&#34;&lt;B1-Motion&gt;&#34;, on_mouse_move)
 # 显示窗口
 window.mainloop()</code></pre></div>
 <p>程序效果
-<a href="#R-image-352187d0319d7fcee1977076d41e5c8f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/06024a21cf7d5930e1710762fcc0317f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-352187d0319d7fcee1977076d41e5c8f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/06024a21cf7d5930e1710762fcc0317f.png"></a>
+<a href="#R-image-d02335c4e7fbb9b0e17ae5ae0a1fbe9a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/06024a21cf7d5930e1710762fcc0317f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d02335c4e7fbb9b0e17ae5ae0a1fbe9a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/06024a21cf7d5930e1710762fcc0317f.png"></a>
 对于手写数字识别，正确率的高低不仅取决于模型的性能，还与数据的质量和多样性有关。在训练模型时，使用的数据集可能与实际应用场景中的数据存在差异，导致模型无法很好地泛化到新的、未知的数据上。</p>
 <p>此外，手写数字的识别难度还受到许多因素的影响，如书写的风格、字母大小、笔画粗细、书写方向等等。如果训练集中没有涵盖到这些因素，那么模型就可能无法准确地识别新的手写数字。因此，为了提高手写数字识别的准确率，需要使用更多、更丰富的数据集，并对模型进行调参和优化以提高其泛化能力。</p>
 <p>来看下下面这个例子，我们的mlp多层感知器貌似基本无能为力了
-<a href="#R-image-cc0112a5dec21e33ae2ce89d022d5893" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/6056b3fa880c452dd89963b17f09d221.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cc0112a5dec21e33ae2ce89d022d5893"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/6056b3fa880c452dd89963b17f09d221.png"></a></p>
+<a href="#R-image-bd114d55a06e6369e961d1c28d599617" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/6056b3fa880c452dd89963b17f09d221.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bd114d55a06e6369e961d1c28d599617"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/basic/dl_02_mlp.md.images/6056b3fa880c452dd89963b17f09d221.png"></a></p>
 
   <footer class="footline">
               <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
@@ -1075,13 +1075,15 @@ window.mainloop()</code></pre></div>
             <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
             <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/index.html">机器学习</a><ul id="R-subsections-d3b98ca0beda96811b8c41829d886d7f" class="collapsible-menu"></ul></li>
             <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu">
             <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/basic/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/basic/index.html">深度基础</a><ul id="R-subsections-82d91c326db2e74346572c248dd5a837" class="collapsible-menu">
             <li class="active " data-nav-id="/docs/programming/ai/deep_learning/basic/dl_02_mlp/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/basic/dl_02_mlp/index.html">深度学习02-神经网络(MLP多层感知器)</a></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/frameworks/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/frameworks/index.html">框架学习</a><ul id="R-subsections-bc6c627c1fa57b86d2660d273634c1d2" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/cnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/cnn/index.html">卷积神经网络</a><ul id="R-subsections-7bacfefef24ae5de2e950bd8fb081ec1" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/rnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/rnn/index.html">循环神经网络</a><ul id="R-subsections-addeb8e29ffecb1f809f271ff170a522" class="collapsible-menu"></ul></li>
-            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/index.html">生成对抗网络</a><ul id="R-subsections-2787239befb1b0643d0f03fc48340180" class="collapsible-menu"></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/index.html">生成对抗网络</a><ul id="R-subsections-2787239befb1b0643d0f03fc48340180" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
           </ul>
         </div>
@@ -1100,8 +1102,8 @@ window.mainloop()</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758332784" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758332784" defer></script>
-    <script src="/docs/js/theme.min.js?1758332784" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
+    <script src="/docs/js/theme.min.js?1758337673" defer></script>
   </body>
 </html>

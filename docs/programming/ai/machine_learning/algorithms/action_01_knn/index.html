@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一、简单k-近邻算法 本文将从k-近邻算法的思想开始讲起，使用python3一步一步编写代码进行实战训练。并且，我也提供了相应的数据集，对代码进行了详细的注释。除此之外，本文也对sklearn实现k-近邻算法的方法进行了讲解。实战实例：电影类别分类、约会网站配对效果判定、手写数字识别。
+文章中大部分文字和例题参考自https://cuijiahua.com/blog/2017/11/ml_1_knn.html 对原文很多代码进行了简化
+感谢这篇文章加速本人入门速度
+1、k-近邻法简介 k近邻法(k-nearest neighbor, k-NN)是1967年由Cover T和Hart P提出的一种基本分类与回归方法。它的工作原理是：存在一个样本数据集合，也称作为训练样本集，并且样本集中每个数据都存在标签，即我们知道样本集中每一个数据与所属分类的对应关系。输入没有标签的新数据后，将新的数据的每个特征与样本集中数据对应的特征进行比较，然后算法提取样本最相似数据(最近邻)的分类标签。一般来说，我们只选择样本数据集中前k个最相似的数据，这就是k-近邻算法中k的出处，通常k是不大于20的整数。最后，选择k个最相似数据中出现次数最多的分类，作为新数据的分类。
+举个简单的例子，我们可以使用k-近邻算法分类一个电影是爱情片还是动作片。
+表1.1 每部电影的打斗镜头数、接吻镜头数以及电影类型
+表1.1 就是我们已有的数据集合，也就是训练样本集。这个数据集有两个特征，即打斗镜头数和接吻镜头数。除此之外，我们也知道每个电影的所属类型，即分类标签。用肉眼粗略地观察，接吻镜头多的，是爱情片。打斗镜头多的，是动作片。以我们多年的看片经验，这个分类还算合理。如果现在给我一部电影，你告诉我这个电影打斗镜头数和接吻镜头数。不告诉我这个电影类型，我可以根据你给我的信息进行判断，这个电影是属于爱情片还是动作片。而k-近邻算法也可以像我们人一样做到这一点，不同的地方在于，我们的经验更&#34;牛逼&#34;，而k-近邻算法是靠已有的数据。比如，你告诉我这个电影打斗镜头数为2，接吻镜头数为102，我的经验会告诉你这个是爱情片，k-近邻算法也会告诉你这个是爱情片。你又告诉我另一个电影打斗镜头数为49，接吻镜头数为51，我&#34;邪恶&#34;的经验可能会告诉你，这有可能是个&#34;爱情动作片&#34;，画面太美，我不敢想象。 (如果说，你不知道&#34;爱情动作片&#34;是什么？请评论留言与我联系，我需要你这样像我一样纯洁的朋友。) 但是k-近邻算法不会告诉你这些，因为在它的眼里，电影类型只有爱情片和动作片，它会提取样本集中特征最相似数据(最邻近)的分类标签，得到的结果可能是爱情片，也可能是动作片，但绝不会是&#34;爱情动作片&#34;。当然，这些取决于数据集的大小以及最近邻的判断标准等因素。
+2、距离度量 我们已经知道k-近邻算法根据特征比较，然后提取样本集中特征最相似数据(最邻近)的分类标签。那么，如何进行比较呢？比如，我们还是以表1.1为例，怎么判断红色圆点标记的电影所属的类别呢？ 如下图所示。
+我们可以从散点图大致推断，这个红色圆点标记的电影可能属于动作片，因为距离已知的那两个动作片的圆点更近。k-近邻算法用什么方法进行判断呢？没错，就是距离度量。这个电影分类的例子有2个特征，也就是在2维实数向量空间，可以使用我们高中学过的两点距离公式计算距离，如图1.2所示。
+通过计算，我们可以得到如下结果：
+(101,20)-&gt;动作片(108,5)的距离约为16.55 (101,20)-&gt;动作片(115,8)的距离约为18.44 (101,20)-&gt;爱情片(5,89)的距离约为118.22 (101,20)-&gt;爱情片(1,101)的距离约为128.69 通过计算可知，红色圆点标记的电影到动作片 (108,5)的距离最近，为16.55。如果算法直接根据这个结果，判断该红色圆点标记的电影为动作片，这个算法就是最近邻算法，而非k-近邻算法。那么k-近邻算法是什么呢？k-近邻算法步骤如下：
+计算已知类别数据集中的点与当前点之间的距离； 按照距离递增次序排序； 选取与当前点距离最小的k个点； 确定前k个点所在类别的出现频率； 返回前k个点所出现频率最高的类别作为当前点的预测分类。 比如，现在我这个k值取3，那么在电影例子中，按距离依次排序的三个点分别是动作片(108,5)、动作片(115,8)、爱情片(5,89)。在这三个点中，动作片出现的频率为三分之二，爱情片出现的频率为三分之一，所以该红色圆点标记的电影为动作片。这个判别过程就是k-近邻算法。
+其他距离公式：
+曼哈顿距离（ManhattanDistance）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)
+则 dis=|x1−x2|&#43;|y1−y2|
+比如 每个小正方形距离是1 红，栏，黄色都是12个方格都是曼哈顿距离
+绿色线是欧氏距离(欧几里德距离：在二维和三维空间中的欧氏距离的就是两点之间的直线距离）
+切比雪夫距离（Chebyshev Distance ）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)
+则dis=max(|x1−x2|,|y1−y2|)">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="机器学习实战教程（一）：K-近邻（KNN）算法 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一、简单k-近邻算法 本文将从k-近邻算法的思想开始讲起，使用python3一步一步编写代码进行实战训练。并且，我也提供了相应的数据集，对代码进行了详细的注释。除此之外，本文也对sklearn实现k-近邻算法的方法进行了讲解。实战实例：电影类别分类、约会网站配对效果判定、手写数字识别。
+文章中大部分文字和例题参考自https://cuijiahua.com/blog/2017/11/ml_1_knn.html 对原文很多代码进行了简化
+感谢这篇文章加速本人入门速度
+1、k-近邻法简介 k近邻法(k-nearest neighbor, k-NN)是1967年由Cover T和Hart P提出的一种基本分类与回归方法。它的工作原理是：存在一个样本数据集合，也称作为训练样本集，并且样本集中每个数据都存在标签，即我们知道样本集中每一个数据与所属分类的对应关系。输入没有标签的新数据后，将新的数据的每个特征与样本集中数据对应的特征进行比较，然后算法提取样本最相似数据(最近邻)的分类标签。一般来说，我们只选择样本数据集中前k个最相似的数据，这就是k-近邻算法中k的出处，通常k是不大于20的整数。最后，选择k个最相似数据中出现次数最多的分类，作为新数据的分类。
+举个简单的例子，我们可以使用k-近邻算法分类一个电影是爱情片还是动作片。
+表1.1 每部电影的打斗镜头数、接吻镜头数以及电影类型
+表1.1 就是我们已有的数据集合，也就是训练样本集。这个数据集有两个特征，即打斗镜头数和接吻镜头数。除此之外，我们也知道每个电影的所属类型，即分类标签。用肉眼粗略地观察，接吻镜头多的，是爱情片。打斗镜头多的，是动作片。以我们多年的看片经验，这个分类还算合理。如果现在给我一部电影，你告诉我这个电影打斗镜头数和接吻镜头数。不告诉我这个电影类型，我可以根据你给我的信息进行判断，这个电影是属于爱情片还是动作片。而k-近邻算法也可以像我们人一样做到这一点，不同的地方在于，我们的经验更&#34;牛逼&#34;，而k-近邻算法是靠已有的数据。比如，你告诉我这个电影打斗镜头数为2，接吻镜头数为102，我的经验会告诉你这个是爱情片，k-近邻算法也会告诉你这个是爱情片。你又告诉我另一个电影打斗镜头数为49，接吻镜头数为51，我&#34;邪恶&#34;的经验可能会告诉你，这有可能是个&#34;爱情动作片&#34;，画面太美，我不敢想象。 (如果说，你不知道&#34;爱情动作片&#34;是什么？请评论留言与我联系，我需要你这样像我一样纯洁的朋友。) 但是k-近邻算法不会告诉你这些，因为在它的眼里，电影类型只有爱情片和动作片，它会提取样本集中特征最相似数据(最邻近)的分类标签，得到的结果可能是爱情片，也可能是动作片，但绝不会是&#34;爱情动作片&#34;。当然，这些取决于数据集的大小以及最近邻的判断标准等因素。
+2、距离度量 我们已经知道k-近邻算法根据特征比较，然后提取样本集中特征最相似数据(最邻近)的分类标签。那么，如何进行比较呢？比如，我们还是以表1.1为例，怎么判断红色圆点标记的电影所属的类别呢？ 如下图所示。
+我们可以从散点图大致推断，这个红色圆点标记的电影可能属于动作片，因为距离已知的那两个动作片的圆点更近。k-近邻算法用什么方法进行判断呢？没错，就是距离度量。这个电影分类的例子有2个特征，也就是在2维实数向量空间，可以使用我们高中学过的两点距离公式计算距离，如图1.2所示。
+通过计算，我们可以得到如下结果：
+(101,20)-&gt;动作片(108,5)的距离约为16.55 (101,20)-&gt;动作片(115,8)的距离约为18.44 (101,20)-&gt;爱情片(5,89)的距离约为118.22 (101,20)-&gt;爱情片(1,101)的距离约为128.69 通过计算可知，红色圆点标记的电影到动作片 (108,5)的距离最近，为16.55。如果算法直接根据这个结果，判断该红色圆点标记的电影为动作片，这个算法就是最近邻算法，而非k-近邻算法。那么k-近邻算法是什么呢？k-近邻算法步骤如下：
+计算已知类别数据集中的点与当前点之间的距离； 按照距离递增次序排序； 选取与当前点距离最小的k个点； 确定前k个点所在类别的出现频率； 返回前k个点所出现频率最高的类别作为当前点的预测分类。 比如，现在我这个k值取3，那么在电影例子中，按距离依次排序的三个点分别是动作片(108,5)、动作片(115,8)、爱情片(5,89)。在这三个点中，动作片出现的频率为三分之二，爱情片出现的频率为三分之一，所以该红色圆点标记的电影为动作片。这个判别过程就是k-近邻算法。
+其他距离公式：
+曼哈顿距离（ManhattanDistance）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)
+则 dis=|x1−x2|&#43;|y1−y2|
+比如 每个小正方形距离是1 红，栏，黄色都是12个方格都是曼哈顿距离
+绿色线是欧氏距离(欧几里德距离：在二维和三维空间中的欧氏距离的就是两点之间的直线距离）
+切比雪夫距离（Chebyshev Distance ）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)
+则dis=max(|x1−x2|,|y1−y2|)">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="机器学习实战教程（一）：K-近邻（KNN）算法 :: liaomin416100569博客">
+    <meta property="og:description" content="一、简单k-近邻算法 本文将从k-近邻算法的思想开始讲起，使用python3一步一步编写代码进行实战训练。并且，我也提供了相应的数据集，对代码进行了详细的注释。除此之外，本文也对sklearn实现k-近邻算法的方法进行了讲解。实战实例：电影类别分类、约会网站配对效果判定、手写数字识别。
+文章中大部分文字和例题参考自https://cuijiahua.com/blog/2017/11/ml_1_knn.html 对原文很多代码进行了简化
+感谢这篇文章加速本人入门速度
+1、k-近邻法简介 k近邻法(k-nearest neighbor, k-NN)是1967年由Cover T和Hart P提出的一种基本分类与回归方法。它的工作原理是：存在一个样本数据集合，也称作为训练样本集，并且样本集中每个数据都存在标签，即我们知道样本集中每一个数据与所属分类的对应关系。输入没有标签的新数据后，将新的数据的每个特征与样本集中数据对应的特征进行比较，然后算法提取样本最相似数据(最近邻)的分类标签。一般来说，我们只选择样本数据集中前k个最相似的数据，这就是k-近邻算法中k的出处，通常k是不大于20的整数。最后，选择k个最相似数据中出现次数最多的分类，作为新数据的分类。
+举个简单的例子，我们可以使用k-近邻算法分类一个电影是爱情片还是动作片。
+表1.1 每部电影的打斗镜头数、接吻镜头数以及电影类型
+表1.1 就是我们已有的数据集合，也就是训练样本集。这个数据集有两个特征，即打斗镜头数和接吻镜头数。除此之外，我们也知道每个电影的所属类型，即分类标签。用肉眼粗略地观察，接吻镜头多的，是爱情片。打斗镜头多的，是动作片。以我们多年的看片经验，这个分类还算合理。如果现在给我一部电影，你告诉我这个电影打斗镜头数和接吻镜头数。不告诉我这个电影类型，我可以根据你给我的信息进行判断，这个电影是属于爱情片还是动作片。而k-近邻算法也可以像我们人一样做到这一点，不同的地方在于，我们的经验更&#34;牛逼&#34;，而k-近邻算法是靠已有的数据。比如，你告诉我这个电影打斗镜头数为2，接吻镜头数为102，我的经验会告诉你这个是爱情片，k-近邻算法也会告诉你这个是爱情片。你又告诉我另一个电影打斗镜头数为49，接吻镜头数为51，我&#34;邪恶&#34;的经验可能会告诉你，这有可能是个&#34;爱情动作片&#34;，画面太美，我不敢想象。 (如果说，你不知道&#34;爱情动作片&#34;是什么？请评论留言与我联系，我需要你这样像我一样纯洁的朋友。) 但是k-近邻算法不会告诉你这些，因为在它的眼里，电影类型只有爱情片和动作片，它会提取样本集中特征最相似数据(最邻近)的分类标签，得到的结果可能是爱情片，也可能是动作片，但绝不会是&#34;爱情动作片&#34;。当然，这些取决于数据集的大小以及最近邻的判断标准等因素。
+2、距离度量 我们已经知道k-近邻算法根据特征比较，然后提取样本集中特征最相似数据(最邻近)的分类标签。那么，如何进行比较呢？比如，我们还是以表1.1为例，怎么判断红色圆点标记的电影所属的类别呢？ 如下图所示。
+我们可以从散点图大致推断，这个红色圆点标记的电影可能属于动作片，因为距离已知的那两个动作片的圆点更近。k-近邻算法用什么方法进行判断呢？没错，就是距离度量。这个电影分类的例子有2个特征，也就是在2维实数向量空间，可以使用我们高中学过的两点距离公式计算距离，如图1.2所示。
+通过计算，我们可以得到如下结果：
+(101,20)-&gt;动作片(108,5)的距离约为16.55 (101,20)-&gt;动作片(115,8)的距离约为18.44 (101,20)-&gt;爱情片(5,89)的距离约为118.22 (101,20)-&gt;爱情片(1,101)的距离约为128.69 通过计算可知，红色圆点标记的电影到动作片 (108,5)的距离最近，为16.55。如果算法直接根据这个结果，判断该红色圆点标记的电影为动作片，这个算法就是最近邻算法，而非k-近邻算法。那么k-近邻算法是什么呢？k-近邻算法步骤如下：
+计算已知类别数据集中的点与当前点之间的距离； 按照距离递增次序排序； 选取与当前点距离最小的k个点； 确定前k个点所在类别的出现频率； 返回前k个点所出现频率最高的类别作为当前点的预测分类。 比如，现在我这个k值取3，那么在电影例子中，按距离依次排序的三个点分别是动作片(108,5)、动作片(115,8)、爱情片(5,89)。在这三个点中，动作片出现的频率为三分之二，爱情片出现的频率为三分之一，所以该红色圆点标记的电影为动作片。这个判别过程就是k-近邻算法。
+其他距离公式：
+曼哈顿距离（ManhattanDistance）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)
+则 dis=|x1−x2|&#43;|y1−y2|
+比如 每个小正方形距离是1 红，栏，黄色都是12个方格都是曼哈顿距离
+绿色线是欧氏距离(欧几里德距离：在二维和三维空间中的欧氏距离的就是两点之间的直线距离）
+切比雪夫距离（Chebyshev Distance ）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)
+则dis=max(|x1−x2|,|y1−y2|)">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="机器学习实战教程（一）：K-近邻（KNN）算法 :: liaomin416100569博客">
+    <meta itemprop="description" content="一、简单k-近邻算法 本文将从k-近邻算法的思想开始讲起，使用python3一步一步编写代码进行实战训练。并且，我也提供了相应的数据集，对代码进行了详细的注释。除此之外，本文也对sklearn实现k-近邻算法的方法进行了讲解。实战实例：电影类别分类、约会网站配对效果判定、手写数字识别。
+文章中大部分文字和例题参考自https://cuijiahua.com/blog/2017/11/ml_1_knn.html 对原文很多代码进行了简化
+感谢这篇文章加速本人入门速度
+1、k-近邻法简介 k近邻法(k-nearest neighbor, k-NN)是1967年由Cover T和Hart P提出的一种基本分类与回归方法。它的工作原理是：存在一个样本数据集合，也称作为训练样本集，并且样本集中每个数据都存在标签，即我们知道样本集中每一个数据与所属分类的对应关系。输入没有标签的新数据后，将新的数据的每个特征与样本集中数据对应的特征进行比较，然后算法提取样本最相似数据(最近邻)的分类标签。一般来说，我们只选择样本数据集中前k个最相似的数据，这就是k-近邻算法中k的出处，通常k是不大于20的整数。最后，选择k个最相似数据中出现次数最多的分类，作为新数据的分类。
+举个简单的例子，我们可以使用k-近邻算法分类一个电影是爱情片还是动作片。
+表1.1 每部电影的打斗镜头数、接吻镜头数以及电影类型
+表1.1 就是我们已有的数据集合，也就是训练样本集。这个数据集有两个特征，即打斗镜头数和接吻镜头数。除此之外，我们也知道每个电影的所属类型，即分类标签。用肉眼粗略地观察，接吻镜头多的，是爱情片。打斗镜头多的，是动作片。以我们多年的看片经验，这个分类还算合理。如果现在给我一部电影，你告诉我这个电影打斗镜头数和接吻镜头数。不告诉我这个电影类型，我可以根据你给我的信息进行判断，这个电影是属于爱情片还是动作片。而k-近邻算法也可以像我们人一样做到这一点，不同的地方在于，我们的经验更&#34;牛逼&#34;，而k-近邻算法是靠已有的数据。比如，你告诉我这个电影打斗镜头数为2，接吻镜头数为102，我的经验会告诉你这个是爱情片，k-近邻算法也会告诉你这个是爱情片。你又告诉我另一个电影打斗镜头数为49，接吻镜头数为51，我&#34;邪恶&#34;的经验可能会告诉你，这有可能是个&#34;爱情动作片&#34;，画面太美，我不敢想象。 (如果说，你不知道&#34;爱情动作片&#34;是什么？请评论留言与我联系，我需要你这样像我一样纯洁的朋友。) 但是k-近邻算法不会告诉你这些，因为在它的眼里，电影类型只有爱情片和动作片，它会提取样本集中特征最相似数据(最邻近)的分类标签，得到的结果可能是爱情片，也可能是动作片，但绝不会是&#34;爱情动作片&#34;。当然，这些取决于数据集的大小以及最近邻的判断标准等因素。
+2、距离度量 我们已经知道k-近邻算法根据特征比较，然后提取样本集中特征最相似数据(最邻近)的分类标签。那么，如何进行比较呢？比如，我们还是以表1.1为例，怎么判断红色圆点标记的电影所属的类别呢？ 如下图所示。
+我们可以从散点图大致推断，这个红色圆点标记的电影可能属于动作片，因为距离已知的那两个动作片的圆点更近。k-近邻算法用什么方法进行判断呢？没错，就是距离度量。这个电影分类的例子有2个特征，也就是在2维实数向量空间，可以使用我们高中学过的两点距离公式计算距离，如图1.2所示。
+通过计算，我们可以得到如下结果：
+(101,20)-&gt;动作片(108,5)的距离约为16.55 (101,20)-&gt;动作片(115,8)的距离约为18.44 (101,20)-&gt;爱情片(5,89)的距离约为118.22 (101,20)-&gt;爱情片(1,101)的距离约为128.69 通过计算可知，红色圆点标记的电影到动作片 (108,5)的距离最近，为16.55。如果算法直接根据这个结果，判断该红色圆点标记的电影为动作片，这个算法就是最近邻算法，而非k-近邻算法。那么k-近邻算法是什么呢？k-近邻算法步骤如下：
+计算已知类别数据集中的点与当前点之间的距离； 按照距离递增次序排序； 选取与当前点距离最小的k个点； 确定前k个点所在类别的出现频率； 返回前k个点所出现频率最高的类别作为当前点的预测分类。 比如，现在我这个k值取3，那么在电影例子中，按距离依次排序的三个点分别是动作片(108,5)、动作片(115,8)、爱情片(5,89)。在这三个点中，动作片出现的频率为三分之二，爱情片出现的频率为三分之一，所以该红色圆点标记的电影为动作片。这个判别过程就是k-近邻算法。
+其他距离公式：
+曼哈顿距离（ManhattanDistance）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)
+则 dis=|x1−x2|&#43;|y1−y2|
+比如 每个小正方形距离是1 红，栏，黄色都是12个方格都是曼哈顿距离
+绿色线是欧氏距离(欧几里德距离：在二维和三维空间中的欧氏距离的就是两点之间的直线距离）
+切比雪夫距离（Chebyshev Distance ）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)
+则dis=max(|x1−x2|,|y1−y2|)">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="958">
+    <title>机器学习实战教程（一）：K-近邻（KNN）算法 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/programming\/ai\/machine_learning\/algorithms\/action_01_knn\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#一简单k-近邻算法">一、简单k-近邻算法</a>
+              <ul>
+                <li><a href="#1k-近邻法简介">1、k-近邻法简介</a></li>
+                <li><a href="#2距离度量">2、距离度量</a></li>
+                <li><a href="#3python3代码实现">3、Python3代码实现</a></li>
+              </ul>
+            </li>
+            <li><a href="#二k-近邻算法实战之约会网站配对效果判定">二、k-近邻算法实战之约会网站配对效果判定</a>
+              <ul>
+                <li><a href="#1实战背景">1、实战背景</a></li>
+                <li><a href="#2准备数据数据解析">2、准备数据：数据解析</a></li>
+                <li><a href="#3分析数据数据可视化">3、分析数据：数据可视化</a></li>
+                <li><a href="#4准备数据数据归一化">4、准备数据：数据归一化</a></li>
+                <li><a href="#5测试算法验证分类器">5、测试算法：验证分类器</a></li>
+                <li><a href="#6使用算法构建完整可用系统">6、使用算法：构建完整可用系统</a></li>
+              </ul>
+            </li>
+            <li><a href="#三k-近邻算法实战之sklearn手写数字识别">三、k-近邻算法实战之sklearn手写数字识别</a>
+              <ul>
+                <li><a href="#1实战背景-1">1、实战背景</a></li>
+                <li><a href="#2sklearn简介">2、sklearn简介</a></li>
+                <li><a href="#3sklearn安装">3、sklearn安装</a></li>
+                <li><a href="#4sklearn实现k-近邻算法简介">4、sklearn实现k-近邻算法简介</a></li>
+                <li><a href="#5sklearn小试牛刀">5、sklearn小试牛刀</a></li>
+              </ul>
+            </li>
+            <li><a href="#四总结">四、总结</a>
+              <ul>
+                <li><a href="#1knn算法的优缺点">1、kNN算法的优缺点</a></li>
+                <li><a href="#2其他">2、其他</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/index.html"><span itemprop="name">人工智能</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/machine_learning/index.html"><span itemprop="name">机器学习</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/machine_learning/algorithms/index.html"><span itemprop="name">核心算法</span></a><meta itemprop="position" content="5">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">机器学习实战教程（一）：K-近邻（KNN）算法</span><meta itemprop="position" content="6"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/machine_learning/algorithms/index.html" title="核心算法 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html" title="机器学习实战教程（四）：从特征分解到协方差矩阵：详细剖析和实现PCA算法 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="机器学习实战教程一k-近邻knn算法">机器学习实战教程（一）：K-近邻（KNN）算法</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h3 id="一简单k-近邻算法">一、简单k-近邻算法</h3>
+<p>本文将从k-近邻算法的思想开始讲起，使用python3一步一步编写代码进行实战训练。并且，我也提供了相应的数据集，对代码进行了详细的注释。除此之外，本文也对sklearn实现k-近邻算法的方法进行了讲解。实战实例：电影类别分类、约会网站配对效果判定、手写数字识别。</p>
+<p>文章中大部分文字和例题参考自<a href="https://cuijiahua.com/blog/2017/11/ml_1_knn.html" rel="external" target="_blank">https://cuijiahua.com/blog/2017/11/ml_1_knn.html</a>  对原文很多代码进行了简化<br>
+感谢这篇文章加速本人入门速度</p>
+<h4 id="1k-近邻法简介">1、k-近邻法简介</h4>
+<p>k近邻法(k-nearest neighbor, k-NN)是1967年由Cover T和Hart P提出的一种基本分类与回归方法。它的工作原理是：存在一个样本数据集合，也称作为训练样本集，并且样本集中每个数据都存在标签，即我们知道样本集中每一个数据与所属分类的对应关系。输入没有标签的新数据后，将新的数据的每个特征与样本集中数据对应的特征进行比较，然后算法提取样本最相似数据(最近邻)的分类标签。一般来说，我们只选择样本数据集中前k个最相似的数据，这就是k-近邻算法中k的出处，通常k是不大于20的整数。最后，选择k个最相似数据中出现次数最多的分类，作为新数据的分类。</p>
+<p>举个简单的例子，我们可以使用k-近邻算法分类一个电影是爱情片还是动作片。</p>
+<p><a href="#R-image-ac5b6317d793635a6bb35c5a316e7d10" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/75feb6140ac91f92c94ee92c5d51ded2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ac5b6317d793635a6bb35c5a316e7d10"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/75feb6140ac91f92c94ee92c5d51ded2.png"></a></p>
+<p>表1.1 每部电影的打斗镜头数、接吻镜头数以及电影类型</p>
+<p>表1.1 就是我们已有的数据集合，也就是训练样本集。这个数据集有两个特征，即打斗镜头数和接吻镜头数。除此之外，我们也知道每个电影的所属类型，即分类标签。用肉眼粗略地观察，接吻镜头多的，是爱情片。打斗镜头多的，是动作片。以我们多年的看片经验，这个分类还算合理。如果现在给我一部电影，你告诉我这个电影打斗镜头数和接吻镜头数。不告诉我这个电影类型，我可以根据你给我的信息进行判断，这个电影是属于爱情片还是动作片。而k-近邻算法也可以像我们人一样做到这一点，不同的地方在于，我们的经验更&quot;牛逼&quot;，而k-近邻算法是靠已有的数据。比如，你告诉我这个电影打斗镜头数为2，接吻镜头数为102，我的经验会告诉你这个是爱情片，k-近邻算法也会告诉你这个是爱情片。你又告诉我另一个电影打斗镜头数为49，接吻镜头数为51，我&quot;邪恶&quot;的经验可能会告诉你，这有可能是个&quot;爱情动作片&quot;，画面太美，我不敢想象。 (如果说，你不知道&quot;爱情动作片&quot;是什么？请评论留言与我联系，我需要你这样像我一样纯洁的朋友。) 但是k-近邻算法不会告诉你这些，因为在它的眼里，电影类型只有爱情片和动作片，它会提取样本集中特征最相似数据(最邻近)的分类标签，得到的结果可能是爱情片，也可能是动作片，但绝不会是&quot;爱情动作片&quot;。当然，这些取决于数据集的大小以及最近邻的判断标准等因素。</p>
+<h4 id="2距离度量">2、距离度量</h4>
+<p>我们已经知道k-近邻算法根据特征比较，然后提取样本集中特征最相似数据(最邻近)的分类标签。那么，如何进行比较呢？比如，我们还是以表1.1为例，怎么判断红色圆点标记的电影所属的类别呢？ 如下图所示。</p>
+<p><a href="#R-image-c8e3690873a70a4da00034f873020062" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/28889705e32efe192430c93f9eec46ef.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c8e3690873a70a4da00034f873020062"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/28889705e32efe192430c93f9eec46ef.jpeg"></a></p>
+<p>我们可以从散点图大致推断，这个红色圆点标记的电影可能属于动作片，因为距离已知的那两个动作片的圆点更近。k-近邻算法用什么方法进行判断呢？没错，就是距离度量。这个电影分类的例子有2个特征，也就是在2维实数向量空间，可以使用我们高中学过的两点距离公式计算距离，如图1.2所示。</p>
+<p><a href="#R-image-3027f6d59e6f1fae3f01a3ce8394631a" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/eb641625ed9dc104b7bad989f42ffd29.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3027f6d59e6f1fae3f01a3ce8394631a"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/eb641625ed9dc104b7bad989f42ffd29.jpeg"></a></p>
+<p>通过计算，我们可以得到如下结果：</p>
+<ul>
+<li>(101,20)-&gt;动作片(108,5)的距离约为16.55</li>
+<li>(101,20)-&gt;动作片(115,8)的距离约为18.44</li>
+<li>(101,20)-&gt;爱情片(5,89)的距离约为118.22</li>
+<li>(101,20)-&gt;爱情片(1,101)的距离约为128.69</li>
+</ul>
+<p>通过计算可知，红色圆点标记的电影到动作片 (108,5)的距离最近，为16.55。如果算法直接根据这个结果，判断该红色圆点标记的电影为动作片，这个算法就是最近邻算法，而非k-近邻算法。那么k-近邻算法是什么呢？k-近邻算法步骤如下：</p>
+<ol>
+<li>计算已知类别数据集中的点与当前点之间的距离；</li>
+<li>按照距离递增次序排序；</li>
+<li>选取与当前点距离最小的k个点；</li>
+<li>确定前k个点所在类别的出现频率；</li>
+<li>返回前k个点所出现频率最高的类别作为当前点的预测分类。</li>
+</ol>
+<p>比如，现在我这个k值取3，那么在电影例子中，按距离依次排序的三个点分别是动作片(108,5)、动作片(115,8)、爱情片(5,89)。在这三个点中，动作片出现的频率为三分之二，爱情片出现的频率为三分之一，所以该红色圆点标记的电影为动作片。这个判别过程就是k-近邻算法。</p>
+<p>其他距离公式：<br>
+曼哈顿距离（ManhattanDistance）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)<br>
+则 dis=|x1−x2|+|y1−y2|<br>
+<a href="#R-image-f1f0383cb32ade0ec98a1891983f4df7" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/003770fda926dcfb274e1553ef44b818.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f1f0383cb32ade0ec98a1891983f4df7"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/003770fda926dcfb274e1553ef44b818.png"></a><br>
+比如 每个小正方形距离是1  红，栏，黄色都是12个方格都是曼哈顿距离<br>
+绿色线是欧氏距离(欧几里德距离：在二维和三维空间中的欧氏距离的就是两点之间的直线距离）<br>
+切比雪夫距离（Chebyshev Distance ）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)<br>
+则dis=max(|x1−x2|,|y1−y2|)</p>
+<p>闵可夫斯基距离(MinkowskiDistance)：</p>
+<p><a href="#R-image-a67f566eb1b14cf278ce19b49f125f49" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f60fa0fee2b1813e80b404022b9732fd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a67f566eb1b14cf278ce19b49f125f49"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f60fa0fee2b1813e80b404022b9732fd.png"></a><br>
+两个n维变量a(x11,x12,…,x1n)与 b(x21,x22,…,x2n)间的闵可夫斯基距离定义为：<br>
+其中p是一个变参数。</p>
+<ul>
+<li>当p=1时，就是曼哈顿距离</li>
+<li>当p=2时，就是欧氏距离</li>
+<li>当p→∞时，就是切比雪夫距离</li>
+</ul>
+<p>根据变参数的不同，闵氏距离可以表示一类的距离。</p>
+<p>其他距离公式参考<a href="https://my.oschina.net/hunglish/blog/787596" rel="external" target="_blank">https://my.oschina.net/hunglish/blog/787596</a></p>
+<h4 id="3python3代码实现">3、Python3代码实现</h4>
+<p>我们已经知道了k-近邻算法的原理，那么接下来就是使用Python3实现该算法，依然以电影分类为例。</p>
+<p><strong>(1)准备数据集</strong></p>
+<p>对于表1.1中的数据，我们可以使用numpy直接创建，代码如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> mp;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> collections <span style="color:#66d9ef">as</span> c;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#实现knn算法 一般用于推测 不具备学习能力 主要是比较</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>数据集合<span style="color:#960050;background-color:#1e0010">，</span>也就是训练样本集<span style="color:#960050;background-color:#1e0010">。</span>这个数据集有两个特征<span style="color:#960050;background-color:#1e0010">，</span>
+</span></span><span style="display:flex;"><span>即打斗镜头数和接吻镜头数<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>除此之外<span style="color:#960050;background-color:#1e0010">，</span>我们也知道每个电影的所属类型<span style="color:#960050;background-color:#1e0010">，</span>即分类标签
+</span></span><span style="display:flex;"><span>电影名称  打斗镜头 接吻镜头 电影类型
+</span></span><span style="display:flex;"><span>神雕侠侣  <span style="color:#ae81ff">100</span>       <span style="color:#ae81ff">20</span>      动作片
+</span></span><span style="display:flex;"><span>毒液<span style="color:#960050;background-color:#1e0010">：</span>致命守护者  <span style="color:#ae81ff">99</span> <span style="color:#ae81ff">10</span>     动作片
+</span></span><span style="display:flex;"><span>碟中谍6<span style="color:#960050;background-color:#1e0010">：</span>全面瓦解 <span style="color:#ae81ff">67</span>  <span style="color:#ae81ff">5</span>     动作片
+</span></span><span style="display:flex;"><span>热情如火  <span style="color:#ae81ff">40</span>       <span style="color:#ae81ff">125</span>     动作片
+</span></span><span style="display:flex;"><span>泰坦尼克号    <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">10</span>     爱情片
+</span></span><span style="display:flex;"><span>倩女幽魂    <span style="color:#ae81ff">10</span>       <span style="color:#ae81ff">20</span>     爱情片
+</span></span><span style="display:flex;"><span>大话西游之月光宝盒 <span style="color:#ae81ff">10</span>  <span style="color:#ae81ff">40</span>    爱情片
+</span></span><span style="display:flex;"><span>烈火如歌         <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">30</span>     爱情片
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>arr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([[<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">200</span>],[<span style="color:#ae81ff">99</span>,<span style="color:#ae81ff">10</span>],[<span style="color:#ae81ff">67</span>,<span style="color:#ae81ff">5</span>],[<span style="color:#ae81ff">40</span>,<span style="color:#ae81ff">125</span>],[<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">10</span>],[<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">20</span>],[<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">40</span>],[<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">30</span>]]);
+</span></span><span style="display:flex;"><span>tarr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>]);</span></span></code></pre></div>
+<p><strong>(2)k-近邻算法</strong></p>
+<p>根据两点距离公式，计算距离，选择距离最小的前k个点，并返回分类结果。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> mp;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> collections <span style="color:#66d9ef">as</span> c;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#实现knn算法 一般用于推测 不具备学习能力 主要是比较</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>数据集合<span style="color:#960050;background-color:#1e0010">，</span>也就是训练样本集<span style="color:#960050;background-color:#1e0010">。</span>这个数据集有两个特征<span style="color:#960050;background-color:#1e0010">，</span>
+</span></span><span style="display:flex;"><span>即打斗镜头数和接吻镜头数<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>除此之外<span style="color:#960050;background-color:#1e0010">，</span>我们也知道每个电影的所属类型<span style="color:#960050;background-color:#1e0010">，</span>即分类标签
+</span></span><span style="display:flex;"><span>电影名称  打斗镜头 接吻镜头 电影类型
+</span></span><span style="display:flex;"><span>神雕侠侣  <span style="color:#ae81ff">100</span>       <span style="color:#ae81ff">20</span>      动作片
+</span></span><span style="display:flex;"><span>毒液<span style="color:#960050;background-color:#1e0010">：</span>致命守护者  <span style="color:#ae81ff">99</span> <span style="color:#ae81ff">10</span>     动作片
+</span></span><span style="display:flex;"><span>碟中谍6<span style="color:#960050;background-color:#1e0010">：</span>全面瓦解 <span style="color:#ae81ff">67</span>  <span style="color:#ae81ff">5</span>     动作片
+</span></span><span style="display:flex;"><span>热情如火  <span style="color:#ae81ff">40</span>       <span style="color:#ae81ff">125</span>     动作片
+</span></span><span style="display:flex;"><span>泰坦尼克号    <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">10</span>     爱情片
+</span></span><span style="display:flex;"><span>倩女幽魂    <span style="color:#ae81ff">10</span>       <span style="color:#ae81ff">20</span>     爱情片
+</span></span><span style="display:flex;"><span>大话西游之月光宝盒 <span style="color:#ae81ff">10</span>  <span style="color:#ae81ff">40</span>    爱情片
+</span></span><span style="display:flex;"><span>烈火如歌         <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">30</span>     爱情片
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>arr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([[<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">200</span>],[<span style="color:#ae81ff">99</span>,<span style="color:#ae81ff">10</span>],[<span style="color:#ae81ff">67</span>,<span style="color:#ae81ff">5</span>],[<span style="color:#ae81ff">40</span>,<span style="color:#ae81ff">125</span>],[<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">10</span>],[<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">20</span>],[<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">40</span>],[<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">30</span>]]);
+</span></span><span style="display:flex;"><span>tarr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>]);
+</span></span><span style="display:flex;"><span>x<span style="color:#f92672">=</span>arr[:,:<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>y<span style="color:#f92672">=</span>arr[:,<span style="color:#ae81ff">1</span>:]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;x轴数据:&#34;</span>,x)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;y轴数据:&#34;</span>,y)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#设置字体</span>
+</span></span><span style="display:flex;"><span>mp<span style="color:#f92672">.</span>rcParams[<span style="color:#e6db74">&#39;font.family&#39;</span>]<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;STFangsong&#39;</span>]
+</span></span><span style="display:flex;"><span>mp<span style="color:#f92672">.</span>title(<span style="color:#e6db74">&#34;电影类型图&#34;</span>)
+</span></span><span style="display:flex;"><span>mp<span style="color:#f92672">.</span>xlabel(<span style="color:#e6db74">&#34;打斗镜头&#34;</span>)
+</span></span><span style="display:flex;"><span>mp<span style="color:#f92672">.</span>ylabel(<span style="color:#e6db74">&#34;接吻镜头&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#第三个参数 o表示使用 散点  r表示red红色</span>
+</span></span><span style="display:flex;"><span>mp<span style="color:#f92672">.</span>plot(x,y,<span style="color:#e6db74">&#34;or&#34;</span>)
+</span></span><span style="display:flex;"><span>mp<span style="color:#f92672">.</span>show();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#判断打斗镜头44  接吻镜头 12到底是哪种类型的片片了</span>
+</span></span><span style="display:flex;"><span>ndata<span style="color:#f92672">=</span>[<span style="color:#ae81ff">44</span>,<span style="color:#ae81ff">12</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#计算当前这个ndata的坐标和之前所有数据的坐标的距离 放在一个jl数组中</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#距离计算公式是 欧氏距离  (x-x1)**2 +(y-y1)**2 开平方根</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># jl中每个下标的数据 就是ndata和对应位置xy坐标的距离</span>
+</span></span><span style="display:flex;"><span>jl<span style="color:#f92672">=</span>[np<span style="color:#f92672">.</span>sqrt((ndata[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">-</span>i[<span style="color:#ae81ff">0</span>])<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span>(ndata[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">-</span>i[<span style="color:#ae81ff">1</span>])<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> arr];
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;未排序的数据是&#34;</span>,jl);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#对距离进行排序  然后获取排序后的下标</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  比如数组：      [10,12,8]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  argsort升序   [2,0,1]</span>
+</span></span><span style="display:flex;"><span>jlsort<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>argsort(jl);
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;排序的索引是&#34;</span>,jlsort);
+</span></span><span style="display:flex;"><span>k<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>print(jlsort[:k])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#获取指定k 前三个值最小下标的标签 也就是前三个距离最近的都是什么类型的电影</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 比如[1,1,0]</span>
+</span></span><span style="display:flex;"><span>flaga<span style="color:#f92672">=</span>[tarr[t] <span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> jlsort[:k]];
+</span></span><span style="display:flex;"><span>print(flaga)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#统计类型集合的哪个出现的次数 会得到一个字典</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[(1,2),(0,1)]</span>
+</span></span><span style="display:flex;"><span>group<span style="color:#f92672">=</span>c<span style="color:#f92672">.</span>Counter(flaga);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#获取到个数排序（从大到小） 值最大的前1个</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[(1,2)]  [0][0]获取到1 类型就是动作片罗</span>
+</span></span><span style="display:flex;"><span>print(group<span style="color:#f92672">.</span>most_common(<span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#来个三目判断下 输出中文</span>
+</span></span><span style="display:flex;"><span>result<span style="color:#f92672">=</span>(<span style="color:#e6db74">&#34;动作片&#34;</span> <span style="color:#66d9ef">if</span> group<span style="color:#f92672">.</span>most_common(<span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">0</span>]<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;爱情片&#34;</span>);
+</span></span><span style="display:flex;"><span>print(result);</span></span></code></pre></div>
+<p>运行结果:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>    排序的索引是 [6 5 7 2 4 1 3 0][6 5 7][0, 0, 1]0爱情片</code></pre></div>
+<p>可以看到，分类结果根据我们的&quot;经验&quot;，是正确的，尽管这种分类比较耗时，用时1.4s。</p>
+<p>到这里，也许有人早已经发现，电影例子中的特征是2维的，这样的距离度量可以用两 点距离公式计算，但是如果是更高维的呢？对，没错。我们可以用欧氏距离(也称欧几里德度量)，如图1.5所示。我们高中所学的两点距离公式就是欧氏距离在二维空间上的公式，也就是欧氏距离的n的值为2的情况。</p>
+<p><a href="#R-image-bd3dc5d4686cf4bc63e1e2bbbdd74ce2" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ee6dfe45e75caead3fea5ad77fac94a8.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bd3dc5d4686cf4bc63e1e2bbbdd74ce2"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ee6dfe45e75caead3fea5ad77fac94a8.jpeg"></a></p>
+<p>图1.5 欧氏距离公式</p>
+<p>看到这里，有人可能会问：“分类器何种情况下会出错？”或者“答案是否总是正确的？”答案是否定的，分类器并不会得到百分百正确的结果，我们可以使用多种方法检测分类器的正确率。此外分类器的性能也会受到多种因素的影响，如分类器设置和数据集等。不同的算法在不同数据集上的表现可能完全不同。为了测试分类器的效果，我们可以使用已知答案的数据，当然答案不能告诉分类器，检验分类器给出的结果是否符合预期结果。通过大量的测试数据，我们可以得到分类器的错误率-分类器给出错误结果的次数除以测试执行的总数。错误率是常用的评估方法，主要用于评估分类器在某个数据集上的执行效果。完美分类器的错误率为0，最差分类器的错误率是1.0。同时，我们也不难发现，k-近邻算法没有进行数据的训练，直接使用未知的数据与已知的数据进行比较，得到结果。因此，可以说k-近邻算法不具有显式的学习过程。</p>
+<h3 id="二k-近邻算法实战之约会网站配对效果判定">二、k-近邻算法实战之约会网站配对效果判定</h3>
+<p>上一小结学习了简单的k-近邻算法的实现方法，但是这并不是完整的k-近邻算法流程，k-近邻算法的一般流程：</p>
+<ol>
+<li>收集数据：可以使用爬虫进行数据的收集，也可以使用第三方提供的免费或收费的数据。一般来讲，数据放在txt文本文件中，按照一定的格式进行存储，便于解析及处理。</li>
+<li>准备数据：使用Python解析、预处理数据。</li>
+<li>分析数据：可以使用很多方法对数据进行分析，例如使用Matplotlib将数据可视化。</li>
+<li>测试算法：计算错误率。</li>
+<li>使用算法：错误率在可接受范围内，就可以运行k-近邻算法进行分类。</li>
+</ol>
+<p>已经了解了k-近邻算法的一般流程，下面开始进入实战内容。</p>
+<h4 id="1实战背景">1、实战背景</h4>
+<p>海伦女士一直使用在线约会网站寻找适合自己的约会对象。尽管约会网站会推荐不同的任选，但她并不是喜欢每一个人。经过一番总结，她发现自己交往过的人可以进行如下分类：</p>
+<ol>
+<li>不喜欢的人</li>
+<li>魅力一般的人</li>
+<li>极具魅力的人</li>
+</ol>
+<p>海伦收集约会数据已经有了一段时间，她把这些数据存放在文本文件datingTestSet.txt中，每个样本数据占据一行，总共有1000行。datingTestSet.txt数据下载： <a href="https://github.com/jiaozi789/machinelearn/blob/master/sklearn_knn/lovedata.txt" rel="external" target="_blank">约会数据</a></p>
+<p>海伦收集的样本数据主要包含以下3种特征：</p>
+<ol>
+<li>每年获得的飞行常客里程数</li>
+<li>玩视频游戏所消耗时间百分比</li>
+<li>每周消费的冰淇淋公升数</li>
+</ol>
+<p>这里不得不吐槽一句，海伦是个小吃货啊，冰淇淋公斤数都影响自己择偶标准。打开txt文本文件，数据格式如图2.1所示。</p>
+<p><a href="#R-image-1018fedf22ac4c1255521bfc5cf93ffd" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/03b0ccbfdb101cbd371c8f3f462e899c.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1018fedf22ac4c1255521bfc5cf93ffd"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/03b0ccbfdb101cbd371c8f3f462e899c.jpeg"></a></p>
+<p>图2.1 datingTestSet.txt格式</p>
+<h4 id="2准备数据数据解析">2、准备数据：数据解析</h4>
+<p>在将上述特征数据输入到分类器前，必须将待处理的数据的格式改变为分类器可以接收的格式。分类器接收的数据是什么格式的？从上小结已经知道，要将数据分类两部分，即特征矩阵和对应的分类标签向量。创建lovesimple.py文件，创建名为dataSet的函数，以此来处理输入格式问题。 将lovedata.txt放到与py文件相同目录下，编写代码如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> pl
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.lines <span style="color:#66d9ef">as</span> mlines
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> collections <span style="color:#66d9ef">as</span> coll;
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  读取data.txt的所有数据集
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  前三列：
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    海伦收集的样本数据主要包含以下3种特征：
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        每年获得的飞行常客里程数
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        玩视频游戏所消耗时间百分比
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        每周消费的冰淇淋公升数
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  最后一列：
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    didntLike 不喜欢的人
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    smallDoses 魅力一般的人
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    largeDoses 极具魅力的人
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dataSet</span>():
+</span></span><span style="display:flex;"><span>    arr<span style="color:#f92672">=</span>[];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;lovedata.txt&#34;</span>,<span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">as</span> file:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> file:
+</span></span><span style="display:flex;"><span>            arr<span style="color:#f92672">.</span>append(line<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">&#34;</span>));<span style="color:#75715e">#默认删除空白符(包括&#39;\n&#39;,&#39;\r&#39;,&#39;\t&#39;,&#39; &#39;)</span>
+</span></span><span style="display:flex;"><span>    arrnp<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array(arr);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#前三列是特征数据 读取出来时字符串数组， 转换成float类型 #最后一列是标签数据 转换成1维向量</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> arrnp[:,:<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>astype(dtype<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>float32),arrnp[:,<span style="color:#ae81ff">3</span>:]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>];</span></span></code></pre></div>
+<p>运行上述代码，得到的数据解析结果如图2.2所示。</p>
+<p><a href="#R-image-66d07b286a829e1fe4a1ae54e79d26d8" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/4761701054d59698ef9fe4542d1c5d52.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-66d07b286a829e1fe4a1ae54e79d26d8"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/4761701054d59698ef9fe4542d1c5d52.png"></a></p>
+<p>可以看到，我们已经顺利导入数据，并对数据进行解析，格式化为分类器需要的数据格式。接着我们需要了解数据的真正含义。可以通过友好、直观的图形化的方式观察数据。</p>
+<h4 id="3分析数据数据可视化">3、分析数据：数据可视化</h4>
+<p>在lovesimple.py文件中编写名为graphDataSet的函数，用来将数据可视化。编写代码如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dataSet</span>():
+</span></span><span style="display:flex;"><span>    arr<span style="color:#f92672">=</span>[];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;lovedata.txt&#34;</span>,<span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">as</span> file:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> file:
+</span></span><span style="display:flex;"><span>            arr<span style="color:#f92672">.</span>append(line<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">&#34;</span>));<span style="color:#75715e">#默认删除空白符(包括&#39;\n&#39;,&#39;\r&#39;,&#39;\t&#39;,&#39; &#39;)</span>
+</span></span><span style="display:flex;"><span>    arrnp<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array(arr);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#将特征数据字符串转换成数字</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> arrnp[:,:<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>astype(dtype<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>float32),arrnp[:,<span style="color:#ae81ff">3</span>:]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">根据数据
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">绘制图形
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">graphDataSet</span>(feature, result):
+</span></span><span style="display:flex;"><span>    pl<span style="color:#f92672">.</span>rcParams[<span style="color:#e6db74">&#39;font.family&#39;</span>] <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;STFangsong&#39;</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#nrow=2,nclos=2时,代表fig画布被分为四个区域,axs[0][0]表示第一行第一个区域 figsize表示画布大小</span>
+</span></span><span style="display:flex;"><span>    fig,axs<span style="color:#f92672">=</span>pl<span style="color:#f92672">.</span>subplots(nrows<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>,ncols<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>);<span style="color:#75715e"># &#34;&#34;&#34;,figsize=(13,8)&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    colorArray <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;black&#34;</span> <span style="color:#66d9ef">if</span> e <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;didntLike&#34;</span> <span style="color:#66d9ef">else</span> (<span style="color:#e6db74">&#34;orange&#34;</span> <span style="color:#66d9ef">if</span> e <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;smallDoses&#34;</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;red&#34;</span>) <span style="color:#66d9ef">for</span> e <span style="color:#f92672">in</span> result]
+</span></span><span style="display:flex;"><span>    drawSubPlot(axs, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;每年获得的飞行常客里程数和玩视频游戏所消耗时间百分比占比&#34;</span>
+</span></span><span style="display:flex;"><span>                , <span style="color:#e6db74">&#34;每年获得的飞行常客里程数&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;玩视频游戏所消耗时间&#34;</span>,
+</span></span><span style="display:flex;"><span>                feature[:, :<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>                feature[:, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">2</span>]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>                colorArray
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#####绘制 0,1这个subplot 上面代码用于学习</span>
+</span></span><span style="display:flex;"><span>    drawSubPlot(axs,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#34;玩视频游戏所消耗时间和每周消费的冰淇淋公升数占比&#34;</span>
+</span></span><span style="display:flex;"><span>                ,<span style="color:#e6db74">&#34;玩视频游戏所消耗时间&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;每周消费的冰淇淋公升数&#34;</span>,
+</span></span><span style="display:flex;"><span>                feature[:, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">2</span>]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>                feature[:, <span style="color:#ae81ff">2</span>:<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>                colorArray
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>    drawSubPlot(axs, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;每年获得的飞行常客里程数和每周消费的冰淇淋公升数占比&#34;</span>
+</span></span><span style="display:flex;"><span>                , <span style="color:#e6db74">&#34;每年获得的飞行常客里程数&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;每周消费的冰淇淋公升数&#34;</span>,
+</span></span><span style="display:flex;"><span>                feature[:, <span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>                feature[:, <span style="color:#ae81ff">2</span>:<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>                colorArray
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>    pl<span style="color:#f92672">.</span>show();
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  绘制子plot的封装
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">drawSubPlot</span>(axs,x,y,title,xlabel,ylabel,xdata,ydata,colorArray):
+</span></span><span style="display:flex;"><span>    axs[x][y]<span style="color:#f92672">.</span>set_title(title)
+</span></span><span style="display:flex;"><span>    axs[x][y]<span style="color:#f92672">.</span>set_xlabel(xlabel)
+</span></span><span style="display:flex;"><span>    axs[x][y]<span style="color:#f92672">.</span>set_ylabel(ylabel)
+</span></span><span style="display:flex;"><span>    axs[x][y]<span style="color:#f92672">.</span>scatter(x<span style="color:#f92672">=</span>xdata, y<span style="color:#f92672">=</span>ydata, color<span style="color:#f92672">=</span>colorArray, s<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>    didntLike <span style="color:#f92672">=</span> mlines<span style="color:#f92672">.</span>Line2D([], [], color<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;black&#39;</span>, marker<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;.&#39;</span>,
+</span></span><span style="display:flex;"><span>                              markersize<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, label<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;不喜欢&#39;</span>)
+</span></span><span style="display:flex;"><span>    smallDoses <span style="color:#f92672">=</span> mlines<span style="color:#f92672">.</span>Line2D([], [], color<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;orange&#39;</span>, marker<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;.&#39;</span>,
+</span></span><span style="display:flex;"><span>                               markersize<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, label<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;魅力一般&#39;</span>)
+</span></span><span style="display:flex;"><span>    largeDoses <span style="color:#f92672">=</span> mlines<span style="color:#f92672">.</span>Line2D([], [], color<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;red&#39;</span>, marker<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;.&#39;</span>,
+</span></span><span style="display:flex;"><span>                               markersize<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, label<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;极具魅力&#39;</span>)
+</span></span><span style="display:flex;"><span>    axs[x][y]<span style="color:#f92672">.</span>legend(handles<span style="color:#f92672">=</span>[didntLike, smallDoses, largeDoses])</span></span></code></pre></div>
+<p>运行以下代码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>feature, result <span style="color:#f92672">=</span> dataSet()
+</span></span><span style="display:flex;"><span>print(feature)
+</span></span><span style="display:flex;"><span>print(result)
+</span></span><span style="display:flex;"><span>graphDataSet(feature,result)</span></span></code></pre></div>
+<p>，可以看到可视化结果如图所示。<br>
+<a href="#R-image-8314f67d680b7b27e9f2efbcf8a37cc1" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/41757aabae48c447cc8b532d1ebb3146.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8314f67d680b7b27e9f2efbcf8a37cc1"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/41757aabae48c447cc8b532d1ebb3146.png"></a></p>
+<p>通过数据可以很直观的发现数据的规律，比如以玩游戏所消耗时间占比与每年获得的飞行常客里程数，只考虑这二维的特征信息，给我的感觉就是海伦喜欢有生活质量的男人。为什么这么说呢？每年获得的飞行常客里程数表明，海伦喜欢能享受飞行常客奖励计划的男人，但是不能经常坐飞机，疲于奔波，满世界飞。同时，这个男人也要玩视频游戏，并且占一定时间比例。能到处飞，又能经常玩游戏的男人是什么样的男人？很显然，有生活质量，并且生活悠闲的人。我的分析，仅仅是通过可视化的数据总结的个人看法。我想，每个人的感受应该也是不尽相同。</p>
+<h4 id="4准备数据数据归一化">4、准备数据：数据归一化</h4>
+<p>以下给出了四组样本，如果想要计算样本3和样本4之间的距离，可以使用欧拉公式计算。</p>
+<p><a href="#R-image-e1655a9d2f67a365b7a7fc104372d0df" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ad71247437b8dc41170b269ebb06afdb.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e1655a9d2f67a365b7a7fc104372d0df"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ad71247437b8dc41170b269ebb06afdb.jpeg"></a></p>
+<p>计算方法如下所示。</p>
+<p><a href="#R-image-0ee547531518af223e146435e9664d8f" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5e5bb8e529cd3684dc2ec0c31fa74d37.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0ee547531518af223e146435e9664d8f"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5e5bb8e529cd3684dc2ec0c31fa74d37.jpeg"></a></p>
+<p>从上计算公式</p>
+<p>我们很容易发现，上面方程中数字差值最大的属性对计算结果的影响最大，也就是说，每年获取的飞行常客里程数对于计算结果的影响将远远大于表中其他两个特征-玩视频游戏所耗时间占比和每周消费冰淇淋公斤数的影响。而产生这种现象的唯一原因，仅仅是因为飞行常客里程数远大于其他特征值。但海伦认为这三种特征是同等重要的，因此作为三个等权重的特征之一，飞行常客里程数并不应该如此严重地影响到计算结果。</p>
+<p>在处理这种不同取值范围的特征值时，我们通常采用的方法是将数值归一化，如将取值范围处理为０到１或者-１到１之间。下面的公式可以将任意取值范围的特征值转化为０到１区间内的值：</p>
+<pre><code>newValue = (oldValue - min) / (max - min)
+</code></pre>
+<p>其中min和max分别是数据集中的最小特征值和最大特征值。虽然改变数值取值范围增加了分类器的复杂度，但为了得到准确结果，我们必须这样做。在lovsimple.py文件中编写名为normalizing的函数，用该函数自动将数据归一化。代码如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">normalizing</span>(feature):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#graphDataSet(feature, result)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#对所有的数据进行归一化</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#假设 feature=np.array([[1,2],[3,4],[1.3,2.3]])</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#每一列上的最小值  [1,2]</span>
+</span></span><span style="display:flex;"><span>    minVal<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>min(feature,axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#每一列上的最大值  [3,4]</span>
+</span></span><span style="display:flex;"><span>    maxVal <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>max(feature,axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 当前数据集 -最小值 [[1,2],[3,4],[1.3,2.3]]-[1,2]是不行的 应该行和列一样</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 第一列应该-1  第二列应该减去2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 模拟成数据  [[1,2],[3,4],[1.3,2.3]]-[[1,2],[1,2],[1,2]] 这样才行</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 有几列 就有几个 [1,2]的最小值数组</span>
+</span></span><span style="display:flex;"><span>    minArr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>tile(minVal,(feature<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>],<span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>    maxArr<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>tile(maxVal,(feature<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>],<span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>    resultArr<span style="color:#f92672">=</span>(feature <span style="color:#f92672">-</span>minArr)<span style="color:#f92672">/</span>(maxArr<span style="color:#f92672">-</span>minArr);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> resultArr;</span></span></code></pre></div>
+<p>添加测试代码：</p>
+<pre><code>feature, result = dataSet()print(normalizing(feature))
+</code></pre>
+<p>运行上述代码，得到结果如图示。</p>
+<pre><code>[[0.44832537 0.39805138 0.5623336 ] [0.1587326  0.34195465 0.9872441 ] [0.28542942 0.06892523 0.4744963 ] ...
+</code></pre>
+<p>从上面运行结果可以看到，我们已经顺利将数据归一化了<br>
+其他比较常用的归一化方法： 均值方差归一化</p>
+<p>这种方式给予原始数据的均值（mean）和标准差（standard deviation）进行数据的标准化。经过处理的数据符合标准正态分布，即均值为0，标准差为1，转化函数为：<br>
+<a href="#R-image-51cd1764e2334579ff68c383e29ac2d5" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/94cc5208e39946d5d7f3d6a71b62bc1c.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-51cd1764e2334579ff68c383e29ac2d5"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/94cc5208e39946d5d7f3d6a71b62bc1c.gif"></a></p>
+<p>其中<a href="#R-image-50dd023f8165e9e17464b2b7fe10a6d8" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5abfc576cdaf37155547b12506ae04b2.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-50dd023f8165e9e17464b2b7fe10a6d8"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5abfc576cdaf37155547b12506ae04b2.gif"></a>为所有样本数据的均值，<a href="#R-image-ab015d53b3eb741271b46740dccdc4ba" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/21948685f68d6b3c832fae1793c88444.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ab015d53b3eb741271b46740dccdc4ba"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/21948685f68d6b3c832fae1793c88444.gif"></a>为所有样本数据的标准差。</p>
+<h4 id="5测试算法验证分类器">5、测试算法：验证分类器</h4>
+<p>机器学习算法一个很重要的工作就是评估算法的正确率，通常我们只提供已有数据的90%作为训练样本来训练分类器，而使用其余的10%数据去测试分类器，检测分类器的正确率。需要注意的是，10%的测试数据应该是随机选择的，由于海伦提供的数据并没有按照特定目的来排序，所以我们可以随意选择10%数据而不影响其随机性。</p>
+<p>为了测试分类器效果，在lovsimple.py文件中创建函数datingClassTest，编写代码如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  该函数用于返回预测当前data的label值 也就是knn算法
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">   data 用于预测结果的数据 比如 [1000,1.1,0.8]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">   trainData 是训练集  [[40920	8.326976	0.953952],[14488	7.153469	1.673904]]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">   k表示预测数据最近的k个数据
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">   labelData 表示训练集的对应的label数据
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">knn</span>(data,trainData,labelData,k):
+</span></span><span style="display:flex;"><span>    testData<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>tile(data,(trainData<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>],<span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#print(testData)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#计算距离差的平方开根</span>
+</span></span><span style="display:flex;"><span>    sqdata<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>sqrt(np<span style="color:#f92672">.</span>sum((testData<span style="color:#f92672">-</span>trainData)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>,axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#选取与当前点距离最小的k个点的下标；</span>
+</span></span><span style="display:flex;"><span>    kindex<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>argsort(sqdata)[:k];
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#取出所有的该距离位置最近的结果</span>
+</span></span><span style="display:flex;"><span>    resultdata<span style="color:#f92672">=</span>[labelData[ki] <span style="color:#66d9ef">for</span> ki <span style="color:#f92672">in</span> kindex]
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#print(sqdata)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#print(kindex)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#print(resultdata)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#分组获取最大的那一个</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (coll<span style="color:#f92672">.</span>Counter(resultdata)<span style="color:#f92672">.</span>most_common(<span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#knn(np.array([1000,1.1,0.8]),np.array([[40920,8.326976,0.953952],[14488,7.153469,1.673904],[35483,12.273169,1.508053]]),[&#34;不喜欢&#34;,&#34;喜欢&#34;,&#34;喜欢&#34;],2)</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    将所有的数据按照ratio比例拆分
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    90%数据用于训练  10%数据用于测试knn算法准确率
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ratio 表示拆分的比例  0.1表示训练集=1-0,1 测试集是0.1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    k表示knn的k
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">testData</span>(ratio,k):
+</span></span><span style="display:flex;"><span>    feature, resultLabel <span style="color:#f92672">=</span> dataSet()
+</span></span><span style="display:flex;"><span>    feature<span style="color:#f92672">=</span>normalizing(feature);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#拿到10%的数据用户测试knn算法</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#获取总行数</span>
+</span></span><span style="display:flex;"><span>    rows<span style="color:#f92672">=</span>feature<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#获取%90的实际个数 必须将float转换成int类型</span>
+</span></span><span style="display:flex;"><span>    ratioCount<span style="color:#f92672">=</span>int(rows<span style="color:#f92672">*</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>ratio));
+</span></span><span style="display:flex;"><span>    trainData<span style="color:#f92672">=</span>feature[:ratioCount,];
+</span></span><span style="display:flex;"><span>    testData<span style="color:#f92672">=</span>feature[ratioCount:,];
+</span></span><span style="display:flex;"><span>    resultI<span style="color:#f92672">=</span>ratioCount;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#统计正确率</span>
+</span></span><span style="display:flex;"><span>    okCount<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    erroCount<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> td <span style="color:#f92672">in</span> testData:
+</span></span><span style="display:flex;"><span>        realResult<span style="color:#f92672">=</span>resultLabel[resultI]
+</span></span><span style="display:flex;"><span>        calculateResult<span style="color:#f92672">=</span>knn(td,trainData,resultLabel,k)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> realResult<span style="color:#f92672">==</span>calculateResult:
+</span></span><span style="display:flex;"><span>            okCount<span style="color:#f92672">=</span>okCount<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            erroCount<span style="color:#f92672">=</span>erroCount<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;真实结果:&#34;</span>,realResult,<span style="color:#e6db74">&#34;  预测结果:&#34;</span>,calculateResult)
+</span></span><span style="display:flex;"><span>        resultI<span style="color:#f92672">=</span>resultI<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;正确率是:&#34;</span>,(okCount<span style="color:#f92672">/</span>(okCount<span style="color:#f92672">+</span>erroCount)))
+</span></span><span style="display:flex;"><span>ratio<span style="color:#f92672">=</span><span style="color:#ae81ff">0.1</span>;
+</span></span><span style="display:flex;"><span>k<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>testData(ratio,k)</span></span></code></pre></div>
+<p>运行上述代码</p>
+<pre><code>正确率是: 0.9504950495049505
+</code></pre>
+<p>算出正确率是: 0.95，这是一个想当不错的结果。我们可以改变函数testData内变量ratio和分类器k的值，检测错误率是否随着变量值的变化而增加。依赖于分类算法、数据集和程序设置，分类器的输出结果可能有很大的不同。</p>
+<h4 id="6使用算法构建完整可用系统">6、使用算法：构建完整可用系统</h4>
+<p>我们可以给海伦一个小段程序，通过该程序海伦会在约会网站上找到某个人并输入他的信息。程序会给出她对男方喜欢程度的预测值。</p>
+<p>在lovsimple.py文件中创建函数classifyPerson，代码如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">classifyPerson</span>():
+</span></span><span style="display:flex;"><span>     precentTats<span style="color:#f92672">=</span> float(input(<span style="color:#e6db74">&#34;每年获得的飞行常客里程数:&#34;</span>))
+</span></span><span style="display:flex;"><span>     ffMiles <span style="color:#f92672">=</span> float(input(<span style="color:#e6db74">&#34;玩视频游戏所耗时间百分比:&#34;</span>))
+</span></span><span style="display:flex;"><span>     iceCream <span style="color:#f92672">=</span> float(input(<span style="color:#e6db74">&#34;每周消费的冰激淋公升数:&#34;</span>))
+</span></span><span style="display:flex;"><span>     feature, resultLabel <span style="color:#f92672">=</span> dataSet()
+</span></span><span style="display:flex;"><span>     k <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>     calculateResult <span style="color:#f92672">=</span> knn([precentTats,ffMiles,iceCream], feature, resultLabel, k)
+</span></span><span style="display:flex;"><span>     print(<span style="color:#e6db74">&#34;您可能 &#34;</span>,calculateResult,<span style="color:#e6db74">&#34;这个人&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>classifyPerson()</span></span></code></pre></div>
+<p>在cmd中，运行程序，并输入数据(44000,12,0.5)，预测结果是&quot;你可能有些喜欢这个人&quot;，也就是这个人魅力一般。一共有三个档次：讨厌、有些喜欢、非常喜欢，对应着不喜欢的人、魅力一般的人、极具魅力的人。</p>
+<p>预测结果</p>
+<p><a href="#R-image-9cf1c510ec9c6aaa5054794b89bf551a" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f9327b66bf538fe402cb63e2177d2ab8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9cf1c510ec9c6aaa5054794b89bf551a"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f9327b66bf538fe402cb63e2177d2ab8.png"></a></p>
+<p>以上例子换成sklearn实现,代码量大大减少</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.neighbors <span style="color:#f92672">import</span> KNeighborsClassifier
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.model_selection <span style="color:#f92672">import</span> train_test_split;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> accuracy_score;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sklearn.preprocessing <span style="color:#66d9ef">as</span> pre;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dataSet</span>():
+</span></span><span style="display:flex;"><span>    arr<span style="color:#f92672">=</span>[];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;lovedata.txt&#34;</span>,<span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">as</span> file:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> file:
+</span></span><span style="display:flex;"><span>            arr<span style="color:#f92672">.</span>append(line<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">&#34;</span>));<span style="color:#75715e">#默认删除空白符(包括&#39;\n&#39;,&#39;\r&#39;,&#39;\t&#39;,&#39; &#39;)</span>
+</span></span><span style="display:flex;"><span>    arrnp<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array(arr);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#将特征数据字符串转换成数字</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> arrnp[:,:<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>astype(dtype<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>float32),arrnp[:,<span style="color:#ae81ff">3</span>:]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#调用sklearn测试k近邻</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">testData</span>(ratio,k):
+</span></span><span style="display:flex;"><span>    feature, result <span style="color:#f92672">=</span> dataSet()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#使用sklearn的预处理进行归一化 使用均值方差归一化</span>
+</span></span><span style="display:flex;"><span>    feature<span style="color:#f92672">=</span>pre<span style="color:#f92672">.</span>StandardScaler()<span style="color:#f92672">.</span>fit(feature)<span style="color:#f92672">.</span>transform(feature);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#train_test_split将数据拆分了 test_size的比例 传入0.1就是10%的测试集</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># random_state 随即种子 可能随即抽取10%的测试集 如果random_state是某个固定的数 下次传入 获取的是相同的测试集</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 如果是0或者不填 每次获取的测试集都不是相同的数据</span>
+</span></span><span style="display:flex;"><span>    train_X, test_X, train_y, test_y<span style="color:#f92672">=</span>train_test_split(feature,result,test_size<span style="color:#f92672">=</span>ratio,random_state <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#创建一个k临近 传入距离最近的k个值</span>
+</span></span><span style="display:flex;"><span>    nei <span style="color:#f92672">=</span> KNeighborsClassifier(k)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#填充 训练数据 和 训练集结果</span>
+</span></span><span style="display:flex;"><span>    nei<span style="color:#f92672">.</span>fit(train_X, train_y)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#预测所有的测试集 得到预测的结果</span>
+</span></span><span style="display:flex;"><span>    predict_y<span style="color:#f92672">=</span>nei<span style="color:#f92672">.</span>predict(test_X)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#比较预测结果和实际结果 得到得分</span>
+</span></span><span style="display:flex;"><span>    score<span style="color:#f92672">=</span>accuracy_score(test_y,predict_y)
+</span></span><span style="display:flex;"><span>    print(score)
+</span></span><span style="display:flex;"><span>ratio<span style="color:#f92672">=</span><span style="color:#ae81ff">0.1</span>;
+</span></span><span style="display:flex;"><span>k<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>testData(ratio,k);</span></span></code></pre></div>
+<p>运行获得结果：</p>
+<pre><code>0.9405940594059405
+</code></pre>
+<h3 id="三k-近邻算法实战之sklearn手写数字识别">三、k-近邻算法实战之sklearn手写数字识别</h3>
+<h4 id="1实战背景-1">1、实战背景</h4>
+<p>对于需要识别数字的图片一般都使用图形处理软件，处理成具有相同的色彩和大小：宽高是32像素x32像素。这里将采用本文格式存储图像，但是为了方便理解，我们将图片转换为文本格式，数字的文本格式如图所示。</p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/277fc2a1130e86b2a105e678d6f9aaeb.jpeg" rel="external" target="_blank"><a href="#R-image-8b8bcc7cf7c493e3dbb2edbbb7db7e38" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/277fc2a1130e86b2a105e678d6f9aaeb.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8b8bcc7cf7c493e3dbb2edbbb7db7e38"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/277fc2a1130e86b2a105e678d6f9aaeb.jpeg"></a></a></p>
+<p>与此同时，这些文本格式存储的数字的文件命名也很有特点，格式为：数字的值_该数字的样本序号，如图3.2所示。</p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/88fcc52c2a64b8a4e97cb12559c5217b.jpeg" rel="external" target="_blank"><a href="#R-image-e32002b2fd802064eb9324b3d323ecd3" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/88fcc52c2a64b8a4e97cb12559c5217b.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e32002b2fd802064eb9324b3d323ecd3"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/88fcc52c2a64b8a4e97cb12559c5217b.jpeg"></a></a></p>
+<p>比如0_0.txt 记事本打开 就是一个用0或者 1 拼成的 32*32个字符的0<br>
+<a href="#R-image-f065a6b868523d4f937a625a72db2bbf" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/bd6e82ae0653c3ce349426b985820686.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f065a6b868523d4f937a625a72db2bbf"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/bd6e82ae0653c3ce349426b985820686.png"></a></p>
+<p>比如 0_1.txt 也是0和上面的0写法优点区别 这两个文件的label就是0  有两个样本<br>
+<a href="#R-image-45ff359fe2048d300d7ddbf49b352598" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/474cc19402a1cb07122c52631f066ca9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-45ff359fe2048d300d7ddbf49b352598"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/474cc19402a1cb07122c52631f066ca9.png"></a></p>
+<p>对于这样已经整理好的文本，我们可以直接使用Python处理，进行数字预测。数据集分为训练集和测试集，使用上小结的方法，自己设计k-近邻算法分类器，可以实现分类。数据集和实现代码下载地址：<a href="https://github.com/jiaozi789/machinelearn/tree/master/sklearn_knn" rel="external" target="_blank">数据集下载</a>  其中<a href="https://github.com/jiaozi789/machinelearn/tree/master/sklearn_knn/trainingDigits" rel="external" target="_blank">trainingDigits</a>是训练数据<br>
+<a href="https://github.com/jiaozi789/machinelearn/tree/master/sklearn_knn/testDigits" rel="external" target="_blank">testDigits</a>是测试数据</p>
+<p>这里不再讲解自己用Python写的k-邻域分类器的方法，因为这不是本小节的重点。接下来，我们将使用强大的第三方Python科学计算库Sklearn构建手写数字系统。</p>
+<h4 id="2sklearn简介">2、sklearn简介</h4>
+<p>Scikit learn 也简称sklearn，是机器学习领域当中最知名的python模块之一。sklearn包含了很多机器学习的方式：</p>
+<ul>
+<li>Classification 分类</li>
+<li>Regression 回归</li>
+<li>Clustering 非监督分类</li>
+<li>Dimensionality reduction 数据降维</li>
+<li>Model Selection 模型选择</li>
+<li>Preprocessing 数据与处理</li>
+</ul>
+<p>使用sklearn可以很方便地让我们实现一个机器学习算法。一个复杂度算法的实现，使用sklearn可能只需要调用几行API即可。所以学习sklearn，可以有效减少我们特定任务的实现周期。</p>
+<h4 id="3sklearn安装">3、sklearn安装</h4>
+<p>在安装sklearn之前，需要安装两个库，即numpy+mkl和scipy。不要使用pip直接进行安装，因为pip3默安装的是numpy，而不是numpy+mkl。第三方库下载地址：<a href="https://cuijiahua.com/wp-content/themes/begin/inc/go.php?url=http://link.zhihu.com/?target=http%3A//www.lfd.uci.edu/~gohlke/pythonlibs/" rel="external" target="_blank">http://www.lfd.uci.edu/~gohlke/pythonlibs/</a></p>
+<p>找到对应python版本（python &ndash;version）的numpy+mkl和scipy，下载安装即可，如图3.3和图3.4所示。</p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/5893e170464a5fa7df1a72189b550abd.jpeg" rel="external" target="_blank"><a href="#R-image-a261955402586526c2ce355803b24a1f" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5893e170464a5fa7df1a72189b550abd.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a261955402586526c2ce355803b24a1f"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5893e170464a5fa7df1a72189b550abd.jpeg"></a></a></p>
+<p>图3.3 numpy+mkl</p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/d81013a2950e2d3a0ef605bd042fdd32.jpeg" rel="external" target="_blank"><a href="#R-image-a35ec9e77a5aead3b4e7faa0d900a248" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/d81013a2950e2d3a0ef605bd042fdd32.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a35ec9e77a5aead3b4e7faa0d900a248"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/d81013a2950e2d3a0ef605bd042fdd32.jpeg"></a></a></p>
+<p>使用pip安装好这两个whl文件后，使用如下指令安装sklearn。</p>
+<pre><code>pip install -U scikit-learn
+</code></pre>
+<h4 id="4sklearn实现k-近邻算法简介">4、sklearn实现k-近邻算法简介</h4>
+<p>官网英文文档：<a href="https://cuijiahua.com/wp-content/themes/begin/inc/go.php?url=http://link.zhihu.com/?target=http%3A//scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html" rel="external" target="_blank">点我查看</a></p>
+<p>sklearn.neighbors模块实现了k-近邻算法，内容如图3.5所示。</p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg" rel="external" target="_blank"><a href="#R-image-4effcba48de800f381b7e71418f36600" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4effcba48de800f381b7e71418f36600"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg"></a></a></p>
+<p>图3.5 sklearn.neighbors</p>
+<p>我们使用sklearn.neighbors.KNeighborsClassifier就可以是实现上小结，我们实现的k-近邻算法。KNeighborsClassifier函数一共有8个参数，如图3.6所示。</p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/ab1db1caa2a10e42bba715b25832c09f.jpeg" rel="external" target="_blank"><a href="#R-image-aa95bdf8357182f18ba428d462a72fbb" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ab1db1caa2a10e42bba715b25832c09f.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-aa95bdf8357182f18ba428d462a72fbb"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ab1db1caa2a10e42bba715b25832c09f.jpeg"></a></a></p>
+<p>图3.6 KNeighborsClassifier</p>
+<p>KNneighborsClassifier参数说明：</p>
+<ul>
+<li>n_neighbors：默认为5，就是k-NN的k的值，选取最近的k个点。</li>
+<li>weights：默认是uniform，参数可以是uniform、distance，也可以是用户自己定义的函数。uniform是均等的权重，就说所有的邻近点的权重都是相等的。distance是不均等的权重，距离近的点比距离远的点的影响大。用户自定义的函数，接收距离的数组，返回一组维数相同的权重。</li>
+<li>algorithm：快速k近邻搜索算法，默认参数为auto，可以理解为算法自己决定合适的搜索算法。除此之外，用户也可以自己指定搜索算法ball_tree、kd_tree、brute方法进行搜索，brute是蛮力搜索，也就是线性扫描，当训练集很大时，计算非常耗时。kd_tree，构造kd树存储数据以便对其进行快速检索的树形数据结构，kd树也就是数据结构中的二叉树。以中值切分构造的树，每个结点是一个超矩形，在维数小于20时效率高。ball tree是为了克服kd树高纬失效而发明的，其构造过程是以质心C和半径r分割样本空间，每个节点是一个超球体。</li>
+<li>leaf_size：默认是30，这个是构造的kd树和ball树的大小。这个值的设置会影响树构建的速度和搜索速度，同样也影响着存储树所需的内存大小。需要根据问题的性质选择最优的大小。</li>
+<li>metric：用于距离度量，默认度量是minkowski，也就是p=2的欧氏距离(欧几里德度量)。</li>
+<li>p：距离度量公式。在上小结，我们使用欧氏距离公式进行距离度量。除此之外，还有其他的度量方法，例如曼哈顿距离。这个参数默认为2，也就是默认使用欧式距离公式进行距离度量。也可以设置为1，使用曼哈顿距离公式进行距离度量。</li>
+<li>metric_params：距离公式的其他关键参数，这个可以不管，使用默认的None即可。</li>
+<li>n_jobs：并行处理设置。默认为1，临近点搜索并行工作数。如果为-1，那么CPU的所有cores都用于并行工作。</li>
+</ul>
+<h4 id="5sklearn小试牛刀">5、sklearn小试牛刀</h4>
+<p>我们知道数字图片是32x32的二进制图像，为了方便计算，我们可以将32x32的二进制图像转换为1x1024的向量。对于sklearn的KNeighborsClassifier输入可以是矩阵，不用一定转换为向量，不过为了跟自己写的k-近邻算法分类器对应上，这里也做了向量化处理。然后构建kNN分类器，利用分类器做预测。创建numtest.py文件，编写代码如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> sklearn.neighbors <span style="color:#66d9ef">as</span> skn
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">获取训练集的数据
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">trainDataSet</span>(dir):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#获取目录下所有的文件名</span>
+</span></span><span style="display:flex;"><span>    files<span style="color:#f92672">=</span>os<span style="color:#f92672">.</span>listdir(dir);
+</span></span><span style="display:flex;"><span>    label<span style="color:#f92672">=</span>[];
+</span></span><span style="display:flex;"><span>    tdata<span style="color:#f92672">=</span>[];
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#有多少个文件</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(files)) :
+</span></span><span style="display:flex;"><span>        fl<span style="color:#f92672">=</span>files[i];
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> open(dir<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">+</span>fl) <span style="color:#66d9ef">as</span> file:
+</span></span><span style="display:flex;"><span>            tdata<span style="color:#f92672">.</span>append([]);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> file:
+</span></span><span style="display:flex;"><span>                line<span style="color:#f92672">=</span>line<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>                arr<span style="color:#f92672">=</span>[line[e] <span style="color:#66d9ef">for</span> e <span style="color:#f92672">in</span> range(len(line))];
+</span></span><span style="display:flex;"><span>                tdata[i]<span style="color:#f92672">.</span>extend(np<span style="color:#f92672">.</span>array(arr)<span style="color:#f92672">.</span>astype(np<span style="color:#f92672">.</span>int8));
+</span></span><span style="display:flex;"><span>        label<span style="color:#f92672">.</span>append(fl<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;_&#34;</span>)[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> tdata,label
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">testData</span>(k):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#训练数据</span>
+</span></span><span style="display:flex;"><span>    dir <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;trainingDigits&#34;</span>;
+</span></span><span style="display:flex;"><span>    tdata, label<span style="color:#f92672">=</span>trainDataSet(dir);
+</span></span><span style="display:flex;"><span>    ne<span style="color:#f92672">=</span>skn<span style="color:#f92672">.</span>KNeighborsClassifier(k)
+</span></span><span style="display:flex;"><span>    ne<span style="color:#f92672">.</span>fit(tdata,label);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#测试数据</span>
+</span></span><span style="display:flex;"><span>    dir1<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;testDigits&#34;</span>;
+</span></span><span style="display:flex;"><span>    testdata, testlabel <span style="color:#f92672">=</span> trainDataSet(dir1);
+</span></span><span style="display:flex;"><span>    okCount<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    errCount<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    okCount<span style="color:#f92672">=</span>sum(ne<span style="color:#f92672">.</span>predict(testdata)<span style="color:#f92672">==</span>testlabel)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;正确个数:&#34;</span>,okCount,<span style="color:#e6db74">&#34; 错误个数：&#34;</span>,len(testdata)<span style="color:#f92672">-</span>okCount);
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;正确率：&#34;</span>,okCount<span style="color:#f92672">/</span>len(testdata));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>testData(<span style="color:#ae81ff">5</span>)</span></span></code></pre></div>
+<p>运行上述代码，得到结果。</p>
+<pre><code>正确个数: 934  错误个数： 12正确率： 0.9873150105708245
+</code></pre>
+<p>上述代码使用的algorithm参数是auto，更改algorithm参数为brute，使用暴力搜索，你会发现，运行时间变长了，变为10s+。更改n_neighbors参数，你会发现，不同的值，检测精度也是不同的。自己可以尝试更改这些参数的设置，加深对其函数的理解。</p>
+<h3 id="四总结">四、总结</h3>
+<h4 id="1knn算法的优缺点">1、kNN算法的优缺点</h4>
+<p><strong>优点</strong></p>
+<ul>
+<li>简单好用，容易理解，精度高，理论成熟，既可以用来做分类也可以用来做回归；</li>
+<li>可用于数值型数据和离散型数据；</li>
+<li>训练时间复杂度为O(n)；无数据输入假定；</li>
+<li>对异常值不敏感</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>计算复杂性高；空间复杂性高；</li>
+<li>样本不平衡问题（即有些类别的样本数量很多，而其它样本的数量很少）；</li>
+<li>一般数值很大的时候不用这个，计算量太大。但是单个样本又不能太少，否则容易发生误分。</li>
+<li>最大的缺点是无法给出数据的内在含义。</li>
+</ul>
+<h4 id="2其他">2、其他</h4>
+<ul>
+<li>关于algorithm参数kd_tree的原理，可以查看《统计学方法 李航》书中的讲解；</li>
+<li>关于距离度量的方法还有切比雪夫距离、马氏距离、巴氏距离等；</li>
+<li>下篇文章将讲解决策树，欢迎各位的捧场！</li>
+<li>如有问题，请留言。如有错误，还望指正，谢谢！</li>
+</ul>
+<p><strong>PS： 如果觉得本篇本章对您有所帮助，欢迎关注、评论、赞！</strong></p>
+<p><strong>参考资料：</strong></p>
+<ol>
+<li>本文中提到的电影类别分类、约会网站配对效果判定、手写数字识别实例和数据集，均来自于《机器学习实战》的第二章k-近邻算法。</li>
+<li>本文的理论部分，参考自《统计学习方法 李航》的第三章k近邻法以及《机器学习实战》的第二章k-近邻算法。</li>
+</ol>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/index.html">机器学习</a><ul id="R-subsections-d3b98ca0beda96811b8c41829d886d7f" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/basic/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/basic/index.html">基础理论</a><ul id="R-subsections-2f18a18645b7652a148815c1a6786b18" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/algorithms/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/index.html">核心算法</a><ul id="R-subsections-921418d1d7190828278c689c88df6881" class="collapsible-menu">
+            <li class="active " data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html">机器学习实战教程（一）：K-近邻（KNN）算法</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html">机器学习实战教程（四）：从特征分解到协方差矩阵：详细剖析和实现PCA算法</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_05_pcaface/index.html">机器学习实战教程（五）：使用PCA实战人脸降维</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_06_decidetree/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_06_decidetree/index.html">机器学习实战教程（六）：决策树</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_07_bays/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_07_bays/index.html">机器学习实战教程（七）：朴素贝叶斯</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_08_multinomial/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_08_multinomial/index.html">机器学习实战教程（八）：多项式回归</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_10_logic/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_10_logic/index.html">机器学习实战教程（十）：逻辑回归</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_11_vectormachine/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_11_vectormachine/index.html">机器学习实战教程（十一）：支持向量机SVM</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_12_cluster/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_12_cluster/index.html">机器学习实战教程（十二）：聚类算法Kmeans</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/algorithms/action_13_intelearn/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/algorithms/action_13_intelearn/index.html">机器学习实战教程（十三）：集成学习</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/evaluation/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/evaluation/index.html">模型评估</a><ul id="R-subsections-d83b378e097742dc59073d128d99d653" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/programming/ai/machine_learning/tools/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/tools/index.html">实践工具</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
+    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>机器学习 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/machine_learning/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>基础理论</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>核心算法</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>模型评估</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/evaluation/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/evaluation/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>实践工具</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/machine_learning/tools/index.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/machine_learning/tools/index.html</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

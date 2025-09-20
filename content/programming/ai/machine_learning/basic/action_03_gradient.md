@@ -1,0 +1,271 @@
+---
+title: "机器学习实战教程（三）：梯度下降"
+date: 2025-09-18T16:55:17+08:00
+weight: 2
+# bookComments: false
+# bookSearchExclude: false
+---
+@[TOC](梯度下降)
+
+# 梯度下降简介
+
+## 梯度下降的场景假设
+梯度下降法的基本思想可以类比为一个下山的过程。假设这样一个场景：一个人被困在山上，需要从山上下来(i.e. 找到山的最低点，也就是山谷)。但此时山上的浓雾很大，导致可视度很低。因此，下山的路径就无法确定，他必须利用自己周围的信息去找到下山的路径。这个时候，他就可以利用梯度下降算法来帮助自己下山。具体来说就是，以他当前的所处的位置为基准，寻找这个位置最陡峭的地方，然后朝着山的高度下降的地方走，同理，如果我们的目标是上山，也就是爬到山顶，那么此时应该是朝着最陡峭的方向往上走。然后每走一段距离，都反复采用同一个方法，最后就能成功的抵达山谷。
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/c4bcf37d0ca9ec73575147a48b6a26d8.png)
+
+## 梯度下降原理
+梯度下降的基本过程就和下山的场景很类似。
+首先，我们有一个可微分的函数。这个函数就代表着一座山。我们的目标就是找到这个函数的最小值，也就是山底。根据之前的场景假设，最快的下山的方式就是找到当前位置最陡峭的方向，然后沿着此方向向下走，对应到函数中，就是找到给定点的梯度 ，然后朝着梯度相反的方向，就能让函数值下降的最快！因为梯度的方向就是函数之变化最快的方向(在后面会详细解释)
+所以，我们重复利用这个方法，反复求取梯度，最后就能到达局部的最小值，这就类似于我们下山的过程。而求取梯度就确定了最陡峭的方向，也就是场景中测量方向的手段。那么为什么梯度的方向就是最陡峭的方向呢？
+其中部分文字图片来自 [教程](https://www.jianshu.com/p/c7e642877b0e)
+### 微分（导数|斜率）
+看待微分的意义，可以有不同的角度，最常用的两种是：
+函数图像中，某点的切线的斜率（导数）
+导数（Derivative），也叫导函数值。又名微商，是微积分中的重要基础概念。当函数y=f（x）的自变量x在一点x0上产生一个增量Δx时，函数输出值的增量Δy与自变量增量Δx的比值在Δx趋于0时的极限a如果存在，a即为在x0处的导数，记作f'（x0）或df（x0）/dx。其实这样就是斜率。
+比如函数 y=2x+1 假设有两个相邻的点  （x1,y1）,(x2,y2)
+Δy/Δx=(2*x1+1)-(2*x2+1)/x1-x2=2(x1-x2)/(x1-x2)=2 所有一元一次函数的斜率其实就是自变量x的系数
+斜率你可以说他代表线的倾斜度  值越大倾斜度越大 
+  斜率>0表示是正向相关，<0表示父向相关
+几个微分的例子：
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6cb6d65e9950910d144ef4e48d1029ef.png)
+指数函数：
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/82ff8ea245f4ed7ccddaad23f84713b8.png)
+其他总结
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/680f00587e8827df29c195a8d90aa5fd.png)
+
+关于单变量微分的求导  比较简单 
+一个复合函数的导数必须使用链式法则
+所谓的复合函数，是指以一个函数作为另一个函数的自变量。
+如f(x)=3x，g(x)=x+3，g(f(x))就是一个复合函数，并且g(f(x))=3x+3
+链式法则(chain rule)：
+```
+ 若h(x)=f(g(x))，则h'(x)=f'(g(x))g'(x)
+链式法则用文字描述，就是“由两个函数凑起来的复合函数，
+其导数等于里边函数代入外边函数的值之导数，乘以里边函数的导数
+```
+比如:
+```
+f(x)=x²,g(x)=2x＋1, 则 
+f(g(x))'
+=((2x+1)²)' ×(2x+1)'
+=2(2x＋1)×2
+=8x＋4
+```
+上面的例子都是单变量的微分，当一个函数有多个变量的时候，就有了多变量的微分，即分别对每个变量进行求微分
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/5b4e42559fb0198da4b54ebaadd483b4.png)
+梯度实际上就是多变量微分的一般化。
+ ![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/caf9d68e8735ad875e3fd1722eca3cc0.png)
+我们可以看到，梯度就是分别对每个变量进行微分，然后用逗号分割开，梯度是用<>包括起来，说明梯度其实一个向量。
+
+### 梯度相反的方向
+为什么算出函数的微分后 往相反的方向走了 用示例来说话
+y=5-x 明显导数是 -1 -1表示往左侧增大  python绘图
+```python
+#设置出现四个象限
+def setXY():
+    # 获取当前坐标轴对象
+    ax = plot.gca()
+
+    # 将垂直坐标刻度置于左边框
+    ax.yaxis.set_ticks_position('left')
+    # 将水平坐标刻度置于底边框
+    ax.xaxis.set_ticks_position('bottom')
+    # 将左边框置于数据坐标原点
+    ax.spines['left'].set_position(('data', 0))
+    # 将底边框置于数据坐标原点
+    ax.spines['bottom'].set_position(('data', 0))
+
+    # 将右边框和顶边框设置成无色
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+setXY()
+#创建 -10到10的10个线性数据
+darr=np.linspace(-10,10,10);
+plot.plot(darr,5-darr);
+plot.show();    
+```
+图像显示
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/bf24bc40e2db8f9cee32f449597ee8e6.png)
+明显微分是-1， 明显梯度下降就需要往右侧走x坐标应该加大 x-(-1)=x+1。
+再比如：
+y=5+x ，明显导数是 1 1表示往右侧增大 。
+```python
+setXY()
+darr=np.linspace(-10,10,10);
+plot.plot(darr,5+darr);
+plot.show();
+```
+图像显示效果：
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6d738cda79aef99df1a9878ce02ad18d.png)
+明显梯度下降就需要往左侧走， x-(1)=x-1。
+<font color=red>总结： 梯度下降走的方向往反方向也就是 x-(导数)走</font>。
+### 梯度下降算法的数学解释
+介绍梯度下降的数学公式
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/cb30b733081354473cdb42a45c08c477.png)
+此公式的意义是：J是关于Θ的一个函数，我们当前所处的位置为Θ0点，要从这个点走到J的最小值点，也就是山底。首先我们先确定前进的方向，也就是梯度的反向（前面讲过-梯度），然后走一段距离的步长，也就是α，走完这个段步长，就到达了Θ1这个点！
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/bc3ffc168bccf41f5f9231d8659be8c4.png)
+面就这个公式的几个常见的疑问：
+α是什么含义？
+α在梯度下降算法中被称作为学习率或者步长，意味着我们可以通过α来控制每一步走的距离，以保证不要步子跨的太大扯着蛋，哈哈，其实就是不要走太快，错过了最低点。同时也要保证不要走的太慢，导致太阳下山了，还没有走到山下。所以α的选择在梯度下降法中往往是很重要的！α不能太大也不能太小，太小的话，可能导致迟迟走不到最低点，太大的话，会导致错过最低点！
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/32febe0a18f4d279d75daef7aa1e2ff1.png)
+### 梯度下降算法的实例
+  演示 计算函数 y=(x-2)**2+2的 最小值y所在x的位置。
+可以知道的是，任何数的平方都应该大于0 所有 x=2时 y最小=2。
+通过t度下降法来预算。
+定义梯度函数
+```python
+"""
+ 获取每一个点的梯度 
+"""
+def gradient(x):
+    return 2*(x-2);
+```
+定义获取每个x点对应的y值
+```python
+"""
+获取每个点的dy值
+"""
+def dy(x):
+    return (x-2)**2+2
+```
+接下来产生一些线性随即数据
+```python
+setXY();
+x=np.linspace(-10,10,100);
+```
+绘制图形
+```python
+plot.plot(x,(x-2)**2+2)
+plot.show();
+```
+图像效果
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/ad1a82facdd46144c545d5f0bd906d52.png)
+接下来随便选择一个点 比如 -7.5开始做梯度下降
+
+```python
+ """
+模拟梯度下降
+"""
+theta=-7.5  #表示梯度下降开始的点
+dyv=0.0;  #表示当前最小theta的y
+eta=0.1 #表示下降步长
+arr=[] #记录所有下降的theta的点 方便绘图
+while True:
+    gradi=gradient(theta) #获取梯度
+    dyv=dy(theta);  #获取当前点的y值
+    arr.append(theta);
+    if np.abs(gradi)<1e-8:#如果到了水平梯度就是0 基本上如果梯度到了 1e-8=0.00000001基本可以理解为平缓了
+        break;
+    theta = theta - eta * gradi;#得到下一个点
+
+print("最小y值的x点的坐标：",theta);
+print("最小的y值：",dyv);
+arr=np.array(arr);
+plot.plot(x,(x-2)**2+2)
+plot.plot(arr,(arr-2)**2+2,"or",marker="*")
+plot.show();
+```
+最后效果图
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/26be13869ad4fdc1c289d57962fea1e3.png)
+红点表示所有下坡的theta点，可以理解坡度越陡 走的越快。
+最后输出的结果（和预测结果基本一致）：
+```
+最小y值的x点的坐标： 1.9999999952754293
+最小的y值： 2.0
+```
+# 梯度下降解决线性回归实例
+使用正态分布模拟在某个线附近上下波动的数据
+```python
+import numpy as np;
+import matplotlib.pyplot as plot
+np.random.seed(100);#设置一个随机种子 让产生的随机数每次运行都想听
+x=np.random.rand(100); #产生100个随机的点0-1之间
+X=x.reshape(-1,1);#转换成矩阵只有一列 [0.2,0.3]转换成 [[0.2],[0.3]]
+#print(X)
+y=x*3+4+np.random.rand(100); #将x值*3+4+一个随机值
+plot.plot(x,y,"o"); #绘制图形
+```
+显示效果:
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/6eb0ede97c2e9b88075bf34dd6a6060b.png)
+
+我们将用梯度下降法来拟合出这条直线！
+首先，我们需要定义一个代价函数，在此我们选用均方误差代价函数
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/955f85e59aa67778616c499283f6ee7d.png)
+其中 
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/695eb5010bf611611f929d032adb8c75.png)
+此公示中
+- m是数据集中点的个数
+- ½是一个常量，这样是为了在求梯度的时候，二次方乘下来就和这里的½抵消了，自然就没有多余的常数系数，-  方便后续的计算，同时对结果不会有影响
+- y 是数据集中每个点的真实y坐标的值
+- h 是我们的预测函数，根据每一个输入x，根据Θ 计算得到预测的y值，即
+
+我们可以根据代价函数看到，代价函数中的变量有两个，分别为theta0和theta1，x和y是已知量，所以是一个多变量的梯度下降问题，求解出代价函数的梯度，也就是分别对两个变量theta0和theta1进行微分
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/0b951cabca0e68d2b91efb133444a827.png)
+开始使用python进行实现正太分布模拟数据的梯度下降
+获取损失函数的y值：
+参考图
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/955f85e59aa67778616c499283f6ee7d.png)
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/695eb5010bf611611f929d032adb8c75.png)
+```python
+"""
+ 获取损失函数的y值 
+(y1-(theta0+theta1*x1)**2)+(y2-(theta0+theta1*x2)**2)+....+(ym-(theta0+theta1*xm)**2)
+"""
+def j(x,y,theta):
+    return np.sum((y-(theta[0]+theta[1]*x[:,1]))**2)/len(y);
+  ```
+计算所有theta的梯度 我么知道有theta0和theta1两个梯度
+参考图
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/0b951cabca0e68d2b91efb133444a827.png)
+计算theta0和theta1在每一个点的梯度(注意theta0和theta1是未知数 所有theta0和theta1是自变量  损失函数式因变量)
+代码：
+```python
+"""
+#dj(theta0)=(y1-(theta0+theta1*x1)+(y2-(theta0+theta1*x2)+....+(ym-(theta0+theta1*xm))/m
+#   为了简单 将theta0*x0    x0=1 即可本来每个x是一个矩阵 比如
+  [[0.5],
+   [0.5]
+  ]
+ 修改为
+  [[1,0.5],
+   [1,0.5]]
+ 假设传入的theta是一个向量
+ [2,1]
+ 点乘就是行和列
+ 1*2+0.5*1=theta0+theta1*x1
+#dj(theta0)=np.sum((theta.*x)-yi)/m
+#dj(theta1)=((y1-(theta0+theta1*x1)*x1+(y2-(theta0+theta1*x2)*x2+....+(ym-(theta0+theta1*xm)*xm))/m
+#dj(theta1)=np.sum((theta.*x)-yi)*xi/m
+"""
+def dj(x,y,theta):
+   djArr=np.empty((len(theta)))
+   djArr[0]=np.sum(2*(x.dot(theta)-y));
+   for i in range(1,len(theta)):
+       djArr[i] = np.sum(2 * (x.dot(theta) - y)*x[:,i]);
+   return 2/len(x)*djArr;
+```
+初始化一个theta值，模拟梯度下降。
+
+```
+"""
+梯度下降获取最佳的值
+"""
+x_b=np.hstack((np.ones((len(x),1)),X));
+init_theta=np.array([0.1,0.5]);
+eta=0.01;
+while True:
+    jr=j(x_b,y,init_theta) #获取损失函数的y值
+    djr=dj(x_b,y,init_theta) #获取梯度值
+    init_theta=init_theta-eta*djr;#让theta按梯度下降
+    if(np.all(np.abs(djr)<=1e-5)):
+        break;
+#打印获取到的两个的theta的值
+print(init_theta);
+#打印图x和通过theta获取的y值
+plot.plot(x,init_theta[0]+init_theta[1]*x)
+plot.show();
+```
+最后输出结果
+[4.54437998 2.94672834]
+最后拟合线图
+![在这里插入图片描述](/docs/images/content/programming/ai/machine_learning/basic/action_03_gradient.md.images/376ed92bace8a57a375d9a5fe0c59383.png)

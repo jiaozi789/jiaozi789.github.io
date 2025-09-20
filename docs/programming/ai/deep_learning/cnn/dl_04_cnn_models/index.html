@@ -69,26 +69,26 @@ LeNet-5 概述 LeNet5 诞生于 1994 年，是最早的卷积神经网络之一�
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="2443">
     <title>深度学习04-CNN经典模型 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758332784" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758332784" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758332784" defer></script>
-    <script src="/docs/js/search.min.js?1758332784" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/search.min.js?1758337673" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758332784";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758332784" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758332784" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758332784" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758332784" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -142,7 +142,7 @@ LeNet-5 概述 LeNet5 诞生于 1994 年，是最早的卷积神经网络之一�
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/deep_learning/cnn/dl_04_cnn_models/index.html">
     <div id="R-body" class="default-animation">
@@ -283,32 +283,32 @@ window.MathJax = {
 <p>回顾一下 CNN 的几个特点：局部感知、参数共享、池化。</p>
 <h2 id="局部感知">局部感知</h2>
 <p>人类对外界的认知一般是从局部到全局、从片面到全面，类似的，在机器识别图像时也没有必要把整张图像按像素全部都连接到神经网络中，在图像中也是局部周边的像素联系比较紧密，而距离较远的像素则相关性较弱，因此可以采用局部连接的模式（将图像分块连接，这样能大大减少模型的参数），如下图所示：
-<a href="#R-image-120e8a79c0d05e87503b57ad9b1690b8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ded35fd1891c4ae5860ca339ab2e9194.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-120e8a79c0d05e87503b57ad9b1690b8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ded35fd1891c4ae5860ca339ab2e9194.png"></a></p>
+<a href="#R-image-82bd29065b726dfe0bf2b08e27d2665b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ded35fd1891c4ae5860ca339ab2e9194.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-82bd29065b726dfe0bf2b08e27d2665b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ded35fd1891c4ae5860ca339ab2e9194.png"></a></p>
 <h2 id="参数权值共享">参数（权值）共享</h2>
 <p>每张自然图像（人物、山水、建筑等）都有其固有特性，也就是说，图像其中一部分的统计特性与其它部分是接近的。这也意味着这一部分学习的特征也能用在另一部分上，能使用同样的学习特征。因此，在局部连接中隐藏层的每一个神经元连接的局部图像的权值参数（例如 5×5），将这些权值参数共享给其它剩下的神经元使用，那么此时不管隐藏层有多少个神经元，需要训练的参数就是这个局部图像的权限参数（例如 5×5），也就是卷积核的大小，这样大大减少了训练参数。如下图
-<a href="#R-image-945423f99a4783767aac8904f4c83579" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5719b5393d7465c85c55dbfde33a9a52.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-945423f99a4783767aac8904f4c83579"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5719b5393d7465c85c55dbfde33a9a52.png"></a></p>
+<a href="#R-image-980508685aaebcdd5e28f8c44578d260" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5719b5393d7465c85c55dbfde33a9a52.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-980508685aaebcdd5e28f8c44578d260"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5719b5393d7465c85c55dbfde33a9a52.png"></a></p>
 <blockquote>
 <p>卷积核的权值是指每个卷积核中的参数，用于对输入数据进行卷积操作时，对每个位置的像素进行加权求和。在卷积神经网络中，同一层中的所有卷积核的权值是共享的，这意味着每个卷积核在不同位置上的权值是相同的。共享权值可以减少模型中需要学习的参数数量，从而降低了模型的复杂度，同时可以提高模型的泛化能力，因为共享权值可以使模型更加稳定，避免过度拟合。共享权值的实现方式是通过使用相同的卷积核对输入数据进行卷积操作。
-<a href="#R-image-af334a4f473767750a7fc90806eb7995" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/256075656a5495f06f01fca1556e8b15.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-af334a4f473767750a7fc90806eb7995"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/256075656a5495f06f01fca1556e8b15.png"></a></p></blockquote>
+<a href="#R-image-54908944b43e3ddf38d3727bfb069f1d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/256075656a5495f06f01fca1556e8b15.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-54908944b43e3ddf38d3727bfb069f1d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/256075656a5495f06f01fca1556e8b15.png"></a></p></blockquote>
 <h2 id="池化">池化</h2>
 <p>随着模型网络不断加深，卷积核越来越多，要训练的参数还是很多，而且直接拿卷积核提取的特征直接训练也容易出现过拟合的现象。回想一下，之所以对图像使用卷积提取特征是因为图像具有一种 “静态性” 的属性，因此，一个很自然的想法就是对不同位置区域提取出有代表性的特征（进行聚合统计，例如最大值、平均值等），这种聚合的操作就叫做池化，池化的过程通常也被称为特征映射的过程（特征降维），如下图：</p>
 <h1 id="lenet-5">LeNet-5</h1>
 <p>概述
 LeNet5 诞生于 1994 年，是最早的卷积神经网络之一， 由 Yann LeCun 完成，推动了深度学习领域的发展。在那时候，没有 GPU 帮助训练模型，甚至 CPU 的速度也很慢，因此，LeNet5 通过巧妙的设计，利用卷积、参数共享、池化等操作提取特征，避免了大量的计算成本，最后再使用全连接神经网络进行分类识别，这个网络也是最近大量神经网络架构的起点，给这个领域带来了许多灵感。
 LeNet5 的网络结构示意图如下所示：
-<a href="#R-image-b678e9913f8cb5c6007fa46bf2a08dd2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/885ae480f4d134a7c635837766ad33f6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b678e9913f8cb5c6007fa46bf2a08dd2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/885ae480f4d134a7c635837766ad33f6.png"></a>
+<a href="#R-image-6a32e9062b0ec9b7135d404c3908b34e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/885ae480f4d134a7c635837766ad33f6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6a32e9062b0ec9b7135d404c3908b34e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/885ae480f4d134a7c635837766ad33f6.png"></a>
 LeNet5 由 7 层 CNN（不包含输入层）组成，上图中输入的原始图像大小是 32×32 像素，卷积层用 Ci 表示，子采样层（pooling，池化）用 Si 表示，全连接层用 Fi 表示。下面逐层介绍其作用和示意图上方的数字含义。</p>
 <h2 id="c1-层卷积层62828">C1 层（卷积层）：6@28×28</h2>
 <p>该层使用了 6 个卷积核，每个卷积核的大小为 5×5，这样就得到了 6 个 feature map（特征图）。
 （1）特征图大小
 每个卷积核（5×5）与原始的输入图像（32×32）进行卷积，这样得到的 feature map（特征图）大小为（32-5+1）×（32-5+1）= 28×28
 卷积过程如下图所示（下图是4*4只是用于演示）：
-<a href="#R-image-7ae8f83a1d05432f3a58d3575c0f8915" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/40ca415abf37addb1558b70f12e2fb83.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7ae8f83a1d05432f3a58d3575c0f8915"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/40ca415abf37addb1558b70f12e2fb83.png"></a>
+<a href="#R-image-3c03f5e915ff75bcd3087efa25f55168" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/40ca415abf37addb1558b70f12e2fb83.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3c03f5e915ff75bcd3087efa25f55168"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/40ca415abf37addb1558b70f12e2fb83.png"></a>
 卷积核与输入图像按卷积核大小逐个区域进行匹配计算，匹配后原始输入图像的尺寸将变小，因为边缘部分卷积核无法越出界，只能匹配一次，如上图，匹配计算后的尺寸变为 Cr×Cc=（Ir-Kr+1）×（Ic-Kc+1），其中 Cr、Cc，Ir、Ic，Kr、Kc 分别表示卷积后结果图像、输入图像、卷积核的行列大小。
 其中Cr表示结果行row，Cc表示结果列column
 （2）参数个数
@@ -319,8 +319,8 @@ LeNet5 由 7 层 CNN（不包含输入层）组成，上图中输入的原始图
 <p>（1）特征图大小
 这一层主要是做池化或者特征映射（特征降维），池化单元为 2×2，因此，6 个特征图的大小经池化后即变为 14×14。回顾本文刚开始讲到的池化操作，池化单元之间没有重叠，在池化区域内进行聚合统计后得到新的特征值，因此经 2×2 池化后，每两行两列重新算出一个特征值出来，相当于图像大小减半，因此卷积后的 28×28 图像经 2×2 池化后就变为 14×14。
 这一层的计算过程是：2×2 单元里的值相加，然后再乘以训练参数 w，再加上一个偏置参数 b（每一个特征图共享相同的 w 和 b)，然后取 sigmoid 值（S 函数：0-1 区间），作为对应的该单元的值。卷积操作与池化的示意图如下：
-<a href="#R-image-201b66f3f5773cc15f443f7113cca555" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/e618cfd02601f00c561a7565a9c7a32b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-201b66f3f5773cc15f443f7113cca555"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/e618cfd02601f00c561a7565a9c7a32b.png"></a>
+<a href="#R-image-04a1de37f7e9b6cc49798733ecfc5b98" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/e618cfd02601f00c561a7565a9c7a32b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-04a1de37f7e9b6cc49798733ecfc5b98"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/e618cfd02601f00c561a7565a9c7a32b.png"></a>
 （2）参数个数
 S2 层由于每个特征图都共享相同的 w 和 b 这两个参数，因此需要 2×6=12 个参数
 （3）连接数
@@ -331,8 +331,8 @@ S2 层由于每个特征图都共享相同的 w 和 b 这两个参数，因此�
 与 C1 层的分析类似，C3 层的特征图大小为（14-5+1）×（14-5+1）= 10×10
 （2）参数个数
 需要注意的是，C3 与 S2 并不是全连接而是部分连接，有些是 C3 连接到 S2 三层、有些四层、甚至达到 6 层，通过这种方式提取更多特征，连接的规则如下表所示：
-<a href="#R-image-cbbea56b438f3251471af69e72e463c3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/eb2c5d0fe70d48328989a921d8c0d354.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cbbea56b438f3251471af69e72e463c3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/eb2c5d0fe70d48328989a921d8c0d354.png"></a>
+<a href="#R-image-dc79eda615d78df92cc1534fe90c7afb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/eb2c5d0fe70d48328989a921d8c0d354.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dc79eda615d78df92cc1534fe90c7afb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/eb2c5d0fe70d48328989a921d8c0d354.png"></a>
 例如第一列表示 C3 层的第 0 个特征图（feature map）只跟 S2 层的第 0、1 和 2 这三个 feature maps 相连接，计算过程为：用 3 个卷积模板分别与 S2 层的 3 个 feature maps 进行卷积，然后将卷积的结果相加求和，再加上一个偏置，再取 sigmoid 得出卷积后对应的 feature map 了。其它列也是类似（有些是 3 个卷积模板，有些是 4 个，有些是 6 个）。因此，C3 层的参数数目为（5×5×3+1）×6 +（5×5×4+1）×9 +5×5×6+1 = 1516</p>
 <p>（3）连接数
 卷积后的特征图大小为 10×10，参数数量为 1516，因此连接数为 1516×10×10= 151600</p>
@@ -353,8 +353,8 @@ S2 层由于每个特征图都共享相同的 w 和 b 这两个参数，因此�
 <h2 id="f6-层全连接层84">F6 层（全连接层）：84</h2>
 <p>1）特征图大小
 F6 层有 84 个单元，之所以选这个数字的原因是来自于输出层的设计，对应于一个 7×12 的比特图，如下图所示，-1 表示白色，1 表示黑色，这样每个符号的比特图的黑白色就对应于一个编码。
-<a href="#R-image-a3cc2d6b58ca37f12bc666acad24012b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/288c57384a469c07dd5ea81d65fa23c1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a3cc2d6b58ca37f12bc666acad24012b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/288c57384a469c07dd5ea81d65fa23c1.png"></a>
+<a href="#R-image-f06a3d5689cfc07922ab009945133442" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/288c57384a469c07dd5ea81d65fa23c1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f06a3d5689cfc07922ab009945133442"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/288c57384a469c07dd5ea81d65fa23c1.png"></a>
 该层有 84 个特征图，特征图大小与 C5 一样都是 1×1，与 C5 层全连接。
 （2）参数个数
 由于是全连接，参数数量为（120+1）×84=10164。跟经典神经网络一样，F6 层计算输入向量和权重向量之间的点积，再加上一个偏置，然后将其传递给 sigmoid 函数得出结果。
@@ -364,16 +364,16 @@ F6 层有 84 个单元，之所以选这个数字的原因是来自于输出层�
 <p>Output 层也是全连接层，共有 10 个节点，分别代表数字 0 到 9。如果第 i 个节点的值为 0，则表示网络识别的结果是数字 i。
 （1）特征图大小
 该层采用径向基函数（RBF）的网络连接方式，假设 x 是上一层的输入，y 是 RBF 的输出，则 RBF 输出的计算方式是：
-<a href="#R-image-1f87ea3cd07603842e2197ec9e9f30a1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/7fd3ed11ef60907b1c60af384d8a003a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1f87ea3cd07603842e2197ec9e9f30a1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/7fd3ed11ef60907b1c60af384d8a003a.png"></a>
+<a href="#R-image-4dbceaa2b86a0cf1cf570f4d7211b08a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/7fd3ed11ef60907b1c60af384d8a003a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4dbceaa2b86a0cf1cf570f4d7211b08a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/7fd3ed11ef60907b1c60af384d8a003a.png"></a>
 上式中的 Wij 的值由 i 的比特图编码确定，i 从 0 到 9，j 取值从 0 到 7×12-1。RBF 输出的值越接近于 0，表示当前网络输入的识别结果与字符 i 越接近。</p>
 <p>（2）参数个数
 由于是全连接，参数个数为 84×10=840
 （3）连接数
 由于是全连接，连接数与参数个数一样，也是 840</p>
 <p>通过以上介绍，已经了解了 LeNet 各层网络的结构、特征图大小、参数数量、连接数量等信息，下图是识别数字 3 的过程，可对照上面介绍各个层的功能进行一一回顾：
-<a href="#R-image-bd42f9e4b5b85666a36dee4d71dd6730" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/42d35b7f62f644b34707ae01f67d6220.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bd42f9e4b5b85666a36dee4d71dd6730"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/42d35b7f62f644b34707ae01f67d6220.png"></a></p>
+<a href="#R-image-1e8ccabc33578e89f7b32c70f6511c78" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/42d35b7f62f644b34707ae01f67d6220.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1e8ccabc33578e89f7b32c70f6511c78"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/42d35b7f62f644b34707ae01f67d6220.png"></a></p>
 <h2 id="编程实现">编程实现</h2>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import tensorflow as tf
 from tensorflow.keras import layers, models
@@ -444,8 +444,8 @@ plt.show()</code></pre></div>
 Test loss: 0.03826029598712921
 Test accuracy: 0.9879999756813049
 预测结果： 6
-<a href="#R-image-a3717604cd289c64c3aae31f6b53f022" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/2145254891056f7791343e7516a83cd0.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a3717604cd289c64c3aae31f6b53f022"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/2145254891056f7791343e7516a83cd0.png"></a></p>
+<a href="#R-image-af56731694120c160f0d587f44b61ee0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/2145254891056f7791343e7516a83cd0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-af56731694120c160f0d587f44b61ee0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/2145254891056f7791343e7516a83cd0.png"></a></p>
 <blockquote>
 <p>参考:https://my.oschina.net/u/876354/blog/1632862</p></blockquote>
 <h1 id="alexnet">AlexNet</h1>
@@ -461,51 +461,51 @@ Test accuracy: 0.9879999756813049
 <p>1、使用 ReLU 激活函数
 传统的神经网络普遍使用 Sigmoid 或者 tanh 等非线性函数作为激励函数，然而它们容易出现梯度弥散或梯度饱和的情况。以 Sigmoid 函数为例，当输入的值非常大或者非常小的时候，这些神经元的梯度接近于 0（梯度饱和现象），如果输入的初始值很大的话，梯度在反向传播时因为需要乘上一个 Sigmoid 导数，会造成梯度越来越小，导致网络变的很难学习。（详见本公博客的文章：深度学习中常用的激励函数）。
 在 AlexNet 中，使用了 ReLU （Rectified Linear Units）激励函数，该函数的公式为：f (x)=max (0,x)，当输入信号 &lt; 0 时，输出都是 0，当输入信号 &gt; 0 时，输出等于输入，如下图所示：</p>
-<p><a href="#R-image-b1e7ed406ac908dcdfc273aeb50c5aaf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/66ab30c567b5435fbae4e38f9da83d74.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b1e7ed406ac908dcdfc273aeb50c5aaf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/66ab30c567b5435fbae4e38f9da83d74.png"></a>
+<p><a href="#R-image-a1fdb1759c05b29b7f3714569815f500" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/66ab30c567b5435fbae4e38f9da83d74.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a1fdb1759c05b29b7f3714569815f500"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/66ab30c567b5435fbae4e38f9da83d74.png"></a>
 使用 ReLU 替代 Sigmoid/tanh，由于 ReLU 是线性的，且导数始终为 1，计算量大大减少，收敛速度会比 Sigmoid/tanh 快很多，如下图所示：
-<a href="#R-image-a5cb30f260be8ac3ca70c16a136dc9c5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/8884dc923073f3cf4efe6ea662279265.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a5cb30f260be8ac3ca70c16a136dc9c5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/8884dc923073f3cf4efe6ea662279265.png"></a>
+<a href="#R-image-203de99279769e51f1fed678956168d3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/8884dc923073f3cf4efe6ea662279265.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-203de99279769e51f1fed678956168d3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/8884dc923073f3cf4efe6ea662279265.png"></a>
 2、数据扩充（Data augmentation）</p>
 <p>有一种观点认为神经网络是靠数据喂出来的，如果能够增加训练数据，提供海量数据进行训练，则能够有效提升算法的准确率，因为这样可以避免过拟合，从而可以进一步增大、加深网络结构。而当训练数据有限时，可以通过一些变换从已有的训练数据集中生成一些新的数据，以快速地扩充训练数据。
 其中，最简单、通用的图像数据变形的方式：水平翻转图像，从原始图像中随机裁剪、平移变换，颜色、光照变换，如下图所示：
-<a href="#R-image-7c153a88dea4e765ac9bad5e39294b73" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d14e7ac31b2f0560b047674d77804395.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7c153a88dea4e765ac9bad5e39294b73"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d14e7ac31b2f0560b047674d77804395.png"></a>
+<a href="#R-image-b5a9f9fc6f2bf1ca438e97f09f838f63" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d14e7ac31b2f0560b047674d77804395.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b5a9f9fc6f2bf1ca438e97f09f838f63"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d14e7ac31b2f0560b047674d77804395.png"></a>
 AlexNet 在训练时，在数据扩充（data augmentation）这样处理：
 （1）随机裁剪，对 256×256 的图片进行随机裁剪到 224×224，然后进行水平翻转，相当于将样本数量增加了（（256-224）^2）×2=2048 倍；
 （2）测试的时候，对左上、右上、左下、右下、中间分别做了 5 次裁剪，然后翻转，共 10 个裁剪，之后对结果求平均。作者说，如果不做随机裁剪，大网络基本上都过拟合；
 （3）对 RGB 空间做 PCA（主成分分析），然后对主成分做一个（0, 0.1）的高斯扰动，也就是对颜色、光照作变换，结果使错误率又下降了 1%。</p>
 <p>3、重叠池化 (Overlapping Pooling)
 一般的池化（Pooling）是不重叠的，池化区域的窗口大小与步长相同，如下图所示：
-<a href="#R-image-d94d5075b4f490f4eff27881727b2d62" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/0c6495716470b88ebf1a33344dd5dac9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d94d5075b4f490f4eff27881727b2d62"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/0c6495716470b88ebf1a33344dd5dac9.png"></a>
+<a href="#R-image-14bb5bb92581942ca1f302a046eabe99" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/0c6495716470b88ebf1a33344dd5dac9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-14bb5bb92581942ca1f302a046eabe99"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/0c6495716470b88ebf1a33344dd5dac9.png"></a>
 在 AlexNet 中使用的池化（Pooling）却是可重叠的，也就是说，在池化的时候，每次移动的步长小于池化的窗口长度。AlexNet 池化的大小为 3×3 的正方形，每次池化移动步长为 2，这样就会出现重叠。重叠池化可以避免过拟合，这个策略贡献了 0.3% 的 Top-5 错误率。
 4、局部归一化（Local Response Normalization，简称 LRN）
 在神经生物学有一个概念叫做 “侧抑制”（lateral inhibitio），指的是被激活的神经元抑制相邻神经元。归一化（normalization）的目的是 “抑制”，局部归一化就是借鉴了 “侧抑制” 的思想来实现局部抑制，尤其当使用 ReLU 时这种 “侧抑制” 很管用，因为 ReLU 的响应结果是无界的（可以非常大），所以需要归一化。使用局部归一化的方案有助于增加泛化能力。
 LRN 的公式如下，核心思想就是利用临近的数据做归一化，这个策略贡献了 1.2% 的 Top-5 错误率。
-<a href="#R-image-f8f4341704ff223484fd4826b01c58ae" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/944fcd68193b479c4a5b41aca0029e62.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f8f4341704ff223484fd4826b01c58ae"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/944fcd68193b479c4a5b41aca0029e62.png"></a>
+<a href="#R-image-991c3f9218316a4d15347435db7bd484" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/944fcd68193b479c4a5b41aca0029e62.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-991c3f9218316a4d15347435db7bd484"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/944fcd68193b479c4a5b41aca0029e62.png"></a>
 5、Dropout
 引入 Dropout 主要是为了防止过拟合。在神经网络中 Dropout 通过修改神经网络本身结构来实现，对于某一层的神经元，通过定义的概率将神经元置为 0，这个神经元就不参与前向和后向传播，就如同在网络中被删除了一样，同时保持输入层与输出层神经元的个数不变，然后按照神经网络的学习方法进行参数更新。在下一次迭代中，又重新随机删除一些神经元（置为 0），直至训练结束。
 Dropout 应该算是 AlexNet 中一个很大的创新，以至于 “神经网络之父” Hinton 在后来很长一段时间里的演讲中都拿 Dropout 说事。Dropout 也可以看成是一种模型组合，每次生成的网络结构都不一样，通过组合多个模型的方式能够有效地减少过拟合，Dropout 只需要两倍的训练时间即可实现模型组合（类似取平均）的效果，非常高效。
 如下图所示：
-<a href="#R-image-c70ded477cf040678298576caabbcad9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fd43d2f73e96f4c9e7867d6566241f43.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c70ded477cf040678298576caabbcad9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fd43d2f73e96f4c9e7867d6566241f43.png"></a>
+<a href="#R-image-72c3e00681383b5b00dbd9d79d1f4d70" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fd43d2f73e96f4c9e7867d6566241f43.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-72c3e00681383b5b00dbd9d79d1f4d70"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fd43d2f73e96f4c9e7867d6566241f43.png"></a>
 6、多 GPU 训练
 AlexNet 当时使用了 GTX580 的 GPU 进行训练，由于单个 GTX 580 GPU 只有 3GB 内存，这限制了在其上训练的网络的最大规模，因此他们在每个 GPU 中放置一半核（或神经元），将网络分布在两个 GPU 上进行并行计算，大大加快了 AlexNet 的训练速度。</p>
 <h2 id="alexnet-网络结构的逐层解析">AlexNet 网络结构的逐层解析</h2>
 <p>下图是 AlexNet 的网络结构图：
-<a href="#R-image-93e2dee57da8e9f873ef4cbcb965754b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/8c544f657baf4fc3e6197af635620d51.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-93e2dee57da8e9f873ef4cbcb965754b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/8c544f657baf4fc3e6197af635620d51.png"></a>
+<a href="#R-image-9f50bbfb387cf6659baf75691a34819a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/8c544f657baf4fc3e6197af635620d51.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9f50bbfb387cf6659baf75691a34819a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/8c544f657baf4fc3e6197af635620d51.png"></a>
 AlexNet 网络结构共有 8 层，前面 5 层是卷积层，后面 3 层是全连接层，最后一个全连接层的输出传递给一个 1000 路的 softmax 层，对应 1000 个类标签的分布。
 由于 AlexNet 采用了两个 GPU 进行训练，因此，该网络结构图由上下两部分组成，一个 GPU 运行图上方的层，另一个运行图下方的层，两个 GPU 只在特定的层通信。例如第二、四、五层卷积层的核只和同一个 GPU 上的前一层的核特征图相连，第三层卷积层和第二层所有的核特征图相连接，全连接层中的神经元和前一层中的所有神经元相连接。</p>
 <p>下面逐层解析 AlexNet 结构：</p>
 <h3 id="第一层卷积层">第一层（卷积层）</h3>
-<p><a href="#R-image-8cc4bf634d57256a7f1fa8c2828fba93" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5dac2c7e8560e9bd3b3e1d6181f62627.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8cc4bf634d57256a7f1fa8c2828fba93"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5dac2c7e8560e9bd3b3e1d6181f62627.png"></a>
+<p><a href="#R-image-5fd3d51fc63823836431487ac832542c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5dac2c7e8560e9bd3b3e1d6181f62627.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5fd3d51fc63823836431487ac832542c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5dac2c7e8560e9bd3b3e1d6181f62627.png"></a>
 该层的处理流程为：卷积 &ndash;&gt;ReLU&ndash;&gt; 池化 &ndash;&gt; 归一化，流程图如下：
-<a href="#R-image-f6e404d10ff1de4d17a124151a5926fd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/76b05b3179355f8fa5162cd1eae82182.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f6e404d10ff1de4d17a124151a5926fd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/76b05b3179355f8fa5162cd1eae82182.png"></a>
+<a href="#R-image-7559f2218264360d308e7fbc4bbdc783" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/76b05b3179355f8fa5162cd1eae82182.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7559f2218264360d308e7fbc4bbdc783"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/76b05b3179355f8fa5162cd1eae82182.png"></a>
 （1）卷积
 输入的原始图像大小为 224×224×3（RGB 图像），在训练时会经过预处理变为 227×227×3。在本层使用 96 个 11×11×3 的卷积核进行卷积计算，生成新的像素。由于采用了两个 GPU 并行运算，因此，网络结构图中上下两部分分别承担了 48 个卷积核的运算。
 卷积核沿图像按一定的步长往 x 轴方向、y 轴方向移动计算卷积，然后生成新的特征图，其大小为：floor ((img_size - filter_size)/stride) +1 = new_feture_size，其中 floor 表示向下取整，img_size 为图像大小，filter_size 为核大小，stride 为步长，new_feture_size 为卷积后的特征图大小，这个公式表示图像尺寸减去卷积核尺寸除以步长，再加上被减去的核大小像素对应生成的一个像素，结果就是卷积后特征图的大小。
@@ -517,11 +517,11 @@ RuLU 后的像素层再经过池化运算，池化运算的尺寸为 3×3，步�
 （4）归一化
 池化后的像素层再进行归一化处理，归一化运算的尺寸为 5×5，归一化后的像素规模不变，仍为 27×27×96，这 96 层像素层被分为两组，每组 48 个像素层，分别在一个独立的 GPU 上进行运算。</p>
 <h3 id="第二层卷积层">第二层（卷积层）</h3>
-<p><a href="#R-image-3713f2b11a634d7d0248397e3a73a776" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ef1a0047841b5fa5fa66e79d129919c0.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3713f2b11a634d7d0248397e3a73a776"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ef1a0047841b5fa5fa66e79d129919c0.png"></a>
+<p><a href="#R-image-45418f88438e24d9eb8df1482a2e754c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ef1a0047841b5fa5fa66e79d129919c0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-45418f88438e24d9eb8df1482a2e754c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ef1a0047841b5fa5fa66e79d129919c0.png"></a>
 该层与第一层类似，处理流程为：卷积 &ndash;&gt;ReLU&ndash;&gt; 池化 &ndash;&gt; 归一化，流程图如下：
-<a href="#R-image-5ec5785f7eabce2e66589bb6eabe9f55" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/56bdb3366027bbaf9f856613393c359a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5ec5785f7eabce2e66589bb6eabe9f55"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/56bdb3366027bbaf9f856613393c359a.png"></a>
+<a href="#R-image-cd5983d0b94266c6a65949a1ca10dbb9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/56bdb3366027bbaf9f856613393c359a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cd5983d0b94266c6a65949a1ca10dbb9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/56bdb3366027bbaf9f856613393c359a.png"></a>
 （1）卷积
 第二层的输入数据为第一层输出的 27×27×96 的像素层（被分成两组 27×27×48 的像素层放在两个不同 GPU 中进行运算），为方便后续处理，在这里每幅像素层的上下左右边缘都被填充了 2 个像素（填充 0），即图像的大小变为 (27+2+2) ×(27+2+2)。第二层的卷积核大小为 5×5，移动步长为 1 个像素，跟第一层第（1）点的计算公式一样，经卷积核计算后的像素层大小变为 (27+2+2-5)/1+1=27，即卷积后大小为 27×27。
 本层使用了 256 个 5×5×48 的卷积核，同样也是被分成两组，每组为 128 个，分给两个 GPU 进行卷积运算，结果生成两组 27×27×128 个卷积后的像素层。
@@ -532,11 +532,11 @@ RuLU 后的像素层再经过池化运算，池化运算的尺寸为 3×3，步�
 （4）归一化
 然后再经归一化处理，归一化运算的尺度为 5×5，归一化后的像素层的规模为 2 组 13×13×128 的像素层，分别由 2 个 GPU 进行运算。</p>
 <h3 id="第三层卷积层">第三层（卷积层）</h3>
-<p><a href="#R-image-76f6608b4ef69275fad8b8bb09e86a1f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/80748fc3cc58e6f278bdbd4444d62a25.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-76f6608b4ef69275fad8b8bb09e86a1f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/80748fc3cc58e6f278bdbd4444d62a25.png"></a>
+<p><a href="#R-image-7affdda2073d7433e7cf13d360390ef3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/80748fc3cc58e6f278bdbd4444d62a25.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7affdda2073d7433e7cf13d360390ef3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/80748fc3cc58e6f278bdbd4444d62a25.png"></a>
 第三层的处理流程为：卷积 &ndash;&gt;ReLU
-<a href="#R-image-b542f61ef27cc68959609db6bae3b604" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d5a08fb7ed3281b15b020e20c71e0088.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b542f61ef27cc68959609db6bae3b604"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d5a08fb7ed3281b15b020e20c71e0088.png"></a>
+<a href="#R-image-7d9f17d2bac110242bca123423e36222" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d5a08fb7ed3281b15b020e20c71e0088.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7d9f17d2bac110242bca123423e36222"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d5a08fb7ed3281b15b020e20c71e0088.png"></a>
 （1）卷积
 第三层输入数据为第二层输出的 2 组 13×13×128 的像素层，为便于后续处理，每幅像素层的上下左右边缘都填充 1 个像素，填充后变为 (13+1+1)×(13+1+1)×128，分布在两个 GPU 中进行运算。
 这一层中每个 GPU 都有 192 个卷积核，每个卷积核的尺寸是 3×3×256。因此，每个 GPU 中的卷积核都能对 2 组 13×13×128 的像素层的所有数据进行卷积运算。如该层的结构图所示，两个 GPU 有通过交叉的虚线连接，也就是说每个 GPU 要处理来自前一层的所有 GPU 的输入。
@@ -544,22 +544,22 @@ RuLU 后的像素层再经过池化运算，池化运算的尺寸为 3×3，步�
 （2）ReLU
 卷积后的像素层经过 ReLU 单元的处理，生成激活像素层，尺寸仍为 2 组 13×13×192 的像素层，分配给两组 GPU 处理。</p>
 <h3 id="第四层卷积层">第四层（卷积层）</h3>
-<p><a href="#R-image-f17540df7497aa99bec40fe557929084" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/0866c80c2c9216a1023a0aa172e667dd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f17540df7497aa99bec40fe557929084"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/0866c80c2c9216a1023a0aa172e667dd.png"></a>
+<p><a href="#R-image-cbcda747a4f71a209e636c1a9d1f409e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/0866c80c2c9216a1023a0aa172e667dd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cbcda747a4f71a209e636c1a9d1f409e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/0866c80c2c9216a1023a0aa172e667dd.png"></a>
 与第三层类似，第四层的处理流程为：卷积 &ndash;&gt;ReLU
-<a href="#R-image-7822176ea6fa9ecaf0be65dafc0656da" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ab9675459db46906f6aa3ad25bd1f95e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7822176ea6fa9ecaf0be65dafc0656da"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ab9675459db46906f6aa3ad25bd1f95e.png"></a>
+<a href="#R-image-d17f55f096dbf3c8db0db884d9928b63" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ab9675459db46906f6aa3ad25bd1f95e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d17f55f096dbf3c8db0db884d9928b63"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ab9675459db46906f6aa3ad25bd1f95e.png"></a>
 1）卷积
 第四层输入数据为第三层输出的 2 组 13×13×192 的像素层，类似于第三层，为便于后续处理，每幅像素层的上下左右边缘都填充 1 个像素，填充后的尺寸变为 (13+1+1)×(13+1+1)×192，分布在两个 GPU 中进行运算。
 这一层中每个 GPU 都有 192 个卷积核，每个卷积核的尺寸是 3×3×192（与第三层不同，第四层的 GPU 之间没有虚线连接，也即 GPU 之间没有通信）。卷积的移动步长是 1 个像素，经卷积运算后的尺寸为 (13+1+1-3)/1+1=13，每个 GPU 中有 13×13×192 个卷积核，2 个 GPU 卷积后生成 13×13×384 的像素层。
 （2）ReLU
 卷积后的像素层经过 ReLU 单元处理，生成激活像素层，尺寸仍为 2 组 13×13×192 像素层，分配给两个 GPU 处理。</p>
 <h3 id="第五层卷积层">第五层（卷积层）</h3>
-<p><a href="#R-image-a3244ccfa202f164f100a76cd959b7c1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/f776bccde1428f70d4a71fe79685c929.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a3244ccfa202f164f100a76cd959b7c1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/f776bccde1428f70d4a71fe79685c929.png"></a>
+<p><a href="#R-image-2a09699124b1d167b2fa7d01506fa08c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/f776bccde1428f70d4a71fe79685c929.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2a09699124b1d167b2fa7d01506fa08c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/f776bccde1428f70d4a71fe79685c929.png"></a>
 第五层的处理流程为：卷积 &ndash;&gt;ReLU&ndash;&gt; 池化
-<a href="#R-image-0b8dc76c4212f0b0eedafe02d94196f8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/c833ddb29f3b044c83299a4d2c691bab.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0b8dc76c4212f0b0eedafe02d94196f8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/c833ddb29f3b044c83299a4d2c691bab.png"></a>
+<a href="#R-image-e7212716c8f10dacff14180cbc676e75" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/c833ddb29f3b044c83299a4d2c691bab.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e7212716c8f10dacff14180cbc676e75"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/c833ddb29f3b044c83299a4d2c691bab.png"></a>
 （1）卷积
 第五层输入数据为第四层输出的 2 组 13×13×192 的像素层，为便于后续处理，每幅像素层的上下左右边缘都填充 1 个像素，填充后的尺寸变为 (13+1+1)×(13+1+1) ，2 组像素层数据被送至 2 个不同的 GPU 中进行运算。
 这一层中每个 GPU 都有 128 个卷积核，每个卷积核的尺寸是 3×3×192，卷积的步长是 1 个像素，经卷积后的尺寸为 (13+1+1-3)/1+1=13，每个 GPU 中有 13×13×128 个卷积核，2 个 GPU 卷积后生成 13×13×256 的像素层。
@@ -568,11 +568,11 @@ RuLU 后的像素层再经过池化运算，池化运算的尺寸为 3×3，步�
 （3）池化
 2 组 13×13×128 像素层分别在 2 个不同 GPU 中进行池化运算处理，池化运算的尺寸为 3×3，步长为 2，池化后图像的尺寸为 (13-3)/2+1=6，即池化后像素的规模为两组 6×6×128 的像素层数据，共有 6×6×256 的像素层数据。</p>
 <h3 id="第六层全连接层">第六层（全连接层）</h3>
-<p><a href="#R-image-b1940326c400238188c681b82ff136d2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fbe254ee242a6cad7411b2155410088e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b1940326c400238188c681b82ff136d2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fbe254ee242a6cad7411b2155410088e.png"></a>
+<p><a href="#R-image-55823843656bd3a9e3955b485f9fe8b2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fbe254ee242a6cad7411b2155410088e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-55823843656bd3a9e3955b485f9fe8b2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fbe254ee242a6cad7411b2155410088e.png"></a>
 第六层的处理流程为：卷积（全连接）&ndash;&gt;ReLU&ndash;&gt;Dropout
-<a href="#R-image-6a078c6cc36c1ede0af79ac160280a26" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/74cc588db43c2fd708f55fe19d147399.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6a078c6cc36c1ede0af79ac160280a26"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/74cc588db43c2fd708f55fe19d147399.png"></a>
+<a href="#R-image-9e8ac0a062a280b3278b73de9b88fc17" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/74cc588db43c2fd708f55fe19d147399.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9e8ac0a062a280b3278b73de9b88fc17"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/74cc588db43c2fd708f55fe19d147399.png"></a>
 （1）卷积（全连接）
 第六层输入数据是第五层的输出，尺寸为 6×6×256。本层共有 4096 个卷积核，每个卷积核的尺寸为 6×6×256，由于卷积核的尺寸刚好与待处理特征图（输入）的尺寸相同，即卷积核中的每个系数只与特征图（输入）尺寸的一个像素值相乘，一一对应，因此，该层被称为全连接层。由于卷积核与特征图的尺寸相同，卷积运算后只有一个值，因此，卷积后的像素层尺寸为 4096×1×1，即有 4096 个神经元。
 （2）ReLU
@@ -580,25 +580,25 @@ RuLU 后的像素层再经过池化运算，池化运算的尺寸为 3×3，步�
 （3）Dropout
 然后再通过 Dropout 运算，输出 4096 个结果值。</p>
 <h3 id="第七层全连接层">第七层（全连接层）</h3>
-<p><a href="#R-image-8f7ce5f0c26c59da36cea64287cff49f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/63ebc77a6b744ff514a4c607d71757af.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8f7ce5f0c26c59da36cea64287cff49f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/63ebc77a6b744ff514a4c607d71757af.png"></a>
+<p><a href="#R-image-8023e2d78cfaab76d0170b2c470aeb66" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/63ebc77a6b744ff514a4c607d71757af.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8023e2d78cfaab76d0170b2c470aeb66"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/63ebc77a6b744ff514a4c607d71757af.png"></a>
 第七层的处理流程为：全连接 &ndash;&gt;ReLU&ndash;&gt;Dropout
-<a href="#R-image-a514fc00a589569234f44f15a4c7cf61" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1f7442e6ead5d4b4c7d4a52248b232be.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a514fc00a589569234f44f15a4c7cf61"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1f7442e6ead5d4b4c7d4a52248b232be.png"></a>
+<a href="#R-image-9482700e9a8b06910475df9a374a410a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1f7442e6ead5d4b4c7d4a52248b232be.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9482700e9a8b06910475df9a374a410a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1f7442e6ead5d4b4c7d4a52248b232be.png"></a>
 第六层输出的 4096 个数据与第七层的 4096 个神经元进行全连接，然后经 ReLU 进行处理后生成 4096 个数据，再经过 Dropout 处理后输出 4096 个数据。</p>
 <h3 id="第八层全连接层">第八层（全连接层）</h3>
-<p><a href="#R-image-d71f01d9a0efcbf271c44ef9d7c0b79d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3e20f0e87c49db6502f427ecbc75431e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d71f01d9a0efcbf271c44ef9d7c0b79d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3e20f0e87c49db6502f427ecbc75431e.png"></a>
+<p><a href="#R-image-4c8e68203702b7a5c61e1db11368b708" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3e20f0e87c49db6502f427ecbc75431e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4c8e68203702b7a5c61e1db11368b708"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3e20f0e87c49db6502f427ecbc75431e.png"></a>
 第八层的处理流程为：全连接
-<a href="#R-image-bafeb9b9830125e0a90c8795bde227d6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3c0eacd7aac19ae5489170084dce1362.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bafeb9b9830125e0a90c8795bde227d6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3c0eacd7aac19ae5489170084dce1362.png"></a>
+<a href="#R-image-b6014202a933cdb7ede49ef684ce9fe7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3c0eacd7aac19ae5489170084dce1362.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b6014202a933cdb7ede49ef684ce9fe7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3c0eacd7aac19ae5489170084dce1362.png"></a>
 第七层输出的 4096 个数据与第八层的 1000 个神经元进行全连接，经过训练后输出 1000 个 float 型的值，这就是预测结果。</p>
 <p>以上就是关于 AlexNet 网络结构图的逐层解析了，看起来挺复杂的，下面是一个简图，看起来就清爽很多啊
-<a href="#R-image-de26164ff9bbcf0aee99fc1339828c8a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/f4f1a34afd3fc94f4414af11d4e64222.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-de26164ff9bbcf0aee99fc1339828c8a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/f4f1a34afd3fc94f4414af11d4e64222.png"></a>
+<a href="#R-image-44f2b04122789cc312699d9e1ae2faf6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/f4f1a34afd3fc94f4414af11d4e64222.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-44f2b04122789cc312699d9e1ae2faf6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/f4f1a34afd3fc94f4414af11d4e64222.png"></a>
 通过前面的介绍，可以看出 AlexNet 的特点和创新之处，主要如下：
-<a href="#R-image-451dcf2243e057c2d8122553b5bfd81f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5483e017be2787ac351fe2a50b4bfc1d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-451dcf2243e057c2d8122553b5bfd81f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5483e017be2787ac351fe2a50b4bfc1d.png"></a></p>
+<a href="#R-image-70006abbde2aedead1bca0c3f291d693" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5483e017be2787ac351fe2a50b4bfc1d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-70006abbde2aedead1bca0c3f291d693"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/5483e017be2787ac351fe2a50b4bfc1d.png"></a></p>
 <h2 id="编程实现-1">编程实现</h2>
 <p>下载imagenet数据集，
 Keras提供的keras.datasets模块可以用来直接加载ImageNet数据集。不过需要注意的是，ImageNet数据集非常大，包含数百万张高分辨率图像，因此通常需要使用分布式计算或者在GPU上进行训练。</p>
@@ -623,8 +623,8 @@ print(x_train.shape)</code></pre></div>
 <p>执行后，日志里有一直在下载的过程，下载很慢，路径
 <a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz" rel="external" target="_blank">https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz</a>
 我们可以手动下载下来，重命名为：cifar-10-batches-py.tar.gz，然后上传到 ~/.keras/datasets目录即可（不用解压），程序会离线解压该文件，window下是：C:\Users\你的用户.keras\datasets
-<a href="#R-image-87ecd6e21a851237b143ca8a7df8f1d2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/36b1c681ccca13d6e68cbe7365292621.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-87ecd6e21a851237b143ca8a7df8f1d2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/36b1c681ccca13d6e68cbe7365292621.png"></a>
+<a href="#R-image-1f7623ff532f0ab7e295eb9ca39e46f6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/36b1c681ccca13d6e68cbe7365292621.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1f7623ff532f0ab7e295eb9ca39e46f6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/36b1c681ccca13d6e68cbe7365292621.png"></a>
 再次运行输出
 (50000, 32, 32, 3)
 随机加载100张，看看效果</p>
@@ -645,8 +645,8 @@ for i in range(10):
         ax.set_title(labels[index][0])
 plt.show()</code></pre></div>
 <p>显示
-<a href="#R-image-381e0351589341f2d9e6867d0f2628de" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ec057edcc7abae90de58a5efbc7fe970.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-381e0351589341f2d9e6867d0f2628de"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ec057edcc7abae90de58a5efbc7fe970.png"></a>
+<a href="#R-image-ac059e0b13da9483694cffbdf5087c3d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ec057edcc7abae90de58a5efbc7fe970.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ac059e0b13da9483694cffbdf5087c3d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ec057edcc7abae90de58a5efbc7fe970.png"></a>
 因为数据集总共有6万张，格式32<em>32，使用alexnet模型进行计算，图像需要转换224</em>224，rgb通道数3，每个像素都需要转换成float32，这样导致数gpu显存占用过大导致内存溢出，
 需要占用显存=60000<em>224</em>224<em>3</em>4＞＝３０ＧＢ，
 所以需增量式进行训练</p>
@@ -735,8 +735,8 @@ print(&#34;识别结果为：&#34; + str(np.argmax(predictions)))
 plt.imshow(srcImage, cmap=plt.cm.binary)
 plt.show()</code></pre></div>
 <p>输出：1
-<a href="#R-image-46a8d7fdcd7c9d6b6331c8e4793ddee9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/332050ef4034e899a28f34faf4a825e8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-46a8d7fdcd7c9d6b6331c8e4793ddee9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/332050ef4034e899a28f34faf4a825e8.png"></a></p>
+<a href="#R-image-a526e2b3769e5f22827231a66c683f57" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/332050ef4034e899a28f34faf4a825e8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a526e2b3769e5f22827231a66c683f57"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/332050ef4034e899a28f34faf4a825e8.png"></a></p>
 <blockquote>
 <p>参考:https://my.oschina.net/u/876354/blog/1633143</p></blockquote>
 <h1 id="vggnet">VGGNet</h1>
@@ -745,16 +745,16 @@ VGGNet 探索了卷积神经网络的深度与其性能之间的关系，成功�
 VGGNet 可以看成是加深版本的 AlexNet，都是由卷积层、全连接层两大部分构成。</p>
 <h2 id="vgg-的特点">VGG 的特点</h2>
 <p>先看一下 VGG 的结构图
-<a href="#R-image-29ce3dac91e5ffb2a9f11eef48940c53" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d252a3f3ac84945b426d262138b364fb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-29ce3dac91e5ffb2a9f11eef48940c53"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d252a3f3ac84945b426d262138b364fb.png"></a>
+<a href="#R-image-089c8b5e1b6c8509da7a9827262ce07b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d252a3f3ac84945b426d262138b364fb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-089c8b5e1b6c8509da7a9827262ce07b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/d252a3f3ac84945b426d262138b364fb.png"></a>
 1、结构简洁
 VGG 由 5 层卷积层、3 层全连接层、softmax 输出层构成，层与层之间使用 max-pooling（最大化池）分开，所有隐层的激活单元都采用 ReLU 函数。
 2、小卷积核和多卷积子层
 VGG 使用多个较小卷积核（3x3）的卷积层代替一个卷积核较大的卷积层，一方面可以减少参数，另一方面相当于进行了更多的非线性映射，可以增加网络的拟合 / 表达能力。
 小卷积核是 VGG 的一个重要特点，虽然 VGG 是在模仿 AlexNet 的网络结构，但没有采用 AlexNet 中比较大的卷积核尺寸（如 7x7），而是通过降低卷积核的大小（3x3），增加卷积子层数来达到同样的性能（VGG：从 1 到 4 卷积子层，AlexNet：1 子层）。
 VGG 的作者认为两个 3x3 的卷积堆叠获得的感受野大小，相当一个 5x5 的卷积；而 3 个 3x3 卷积的堆叠获取到的感受野相当于一个 7x7 的卷积。这样可以增加非线性映射，也能很好地减少参数（例如 7x7 的参数为 49 个，而 3 个 3x3 的参数为 27），如下图所示：
-<a href="#R-image-841cacd0c00cb8150f8838fb21896076" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/b3dc987629ffb5a11d5b73961a91aa9f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-841cacd0c00cb8150f8838fb21896076"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/b3dc987629ffb5a11d5b73961a91aa9f.png"></a>
+<a href="#R-image-02a397c1b4193a8ac5196f3107b833c7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/b3dc987629ffb5a11d5b73961a91aa9f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-02a397c1b4193a8ac5196f3107b833c7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/b3dc987629ffb5a11d5b73961a91aa9f.png"></a>
 3、小池化核
 相比 AlexNet 的 3x3 的池化核，VGG 全部采用 2x2 的池化核。
 4、通道数多
@@ -765,21 +765,21 @@ VGG 网络第一层的通道数为 64，后面每层都进行了翻倍，最多�
 这也是 VGG 的一个特点，在网络测试阶段将训练阶段的三个全连接替换为三个卷积，使得测试得到的全卷积网络因为没有全连接的限制，因而可以接收任意宽或高为的输入，这在测试阶段很重要。
 如本节第一个图所示，输入图像是 224x224x3，如果后面三个层都是全连接，那么在测试阶段就只能将测试的图像全部都要缩放大小到 224x224x3，才能符合后面全连接层的输入数量要求，这样就不便于测试工作的开展。
 而 “全连接转卷积”，替换过程如下：
-<a href="#R-image-f2ce4dbd93268a56af3bc69846af7dc9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/9dd75009d679e7ec93a92d1e3f1575c9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f2ce4dbd93268a56af3bc69846af7dc9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/9dd75009d679e7ec93a92d1e3f1575c9.png"></a>
+<a href="#R-image-9d79d2433e8bb24c75011d07b689b662" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/9dd75009d679e7ec93a92d1e3f1575c9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9d79d2433e8bb24c75011d07b689b662"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/9dd75009d679e7ec93a92d1e3f1575c9.png"></a>
 例如 7x7x512 的层要跟 4096 个神经元的层做全连接，则替换为对 7x7x512 的层作通道数为 4096、卷积核为 1x1 的卷积。
 这个 “全连接转卷积” 的思路是 VGG 作者参考了 OverFeat 的工作思路，例如下图是 OverFeat 将全连接换成卷积后，则可以来处理任意分辨率（在整张图）上计算卷积，这就是无需对原图做重新缩放处理的优势。
-<a href="#R-image-cc1da91b3d06c5161de1b07e37859410" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/9be9abe7d1198f7809c722b748cedf92.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cc1da91b3d06c5161de1b07e37859410"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/9be9abe7d1198f7809c722b748cedf92.png"></a></p>
+<a href="#R-image-fa369e1a6b2ea719884dbc24d2dfc204" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/9be9abe7d1198f7809c722b748cedf92.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fa369e1a6b2ea719884dbc24d2dfc204"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/9be9abe7d1198f7809c722b748cedf92.png"></a></p>
 <h2 id="vgg-的网络结构">VGG 的网络结构</h2>
 <p>下图是来自论文《Very Deep Convolutional Networks for Large-Scale Image Recognition》（基于甚深层卷积网络的大规模图像识别）的 VGG 网络结构，正是在这篇论文中提出了 VGG，如下图：
-<a href="#R-image-8436f223526cfb28039168b48cb28dc7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/dfb97c18fac5d82766055d9bd70a79fa.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8436f223526cfb28039168b48cb28dc7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/dfb97c18fac5d82766055d9bd70a79fa.png"></a>
+<a href="#R-image-71cbf51fb0e60e71933febcb6dd9fd1e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/dfb97c18fac5d82766055d9bd70a79fa.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-71cbf51fb0e60e71933febcb6dd9fd1e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/dfb97c18fac5d82766055d9bd70a79fa.png"></a>
 在这篇论文中分别使用了 A、A-LRN、B、C、D、E 这 6 种网络结构进行测试，这 6 种网络结构相似，都是由 5 层卷积层、3 层全连接层组成，其中区别在于每个卷积层的子层数量不同，从 A 至 E 依次增加（子层数量从 1 到 4），总的网络深度从 11 层到 19 层（添加的层以粗体显示），表格中的卷积层参数表示为 “conv⟨感受野大小⟩- 通道数⟩”，例如 con3-128，表示使用 3x3 的卷积核，通道数为 128。为了简洁起见，在表格中不显示 ReLU 激活功能。
 其中，网络结构 D 就是著名的 VGG16，网络结构 E 就是著名的 VGG19。</p>
 <p>以网络结构 D（VGG16）为例，介绍其处理过程如下，请对比上面的表格和下方这张图，留意图中的数字变化，有助于理解 VGG16 的处理过程：
-<a href="#R-image-78931ae95da4ec5f4441fb2c3986bc89" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/df2c7cc6443b6b99bdb1d1f7a4bc1886.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-78931ae95da4ec5f4441fb2c3986bc89"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/df2c7cc6443b6b99bdb1d1f7a4bc1886.png"></a>
+<a href="#R-image-525f3636e15a504427ba8a901c371d94" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/df2c7cc6443b6b99bdb1d1f7a4bc1886.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-525f3636e15a504427ba8a901c371d94"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/df2c7cc6443b6b99bdb1d1f7a4bc1886.png"></a>
 1、输入 224x224x3 的图片，经 64 个 3x3 的卷积核作两次卷积 + ReLU，卷积后的尺寸变为 224x224x64
 2、作 max pooling（最大化池化），池化单元尺寸为 2x2（效果为图像尺寸减半），池化后的尺寸变为 112x112x64
 3、经 128 个 3x3 的卷积核作两次卷积 + ReLU，尺寸变为 112x112x128
@@ -793,17 +793,17 @@ VGG 网络第一层的通道数为 64，后面每层都进行了翻倍，最多�
 11、与两层 1x1x4096，一层 1x1x1000 进行全连接 + ReLU（共三层）
 12、通过 softmax 输出 1000 个预测结果</p>
 <p>以上就是 VGG16（网络结构 D）各层的处理过程，A、A-LRN、B、C、E 其它网络结构的处理过程也是类似，执行过程如下（以 VGG16 为例）：
-<a href="#R-image-15cdfdce54a0884a2694a09767c20515" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/baafe0ddad3c6d64add31454281c8a9e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-15cdfdce54a0884a2694a09767c20515"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/baafe0ddad3c6d64add31454281c8a9e.png"></a>
+<a href="#R-image-df9938df0cdfea2e17b16cc4e2605def" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/baafe0ddad3c6d64add31454281c8a9e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-df9938df0cdfea2e17b16cc4e2605def"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/baafe0ddad3c6d64add31454281c8a9e.png"></a>
 从上面的过程可以看出 VGG 网络结构还是挺简洁的，都是由小卷积核、小池化核、ReLU 组合而成。其简化图如下（以 VGG16 为例）：
-<a href="#R-image-2b761e5a1fb094969d71752b70cafa2f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/32713e886187406e7c8a7e3f555ee552.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2b761e5a1fb094969d71752b70cafa2f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/32713e886187406e7c8a7e3f555ee552.png"></a>
+<a href="#R-image-c677f08d015bf7be897672bc758b0c4b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/32713e886187406e7c8a7e3f555ee552.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c677f08d015bf7be897672bc758b0c4b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/32713e886187406e7c8a7e3f555ee552.png"></a>
 A、A-LRN、B、C、D、E 这 6 种网络结构的深度虽然从 11 层增加至 19 层，但参数量变化不大，这是由于基本上都是采用了小卷积核（3x3，只有 9 个参数），这 6 种结构的参数数量（百万级）并未发生太大变化，这是因为在网络中，参数主要集中在全连接层。
-<a href="#R-image-d9688c1f89395d2f5d7ab70f0d0d1775" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/35a5e47c69cd51e37d00abcced080c9d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d9688c1f89395d2f5d7ab70f0d0d1775"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/35a5e47c69cd51e37d00abcced080c9d.png"></a>
+<a href="#R-image-5c7db694aa0bd440a8c3ede2f38f2600" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/35a5e47c69cd51e37d00abcced080c9d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5c7db694aa0bd440a8c3ede2f38f2600"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/35a5e47c69cd51e37d00abcced080c9d.png"></a>
 经作者对 A、A-LRN、B、C、D、E 这 6 种网络结构进行单尺度的评估，错误率结果如下：
-<a href="#R-image-87854a8db84198bdfe99e244c5802603" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/74f7b0832f63b852bdd335662359a8fd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-87854a8db84198bdfe99e244c5802603"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/74f7b0832f63b852bdd335662359a8fd.png"></a>
+<a href="#R-image-7f68dcfd6633369b2f5f1cd5a09887af" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/74f7b0832f63b852bdd335662359a8fd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7f68dcfd6633369b2f5f1cd5a09887af"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/74f7b0832f63b852bdd335662359a8fd.png"></a>
 从上表可以看出：<br>
 <strong>1、LRN 层无性能增益（A-LRN）</strong><br>
 VGG 作者通过网络 A-LRN 发现，AlexNet 曾经用到的 LRN 层（local response normalization，局部响应归一化）并没有带来性能的提升，因此在其它组的网络中均没再出现 LRN 层。<br>
@@ -927,26 +927,26 @@ print(&#39;Test accuracy:&#39;, test_acc)</code></pre></div>
 Inception 历经了 V1、V2、V3、V4 等多个版本的发展，不断趋于完善，下面一一进行介绍</p>
 <h2 id="inception-v1">Inception V1</h2>
 <p>通过设计一个稀疏网络结构，但是能够产生稠密的数据，既能增加神经网络表现，又能保证计算资源的使用效率。谷歌提出了最原始 Inception 的基本结构：
-<a href="#R-image-974a345c7b0f4c98b5bace02ae62e3c1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1a4b5804c3a969cfab032e43f029607c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-974a345c7b0f4c98b5bace02ae62e3c1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1a4b5804c3a969cfab032e43f029607c.png"></a>
+<a href="#R-image-3254d769b83fe0bfb51dd7096892e170" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1a4b5804c3a969cfab032e43f029607c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3254d769b83fe0bfb51dd7096892e170"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1a4b5804c3a969cfab032e43f029607c.png"></a>
 该结构将 CNN 中常用的卷积（1x1，3x3，5x5）、池化操作（3x3）堆叠在一起（卷积、池化后的尺寸相同，将通道相加），一方面增加了网络的宽度，另一方面也增加了网络对尺度的适应性。
 网络卷积层中的网络能够提取输入的每一个细节信息，同时 5x5 的滤波器也能够覆盖大部分接受层的的输入。还可以进行一个池化操作，以减少空间大小，降低过度拟合。在这些层之上，在每一个卷积层后都要做一个 ReLU 操作，以增加网络的非线性特征。
 然而这个 Inception 原始版本，所有的卷积核都在上一层的所有输出上来做，而那个 5x5 的卷积核所需的计算量就太大了，造成了特征图的厚度很大，为了避免这种情况，在 3x3 前、5x5 前、max pooling 后分别加上了 1x1 的卷积核，以起到了降低特征图厚度的作用，这也就形成了 Inception v1 的网络结构，如下图所示：
-<a href="#R-image-aeb7b385d84b5fd770ab0d71a4e3d7f3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/56c17d869d516346212da2dfe7dcdfba.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-aeb7b385d84b5fd770ab0d71a4e3d7f3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/56c17d869d516346212da2dfe7dcdfba.png"></a>
+<a href="#R-image-b82c4d4774727c0f84463c4662573c36" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/56c17d869d516346212da2dfe7dcdfba.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b82c4d4774727c0f84463c4662573c36"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/56c17d869d516346212da2dfe7dcdfba.png"></a>
 1x1 的卷积核有什么用呢？
 1x1 卷积的主要目的是为了减少维度，还用于修正线性激活（ReLU）。比如，上一层的输出为 100x100x128，经过具有 256 个通道的 5x5 卷积层之后 (stride=1，pad=2)，输出数据为 100x100x256，其中，卷积层的参数为 128x5x5x256= 819200。而假如上一层输出先经过具有 32 个通道的 1x1 卷积层，再经过具有 256 个输出的 5x5 卷积层，那么输出数据仍为为 100x100x256，但卷积参数量已经减少为 128x1x1x32 + 32x5x5x256= 204800，大约减少了 4 倍。</p>
 <p>基于 Inception 构建了 GoogLeNet 的网络结构如下（共 22 层）：
-<a href="#R-image-b55d731a64b286cbc07744d64ea7211e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/57e2088c8a62e87160fba0adca6bf079.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b55d731a64b286cbc07744d64ea7211e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/57e2088c8a62e87160fba0adca6bf079.png"></a>
+<a href="#R-image-b4cdc163e715b2faa8fdbd253ed08f80" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/57e2088c8a62e87160fba0adca6bf079.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b4cdc163e715b2faa8fdbd253ed08f80"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/57e2088c8a62e87160fba0adca6bf079.png"></a>
 对上图说明如下：<br>
 （1）GoogLeNet 采用了模块化的结构（Inception 结构），方便增添和修改；<br>
 （2）网络最后采用了 average pooling（平均池化）来代替全连接层，该想法来自 NIN（Network in Network），事实证明这样可以将准确率提高 0.6%。但是，实际在最后还是加了一个全连接层，主要是为了方便对输出进行灵活调整；<br>
 （3）虽然移除了全连接，但是网络中依然使用了 Dropout ;<br>
 （4）为了避免梯度消失，网络额外增加了 2 个辅助的 softmax 用于向前传导梯度（辅助分类器）。辅助分类器是将中间某一层的输出用作分类，并按一个较小的权重（0.3）加到最终分类结果中，这样相当于做了模型融合，同时给网络增加了反向传播的梯度信号，也提供了额外的正则化，对于整个网络的训练很有裨益。而在实际测试的时候，这两个额外的 softmax 会被去掉。</p>
 <p>GoogLeNet 的网络结构图细节如下：
-<a href="#R-image-ba7a7a74697134145d0502611dcb8ee0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/cf571825df826fe319bd8811fdbd661c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ba7a7a74697134145d0502611dcb8ee0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/cf571825df826fe319bd8811fdbd661c.png"></a>
+<a href="#R-image-9437ef4b165eb32e421913637d9ed489" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/cf571825df826fe319bd8811fdbd661c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9437ef4b165eb32e421913637d9ed489"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/cf571825df826fe319bd8811fdbd661c.png"></a>
 注：上表中的 “#3x3 reduce”，“#5x5 reduce” 表示在 3x3，5x5 卷积操作之前使用了 1x1 卷积的数量。</p>
 <p>GoogLeNet 网络结构明细表解析如下：<br>
 <strong>0、输入</strong><br>
@@ -972,37 +972,37 @@ Inception 历经了 V1、V2、V3、V4 等多个版本的发展，不断趋于完
 将四个结果进行连接，对这四部分输出结果的第三维并联，即 128+192+96+64=480，最终输出输出为 28x28x480</p>
 <p>第四层（4a,4b,4c,4d,4e）、第五层（5a,5b）……，与 3a、3b 类似，在此就不再重复。</p>
 <p>从 GoogLeNet 的实验结果来看，效果很明显，差错率比 MSRA、VGG 等模型都要低，对比结果如下表所示：
-<a href="#R-image-d82c80cb2ebadac3da187c031a69b404" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ee261d58d84ee801f2877b6454887bb5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d82c80cb2ebadac3da187c031a69b404"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ee261d58d84ee801f2877b6454887bb5.png"></a></p>
+<a href="#R-image-c7c5156b2d48f9ebaed4cf296bcc72bc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ee261d58d84ee801f2877b6454887bb5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c7c5156b2d48f9ebaed4cf296bcc72bc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/ee261d58d84ee801f2877b6454887bb5.png"></a></p>
 <h2 id="inception-v2">Inception V2</h2>
 <p>GoogLeNet 凭借其优秀的表现，得到了很多研究人员的学习和使用，因此 GoogLeNet 团队又对其进行了进一步地发掘改进，产生了升级版本的 GoogLeNet。<br>
 GoogLeNet 设计的初衷就是要又准又快，而如果只是单纯的堆叠网络虽然可以提高准确率，但是会导致计算效率有明显的下降，所以如何在不增加过多计算量的同时提高网络的表达能力就成为了一个问题。<br>
 Inception V2 版本的解决方案就是修改 Inception 的内部计算逻辑，提出了比较特殊的 “卷积” 计算结构。</p>
 <p><strong>1、卷积分解（Factorizing Convolutions）</strong><br>
 大尺寸的卷积核可以带来更大的感受野，但也意味着会产生更多的参数，比如 5x5 卷积核的参数有 25 个，3x3 卷积核的参数有 9 个，前者是后者的 25/9=2.78 倍。因此，GoogLeNet 团队提出可以用 2 个连续的 3x3 卷积层组成的小网络来代替单个的 5x5 卷积层，即在保持感受野范围的同时又减少了参数量，如下图：
-<a href="#R-image-3590ed3ffc9e869d5ba4f39c9c0c4e83" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/e0870940855835a40674f1939da89acd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3590ed3ffc9e869d5ba4f39c9c0c4e83"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/e0870940855835a40674f1939da89acd.png"></a>
+<a href="#R-image-651d5ba36bf5f7d9ee799d3079afbed8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/e0870940855835a40674f1939da89acd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-651d5ba36bf5f7d9ee799d3079afbed8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/e0870940855835a40674f1939da89acd.png"></a>
 那么这种替代方案会造成表达能力的下降吗？通过大量实验表明，并不会造成表达缺失。
 可以看出，大卷积核完全可以由一系列的 3x3 卷积核来替代，那能不能再分解得更小一点呢？GoogLeNet 团队考虑了 nx1 的卷积核，如下图所示，用 3 个 3x1 取代 3x3 卷积：
-<a href="#R-image-9be35861b2c65b689433ef250aa0bba9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/429a3c916d77949c256f2476d1407117.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9be35861b2c65b689433ef250aa0bba9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/429a3c916d77949c256f2476d1407117.png"></a>
+<a href="#R-image-555665d162c03e1b7ce829d71ca6e943" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/429a3c916d77949c256f2476d1407117.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-555665d162c03e1b7ce829d71ca6e943"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/429a3c916d77949c256f2476d1407117.png"></a>
 因此，任意 nxn 的卷积都可以通过 1xn 卷积后接 nx1 卷积来替代。GoogLeNet 团队发现在网络的前期使用这种分解效果并不好，在中度大小的特征图（feature map）上使用效果才会更好（特征图大小建议在 12 到 20 之间）。
-<a href="#R-image-c36e79386e6ec7677b3fb2ccd31cae2f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fa38249c67bc296fde3d8e0085cdf8bd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c36e79386e6ec7677b3fb2ccd31cae2f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fa38249c67bc296fde3d8e0085cdf8bd.png"></a>
+<a href="#R-image-a33fc6d6501de8d8851c1ebfd9eab7cf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fa38249c67bc296fde3d8e0085cdf8bd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a33fc6d6501de8d8851c1ebfd9eab7cf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fa38249c67bc296fde3d8e0085cdf8bd.png"></a>
 <strong>2、降低特征图大小</strong><br>
 一般情况下，如果想让图像缩小，可以有如下两种方式：
-<a href="#R-image-ceed77bf6f468448708e88ffaca8bf65" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/45957aa32edd7a5a63b5014fa28265d1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ceed77bf6f468448708e88ffaca8bf65"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/45957aa32edd7a5a63b5014fa28265d1.png"></a>
+<a href="#R-image-c2d5e185daf0eec00393d7248c38d989" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/45957aa32edd7a5a63b5014fa28265d1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c2d5e185daf0eec00393d7248c38d989"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/45957aa32edd7a5a63b5014fa28265d1.png"></a>
 先池化再作 Inception 卷积，或者先作 Inception 卷积再作池化。但是方法一（左图）先作 pooling（池化）会导致特征表示遇到瓶颈（特征缺失），方法二（右图）是正常的缩小，但计算量很大。为了同时保持特征表示且降低计算量，将网络结构改为下图，使用两个并行化的模块来降低计算量（卷积、池化并行执行，再进行合并）
-<a href="#R-image-f7b75a0c18c6b1b8c61d064c83869133" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1652ae3a70555a299b7a59cdd443e221.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f7b75a0c18c6b1b8c61d064c83869133"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1652ae3a70555a299b7a59cdd443e221.png"></a>
+<a href="#R-image-2517e354d4c5ba2c8cf660cb523f7950" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1652ae3a70555a299b7a59cdd443e221.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2517e354d4c5ba2c8cf660cb523f7950"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/1652ae3a70555a299b7a59cdd443e221.png"></a>
 使用 Inception V2 作改进版的 GoogLeNet，网络结构图如下：
-<a href="#R-image-35b9bc50f490e0dbaf0c99f73d6ffa66" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3c60015e23aedf823080bcd95fdfa9d2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-35b9bc50f490e0dbaf0c99f73d6ffa66"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3c60015e23aedf823080bcd95fdfa9d2.png"></a>
+<a href="#R-image-b83118d00fde3fb24114c744145b46ff" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3c60015e23aedf823080bcd95fdfa9d2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b83118d00fde3fb24114c744145b46ff"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/3c60015e23aedf823080bcd95fdfa9d2.png"></a>
 注：上表中的 Figure 5 指没有进化的 Inception，Figure 6 是指小卷积版的 Inception（用 3x3 卷积核代替 5x5 卷积核），Figure 7 是指不对称版的 Inception（用 1xn、nx1 卷积核代替 nxn 卷积核）。</p>
 <p>经实验，模型结果与旧的 GoogleNet 相比有较大提升，如下表所示：
-<a href="#R-image-ae6db93797f3864ad85a8e4b010961a9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fd88fa8c32b3198bfb09a3eb14764b7d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ae6db93797f3864ad85a8e4b010961a9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fd88fa8c32b3198bfb09a3eb14764b7d.png"></a></p>
+<a href="#R-image-2a8f34fa1c31f97077e3e1380a54e40a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fd88fa8c32b3198bfb09a3eb14764b7d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2a8f34fa1c31f97077e3e1380a54e40a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/fd88fa8c32b3198bfb09a3eb14764b7d.png"></a></p>
 <h2 id="inception-v3">Inception V3</h2>
 <p>Inception V3 一个最重要的改进是分解（Factorization），将 7x7 分解成两个一维的卷积（1x7,7x1），3x3 也是一样（1x3,3x1），这样的好处，既可以加速计算，又可以将 1 个卷积拆成 2 个卷积，使得网络深度进一步增加，增加了网络的非线性（每增加一层都要进行 ReLU）。
 另外，网络输入从 224x224 变为了 299x299。</p>
@@ -1010,14 +1010,14 @@ Inception V2 版本的解决方案就是修改 Inception 的内部计算逻辑�
 <p>Inception V4 研究了 Inception 模块与残差连接的结合。ResNet 结构大大地加深了网络深度，还极大地提升了训练速度，同时性能也有提升（ResNet 的技术原理介绍见本博客之前的文章：大话深度残差网络 ResNet）。
 Inception V4 主要利用残差连接（Residual Connection）来改进 V3 结构，得到 Inception-ResNet-v1，Inception-ResNet-v2，Inception-v4 网络。
 ResNet 的残差结构如下：
-<a href="#R-image-e4f33a578c68e5b6dc6745195d6b59cd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/a6822bd8e2fdf590d972a211618706e6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e4f33a578c68e5b6dc6745195d6b59cd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/a6822bd8e2fdf590d972a211618706e6.png"></a>
+<a href="#R-image-8be61ce1442fa95d9b9cdf023f40ac5c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/a6822bd8e2fdf590d972a211618706e6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8be61ce1442fa95d9b9cdf023f40ac5c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/a6822bd8e2fdf590d972a211618706e6.png"></a>
 将该结构与 Inception 相结合，变成下图：
-<a href="#R-image-b004f2a81f1fcd9892320a48de0cbad6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/b876dceb5703dcc997bba914e4935a76.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b004f2a81f1fcd9892320a48de0cbad6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/b876dceb5703dcc997bba914e4935a76.png"></a>
+<a href="#R-image-7fed3f74245e688bdf81a0e4e672be07" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/b876dceb5703dcc997bba914e4935a76.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7fed3f74245e688bdf81a0e4e672be07"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/b876dceb5703dcc997bba914e4935a76.png"></a>
 通过 20 个类似的模块组合，Inception-ResNet 构建如下：
-<a href="#R-image-ddea0a67d05b8c4729652b1222c24ff1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/a0f335f834199e207f579718c3c31f22.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ddea0a67d05b8c4729652b1222c24ff1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/a0f335f834199e207f579718c3c31f22.png"></a></p>
+<a href="#R-image-bb1f6bd117cc79ffe130eb7e89cf97df" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/a0f335f834199e207f579718c3c31f22.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bb1f6bd117cc79ffe130eb7e89cf97df"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/cnn/dl_04_cnn_models.md.images/a0f335f834199e207f579718c3c31f22.png"></a></p>
 <h2 id="编程实现-3">编程实现</h2>
 <p>后续补充</p>
 <blockquote>
@@ -1074,6 +1074,7 @@ ResNet 的残差结构如下：
             <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
             <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/machine_learning/index.html"><a class="padding" href="/docs/programming/ai/machine_learning/index.html">机器学习</a><ul id="R-subsections-d3b98ca0beda96811b8c41829d886d7f" class="collapsible-menu"></ul></li>
             <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu">
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/basic/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/basic/index.html">深度基础</a><ul id="R-subsections-82d91c326db2e74346572c248dd5a837" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/frameworks/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/frameworks/index.html">框架学习</a><ul id="R-subsections-bc6c627c1fa57b86d2660d273634c1d2" class="collapsible-menu"></ul></li>
@@ -1081,7 +1082,8 @@ ResNet 的残差结构如下：
             <li class="" data-nav-id="/docs/programming/ai/deep_learning/cnn/dl_03_cnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/cnn/dl_03_cnn/index.html">深度学习03-卷积神经网络(CNN)</a></li>
             <li class="active " data-nav-id="/docs/programming/ai/deep_learning/cnn/dl_04_cnn_models/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/cnn/dl_04_cnn_models/index.html">深度学习04-CNN经典模型</a></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/rnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/rnn/index.html">循环神经网络</a><ul id="R-subsections-addeb8e29ffecb1f809f271ff170a522" class="collapsible-menu"></ul></li>
-            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/index.html">生成对抗网络</a><ul id="R-subsections-2787239befb1b0643d0f03fc48340180" class="collapsible-menu"></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/index.html">生成对抗网络</a><ul id="R-subsections-2787239befb1b0643d0f03fc48340180" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
           </ul>
         </div>
@@ -1100,8 +1102,8 @@ ResNet 的残差结构如下：
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758332784" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758332784" defer></script>
-    <script src="/docs/js/theme.min.js?1758332784" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
+    <script src="/docs/js/theme.min.js?1758337673" defer></script>
   </body>
 </html>

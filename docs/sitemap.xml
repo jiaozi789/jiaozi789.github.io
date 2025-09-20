@@ -13,7 +13,23 @@
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/tools_libraries/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_02_linear/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
@@ -41,11 +57,31 @@
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/computer_vision/tools/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/computer_vision/applications/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_03_gradient/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/deep_learning/frameworks/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/deep_learning/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/computer_vision/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
@@ -60,11 +96,62 @@
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/evaluation/action_09_generalize/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/evaluation/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/basic/action_06_pytorch/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/tools/index.html</loc>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/deep_learning/rnn/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_05_pcaface/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/deep_learning/gans/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_06_decidetree/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_07_bays/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_08_multinomial/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_10_logic/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_11_vectormachine/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_12_cluster/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/machine_learning/algorithms/action_13_intelearn/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
@@ -117,6 +204,14 @@
   </url>
   <url>
     <loc>https://jiaozi789.github.io/docs/programming/plugins/vscode/vscode_cross/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/computer_vision/tools/action_01_opencv/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/ai/computer_vision/applications/action_02_yolov5/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
