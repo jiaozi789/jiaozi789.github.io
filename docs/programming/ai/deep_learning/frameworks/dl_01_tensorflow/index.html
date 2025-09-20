@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="@[toc]
+简介 TensorFlow是一种端到端开源机器学习平台，它提供了一个全面而灵活的生态系统，包含各种工具、库和社区资源，能够助力研究人员推动先进机器学习技术的发展。在TensorFlow机器学习框架下，开发者能够轻松地构建和部署由机器学习提供支持的应用。[2]
+Keras是一个高层次神经网络 API，适用于快速构建原型、高级研究和生产。它作为TensorFlow的一个接口，可以兼容多种深度学习框架。Keras 的核心数据结构是 model，一种组织网络层的方式。最简单的模型是 Sequential 顺序模型，它由多个网络层线性堆叠。对于更复杂的结构，你应该使用 Keras 函数式 API，它允许构建任意的神经网络图。 Keras最开始是为研究人员开发的，其目的在于快速实验，具有相同的代码可以在CPU或GPU上无缝切换运行的特点，同时也具有用户友好的API，方便快速地开发深度学习模型的原型。 Keras使用类sklearn的api接口来调用tensorflow，从sklearn机器学习中切换过来，更加容易上手。 Tenforflow2.0后直接内置可keras。
+运行硬件 TensorFlow支持在CPU和GPU上运行。GPU（图形处理单元）是一种专门用于加速计算的硬件，它可以大大提高深度学习模型的训练速度。相对而言，CPU（中央处理器）的每个核心具有更强大的处理能力，但它们的数量通常非常有限，因此在处理大数据时它们表现不佳。
+TensorFlow GPU和CPU的主要区别在于如何使用硬件来处理计算任务，以及处理速度的差异。在CPU上，TensorFlow利用所有可用的CPU内核并将任务分配给它们，这可能需要几分钟或几小时来完成。在GPU上，TensorFlow使用CUDA（Compute Unified Device Architecture）技术来利用GPU进行并行计算并加速训练过程，因为GPU拥有数百到数千个小型核心，这比CPU的几十个核心要多得多。这使得TensorFlow能够在GPU上实现更快的训练速度和更高的吞吐量，尤其是在处理大规模的深度学习任务时。
+另外需要注意的是，如果你的计算机没有安装专门的GPU，则无法使用TensorFlow GPU。在这种情况下，TensorFlow会使用CPU作为默认选项，但是训练过程会比在GPU上慢得多。因此，如果你需要进行大量的深度学习训练任务，建议使用具有至少一张GPU的计算机来加速训练。
+总之，TensorFlow GPU和CPU之间的区别在于它们的硬件架构、并行计算能力以及处理速度等方面。当进行大规模的深度学习训练时，使用GPU可以显著提高训练速度和吞吐量，而对于较小的任务或者没有专门GPU的计算机，则应该使用CPU。
+cuda和cuddn CUDA（Compute Unified Device Architecture）是一种由NVIDIA公司开发的并行计算平台和编程模型，它允许开发人员使用标准C/C&#43;&#43;语言编写基于GPU的高性能应用程序。CUDA包括一个可编程的内核语言（CUDA C/C&#43;&#43;），一个并行计算库（CUDA Toolkit），以及驱动程序和硬件架构，支持对NVIDIA GPU进行高性能并行计算。与CPU相比，GPU在并行处理任务时的性能要高得多，因此CUDA被广泛用于深度学习、科学计算和高性能计算等领域。[2]
+cuDNN（CUDA Deep Neural Network library）是NVIDIA CUDA的一个加速库，它提供了一组高度优化的本地函数，用于加速深度神经网络模型的训练和推理。cuDNN主要用于卷积神经网络（CNNs）和递归神经网络（RNNs）等深度学习模型的优化，从而实现更快的训练和推理速度。cuDNN支持多种深度学习框架，包括TensorFlow，PyTorch和Caffe等。[1]
+因此，CUDA是一种GPU计算平台和编程模型，cuDNN是其中一个加速库，专门用于加速深度学习模型的训练和推理。这两个技术结合起来，可以实现对GPU的高性能并行计算和深度学习模型的优化，从而提高深度学习任务的整体性能。
+不同的tensorflow版本需要不同的cuda和cuddn版本，google官网可查看 https://tensorflow.google.cn/install/source_windows?hl=en 如果电脑有gpu建议安装tensorflow-gpu,如果电脑没有gpu安装性能较差的tensorflow
+打开任务管理器-性能,查看你是否支持gpu 从这里我们可以看到我的cpu是英伟达(nvidia)的gtx1050 如果电脑已经安装显卡驱动，cuda肯定是自带的，我们可以使用nvidia-smi命令查看">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="深度学习01-tensorflow开发环境搭建 :: liaomin416100569博客">
+    <meta name="twitter:description" content="@[toc]
+简介 TensorFlow是一种端到端开源机器学习平台，它提供了一个全面而灵活的生态系统，包含各种工具、库和社区资源，能够助力研究人员推动先进机器学习技术的发展。在TensorFlow机器学习框架下，开发者能够轻松地构建和部署由机器学习提供支持的应用。[2]
+Keras是一个高层次神经网络 API，适用于快速构建原型、高级研究和生产。它作为TensorFlow的一个接口，可以兼容多种深度学习框架。Keras 的核心数据结构是 model，一种组织网络层的方式。最简单的模型是 Sequential 顺序模型，它由多个网络层线性堆叠。对于更复杂的结构，你应该使用 Keras 函数式 API，它允许构建任意的神经网络图。 Keras最开始是为研究人员开发的，其目的在于快速实验，具有相同的代码可以在CPU或GPU上无缝切换运行的特点，同时也具有用户友好的API，方便快速地开发深度学习模型的原型。 Keras使用类sklearn的api接口来调用tensorflow，从sklearn机器学习中切换过来，更加容易上手。 Tenforflow2.0后直接内置可keras。
+运行硬件 TensorFlow支持在CPU和GPU上运行。GPU（图形处理单元）是一种专门用于加速计算的硬件，它可以大大提高深度学习模型的训练速度。相对而言，CPU（中央处理器）的每个核心具有更强大的处理能力，但它们的数量通常非常有限，因此在处理大数据时它们表现不佳。
+TensorFlow GPU和CPU的主要区别在于如何使用硬件来处理计算任务，以及处理速度的差异。在CPU上，TensorFlow利用所有可用的CPU内核并将任务分配给它们，这可能需要几分钟或几小时来完成。在GPU上，TensorFlow使用CUDA（Compute Unified Device Architecture）技术来利用GPU进行并行计算并加速训练过程，因为GPU拥有数百到数千个小型核心，这比CPU的几十个核心要多得多。这使得TensorFlow能够在GPU上实现更快的训练速度和更高的吞吐量，尤其是在处理大规模的深度学习任务时。
+另外需要注意的是，如果你的计算机没有安装专门的GPU，则无法使用TensorFlow GPU。在这种情况下，TensorFlow会使用CPU作为默认选项，但是训练过程会比在GPU上慢得多。因此，如果你需要进行大量的深度学习训练任务，建议使用具有至少一张GPU的计算机来加速训练。
+总之，TensorFlow GPU和CPU之间的区别在于它们的硬件架构、并行计算能力以及处理速度等方面。当进行大规模的深度学习训练时，使用GPU可以显著提高训练速度和吞吐量，而对于较小的任务或者没有专门GPU的计算机，则应该使用CPU。
+cuda和cuddn CUDA（Compute Unified Device Architecture）是一种由NVIDIA公司开发的并行计算平台和编程模型，它允许开发人员使用标准C/C&#43;&#43;语言编写基于GPU的高性能应用程序。CUDA包括一个可编程的内核语言（CUDA C/C&#43;&#43;），一个并行计算库（CUDA Toolkit），以及驱动程序和硬件架构，支持对NVIDIA GPU进行高性能并行计算。与CPU相比，GPU在并行处理任务时的性能要高得多，因此CUDA被广泛用于深度学习、科学计算和高性能计算等领域。[2]
+cuDNN（CUDA Deep Neural Network library）是NVIDIA CUDA的一个加速库，它提供了一组高度优化的本地函数，用于加速深度神经网络模型的训练和推理。cuDNN主要用于卷积神经网络（CNNs）和递归神经网络（RNNs）等深度学习模型的优化，从而实现更快的训练和推理速度。cuDNN支持多种深度学习框架，包括TensorFlow，PyTorch和Caffe等。[1]
+因此，CUDA是一种GPU计算平台和编程模型，cuDNN是其中一个加速库，专门用于加速深度学习模型的训练和推理。这两个技术结合起来，可以实现对GPU的高性能并行计算和深度学习模型的优化，从而提高深度学习任务的整体性能。
+不同的tensorflow版本需要不同的cuda和cuddn版本，google官网可查看 https://tensorflow.google.cn/install/source_windows?hl=en 如果电脑有gpu建议安装tensorflow-gpu,如果电脑没有gpu安装性能较差的tensorflow
+打开任务管理器-性能,查看你是否支持gpu 从这里我们可以看到我的cpu是英伟达(nvidia)的gtx1050 如果电脑已经安装显卡驱动，cuda肯定是自带的，我们可以使用nvidia-smi命令查看">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/ai/deep_learning/frameworks/dl_01_tensorflow/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="深度学习01-tensorflow开发环境搭建 :: liaomin416100569博客">
+    <meta property="og:description" content="@[toc]
+简介 TensorFlow是一种端到端开源机器学习平台，它提供了一个全面而灵活的生态系统，包含各种工具、库和社区资源，能够助力研究人员推动先进机器学习技术的发展。在TensorFlow机器学习框架下，开发者能够轻松地构建和部署由机器学习提供支持的应用。[2]
+Keras是一个高层次神经网络 API，适用于快速构建原型、高级研究和生产。它作为TensorFlow的一个接口，可以兼容多种深度学习框架。Keras 的核心数据结构是 model，一种组织网络层的方式。最简单的模型是 Sequential 顺序模型，它由多个网络层线性堆叠。对于更复杂的结构，你应该使用 Keras 函数式 API，它允许构建任意的神经网络图。 Keras最开始是为研究人员开发的，其目的在于快速实验，具有相同的代码可以在CPU或GPU上无缝切换运行的特点，同时也具有用户友好的API，方便快速地开发深度学习模型的原型。 Keras使用类sklearn的api接口来调用tensorflow，从sklearn机器学习中切换过来，更加容易上手。 Tenforflow2.0后直接内置可keras。
+运行硬件 TensorFlow支持在CPU和GPU上运行。GPU（图形处理单元）是一种专门用于加速计算的硬件，它可以大大提高深度学习模型的训练速度。相对而言，CPU（中央处理器）的每个核心具有更强大的处理能力，但它们的数量通常非常有限，因此在处理大数据时它们表现不佳。
+TensorFlow GPU和CPU的主要区别在于如何使用硬件来处理计算任务，以及处理速度的差异。在CPU上，TensorFlow利用所有可用的CPU内核并将任务分配给它们，这可能需要几分钟或几小时来完成。在GPU上，TensorFlow使用CUDA（Compute Unified Device Architecture）技术来利用GPU进行并行计算并加速训练过程，因为GPU拥有数百到数千个小型核心，这比CPU的几十个核心要多得多。这使得TensorFlow能够在GPU上实现更快的训练速度和更高的吞吐量，尤其是在处理大规模的深度学习任务时。
+另外需要注意的是，如果你的计算机没有安装专门的GPU，则无法使用TensorFlow GPU。在这种情况下，TensorFlow会使用CPU作为默认选项，但是训练过程会比在GPU上慢得多。因此，如果你需要进行大量的深度学习训练任务，建议使用具有至少一张GPU的计算机来加速训练。
+总之，TensorFlow GPU和CPU之间的区别在于它们的硬件架构、并行计算能力以及处理速度等方面。当进行大规模的深度学习训练时，使用GPU可以显著提高训练速度和吞吐量，而对于较小的任务或者没有专门GPU的计算机，则应该使用CPU。
+cuda和cuddn CUDA（Compute Unified Device Architecture）是一种由NVIDIA公司开发的并行计算平台和编程模型，它允许开发人员使用标准C/C&#43;&#43;语言编写基于GPU的高性能应用程序。CUDA包括一个可编程的内核语言（CUDA C/C&#43;&#43;），一个并行计算库（CUDA Toolkit），以及驱动程序和硬件架构，支持对NVIDIA GPU进行高性能并行计算。与CPU相比，GPU在并行处理任务时的性能要高得多，因此CUDA被广泛用于深度学习、科学计算和高性能计算等领域。[2]
+cuDNN（CUDA Deep Neural Network library）是NVIDIA CUDA的一个加速库，它提供了一组高度优化的本地函数，用于加速深度神经网络模型的训练和推理。cuDNN主要用于卷积神经网络（CNNs）和递归神经网络（RNNs）等深度学习模型的优化，从而实现更快的训练和推理速度。cuDNN支持多种深度学习框架，包括TensorFlow，PyTorch和Caffe等。[1]
+因此，CUDA是一种GPU计算平台和编程模型，cuDNN是其中一个加速库，专门用于加速深度学习模型的训练和推理。这两个技术结合起来，可以实现对GPU的高性能并行计算和深度学习模型的优化，从而提高深度学习任务的整体性能。
+不同的tensorflow版本需要不同的cuda和cuddn版本，google官网可查看 https://tensorflow.google.cn/install/source_windows?hl=en 如果电脑有gpu建议安装tensorflow-gpu,如果电脑没有gpu安装性能较差的tensorflow
+打开任务管理器-性能,查看你是否支持gpu 从这里我们可以看到我的cpu是英伟达(nvidia)的gtx1050 如果电脑已经安装显卡驱动，cuda肯定是自带的，我们可以使用nvidia-smi命令查看">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="深度学习01-tensorflow开发环境搭建 :: liaomin416100569博客">
+    <meta itemprop="description" content="@[toc]
+简介 TensorFlow是一种端到端开源机器学习平台，它提供了一个全面而灵活的生态系统，包含各种工具、库和社区资源，能够助力研究人员推动先进机器学习技术的发展。在TensorFlow机器学习框架下，开发者能够轻松地构建和部署由机器学习提供支持的应用。[2]
+Keras是一个高层次神经网络 API，适用于快速构建原型、高级研究和生产。它作为TensorFlow的一个接口，可以兼容多种深度学习框架。Keras 的核心数据结构是 model，一种组织网络层的方式。最简单的模型是 Sequential 顺序模型，它由多个网络层线性堆叠。对于更复杂的结构，你应该使用 Keras 函数式 API，它允许构建任意的神经网络图。 Keras最开始是为研究人员开发的，其目的在于快速实验，具有相同的代码可以在CPU或GPU上无缝切换运行的特点，同时也具有用户友好的API，方便快速地开发深度学习模型的原型。 Keras使用类sklearn的api接口来调用tensorflow，从sklearn机器学习中切换过来，更加容易上手。 Tenforflow2.0后直接内置可keras。
+运行硬件 TensorFlow支持在CPU和GPU上运行。GPU（图形处理单元）是一种专门用于加速计算的硬件，它可以大大提高深度学习模型的训练速度。相对而言，CPU（中央处理器）的每个核心具有更强大的处理能力，但它们的数量通常非常有限，因此在处理大数据时它们表现不佳。
+TensorFlow GPU和CPU的主要区别在于如何使用硬件来处理计算任务，以及处理速度的差异。在CPU上，TensorFlow利用所有可用的CPU内核并将任务分配给它们，这可能需要几分钟或几小时来完成。在GPU上，TensorFlow使用CUDA（Compute Unified Device Architecture）技术来利用GPU进行并行计算并加速训练过程，因为GPU拥有数百到数千个小型核心，这比CPU的几十个核心要多得多。这使得TensorFlow能够在GPU上实现更快的训练速度和更高的吞吐量，尤其是在处理大规模的深度学习任务时。
+另外需要注意的是，如果你的计算机没有安装专门的GPU，则无法使用TensorFlow GPU。在这种情况下，TensorFlow会使用CPU作为默认选项，但是训练过程会比在GPU上慢得多。因此，如果你需要进行大量的深度学习训练任务，建议使用具有至少一张GPU的计算机来加速训练。
+总之，TensorFlow GPU和CPU之间的区别在于它们的硬件架构、并行计算能力以及处理速度等方面。当进行大规模的深度学习训练时，使用GPU可以显著提高训练速度和吞吐量，而对于较小的任务或者没有专门GPU的计算机，则应该使用CPU。
+cuda和cuddn CUDA（Compute Unified Device Architecture）是一种由NVIDIA公司开发的并行计算平台和编程模型，它允许开发人员使用标准C/C&#43;&#43;语言编写基于GPU的高性能应用程序。CUDA包括一个可编程的内核语言（CUDA C/C&#43;&#43;），一个并行计算库（CUDA Toolkit），以及驱动程序和硬件架构，支持对NVIDIA GPU进行高性能并行计算。与CPU相比，GPU在并行处理任务时的性能要高得多，因此CUDA被广泛用于深度学习、科学计算和高性能计算等领域。[2]
+cuDNN（CUDA Deep Neural Network library）是NVIDIA CUDA的一个加速库，它提供了一组高度优化的本地函数，用于加速深度神经网络模型的训练和推理。cuDNN主要用于卷积神经网络（CNNs）和递归神经网络（RNNs）等深度学习模型的优化，从而实现更快的训练和推理速度。cuDNN支持多种深度学习框架，包括TensorFlow，PyTorch和Caffe等。[1]
+因此，CUDA是一种GPU计算平台和编程模型，cuDNN是其中一个加速库，专门用于加速深度学习模型的训练和推理。这两个技术结合起来，可以实现对GPU的高性能并行计算和深度学习模型的优化，从而提高深度学习任务的整体性能。
+不同的tensorflow版本需要不同的cuda和cuddn版本，google官网可查看 https://tensorflow.google.cn/install/source_windows?hl=en 如果电脑有gpu建议安装tensorflow-gpu,如果电脑没有gpu安装性能较差的tensorflow
+打开任务管理器-性能,查看你是否支持gpu 从这里我们可以看到我的cpu是英伟达(nvidia)的gtx1050 如果电脑已经安装显卡驱动，cuda肯定是自带的，我们可以使用nvidia-smi命令查看">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="571">
+    <title>深度学习01-tensorflow开发环境搭建 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758332784" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758332784" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758332784" defer></script>
+    <script src="/docs/js/search.min.js?1758332784" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758332784";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758332784" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758332784" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/programming\/ai\/deep_learning\/frameworks\/dl_01_tensorflow\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758332784" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/ai/deep_learning/frameworks/dl_01_tensorflow/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#运行硬件">运行硬件</a></li>
+    <li><a href="#cuda和cuddn">cuda和cuddn</a></li>
+    <li><a href="#tensorflow安装">tensorflow安装。</a>
+      <ul>
+        <li><a href="#tensorflow版本">tensorflow版本</a></li>
+        <li><a href="#安装anaconda">安装Anaconda</a></li>
+        <li><a href="#创建python环境">创建python环境</a></li>
+        <li><a href="#安装tensorflow-gpu">安装tensorflow-gpu</a></li>
+        <li><a href="#pycharm配置">pycharm配置</a>
+          <ul>
+            <li><a href="#配置conda环境">配置conda环境</a></li>
+            <li><a href="#配置juypternotebook">配置juypternotebook</a></li>
+          </ul>
+        </li>
+        <li><a href="#安装cuda">安装cuda</a></li>
+        <li><a href="#安装cudnn">安装cudnn</a></li>
+        <li><a href="#安装blas">安装blas</a></li>
+      </ul>
+    </li>
+    <li><a href="#云服务器运行">云服务器运行</a>
+      <ul>
+        <li><a href="#云服务器选择">云服务器选择</a></li>
+        <li><a href="#pycharm配置-1">pycharm配置</a>
+          <ul>
+            <li><a href="#代码自动同步">代码自动同步</a></li>
+            <li><a href="#远程interpreter">远程interpreter</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/index.html"><span itemprop="name">人工智能</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/deep_learning/index.html"><span itemprop="name">深度学习</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/ai/deep_learning/frameworks/index.html"><span itemprop="name">框架学习</span></a><meta itemprop="position" content="5">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">深度学习01-tensorflow开发环境搭建</span><meta itemprop="position" content="6"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/deep_learning/frameworks/index.html" title="框架学习 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/ai/deep_learning/frameworks/dl_06_pytorch/index.html" title="深度学习06-pytorch从入门到精通 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="深度学习01-tensorflow开发环境搭建">深度学习01-tensorflow开发环境搭建</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p>@[toc]</p>
+<h1 id="简介">简介</h1>
+<p>TensorFlow是一种端到端开源机器学习平台，它提供了一个全面而灵活的生态系统，包含各种工具、库和社区资源，能够助力研究人员推动先进机器学习技术的发展。在TensorFlow机器学习框架下，开发者能够轻松地构建和部署由机器学习提供支持的应用。[2]</p>
+<p>Keras是一个高层次神经网络 API，适用于快速构建原型、高级研究和生产。它作为TensorFlow的一个接口，可以兼容多种深度学习框架。Keras 的核心数据结构是 model，一种组织网络层的方式。最简单的模型是 Sequential 顺序模型，它由多个网络层线性堆叠。对于更复杂的结构，你应该使用 Keras 函数式 API，它允许构建任意的神经网络图。 Keras最开始是为研究人员开发的，其目的在于快速实验，具有相同的代码可以在CPU或GPU上无缝切换运行的特点，同时也具有用户友好的API，方便快速地开发深度学习模型的原型。
+Keras使用类sklearn的api接口来调用tensorflow，从sklearn机器学习中切换过来，更加容易上手。
+Tenforflow2.0后直接内置可keras。</p>
+<h1 id="运行硬件">运行硬件</h1>
+<p>TensorFlow支持在CPU和GPU上运行。GPU（图形处理单元）是一种专门用于加速计算的硬件，它可以大大提高深度学习模型的训练速度。相对而言，CPU（中央处理器）的每个核心具有更强大的处理能力，但它们的数量通常非常有限，因此在处理大数据时它们表现不佳。</p>
+<p>TensorFlow GPU和CPU的主要区别在于如何使用硬件来处理计算任务，以及处理速度的差异。在CPU上，TensorFlow利用所有可用的CPU内核并将任务分配给它们，这可能需要几分钟或几小时来完成。在GPU上，TensorFlow使用CUDA（Compute Unified Device Architecture）技术来利用GPU进行并行计算并加速训练过程，因为GPU拥有数百到数千个小型核心，这比CPU的几十个核心要多得多。这使得TensorFlow能够在GPU上实现更快的训练速度和更高的吞吐量，尤其是在处理大规模的深度学习任务时。</p>
+<p>另外需要注意的是，如果你的计算机没有安装专门的GPU，则无法使用TensorFlow GPU。在这种情况下，TensorFlow会使用CPU作为默认选项，但是训练过程会比在GPU上慢得多。因此，如果你需要进行大量的深度学习训练任务，建议使用具有至少一张GPU的计算机来加速训练。</p>
+<p>总之，TensorFlow GPU和CPU之间的区别在于它们的硬件架构、并行计算能力以及处理速度等方面。当进行大规模的深度学习训练时，使用GPU可以显著提高训练速度和吞吐量，而对于较小的任务或者没有专门GPU的计算机，则应该使用CPU。</p>
+<h1 id="cuda和cuddn">cuda和cuddn</h1>
+<p>CUDA（Compute Unified Device Architecture）是一种由NVIDIA公司开发的并行计算平台和编程模型，它允许开发人员使用标准C/C++语言编写基于GPU的高性能应用程序。CUDA包括一个可编程的内核语言（CUDA C/C++），一个并行计算库（CUDA Toolkit），以及驱动程序和硬件架构，支持对NVIDIA GPU进行高性能并行计算。与CPU相比，GPU在并行处理任务时的性能要高得多，因此CUDA被广泛用于深度学习、科学计算和高性能计算等领域。[2]</p>
+<p>cuDNN（CUDA Deep Neural Network library）是NVIDIA CUDA的一个加速库，它提供了一组高度优化的本地函数，用于加速深度神经网络模型的训练和推理。cuDNN主要用于卷积神经网络（CNNs）和递归神经网络（RNNs）等深度学习模型的优化，从而实现更快的训练和推理速度。cuDNN支持多种深度学习框架，包括TensorFlow，PyTorch和Caffe等。[1]</p>
+<p>因此，CUDA是一种GPU计算平台和编程模型，cuDNN是其中一个加速库，专门用于加速深度学习模型的训练和推理。这两个技术结合起来，可以实现对GPU的高性能并行计算和深度学习模型的优化，从而提高深度学习任务的整体性能。</p>
+<p>不同的tensorflow版本需要不同的cuda和cuddn版本，google官网可查看
+<a href="https://tensorflow.google.cn/install/source_windows?hl=en" rel="external" target="_blank">https://tensorflow.google.cn/install/source_windows?hl=en</a>
+<a href="#R-image-816be6c2a2d1b057b6881f9ca032bbde" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-816be6c2a2d1b057b6881f9ca032bbde"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a></p>
+<blockquote>
+<p>如果电脑有gpu建议安装tensorflow-gpu,如果电脑没有gpu安装性能较差的tensorflow</p></blockquote>
+<p>打开任务管理器-性能,查看你是否支持gpu
+<a href="#R-image-79443f7926be17264c57db6928981c65" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/747ab8d7d8544fe55578c8e1d0936685.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-79443f7926be17264c57db6928981c65"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/747ab8d7d8544fe55578c8e1d0936685.png"></a>
+从这里我们可以看到我的cpu是英伟达(nvidia)的gtx1050
+如果电脑已经安装显卡驱动，cuda肯定是自带的，我们可以使用nvidia-smi命令查看
+<a href="#R-image-1eacabd066190fcb9d70fec0b63d5684" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e25c201c268b87f8d57a7a5e01295d3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1eacabd066190fcb9d70fec0b63d5684"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e25c201c268b87f8d57a7a5e01295d3.png"></a></p>
+<h1 id="tensorflow安装">tensorflow安装。</h1>
+<h2 id="tensorflow版本">tensorflow版本</h2>
+<p>tensorflow-gpu需要至少4GB的GPU显存才能运行，并且在训练模型时需要大量的计算资源。而tensorflow-cpu则是专门为CPU设计的版本，能够在CPU上高效地运行，同时不需要GPU显存。一般pc电脑的环境中，建议使用tensorflow-cpu会更加适合。当然，如果你未来有升级GPU的计划，可以考虑使用tensorflow-gpu。</p>
+<h2 id="安装anaconda">安装Anaconda</h2>
+<p>首先我们安装Anaconda，<a href="https://blog.csdn.net/liaomin416100569/article/details/83745320?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522168336819016782425194396%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&request_id=168336819016782425194396&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-83745320-null-null.blog_rank_default&utm_term=conda&spm=1018.2226.3001.4450" rel="external" target="_blank">教程参考</a>：
+打开命令行
+<a href="#R-image-8d495e4bc2479f181d73fa66460bf80f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/fd6b8e1a83be89c65a7f52c0b51726fc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8d495e4bc2479f181d73fa66460bf80f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/fd6b8e1a83be89c65a7f52c0b51726fc.png"></a>
+同时这里建议使用anaconda的替代方案mamba，因为conda包多了之后安装超级慢，会让你崩溃的，mamba基本匹配pip的速度，<a href="https://mamba.readthedocs.io/en/latest/installation.html#api" rel="external" target="_blank">官网</a>。</p>
+<p>在window上打开powershell，执行web命令下载压缩包</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>mkdir d:\green\mamba &amp;&amp; cd d:\green\mamba
+Invoke-Webrequest -URI https://micro.mamba.pm/api/micromamba/win-64/latest -OutFile micromamba.tar.bz2
+tar xf micromamba.tar.bz2</code></pre></div>
+<p>比如我的下载这里，直接将解压路径添加到path环境变量中
+<a href="#R-image-1c9c1679d87001863d5ab5f2b16eb5e5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/02aa954dfeb8cd3b50824fbf40e41921.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1c9c1679d87001863d5ab5f2b16eb5e5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/02aa954dfeb8cd3b50824fbf40e41921.png"></a>
+其他命令就和conda一样了，比如</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>micromamba env list
+micomamba activate base</code></pre></div>
+<h2 id="创建python环境">创建python环境</h2>
+<p>在其他盘创建一个环境，假设使用python3.7版本</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>conda create --prefix=d:\condaenv\env_name python=3.7 
+micromamba create --prefix=d:\condaenv\env_name python=3.7 -c conda-forge</code></pre></div>
+<p>切换</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>activate d:\condaenv\env_name
+(d:\condaenv\env_name) C:\Users\liaomin&gt;python --version
+Python 3.7.4</code></pre></div>
+<h2 id="安装tensorflow-gpu">安装tensorflow-gpu</h2>
+<p>通过版本关系图
+<a href="#R-image-e41edf6f9a031a2ff025c9a2bf26b40f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e41edf6f9a031a2ff025c9a2bf26b40f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
+可以确定我们可以使用python3.7版本安装tensorflow-gpu 2.0.0以上所有版本，我们选择一个2.6.0</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#设置镜像源
+conda config --add channels    https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels    https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+conda config --add channels    https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+#安装tensorflow-gpu
+conda install tensorflow-gpu==2.6.0
+#或者（建议用mamba）
+micomamba install tensorflow-gpu==2.6.0
+#如果是cpu版本直接
+micomamba install tensorflow==2.6.0</code></pre></div>
+<p>安装完成我们先不急着安装cuddn和cuda可以先写个helloworld测试下</p>
+<h2 id="pycharm配置">pycharm配置</h2>
+<h3 id="配置conda环境">配置conda环境</h3>
+<p>创建一个项目pure python项目，点击project interpreter 选择Existing interpreter,点击右侧的..
+<a href="#R-image-2b6d6f11bb0eed70db5919e88adeba25" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/bc3c95484e23d1b14117ae8563b23c6b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2b6d6f11bb0eed70db5919e88adeba25"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/bc3c95484e23d1b14117ae8563b23c6b.png"></a>
+选择conda environment
+<a href="#R-image-acd40c8aced7bd9edd453d476e349039" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7ff530385a56ad5d17e6fd943a52c388.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-acd40c8aced7bd9edd453d476e349039"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7ff530385a56ad5d17e6fd943a52c388.png"></a>
+然后点击ok 在interpreter下拉框中选择刚新建的那个</p>
+<p><a href="#R-image-619c7c72eb02068af53cd1d1f246d678" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d640964e56f34afde2a46a26bcccae8a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-619c7c72eb02068af53cd1d1f246d678"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d640964e56f34afde2a46a26bcccae8a.png"></a>
+编写一段helloworld代码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import tensorflow as tf
+
+# 创建一个常量张量
+x = tf.constant([1, 2, 3])
+
+# 创建一个变量张量
+y = tf.Variable([3, 2, 1])
+
+# 计算两个张量的和
+z = tf.add(x, y)
+
+# 输出结果
+print(z.numpy())</code></pre></div>
+<p>运行，虽然能输出结果[4 4 4]，但是有红色警告</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>2023-05-06 16:43:35.610912: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;cudart64_110.dll&#39;; dlerror: cudart64_110.dll not found
+#下面这段是安装好cuda后报的错。
+2023-05-06 17:37:38.727999: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;cudnn64_8.dll&#39;; dlerror: cudnn64_8.dll not found
+2023-05-06 17:37:38.728345: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1835] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2023-05-06 17:37:38.729310: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.</code></pre></div>
+<blockquote>
+<p>显然缺少cuda和cudnn，注意这里缺少cudart64_110.dll并不是说cuda就是110版本，实际你11.2安装后也是这个dll。</p></blockquote>
+<h3 id="配置juypternotebook">配置juypternotebook</h3>
+<p>打开anaconda prompt，并且激活你新穿件的环境，安装jupyter</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>conda install jupyter notebook
+#或者（建议用mamba）
+micomamba install jupyter notebook</code></pre></div>
+<p>在pycharm中右键创建一个notebook
+<a href="#R-image-90d94ed5eb911647b57a6160b71b55f2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/72d892def48992ca2f8af5b4fe98da5b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-90d94ed5eb911647b57a6160b71b55f2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/72d892def48992ca2f8af5b4fe98da5b.png"></a>
+输入之前的helloword代码，选择运行或者调试
+<a href="#R-image-3a19e64362ebdefde7f6bc6e1e0c9201" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b280bd8bed7752506001586191938eae.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3a19e64362ebdefde7f6bc6e1e0c9201"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b280bd8bed7752506001586191938eae.png"></a>
+右侧输出结果</p>
+<h2 id="安装cuda">安装cuda</h2>
+<p>通过版本关系图，我们知道tensorflow-gpu 2.6.0需要安装11.2的cuda</p>
+<blockquote>
+<p>如果是cpu版本无需安装</p></blockquote>
+<p><a href="#R-image-5fa2f6ea4d095f1ad2d33681e7038de7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5fa2f6ea4d095f1ad2d33681e7038de7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
+<a href="https://developer.nvidia.com/cuda-toolkit-archive" rel="external" target="_blank">cuda历史版本下载位置</a>,下载对应版本安装
+这里有三个版本选择最高的11.2.2
+<a href="#R-image-889e4ebe700f473fe5b8b0588814646a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/c00ccc2827431ff5bfaa126ae1e60301.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-889e4ebe700f473fe5b8b0588814646a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/c00ccc2827431ff5bfaa126ae1e60301.png"></a>
+点击进入后 选择window版本
+<a href="#R-image-dcf8f15e6e8338339d4063e91680675d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5ee0cca9aa94121ef48ed520c8e59b0a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dcf8f15e6e8338339d4063e91680675d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5ee0cca9aa94121ef48ed520c8e59b0a.png"></a>
+默认安装路径是C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA
+打开电脑设置——&gt;系统——&gt;系统高级设置——&gt;环境变量——&gt;系统变量——&gt;PATH
+将C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin加入到环境变量PATH中
+<a href="#R-image-92e6e424a720aa95010881511d403855" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f610ad05f1964bec76d594a88303e082.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-92e6e424a720aa95010881511d403855"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f610ad05f1964bec76d594a88303e082.png"></a>
+cmd重新执行nvidia-smi，发现版本更新了
+<a href="#R-image-77f3256aefa44ae9de3a60b7e798d2f7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b9d39cab59c0f309514d6fefdbc05129.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-77f3256aefa44ae9de3a60b7e798d2f7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b9d39cab59c0f309514d6fefdbc05129.png"></a>
+发现之前缺失的cudart64_110.dll确实在C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin
+<a href="#R-image-d17b533e33647fa44df51c2e8bcee292" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d58b409ad0ae936f5b41aded022ed05c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d17b533e33647fa44df51c2e8bcee292"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d58b409ad0ae936f5b41aded022ed05c.png"></a></p>
+<h2 id="安装cudnn">安装cudnn</h2>
+<p>通过版本关系图，我们知道tensorflow-gpu 2.6.0需要安装8.1的cudnn
+<a href="#R-image-6071affef1faaf304270ee99087c80d2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6071affef1faaf304270ee99087c80d2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
+<a href="https://developer.nvidia.com/rdp/cudnn-archive" rel="external" target="_blank">cudnn历史版本下载位置</a>,下载对应版本8.1，下载cudnn需要注册nvidia
+<a href="#R-image-a0b1b3c53b3f813d3ef45dccb1bdd078" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f6ebc457c03546077202d5c3fb0cb4bb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a0b1b3c53b3f813d3ef45dccb1bdd078"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f6ebc457c03546077202d5c3fb0cb4bb.png"></a></p>
+<p>选择cudnn library for window(x86)点击下载
+打开cudnn文件夹
+<a href="#R-image-12afeb1444d5f41c207a0c93bbbde799" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e849422d3211cbd7122eef40020de90.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-12afeb1444d5f41c207a0c93bbbde799"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e849422d3211cbd7122eef40020de90.png"></a>
+将上述cudnn里面的文件移动或copy到cuda对应文件夹目录下即可！
+<a href="#R-image-64d9897f000fdd34a8dcdab7009cdd1e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7c4f24343c84a5240feb4895fcf0d062.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-64d9897f000fdd34a8dcdab7009cdd1e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7c4f24343c84a5240feb4895fcf0d062.png"></a></p>
+<p>此时在运行helloworld程序使用gpu正常运行</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>2023-05-06 19:01:23.403530: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-05-06 19:01:24.075663: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1510] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 1320 MB memory:  -&gt; device: 0, name: GeForce GTX 1050, pci bus id: 0000:01:00.0, compute capability: 6.1
+[4 4 4]</code></pre></div>
+<h2 id="安装blas">安装blas</h2>
+<p>TensorFlow 是一个使用 C++ 编写的开源机器学习框架，它支持在 CPU 和 GPU 上运行计算。在 TensorFlow 中，BLAS（Basic Linear Algebra Subprograms）库是用于执行线性代数计算的关键库，例如矩阵乘法和向量加法。由于这些操作在机器学习中非常常见，因此 BLAS 库对于 TensorFlow 的性能和稳定性至关重要。
+切换到你的python环境，使用以下命令来安装 BLAS 库：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>conda install blas
+#或者（建议用mamba）
+micomamba install openblas</code></pre></div>
+<p>安装完成后，因为安装的是动态链接库最终仍然会安装在你的anaconda的base环境下，找到动态链接库的位置</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>C:\Users\你的用户名\anaconda3\pkgs\blas-2.116-blis\Library\bin</code></pre></div>
+<p>将上面的路径添加到环境变量PATH中，如果不添加tensorflow会报错找不到blas
+执行以下代码测试</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>python -c &#34;import tensorflow as tf; print(tf.linalg.matmul(tf.ones([1, 2]), tf.ones([2, 2])))&#34;</code></pre></div>
+<p>运行结果</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>(d:\condaenv\env_name) C:\Users\liaomin&gt;python -c &#34;import tensorflow as tf; print(tf.linalg.matmul(tf.ones([1, 2]), tf.ones([2, 2])))&#34;
+2023-05-10 09:39:23.654612: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-05-10 09:39:24.372107: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1510] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 1320 MB memory:  -&gt; device: 0, name: GeForce GTX 1050, pci bus id: 0000:01:00.0, compute capability: 6.1
+tf.Tensor([[2. 2.]], shape=(1, 2), dtype=float32)</code></pre></div>
+<h1 id="云服务器运行">云服务器运行</h1>
+<p>云服务器提供高性能的CPU和GPU运算服务器，对个人开发者来说非常便宜一般几十块钱半个月的秒杀团很多，可以提供强大的计算能力。对于需要大量计算资源的TensorFlow程序，使用腾讯云服务器可以提高计算效率</p>
+<h2 id="云服务器选择">云服务器选择</h2>
+<p>我这里首选autodl（关机不扣费，gpu按小时收费，0.5-2块钱一个小时，而且数据集和镜像【chatglm镜像等】，cuda都安装好了）,其次是腾讯云（新用户有秒杀,15天60元还是划算的），对个人友好，可以微信登录，微信支付。
+<a href="#R-image-a61b033be7e47cadfbf2efc736439544" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/16c6d2a4a030157e9d811fae81e6e5f8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a61b033be7e47cadfbf2efc736439544"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/16c6d2a4a030157e9d811fae81e6e5f8.png"></a>
+右侧的gpu服务器是gpu 8gb的适合个人学习来跑神经网络。
+购买的时候选择系统为：unbuntu的tensorflow版本，我选择的是：TensorFlow 2.8.0 Ubuntu 18.04 GPU基础镜像（预装460驱动），不要选window自己安装环境，麻烦，因为我们的pycharm支持远程ssh编程，用服务器跑，结果显示在pycharm中。
+<a href="#R-image-46067ee9d521f765d71ef9f871d7377e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/00b3624fbe30c244ef748716fabf3cd7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-46067ee9d521f765d71ef9f871d7377e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/00b3624fbe30c244ef748716fabf3cd7.png"></a>
+重置你的ubuntu密码（系统默认的账号是ubuntu，不是root），主机会给你配个公网地址
+<a href="#R-image-203fe5dc5bccf643f9d3e9674e741d3e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/03a69f111dd440f8633b1b2192450899.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-203fe5dc5bccf643f9d3e9674e741d3e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/03a69f111dd440f8633b1b2192450899.png"></a></p>
+<h2 id="pycharm配置-1">pycharm配置</h2>
+<h3 id="代码自动同步">代码自动同步</h3>
+<p>我们在/homt/ubuntu用户目录下新建一个deeplearn目录用于映射本地代码
+点击tools-deployment-configuation
+<a href="#R-image-e8381d7e526fa127095ac3ea05388b6e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/de77e64a04603d433809c25fa3567691.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e8381d7e526fa127095ac3ea05388b6e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/de77e64a04603d433809c25fa3567691.png"></a>
+选择sftp，输入账号密码测试连接
+<a href="#R-image-f26b0bfaf325e7e3dc60d73cf1591814" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a42f3701e66c5f8932888e282d7a18c3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f26b0bfaf325e7e3dc60d73cf1591814"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a42f3701e66c5f8932888e282d7a18c3.png"></a>
+点击mappings目录映射本地目录和远程目录
+<a href="#R-image-031a2e204441ce4fff3837a56a739b36" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a400e3f6454fae5eb654334f45c23568.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-031a2e204441ce4fff3837a56a739b36"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a400e3f6454fae5eb654334f45c23568.png"></a>
+确定后在享有右键deployments-&gt;upload  上传代码
+<a href="#R-image-3da2a3056d1231d62e45e26faafd63b4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/91f757c80cb66d775038cead41043367.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3da2a3056d1231d62e45e26faafd63b4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/91f757c80cb66d775038cead41043367.png"></a>
+点击tools-deployments-browe remote host查看远程目录是否上传（勾上Automatic upload(always)保存代码自动上传）
+<a href="#R-image-00e380af721004fc1bb8ba53bb429800" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/1bbb857b7f23cd2f39f6037316f21d72.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-00e380af721004fc1bb8ba53bb429800"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/1bbb857b7f23cd2f39f6037316f21d72.png"></a></p>
+<h3 id="远程interpreter">远程interpreter</h3>
+<p>点击File-Settings-Project（项目名）-Project interpreter  add一个
+<a href="#R-image-748d940454afa67c0b14730a4067e18d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/29de250093f29318a55eac79c8d37054.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-748d940454afa67c0b14730a4067e18d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/29de250093f29318a55eac79c8d37054.png"></a>
+输入密码后下一步进入配置python目录，我们可以使用shell登录到远程服务器执行</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>ubuntu@VM-0-5-ubuntu:~$ which python3
+/usr/local/miniconda3/bin//python3</code></pre></div>
+<p>在interpreter上输入python3的路径即可
+<a href="#R-image-3e17ebb2644ddd9e5f7de1155c671c9c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/4bb8855380c92815462395d426b530ce.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3e17ebb2644ddd9e5f7de1155c671c9c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/4bb8855380c92815462395d426b530ce.png"></a>
+确认项目选择了该interpreter
+<a href="#R-image-82a7e4d7f824a7966e0c7796f5a8beba" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/ba90db920534cd7ad468962250bfeac0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-82a7e4d7f824a7966e0c7796f5a8beba"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/ba90db920534cd7ad468962250bfeac0.png"></a></p>
+<p>接下来打开神经网络代码,，代码右键运行，可看到运行是ssh运行的
+<a href="#R-image-a77489f2c6320b4acc318df341667cc2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a5962804b7cb70c71bed5ae6d5e93f83.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a77489f2c6320b4acc318df341667cc2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a5962804b7cb70c71bed5ae6d5e93f83.png"></a>
+执行后的模型实际上是在远程服务器的可以使用brwoer remote host右键下载下来覆盖本地
+<a href="#R-image-98713afc9da89effc768084de0131867" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/aa8649bbd102ecb346f603a234656d02.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-98713afc9da89effc768084de0131867"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/aa8649bbd102ecb346f603a234656d02.png"></a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/index.html">工具库</a><ul id="R-subsections-e43804740042696aa314af8cc1e28fa9" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/basic/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/basic/index.html">深度基础</a><ul id="R-subsections-82d91c326db2e74346572c248dd5a837" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/frameworks/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/frameworks/index.html">框架学习</a><ul id="R-subsections-bc6c627c1fa57b86d2660d273634c1d2" class="collapsible-menu">
+            <li class="active " data-nav-id="/docs/programming/ai/deep_learning/frameworks/dl_01_tensorflow/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/frameworks/dl_01_tensorflow/index.html">深度学习01-tensorflow开发环境搭建</a></li>
+            <li class="" data-nav-id="/docs/programming/ai/deep_learning/frameworks/dl_06_pytorch/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/frameworks/dl_06_pytorch/index.html">深度学习06-pytorch从入门到精通</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/cnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/cnn/index.html">卷积神经网络</a><ul id="R-subsections-7bacfefef24ae5de2e950bd8fb081ec1" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/rnn/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/rnn/index.html">循环神经网络</a><ul id="R-subsections-addeb8e29ffecb1f809f271ff170a522" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/index.html">生成对抗网络</a><ul id="R-subsections-2787239befb1b0643d0f03fc48340180" class="collapsible-menu"></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758332784" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758332784" defer></script>
+    <script src="/docs/js/theme.min.js?1758332784" defer></script>
+  </body>
+</html>

@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>汇编语言 :: liaomin416100569博客</title>
-    <link>http://localhost:1313/docs/programming/languages/assembly/index.html</link>
+    <link>https://jiaozi789.github.io/docs/programming/languages/assembly/index.html</link>
     <description></description>
     <generator>Hugo</generator>
-    <language>en-us</language>
+    <language>zh</language>
     <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/docs/programming/languages/assembly/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://jiaozi789.github.io/docs/programming/languages/assembly/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>68000汇编实战01-编程基础</title>
-      <link>http://localhost:1313/docs/programming/languages/assembly/68000_01_base/index.html</link>
+      <link>https://jiaozi789.github.io/docs/programming/languages/assembly/68000_01_base/index.html</link>
       <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
-      <guid>http://localhost:1313/docs/programming/languages/assembly/68000_01_base/index.html</guid>
+      <guid>https://jiaozi789.github.io/docs/programming/languages/assembly/68000_01_base/index.html</guid>
       <description>简介 68000 汇编语言是为 Motorola 68000 微处理器设计的低级编程语言。68000 微处理器于 1979 年推出，因其强大的性能和灵活的架构而广泛应用于多种计算机系统和嵌入式设备中。以下是对 68000 汇编语言的背景、应用领域以及学习它的好处的详细介绍。&#xA;产生背景 技术进步：&#xA;68000 微处理器是 16 位架构，具有 32 位的地址总线，能够寻址高达 4GB 的内存。这使得它在当时的微处理器中具有较高的性能和灵活性。 其设计采用了复杂指令集计算（CISC）架构，支持多种寻址模式和丰富的指令集。 市场需求：&#xA;1970 年代末和1980年代初，个人计算机和嵌入式系统的需求迅速增长。68000 微处理器因其性能和成本效益被广泛采用。 许多知名的计算机系统（如 Apple Macintosh、Atari ST 和 Sega Genesis）都使用了 68000 处理器。 应用领域 个人计算机：&#xA;68000 微处理器被用于早期的个人计算机，如 Apple Macintosh 和 Atari ST。这些系统的操作系统和应用程序通常使用 68000 汇编语言进行开发。 嵌入式系统：&#xA;68000 处理器也被广泛应用于嵌入式系统，如工业控制、汽车电子和消费电子产品。 游戏机：&#xA;Sega Genesis 和其他游戏机使用 68000 处理器，许多经典游戏都是用 68000 汇编语言编写的，学习后可以做一些hackrom的实战。 实时系统：&#xA;由于其高效的性能，68000 处理器在实时系统中也得到了应用，如医疗设备和航空航天系统。 语言学习 EASy68K EASy68K 是一个 68000 结构化汇编语言集成开发环境（IDE）。EASy68K 允许您在 Windows PC 或 Wine 上编辑、汇编和运行 68000 程序。无需额外的硬件。EASy68K 是一个开源项目，根据 GNU 通用公共使用许可分发。 使用easy68k方便我们学习整套68000的编程和调试，学习这件基础知识，对我们hackrom或者逆向的基础。 下载地址：http://www.easy68k.com/files/SetupEASy68K.exe 安装完成后的目录结构</description>
     </item>
   </channel>

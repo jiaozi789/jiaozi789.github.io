@@ -2,17 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>人工智能 :: liaomin416100569博客</title>
-    <link>http://localhost:1313/docs/programming/ai/index.html</link>
+    <link>https://jiaozi789.github.io/docs/programming/ai/index.html</link>
     <description></description>
     <generator>Hugo</generator>
-    <language>en-us</language>
+    <language>zh</language>
     <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/docs/programming/ai/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>工具库</title>
-      <link>http://localhost:1313/docs/programming/ai/tools_libraries/index.html</link>
+      <link>https://jiaozi789.github.io/docs/programming/ai/tools_libraries/index.html</link>
       <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
-      <guid>http://localhost:1313/docs/programming/ai/tools_libraries/index.html</guid>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/tools_libraries/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>深度学习</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/index.html</guid>
       <description></description>
     </item>
   </channel>

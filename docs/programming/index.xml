@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>编程开发 :: liaomin416100569博客</title>
-    <link>http://localhost:1313/docs/programming/index.html</link>
+    <link>https://jiaozi789.github.io/docs/programming/index.html</link>
     <description></description>
     <generator>Hugo</generator>
-    <language>en-us</language>
+    <language>zh</language>
     <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/docs/programming/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://jiaozi789.github.io/docs/programming/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>编程语言</title>
-      <link>http://localhost:1313/docs/programming/languages/index.html</link>
+      <link>https://jiaozi789.github.io/docs/programming/languages/index.html</link>
       <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
-      <guid>http://localhost:1313/docs/programming/languages/index.html</guid>
+      <guid>https://jiaozi789.github.io/docs/programming/languages/index.html</guid>
       <description></description>
     </item>
     <item>
       <title>人工智能</title>
-      <link>http://localhost:1313/docs/programming/ai/index.html</link>
+      <link>https://jiaozi789.github.io/docs/programming/ai/index.html</link>
       <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
-      <guid>http://localhost:1313/docs/programming/ai/index.html</guid>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/index.html</guid>
       <description></description>
     </item>
     <item>
       <title>插件开发</title>
-      <link>http://localhost:1313/docs/programming/plugins/index.html</link>
+      <link>https://jiaozi789.github.io/docs/programming/plugins/index.html</link>
       <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
-      <guid>http://localhost:1313/docs/programming/plugins/index.html</guid>
+      <guid>https://jiaozi789.github.io/docs/programming/plugins/index.html</guid>
       <description>插件开发 插件开发文档 插件使用主题：&#xA;https://github.com/McShelby/hugo-theme-relearn https://github.com/88250/hugo-theme-archie 插件列表 插件列表</description>
     </item>
   </channel>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>循环神经网络 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/rnn/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/deep_learning/rnn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>深度学习05-RNN循环神经网络</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/rnn/dl_05_rnn/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/rnn/dl_05_rnn/index.html</guid>
+      <description>@[toc]&#xA;概述 循环神经网络（Recurrent Neural Network，RNN）是一种具有循环连接的神经网络结构，被广泛应用于自然语言处理、语音识别、时序数据分析等任务中。相较于传统神经网络，RNN的主要特点在于它可以处理序列数据，能够捕捉到序列中的时序信息。&#xA;RNN的基本单元是一个循环单元（Recurrent Unit），它接收一个输入和一个来自上一个时间步的隐藏状态，并输出当前时间步的隐藏状态。在传统的RNN中，循环单元通常使用tanh或ReLU等激活函数。&#xA;基本循环神经网络 原理 基本的 循环神经网络，结构由 输入层、一个隐藏层和输出层 组成。&#xA;$x$是输入向量，$o$是输出向量，$s$表示隐藏层的值；$U$是输入层到隐藏层的权重矩阵，$V$是隐藏层到输出层的权重矩阵。循环神经网络的隐藏层的值s不仅仅取决于当前这次的输入$x$，还取决于上一次隐藏层的值$s$。权重矩阵W就是隐藏层上一次的值作为这一次的输入的权重。 将上图的基本RNN结构在时间维度展开(RNN是一个链式结构，每个时间片使用的是相同的参数,t表示t时刻)： 现在看上去就会清楚许多，这个网络在t时刻接收到输入$x_t$之后，隐藏层的值是$s_t$，输出值是$o_t$。关键一点是$s_t$的值不仅仅取决于$x_t$，还取决于$s_{t−1}$。 公式1：$s_t=f(U∗x_t+W∗s_{t−1}+B1)$ 公式2：$o_t=g(V∗s_t+B2)$&#xA;式1是隐藏层的计算公式，它是循环层。U是输入x的权重矩阵，W是上一次隐藏层值$S_{t−1}$作为这一次的输入的权重矩阵，f是激活函数。 式2是输出层的计算公式，V是输出层的权重矩阵，g是激活函数,B1,B2是偏置假设为0。 隐含层有两个输入，第一是U与$x_t$向量的乘积，第二是上一隐含层输出的状态$s_t−1$和W的乘积。等于上一个时刻计算的$s_t−1$需要缓存一下，在本次输入$x_t$一起计算，共同输出最后的$o_t$。&#xA;如果反复把式1带入式2，我们将得到： 从上面可以看出，循环神经网络的输出值ot，是受前面历次输入值、、、、、、、、$x_t$、$x_{t−1}$、$x_{t−2}$、$x_{t−3}$、…影响的，这就是为什么循环神经网络可以往前看任意多个输入值的原因。这样其实不好，因为如果太前面的值和后面的值已经没有关系了，循环神经网络还考虑前面的值的话，就会影响后面值的判断。&#xA;上面是整个单向单层NN的前向传播过程&#xA;为了更快理解输入x输入格式下面使用nlp中Word Embedding讲解下。&#xA;Word Embedding 首先我们需要对输入文本x进行编码，使之成为计算机可以读懂的语言，在编码时，我们期望句子之间保持词语间的相似行，词的向量表示是进行机器学习和深度学习的基础。&#xA;word embedding的一个基本思路就是，我们把一个词映射到语义空间的一个点，把一个词映射到低维的稠密空间，这样的映射使得语义上比较相似的词，他在语义空间的距离也比较近，如果两个词的关系不是很接近，那么在语义空间中向量也会比较远。&#xA;如上图英语和西班牙语映射到语义空间，语义相同的数字他们在语义空间分布的位置是相同的 简单回顾一下word embedding,对于nlp来说，我们输入的是一个个离散的符号，对于神经网络来说，它处理的都是向量或者矩阵。所以第一步，我们需要把一个词编码成向量。最简单的就是one-hot的表示方法。如下图所示： python代码（one-hot），比如</description>
+    </item>
+  </channel>
+</rss>

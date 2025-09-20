@@ -29,6 +29,10 @@ baseURL = 'https://jiaozi789.github.io/docs'
 ```
 如果是其他github账号，修改index.html跳转即可。
 # 发布
+首先打包静态网页
+```shell
+  hugo
+```
 使用git push提交到github，然后使用github action自动发布到gitpage。
 访问yourname.github.io即可
 

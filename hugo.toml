@@ -1,11 +1,16 @@
 baseURL = 'https://jiaozi789.github.io/docs'
-languageCode = 'en-us'
+languageCode = 'zh'
 publishDir = "docs"
 title = 'liaomin416100569博客'
 theme = 'relearn'
 [params]
   custom_css = ["css/custom.css"]
-
+[params.search]
+  [params.search.adapter]
+    [params.search.adapter.params]
+      additionalContentLanguage = ["zh"]
 [markup.tableOfContents]
 startLevel = 1
 endLevel = 4   # 默认是 3，你可以改成 4 或更高
+
+defaultContentLanguage = "zh"

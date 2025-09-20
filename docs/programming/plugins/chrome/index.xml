@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>chrome插件 :: liaomin416100569博客</title>
-    <link>http://localhost:1313/docs/programming/plugins/chrome/index.html</link>
+    <link>https://jiaozi789.github.io/docs/programming/plugins/chrome/index.html</link>
     <description>插件开发 插件开发文档 插件使用主题：&#xA;https://github.com/McShelby/hugo-theme-relearn https://github.com/88250/hugo-theme-archie 插件列表 插件列表</description>
     <generator>Hugo</generator>
-    <language>en-us</language>
-    <atom:link href="http://localhost:1313/docs/programming/plugins/chrome/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/plugins/chrome/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

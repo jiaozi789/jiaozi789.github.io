@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>深度学习 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/deep_learning/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>深度基础</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/basic/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/basic/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>框架学习</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/frameworks/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/frameworks/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>卷积神经网络</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/cnn/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/cnn/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>循环神经网络</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/rnn/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/rnn/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>生成对抗网络</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/gans/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/gans/index.html</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

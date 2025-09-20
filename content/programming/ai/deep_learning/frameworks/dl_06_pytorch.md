@@ -1,0 +1,1911 @@
+---
+title: "深度学习06-pytorch从入门到精通"
+date: 2025-09-18T16:55:17+08:00
+# bookComments: false
+# bookSearchExclude: false
+---
+
+# 概述
+PyTorch是一个基于Python的开源机器学习框架，由Facebook的人工智能研究团队开发并维护。它提供了丰富的工具和接口，用于构建和训练深度神经网络模型。
+
+PyTorch的主要特点和优势包括：
+
+1.  动态图：PyTorch使用动态图机制，即在运行时构建计算图。这使得模型的构建和调试更加直观和灵活，能够更好地处理复杂的计算流程和动态控制流。
+    
+2.  简洁明了：PyTorch的API设计简洁明了，易于学习和使用。它提供了一系列高级接口，使得模型的构建、训练和评估变得更加简单和高效。
+    
+3.  强大的GPU加速支持：PyTorch能够利用GPU进行张量运算和模型训练，从而加快计算速度。它提供了简单易用的接口，使得在GPU上进行加速变得更加方便。
+    
+4.  灵活扩展：PyTorch支持自定义操作符和扩展，使得用户可以方便地实现和使用自己的模型组件和功能。
+    
+
+相比之下，TensorFlow是由Google开发的另一个流行的深度学习框架。与PyTorch相比，TensorFlow的主要特点和优势包括：
+
+1.  静态图：TensorFlow使用静态图机制，即在编译时构建计算图。这使得TensorFlow在模型运行时能够进行更多的优化和性能提升，适用于大规模的、计算密集型的任务。
+    
+2.  跨平台支持：TensorFlow可以在多种硬件和操作系统上运行，并且具有广泛的部署支持。它提供了TensorFlow Serving、TensorFlow Lite和TensorFlow.js等工具，使得模型的部署和移植更加方便。
+    
+3.  分布式训练支持：TensorFlow提供了分布式训练的功能，可以在多个设备和计算节点上进行模型训练，从而加快训练速度。
+    
+4.  生态系统和社区：TensorFlow具有庞大的生态系统和活跃的社区，提供了丰富的资源和支持，包括模型库、教程和论坛等。
+    
+
+总的来说，PyTorch和TensorFlow都是优秀的深度学习框架，各有其特点和适用场景。PyTorch适合于快速原型开发、动态计算流程和小规模任务，而TensorFlow适合于大规模、计算密集型的任务和分布式训练。选择哪个框架取决于具体的需求和个人偏好。
+><font color=red>对于初学接触神经网络，建议先学pytorch，它提供的api接近理论概念，有动态图，方便调试，适合做研究使用，，由于最近chargpt的大火，Hugging Face的transforms是使用PyTorch的。Hugging Face是一个提供自然语言处理（NLP）模型和工具的平台，他们的Transformers库主要基于PyTorch实现，他的入门pytorch必须要有基础。这个库提供了一系列用于数据预处理和后处理的函数，可以方便地对文本数据进行转换和处理。</font>
+
+# 环境准备
+## 安装cuda和cudnn
+一般pc电脑或者服务器都有nvida显卡，可以通过nvidia-smi命令查看。
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/7c7485dacdb8adcba9d5c4a222595310.png)
+其中python环境（3.8+版本），cuda和cudnn安装请参考：https://blog.csdn.net/liaomin416100569/article/details/130532993
+安装后可以看到我的cuda version是11.2
+## 安装pytorch
+考虑到版本向下兼容，不一定非要下载cuda=11.2对应的那个版本的torch，或许低于这个版本就可以。所以我就选择下载cuda11.1的版本。
+以下是pytorch对应的稳定版的网址下载链接，可以根据需要找到对应的torch版本下载。cu版本就是gpu版本，不带cu的是cpu版本，https://download.pytorch.org/whl/torch_stable.html，搜索cu111
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/857d436ed5632f0d7ba1e8077f290297.png)
+直接选择
+```
+pip install torch==1.9.1+cu111 torchvision==0.10.1+cu111 torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html
+```
+编写测试代码
+
+```
+import torch
+print(torch.__version__)
+#cuda是否可用，如果返回True，表示正常可用gpu
+print(torch.cuda.is_available())
+print(torch.cuda.device_count())
+
+x1=torch.rand(5,3)
+#把x1转换gpu0的tensor
+x1=x1.cuda(0)
+print(x1)
+```
+测试运行
+```
+
+1.9.1+cu111
+True  
+1
+tensor([[0.5761, 0.7046, 0.2004],
+        [0.6030, 0.3285, 0.5602],
+        [0.6852, 0.6602, 0.0033],
+        [0.4213, 0.7174, 0.0591],
+        [0.5276, 0.4181, 0.8665]], device='cuda:0')
+```
+## 使用colab
+如果自己沒有gpu的環境，可以使用cpu進行學習，但是學到模型训练还是要gpu，如果有外网环境，可以考虑使用google提供的colab，主要是免费，gpu能给到16GB，系统磁盘100gb，googledrive15gb,非常良心了，注意：colab不支持和本地pycharm远程调试，模型比较大时磁盘是个大问题，根据Colab的官方规定，每个用户每天可以使用Colab资源的总时间为12小时。这意味着，一旦你的Colab会话运行了12小时，你将无法继续使用Colab的计算资源。当然，你可以重新启动一个新的Colab会话来继续使用。
+### 申请colab
+首先你先需要申请一个googledrive（类似百度网盘），准备一个gmail邮箱就可以申请，申请完成后默认有15GB的存储空间，如果需要更多就需要购买了。
+在我的云端云盘右侧空白的地方点击邮件，关联更多应用，搜索colab安装，安装后右键就会多了
+一个google colaboratory，点击进去，会弹出一个notebook的开发环境。
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/513b61836eb74cf1a57b309f7d19de6d.png)
+可以点击左侧的文件夹，自动分配一个计算资源
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/dedeecbed8930d2b550c9ad5372bf3be.png)
+查看分配的机器
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/c5861825eb1467fc2f441e4768daa943.png)
+点击目录..可以进入到系统根目录,点击工具栏第三个图标挂载googledrive
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/815027001ec16447f56bb1c9d8c4020b.png)
+在content notepadbook中执行命令查看资源信息，和右侧的资源坐下对比，可以确认系统是ubuntu，内存是12.7gb，磁盘107gb，没有gpu
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/39ae8f7a2cfe2e36725e9c2e74027095.png)
+你的notepad文件内容，默认是新建在googledrive的根目录下，你可以双击文件直接进入notebook
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/729c97c06a90544540c31673759905c6.png)
+### 挂载googledrive
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/d54741aa9b66ccb2f5dcce53f4f6745f.png)
+挂载完成后/content多了一个drive目录，MyDrive内容就和googledrive是一致的。
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/0eeaf8fcfc14923a0d4e91de70034109.png)
+
+### colab申请gpu
+点击右上角的view resouce
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/ede9fef01cde00a0f1f3cf4a9ae559c6.png)
+选择change runtime type,选择免费的GPU或者TPU
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/c800af8f306e064ceb7159a967975e37.png)
+再次使用nvdia-smi确认
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/be6b362358675a6cb10e1d231886a30e.png)
+>google的另一款免费的实验免费gpu是kaggle，也可以注册使用，比colab更简单方便，同时可直接引用其他开源模型。
+### notebook语法
+1. python语法
+可直接在快中执行python语法。
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/f32d7b00b88b97e9dfbd2ef80df20c52.png)
+2. 使用！执行shell命令。
+比如使用 !bash进入一个交互shell行，exit退出
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/730e9b2adb8eef8db66b75ef16969a90.png)
+可以使用 ！任意shell命令执行，
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/1e3fc222300f02cb36acceae96aca869.png)
+# 基础
+## 张量
+在PyTorch中，除了张量（Tensor）之外，还有很多其他的数据类型和类。以下是一些常见的PyTorch数据类型和类：
+
+1.  Tensor（张量）：张量是PyTorch的核心数据结构，类似于数组，可以存储和操作多维数据。
+   
+2.  Variable（变量）：Variable是对张量的封装，用于自动求导。
+    
+3.  nn.Module：nn.Module是PyTorch中用于构建神经网络模型的基类，可以包含多个层和操作。
+    
+4.  nn.Parameter：nn.Parameter是Variable的子类，用于定义模型中需要进行学习的参数。
+    
+5.  DataLoader：DataLoader是一个用于加载数据的实用类，可以方便地对数据进行批量处理和迭代。
+    
+6.  Optimizer（优化器）：优化器是用于更新模型参数的算法，例如SGD、Adam等。
+    
+7.  Loss Function（损失函数）：损失函数用于衡量模型预测结果与真实标签之间的差异，例如交叉熵损失、均方误差等。
+    
+
+这些是PyTorch中常用的一些数据类型和类，它们提供了丰富的功能来支持深度学习任务的实现和训练。
+
+### 定义
+```
+import torch as t
+import numpy as np
+#构建5*3数组,只是分配了空间未初始化
+result=t.Tensor(5,3)
+print(result)
+#这里产生个0-1之间的tensor张量，并且初始化
+x1=t.rand(5,3)
+y1=t.rand(5,3)
+print(x1)
+print(x1.size())
+result=x1+y1
+print(result)
+```
+### numpy转换
+```
+#产生5个1的一维数组tensor转换成numpy
+print(t.ones(5).numpy())
+#将numpy数组转换为tensor
+print(t.from_numpy(np.array([2,2,2,])))
+```
+### 数学函数
+#### 随机数
+下面是一些常见的PyTorch函数，可以用于生成随机数：
+
+1.  `torch.randn(size, dtype=None, device=None)` - 从标准正态分布中返回随机样本。返回一个具有给定大小的张量，其中每个元素独立地从标准正态分布中抽取。可以通过指定`size`参数来指定张量的形状。
+
+例子：
+
+```import torch
+
+x = torch.randn(3, 3)
+print(x)
+```
+
+2.  `torch.rand(size, dtype=None, device=None)` - 从均匀分布中返回随机样本。返回一个具有给定大小的张量，其中每个元素独立地从一个均匀分布上抽取。可以通过指定`size`参数来指定张量的形状。
+
+例子：
+
+```import torch
+
+x = torch.rand(3, 3)
+print(x)`
+```
+
+3.  `torch.randint(low, high, size, dtype=None, device=None)` - 从离散均匀分布中返回随机整数。返回一个具有给定大小的张量，其中每个元素独立地从一个均匀分布上抽取。可以通过指定`low`和`high`参数来指定取值范围。
+
+例子：
+
+```import torch
+
+x = torch.randint(0, 10, (3, 3))
+print(x)
+```
+
+4.  `torch.normal(mean, std, size, dtype=None, device=None)` - 从正态分布中返回随机样本。返回一个具有给定大小的张量，其中每个元素独立地从一个正态分布中抽取。可以通过指定`mean`和`std`参数来指定正态分布的均值和标准差。
+
+例子：
+
+```import torch
+
+x = torch.normal(0, 1, (3, 3))
+print(x)
+```
+
+这些函数可以帮助您在PyTorch中生成随机数。请根据您的需求选择适当的函数。
+
+#### 计算函数
+常用的数学计算函数
+当然，下面是PyTorch中一些常用的数学函数的清单，每个都附有简短的描述和一个调用小例子：
+- torch.abs(input): 返回输入张量的绝对值。示例：torch.abs(torch.tensor([-1, 2, -3]))。
+- torch.sqrt(input): 返回输入张量的平方根。示例：torch.sqrt(torch.tensor([4, 9, 16]))。
+- torch.exp(input): 计算输入张量的指数函数。示例：torch.exp(torch.tensor([1, 2, 3]))。
+- torch.log(input): 计算输入张量的自然对数。示例：torch.log(torch.tensor([1, 10, 100]))。
+- torch.sin(input): 计算输入张量的正弦值。示例：torch.sin(torch.tensor([0, math.pi/2, math.pi]))。
+- torch.cos(input): 计算输入张量的余弦值。示例：torch.cos(torch.tensor([0, math.pi/2, math.pi]))。
+- torch.tan(input): 计算输入张量的正切值。示例：torch.tan(torch.tensor([0, math.pi/4, math.pi/2]))。
+- torch.sigmoid(input): 计算输入张量的Sigmoid函数。示例：torch.sigmoid(torch.tensor([0, 1, 2]))。
+- torch.relu(input): 应用ReLU激活函数，即max(0, input)。示例：torch.relu(torch.tensor([-1, 0, 1]))。
+- torch.softmax(input, dim): 计算输入张量在指定维度上的Softmax函数。示例：torch.softmax(torch.tensor([[1, 2], [3, 4]]), dim=1)。
+- torch.mean(input): 计算输入张量的均值。示例：torch.mean(torch.tensor([1, 2, 3]))。
+- torch.sum(input): 计算输入张量的总和。示例：torch.sum(torch.tensor([1, 2, 3]))。
+- torch.max(input): 返回输入张量中的最大值。示例：torch.max(torch.tensor([1, 2, 3]))。
+- torch.min(input): 返回输入张量中的最小值。示例：torch.min(torch.tensor([1, 2, 3]))。
+- torch.argmax(input): 返回输入张量中最大值的索引。示例：torch.argmax(torch.tensor([1, 2, 3]))。
+- torch.argmin(input): 返回输入张量中最小值的索引。示例：torch.argmin(torch.tensor([1, 2, 3]))。
+- torch.sort(input): 对输入张量进行排序。示例：torch.sort(torch.tensor([3, 1, 2]))。
+- torch.clamp(input, min, max): 将输入张量的值限制在指定范围内。示例：torch.clamp(torch.tensor([1, 2, 3]), min=2, max=3)。
+- torch.round(input): 对输入张量进行四舍五入。示例：torch.round(torch.tensor([1.1, 2.4, 3.6]))。
+- torch.floor(input): 向下取整，返回不大于输入张量的最大整数。示例：torch.floor(torch.tensor([1.1, 2.4, 3.6]))。
+#### 矩阵处理函数
+以下是PyTorch中常用的20个矩阵处理函数的清单及其描述：
+- torch.mm(): 计算两个矩阵的乘积。
+    示例：torch.mm(torch.tensor([[1, 2], [3, 4]]), torch.tensor([[5], [6]]))返回tensor([[17], [39]])
+    
+- torch.matmul(): 计算两个张量的矩阵乘积。
+    示例：torch.matmul(torch.tensor([[1, 2], [3, 4]]), torch.tensor([[5], [6]]))返回tensor([[17], [39]])
+    
+- torch.transpose(): 返回输入张量的转置。
+    示例：torch.transpose(torch.tensor([[1, 2], [3, 4]]), 0, 1)返回tensor([[1, 3], [2, 4]])
+    
+- torch.mm(): 计算一个矩阵和一个向量的乘积。
+    示例：torch.mm(torch.tensor([[1, 2], [3, 4]]), torch.tensor([5, 6]))返回tensor([17, 39])
+    
+- torch.trace(): 返回矩阵的迹。
+    示例：torch.trace(torch.tensor([[1, 2], [3, 4]]))返回tensor(5)
+    
+- torch.det(): 计算矩阵的行列式。
+    示例：torch.det(torch.tensor([[1, 2], [3, 4]]))返回tensor(-2)
+    
+- torch.svd(): 对矩阵进行奇异值分解。
+    示例：torch.svd(torch.tensor([[1, 2], [3, 4]]))返回(tensor([[-0.4046, -0.9145], [-0.9145, 0.4046]]), tensor([5.4645, 0.3650]), tensor([[-0.5760, -0.8174], [-0.8174, 0.5760]]))
+    
+- torch.eig(): 计算矩阵的特征值和特征向量。
+    示例：torch.eig(torch.tensor([[1, 2], [3, 4]]))返回(tensor([[0.3723, 0.0000], [5.6277, 0.0000]]), tensor([]))
+    
+- torch.inverse(): 计算矩阵的逆。
+    示例：torch.inverse(torch.tensor([[1, 2], [3, 4]]))返回tensor([[-2.0000, 1.0000], [ 1.5000, -0.5000]])
+    
+- torch.diag(): 返回矩阵的对角线元素。
+    示例：torch.diag(torch.tensor([[1, 2], [3, 4]]))返回tensor([1, 4])
+    
+- torch.diag_embed(): 将一维张量转化为对角矩阵。
+    示例：torch.diag_embed(torch.tensor([1, 2, 3]))返回tensor([[[1, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 2, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 3]]])
+    
+- torch.einsum(): 执行爱因斯坦求和约定。
+    示例：torch.einsum('ij,jk->ik', torch.tensor([[1, 2], [3, 4]]), torch.tensor([[5, 6], [7, 8]]))返回tensor([[19, 22], [43, 50]])
+    
+- torch.flatten(): 对输入张量进行扁平化操作。
+    示例：torch.flatten(torch.tensor([[1, 2], [3, 4]]))返回tensor([1, 2, 3, 4])
+    
+- torch.cat(): 沿指定维度拼接张量。
+    示例：torch.cat((torch.tensor([[1, 2]]), torch.tensor([[3, 4]])), dim=0)返回tensor([[1, 2], [3, 4]])
+    
+- torch.stack(): 沿新维度拼接张量。
+    示例：torch.stack((torch.tensor([1, 2]), torch.tensor([3, 4])), dim=0)返回tensor([[1, 2], [3, 4]])
+    
+- torch.split(): 沿指定维度分割张量。
+    示例：torch.split(torch.tensor([[1, 2, 3, 4]]), 2, dim=1)返回(tensor([[1, 2]]), tensor([[3, 4]]))
+    
+- torch.chunk(): 将张量分割成指定数量的块。
+    示例：torch.chunk(torch.tensor([[1, 2, 3, 4]]), 2, dim=1)返回(tensor([[1, 2]]), tensor([[3, 4]]))
+    
+- torch.reshape(): 改变张量的形状。
+    示例：torch.reshape(torch.tensor([[1, 2, 3, 4]]), (2, 2))返回tensor([[1, 2], [3, 4]])
+    
+- torch.squeeze(): 压缩张量中尺寸为1的维度。
+    示例：torch.squeeze(torch.tensor([[[1], [2]]]))返回tensor([1, 2])
+    
+- torch.unsqueeze(): 在指定位置插入尺寸为1的新维度。
+    示例：torch.unsqueeze(torch.tensor([1, 2]), dim=1)返回tensor([[1], [2]]
+    
+- torch.view是PyTorch中的一个函数，用于改变张量的形状，即对张量进行重塑操作。它的作用类似于NumPy中的reshape函数。
+    x = torch.tensor([1, 2, 3, 4, 5, 6])
+    y = x.view(2, 3)
+
+- torch.permute函数是PyTorch中的一个函数，用于重新排列张量的维度顺序。它的作用是交换或重新组织张量的维度。
+在下述示例中，原始张量x的维度顺序为(2, 3, 4)，通过使用permute(2, 0, 1)，将维度顺序重新排列为(4, 2, 3)，得到了新的张量  也就是维度2换成函数索引0个维度,0维度的换成1,1维度的换成2
+```
+        import torch
+        x = torch.randn(2, 3, 4)  # 创建一个形状为(2, 3, 4)的张量
+        x_permuted = x.permute(2, 0, 1)  # 将维度顺序重新排列为(4, 2, 3)
+        print(x_permuted.shape)  # 输出: torch.Size([4, 2, 3])
+```
+
+ ## 自动梯度
+ 深度学习的算法本质上是通过反向传播求导数，PyTorch的Autograd模块实现了此功能。在Tensor上的所有操作，Autograd都能为它们自动提供微分，避免手动计算导数的复杂过程。
+
+在PyTorch中，Tensor和Variable都可以求梯度，但是它们有一些区别。
+
+在旧版本的PyTorch中，Variable是一个Tensor的封装，它包含了Tensor的数据以及关于这个Tensor的梯度信息。在新版本的PyTorch中，Variable已经被弃用，官方建议直接使用Tensor。
+
+PyTorch中的Tensor对象有一个属性.requires_grad，默认为False。当你将其设置为True时，表示希望计算这个Tensor的梯度。在进行反向传播计算梯度时，所有具有.requires_grad=True的Tensor都会被保留梯度信息。
+
+当你使用Tensor进行计算时，可以调用.backward()方法来计算相对于这个Tensor的梯度。梯度信息会保存在.grad属性中。
+
+所以，Variable的作用可以用Tensor的.requires_grad属性来代替，而且在新版本的PyTorch中，官方建议直接使用Tensor进行梯度计算。
+Variable和Tensor主要包含三个属性。
+- data：保存计算后结果对应的的Tensor。
+- grad：保存data对应的梯度，是Tensor，它和data的形状一样。
+- grad fn：指向一个Function对象，这个Function用来反向传播计算输入的梯度,requires_grad=True
+
+```
+x=Variable(t.from_numpy(np.array([[1,2],[2,4]],dtype=float)),requires_grad=True)
+print("张量x=",x)
+y=x.sum()
+print("输出y",y)
+print("输出y的梯度",y.grad) #注意结果是y，所以y是没有梯度的，y进行反向传播，可以求导x的导数
+print("y的反向梯度函数",y.grad_fn)
+print("y的数据",y.data)
+# 因为y=x[0][0]+x[0][1]+x[1][0]++x[1][1],可以认为四个数是四个变量，比如求每个变量的导数
+# 假设是y=x1+x2+x3+x4  x1是自变量，x1的导数就是1，同理x2的导数也是1，最后就得到了4个1
+# 注意每个点都有个梯度
+y.backward() #反向传播计算梯度
+print(x.grad)
+```
+输出
+```
+张量x= tensor([[1., 2.],
+        [2., 4.]], dtype=torch.float64, requires_grad=True)
+输出y tensor(9., dtype=torch.float64, grad_fn=<SumBackward0>)
+输出y的梯度 None
+y的反向梯度函数 <SumBackward0 object at 0x0000025F8F2C8C10>
+y的数据 tensor(9., dtype=torch.float64)
+x的梯度 tensor([[1., 1.],
+        [1., 1.]], dtype=torch.float64)
+```
+###  案例
+案例1:计算$x^2*e^x$导数
+
+```
+#计算x**2*e^x导数
+#dx=2*x*e^x+x**2*e^x
+#定义fx的函数逻辑
+def f(x):
+    return x**2*t.exp(x)
+#我们预先知道他的梯度函数是
+def graddx(x):
+    return 2*x*t.exp(x)+x**2*t.exp(x)
+#生成一个3*3随机矩阵，求梯度
+x=Variable(t.rand(3,3),requires_grad=True)
+print(graddx(x))
+#使用反向传播求梯度
+y=f(x)
+y.backward(t.ones(y.size()))
+print(x.grad)
+```
+案例2: 使用自动梯度梯度下降拟合最佳直线            
+```
+#使用autograd计算梯度，来实现线性回归
+import torch as t
+from torch.autograd import Variable as V
+import matplotlib.pyplot as plot
+t.manual_seed(42)
+# 使用自动梯度实现线性回归
+x=t.randn(100,1)
+y=3*x+2+t.randn(100,1) #实际值上加上一些随机噪点
+plot.plot(x,y,'.')
+plot.show()
+w=V(t.randn(1,1),requires_grad=True)
+b=V(t.randn(1),requires_grad=True)
+def fx(x):
+   return t.mm(x,w)+b
+#损失函数   
+def lossf(y_pre,y):
+    return t.mean((y_pre-y)**2)
+#训练100次，100次梯度下降，计算到最小损失时的w和b
+w_gra_last,b_gra_last=0,0
+for epoch in range(100):
+    y_pre=fx(x)
+    loss=lossf(y_pre,y)
+    loss.backward()
+    w_gra=w.grad.data
+    b_gra=b.grad.data
+    w_gra_last=w_gra.clone()
+    b_gra_last=b_gra.clone()
+    #如果梯度小于某个值直接退出
+    if t.abs(w_gra)<=1e-8 and t.abs(b_gra)<=1e-8:
+        break;
+    learn_rate=0.01
+    #注意w.sub_是不行的因为w是requires_grad=True，需要后面的参数都是设置为：requires_grad=True
+    #所以只能是更新他的data
+    w.data.sub_(w_gra*learn_rate)
+    b.data.sub_(b_gra*learn_rate)
+    #注意梯度清零，否则会累加
+    w.grad.data.zero_()
+    b.grad.data.zero_()
+# w_gra_last是张量，item输出标量
+print(epoch,w_gra_last.item(),b_gra_last.item())    
+y_pre=fx(x)  
+plot.plot(x,y,'.')
+plot.plot(x.data.numpy(),y_pre.data.numpy())
+plot.show()
+```
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/fc646741ad2645c16168f0bccf15287e.png)
+### 计算图
+PyTorch的计算图是一种用于描述计算操作的有向无环图(Directed Acyclic Graph, DAG)。在PyTorch中，计算图是动态的，它会随着代码的执行而构建。
+
+计算图的主要作用是记录和管理计算操作的流程，以便进行自动微分和梯度优化。通过构建计算图，PyTorch能够追踪和记录所有的计算操作，从而实现自动求导。这使得在深度学习中，我们可以方便地进行反向传播和优化模型的参数。
+
+使用计算图的好处有：
+
+1.  自动求导：PyTorch可以根据计算图自动生成反向传播所需的梯度计算代码，简化了手动求导的过程。
+2.  动态图灵活性：计算图是动态构建的，可以根据需要进行动态修改和调整，使得模型的结构和计算过程更加灵活和可变。
+3.  可视化和调试：计算图可以可视化，帮助我们理解和调试模型的运行过程，更好地理解和解释模型的行为。
+
+总之，PyTorch的计算图是一种强大的工具，它为我们提供了灵活、高效的自动求导功能，使得深度学习模型的训练和优化更加方便和快捷。
+
+```
+#打印计算图
+import torch
+from torchviz import make_dot
+
+# 定义一个简单的计算图
+w= torch.randn(1, requires_grad=True)
+b= torch.randn(1, requires_grad=True)
+x = torch.randn(1, requires_grad=True)
+y = w*x + b
+
+# 使用make_dot函数绘制计算图,图上的数字只是代表数据的维度
+dot = make_dot(y, params={'x': x, 'w': w, 'b': b}, show_attrs=True, show_saved=True)
+dot.render(filename='compute_graph', format='png')
+
+```
+当前运行的目录出现一个compute_graph.png
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/0433628210603d6c618717987e23e461.png)
+剖析下反向求导的过程
+如表达式z=wx+b可分解为y=wx和z=y+b，其计算图如图3-5所示，图中的MUL和ADD都是算子，w、x、b为变量。
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/29b10513a262dbef31e51b319975f3f7.png)
+如上有向无环图中，X 和b是叶子节点（leaf node），这些节点通常由用户自己创建，不依赖于其他变量。z称为根节点，是计算图的最终目标。利用链式法则很容易求得各个叶子节点的梯度。
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/9a9f7896983d152213ba86f4ea637e95.png)
+而有了计算图，上述链式求导即可利用计算图的反向传播自动完成，其过程如图所示。
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/578c727b6e32ac3e0e44faeadcab66b6.png)
+
+# torchvision模块
+torchvision是PyTorch的一个扩展库，提供了许多用于计算机视觉任务的实用函数和预训练模型。它包含了常用的数据集、数据转换、模型架构和图像处理方法等功能。
+
+torchvision的主要特点包括：
+
+1.  数据集：torchvision提供了许多常用的计算机视觉数据集，例如MNIST、CIFAR-10、ImageNet等。这些数据集可以方便地用于训练和测试模型。
+    
+2.  数据转换：torchvision提供了一系列用于数据预处理和增强的转换函数，例如对图像进行裁剪、缩放、翻转、归一化等操作。这些转换函数可以灵活地应用于数据集中的样本，以满足模型训练的需求。
+    
+3.  预训练模型：torchvision中集成了一些经典的计算机视觉模型，例如AlexNet、VGG、ResNet等。这些预训练模型可以直接用于特定任务的迁移学习，也可以作为基准模型进行性能比较。
+    
+4.  图像处理：torchvision还提供了一些常用的图像处理方法，例如图像滤波、边缘检测、颜色转换等。这些方法可以用于图像处理和增强的任务。
+    
+
+总之，torchvision为PyTorch提供了丰富的计算机视觉功能和工具，可以极大地简化计算机视觉任务的开发和实现过程。
+## Transforms
+torchvision提供了一些用于数据增强的常用transforms，如随机裁剪、翻转、旋转、归一化等。这些transforms可以在数据加载时应用于图像，以提高模型的泛化能力和鲁棒性。
+以下是torch中所有的transforms：
+1.  Compose: 将多个transforms组合在一起。
+2.  ToTensor: 将PIL图像或NumPy数组转换为张量。
+3.  ToPILImage: 将张量转换为PIL图像对象。
+4.  Normalize: 标准化张量，将每个通道的值减去均值，然后除以标准差。
+5.  Resize: 调整图像的大小。
+6.  CenterCrop: 中心裁剪图像的一部分。
+7.  RandomCrop: 随机裁剪图像的一部分。
+8.  RandomResizedCrop: 随机裁剪并调整大小图像。
+9.  FiveCrop: 对图像进行五个不同位置的裁剪。
+10.  TenCrop: 对图像进行十个不同位置的裁剪。
+11.  RandomHorizontalFlip: 随机水平翻转图像。
+12.  RandomVerticalFlip: 随机垂直翻转图像。
+13.  RandomRotation: 随机旋转图像。
+14.  RandomAffine: 随机仿射变换图像。
+15.  ColorJitter: 随机调整图像的亮度、对比度、饱和度和色调。
+16.  RandomGrayscale: 随机将图像转换为灰度图像。
+17.  RandomErasing: 随机擦除图像的一部分。
+18.  RandomChoice: 随机选择一个transform进行应用。
+19.  RandomApply: 随机应用一个transform。
+20.  RandomOrder: 随机打乱transforms的顺序。
+
+这是torch中所有的transforms，你可以根据需要选择适合的transforms来处理图像数据。
+下面是一些常用的transforms功能和示例代码：
+
+1.  Resize：调整图像大小
+
+```from torchvision import transforms
+from PIL import Image
+
+# 定义一个Resize变换，将图像调整为指定大小
+resize = transforms.Resize((256, 256))
+
+# 读取图像
+image = Image.open('image.jpg')
+
+# 对图像进行Resize变换
+resized_image = resize(image)
+```
+
+2.  ToTensor：将图像转换为Tensor类型
+
+```from torchvision import transforms
+from PIL import Image
+
+# 定义一个ToTensor变换，将图像转换为Tensor类型
+to_tensor = transforms.ToTensor()
+
+# 读取图像
+image = Image.open('image.jpg')
+
+# 对图像进行ToTensor变换
+tensor_image = to_tensor(image)
+```
+
+3.  Normalize：对图像进行归一化
+
+```from torchvision import transforms
+from PIL import Image
+
+# 定义一个Normalize变换，将图像进行归一化
+normalize = transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+
+# 读取图像
+image = Image.open('image.jpg')
+
+# 对图像进行Normalize变换
+normalized_image = normalize(image)
+```
+>`transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])` 的作用是将输入数据标准化到均值为0，标准差为1的范围内，而不是将值标准化到-1和1之间。标准化的目的是为了使数据具有相似的尺度，以便更好地进行模型训练和优化。
+对于给定的某个点(100, 150, 200)，标准化的过程如下：
+1.计算每个通道的均值：(100 + 150 + 200) / 3 = 150
+2.计算每个通道的标准差：sqrt(((100-150)^2 + (150-150)^2 + (200-150)^2) / 3) = sqrt((2500 + 0 + 2500) / 3) ≈ 50
+3.对每个通道的值进行标准化：(100-150)/50 = -1, (150-150)/50 = 0, (200-150)/50 = 1
+所以，标准化后的点为(-1, 0, 1)。
+需要注意的是，这只是一个简单的例子，实际上在计算标准差时使用的是整个数据集的均值和标准差，而不是单个点的均值和标准差。
+
+4.  RandomCrop：随机裁剪图像
+
+```from torchvision import transforms
+from PIL import Image
+
+# 定义一个RandomCrop变换，随机裁剪图像
+random_crop = transforms.RandomCrop((224, 224))
+
+# 读取图像
+image = Image.open('image.jpg')
+
+# 对图像进行RandomCrop变换
+cropped_image = random_crop(image)
+```
+
+5.  RandomHorizontalFlip：随机水平翻转图像
+
+```from torchvision import transforms
+from PIL import Image
+
+# 定义一个RandomHorizontalFlip变换，随机水平翻转图像
+random_horizontal_flip = transforms.RandomHorizontalFlip(p=0.5)
+
+# 读取图像
+image = Image.open('image.jpg')
+
+# 对图像进行RandomHorizontalFlip变换
+flipped_image = random_horizontal_flip(image)
+```
+
+通过使用transforms模块中的这些函数，我们可以方便地对图像进行预处理和增强，以便于在训练模型时使用。需要注意的是，transforms函数通常需要作为参数传递给`torchvision.transforms.Compose`函数，以便将多个transforms组合在一起应用到图像上，如：
+```
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+])
+```
+更详细的图像增强处理例子参考：https://github.com/lzeqian/deeplearn/blob/master/learn_rnn/pytorch/4.nn%E6%A8%A1%E5%9D%97/3.%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86.ipynb
+## DataSet
+torchvision库中提供了许多常用的计算机视觉数据集。以下是torchvision库中支持的一些常见数据集的列表：
+
+1.  MNIST：手写数字图片数据集。
+2.  FashionMNIST：时尚商品图片数据集。
+3.  CIFAR10：包含10个类别的彩色图片数据集。
+4.  CIFAR100：包含100个细分类别的彩色图片数据集。
+5.  SVHN：包含数字图片的街景数据集。
+6.  ImageNet：包含超过100万个物体类别的彩色图片数据集。
+7.  COCO：包含多个物体类别的彩色图片数据集，用于目标检测和图像分割任务。
+
+除了上述数据集，torchvision还提供了一些辅助函数和类，用于加载和预处理数据集，如DataLoader、ImageFolder等。
+### DataLoader
+以下是对CIFAR10的加载例子
+
+```
+import torchvision.datasets as datasets
+import torchvision.transforms as transforms
+from torch.utils.data import Dataset,DataLoader
+import torch as t
+import numpy as np
+#加载训练数据50000条
+train_dataset=datasets.CIFAR10(root="./data",train=True,transform=transforms.ToTensor(),download=True)
+#测试数据集10000条
+test_dataset = datasets.CIFAR10(root='./data', train=False, download=True, transform=transforms.ToTensor())
+#打印数据集的维度
+print(train_dataset.data.shape,test_dataset.data.shape)
+#打印数据集的标签
+print(len(train_dataset.targets))
+#torchvision.datasets.cifar.CIFAR10
+print(type(train_dataset))
+#torchvision.datasets.vision.VisionDataset
+print(type(train_dataset).__bases__)
+```
+>注意datasets.CIFAR10在root指定的目录没有数据集会自动下载，如果下载很慢，可以将控制台打印的路径下载下来丢到./data目录即可离线加载。
+
+DataLoader是PyTorch中用于数据加载的实用工具类。它可以将自定义的数据集包装成一个可迭代的数据加载器，方便进行批处理、洗牌和并行加载等操作。以下是DataLoader的一些常用参数的详细解释：
+
+*   **dataset**：要加载的数据集。可以是继承自`torch.utils.data.Dataset`的自定义数据集类的实例，也可以是已有的PyTorch数据集类（如`torchvision.datasets.ImageFolder`）的实例。
+    
+*   **batch\_size**：每个批次中样本的数量。默认值为1。通常会根据模型和设备的内存情况选择合适的批量大小。
+    
+*   **shuffle**：是否在每个epoch开始前对数据进行洗牌（随机打乱顺序）。默认值为False。洗牌可以提高训练的随机性，有助于模型更好地学习数据中的模式。
+    
+*   **sampler**：用于定义数据采样策略的采样器。如果指定了sampler，则忽略shuffle参数。常用的采样器包括`torch.utils.data.RandomSampler`（随机采样）和`torch.utils.data.SequentialSampler`（顺序采样）。
+    
+*   **batch\_sampler**：用于定义批次级别的数据采样策略的采样器。如果指定了batch\_sampler，则忽略batch\_size、shuffle和sampler参数。常用的批次采样器包括`torch.utils.data.BatchSampler`。
+    
+*   **num\_workers**：用于数据加载的子进程数量。默认值为0，表示在主进程中加载数据。可以根据计算机的CPU核心数和数据加载的性能需求来选择合适的数值。
+    
+*   **collate\_fn**：用于将样本列表转换为批次张量的函数。默认情况下使用默认的collate函数，它假定样本是Tensor或Numpy数组，并将它们堆叠成批次。如果数据集返回的样本具有不同的类型或形状，可以自定义collate函数来处理。
+    
+*   **pin\_memory**：是否将数据加载到CUDA固定内存中。默认值为False。当使用GPU进行训练时，设置pin\_memory为True可以加速数据传输，但会占用额外的内存。
+    
+*   **drop\_last**：如果数据集的大小不能被批次大小整除，是否丢弃最后一个不完整的批次。默认值为False。在训练过程中，通常会设置为True，以避免不完整的批次导致的错误。
+    
+*   **timeout**：数据加载器在等待数据时的超时时间（以秒为单位）。默认值为0，表示无超时限制。如果数据加载时间较长，可以设置一个较大的超时时间。
+    
+*   **worker\_init\_fn**：用于每个数据加载器子进程的初始化函数。可以用来设置每个子进程的随机种子或其他初始化操作。
+    
+
+这些参数可以根据具体的需求进行调整和配置，以实现更高效、方便的数据加载
+DataLoader会将加载的数据集转换为（批量，通道，高度，宽度）的形式。在PyTorch中，图像数据一般采用CHW（通道，高度，宽度）的顺序。而DataLoader则会将加载的图像数据转换为（批量，通道，高度，宽度）的形式，
+其中批量表示一次加载的图像数量。这样的数据形式符合PyTorch中卷积神经网络的输入要求。
+torchvision.datasets.vision.VisionDataset复杂处理这些。
+```
+train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+# 使用数据加载器进行迭代,一批次64条，64条一个循环
+for batch in train_loader:
+    input_data, labels = batch
+    print(input_data.shape)
+    break; 
+```
+输出：torch.Size([64, 3, 32, 32])
+
+### 自定义数据集
+自己创建的数据集没有做任何维度的转换。
+
+```
+class MyDs(Dataset):
+    def __init__(self,data,label):
+        self.data=data
+        self.label=label
+    def __len__(self):
+        return len(self.data)
+    def __getitem__(self, index):
+        return self.data[index],self.label[index]
+ds=MyDs([1,2,3,4],[0,1,1,1])
+dsLoader=DataLoader(ds,batch_size=2,shuffle=True)
+for input,label in dsLoader:  #四条数据分成了2批，循环两次
+    print(input,label)
+```
+# nn模块
+## nn.Module
+`nn.Module`是PyTorch中所有神经网络模块的基类。它是构建自定义神经网络模块的核心组件，提供了一些基本功能和属性。
+
+下面是`nn.Module`的一些重要属性和方法：
+
+*   `parameters()`：返回模块中需要训练的参数的迭代器。
+*   `named_parameters()`：返回模块中需要训练的参数及其名称的迭代器。
+*   `children()`：返回模块中所有子模块的迭代器。
+*   `named_children()`：返回模块中所有子模块及其名称的迭代器。
+*   `to(device)`：将模块移动到指定的设备（如CPU或GPU）。
+*   `train()`：将模块设置为训练模式，启用`BatchNorm`和`Dropout`等层的训练行为。
+*   `eval()`：将模块设置为评估模式，禁用`BatchNorm`和`Dropout`等层的训练行为。
+*   `forward(input)`：定义模块的前向传播逻辑，接收输入并返回输出。
+
+此外，`nn.Module`还提供了一些方法用于模块的初始化和参数管理：
+
+*   `__init__()`：构造函数，用于初始化模块的参数和子模块。
+*   `zero_grad()`：将模块中所有参数的梯度置零。
+*   `apply(fn)`：递归地对模块和子模块应用指定的函数。
+*   `state_dict()`：返回模块的当前状态字典，包含所有参数和缓冲区。
+*   `load_state_dict(state_dict)`：加载给定的状态字典，用于恢复模块的参数和缓冲区。
+
+通过继承`nn.Module`类，可以方便地构建自定义的神经网络模块，并使用PyTorch提供的许多功能来管理模块的参数、状态和计算逻辑。
+
+使用module自定义一个全连接层
+
+```
+import torch as t;
+import torch.nn as nn
+class Linear(nn.Module):
+    def __init__(self,input_feature,out_feature):
+        nn.Module.__init__(self)
+        #nn.Prameter是自动算梯度的
+        self.w=nn.Parameter(t.randn(input_feature,out_feature))
+        self.b=nn.Parameter(t.randn(out_feature))
+    def forward(self,x):
+        return x.mm(self.w)+self.b
+    
+layer=Linear(4,1)
+rtn=layer(t.randn(3,4))
+rtn.backward(t.ones(rtn.size()))  # 计算梯度
+print(layer.w.grad)  # 获取w的梯度
+print(layer.b.grad)  # 获取b的梯度
+```
+## CNN
+在神经网络处理中，图片矩阵的通道通常是在宽高之前。这种表示方式被称为“通道优先”（channel-first）或“NCHW”表示法。在这种表示法中，矩阵的维度顺序为（批量大小，通道数，高度，宽度）。
+
+例如，对于一个RGB彩色图像，它的矩阵表示将具有维度顺序为（1，3，H，W），其中1是批量大小（表示一次处理的图像数量，就是行数），3是通道数（表示RGB三个通道），H是图像的高度，W是图像的宽度，pytorch使用这种方式。
+
+另一种表示方式是“宽高优先”（channel-last）或“NHWC”表示法，其中矩阵的维度顺序为（批量大小，高度，宽度，通道数）。但是，通道优先的表示法更常见，因为它与卷积操作的计算方式更契合，tensorflow使用这种方式。
+### 图像处理层
+PyTorch提供了一系列用于图像处理的层和函数。以下是一些常用的图像处理层：
+1.  `nn.Conv2d`：卷积层，用于提取图像中的特征。
+2.  `nn.MaxPool2d`：最大池化层，用于降低特征图的空间维度。
+3.  `nn.AvgPool2d`：均值池化层，用于降低特征图的空间维度
+4.  `nn.BatchNorm2d`：批量归一化层，用于加速训练并提高模型的鲁棒性。
+5.  `nn.ReLU`：ReLU激活函数层，用于引入非线性性。
+6.  `nn.Linear`：全连接层，用于将卷积层的输出映射到最终的分类或回归结果。
+7.  `nn.Dropout2d`：二维Dropout层，用于减少过拟合。
+8.  `nn.Upsample`：上采样层，用于增加特征图的空间维度。
+9.  `nn.Softmax`：Softmax函数层，用于多类别分类问题中的概率计算。
+
+除了这些层，PyTorch还提供了一些用于图像处理的函数，例如卷积操作`torch.nn.functional.conv2d`，池化操作`torch.nn.functional.max_pool2d`，以及其他常用的图像处理函数如裁剪、旋转、缩放等。
+
+这些层和函数可以用来构建卷积神经网络（CNN）等图像处理模型,torch.nn.functional只是用于计算结果而nn包的函数可以用于计算梯度，如果在构建神经网络时必须用nn包。
+>卷积神经网络的各层的概念请参考：https://blog.csdn.net/liaomin416100569/article/details/130597944?spm=1001.2014.3001.5501
+#### nn.Conv2d
+`nn.Conv`是PyTorch中用于定义卷积层的类，它的参数如下：
+
+*   `in_channels`：输入张量的通道数。
+*   `out_channels`：卷积层输出的通道数，也是卷积核的数量。
+*   `kernel_size`：卷积核的大小，可以是一个整数或一个元组，如(3, 3)。
+*   `stride`：卷积操作的步长，默认为1。
+*   `padding`：在输入张量的边缘周围填充0的层数，默认为0。
+*   `dilation`：卷积核元素之间的间隔，默认为1。
+*   `groups`：将输入张量分成几组进行卷积，默认为1。
+*   `bias`：是否使用偏置项，默认为True。
+
+以下是一个示例：
+
+```import torch
+import torch.nn as nn
+
+# 创建一个卷积层
+conv = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1)
+
+## 打印卷积层的参数
+print(conv)
+```
+
+输出结果如下：
+
+`Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))` 
+
+上述代码创建了一个输入通道数为3，输出通道数（神经元个数）为64的卷积层，卷积核大小为3x3，步长为1，填充层数为1。
+
+in_channels代表输入张量的通道数，也可以理解为输入张量的维度。在卷积神经网络中，输入张量的维度通常是指图像的通道数。例如，对于RGB图像，通道数为3，因为图像由红、绿、蓝三个通道组成。对于灰度图像，通道数为1，因为图像只有一个通道。
+
+在使用nn.Conv创建卷积层时，需要根据输入张量的通道数来设置in_channels参数，以确保卷积层与输入张量的维度匹配。
+>Conv2d的步长（stride）参数表示卷积核在进行滑动时的步幅大小。步长的作用是控制输出特征图的尺寸。具体来说，如果步长为1，
+则卷积核每次滑动一个像素；如果步长为2，则卷积核每次滑动两个像素，以此类推。
+步长的两个维度分别表示在图像的行方向和列方向上的步幅大小。在您提供的示例中，步长为(1, 1)，表示卷积核在图像的行和列方向上每次滑动一个像素。
+
+>Conv2d的padding参数表示在输入图像的周围添加填充（padding）的大小。填充的作用是在卷积操作中保持输出特征图的尺寸与输入特征图的尺寸相同，或者根据需要进行调整。
+>
+
+```
+#################学习卷积
+import torchvision.datasets as datasets
+import torchvision.transforms as transforms
+import matplotlib.pyplot as plt
+import torch.nn as nn
+import torch as t
+#预处理模块
+from PIL import Image
+image=Image.open("./images/2023_6_30.jpg")
+# plt.imshow(image)
+# plt.show()
+"""
+这是一个用于边缘检测的卷积核。在这个卷积核中，中心元素是1，
+表示当前位置的像素值对边缘检测有贡献，而周围的元素都是-0.1111，
+表示对边缘检测没有贡献。这样的卷积核可以帮助我们提取图像中的垂直边缘特征。
+"""
+kernel=t.Tensor(
+        [[-0.1111, -0.1111, -0.1111],
+        [-0.1111,  1.0000, -0.1111],
+        [-0.1111, -0.1111, -0.1111]],
+)
+kernel=t.ones(3,3)/-9
+kernel[1][1]=1
+#转换成灰度图，通道数变成1了
+image=image.convert("L")
+#转换成张量
+imageTensor=transforms.ToTensor()(image)
+print(imageTensor.shape)
+#在第0个维度添加一个一维表示批次数据
+input=imageTensor.unsqueeze(0)
+print("输入形状",input.shape)
+layer=nn.Conv2d(1,1,(3,3),bias=False)
+# 定义输入张量shape为(batch_size, channels, height, width)
+layer.weight.data=kernel.view(1,1,3,3)
+output=layer(input)
+plt.imshow(transforms.ToPILImage()(output.squeeze(0)),cmap="gray")
+plt.show()
+#每个卷积核（3×3）与原始的输入图像（480×479）进行卷积，这样得到的 feature map（特征图）大小为（480-3+1）×（479-3+1）= 478×477
+print("输出形状",output.shape)
+```
+原始图
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/d2c77d023c85456a5d4864d11536be10.png)
+输出：
+torch.Size([1, 480, 479])
+输入形状 torch.Size([1, 1, 480, 479])
+输出形状 torch.Size([1, 1, 478, 477])
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/9a892feb3df58c4732dac61b94eacd8c.png)
+#### nn.AvgPool2d和nn.MaxPool2d
+上面的卷积图在经过池化
+
+```
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 设置全局字体为SimHei
+#平均池化（AvgPool）
+pool=nn.AvgPool2d(kernel_size=2, stride=2)
+#池化层478×477经过(2,2)池化后=(478/2=239,477/2=238)
+poolOuput=pool(output)
+print(poolOuput.shape)
+plt.title("平均池化")
+plt.imshow(transforms.ToPILImage()(poolOuput.squeeze(0)),cmap="gray")
+plt.show()
+#最大化池
+pool=nn.MaxPool2d(kernel_size=2, stride=2)
+#池化层478×477经过(2,2)池化后=(478/2=239,477/2=238)
+poolOuput=pool(output)
+print(poolOuput.shape)
+plt.title("最大池化")
+plt.imshow(transforms.ToPILImage()(poolOuput.squeeze(0)),cmap="gray")
+plt.show()
+```
+输出
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/9ac95beb241b69070f877014f6233eb6.png)
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/d7510ad901669f61c865e2815ca84b50.png)
+#### nn.Linear
+`nn.Linear`是PyTorch中用于定义线性变换的类。它是`nn.Module`的子类，用于构建神经网络的层。
+
+`nn.Linear`接受两个参数：`in_features`和`out_features`，分别表示输入特征的大小和输出特征的大小。它会自动创建一个可学习的权重矩阵，形状为`( in_features，out_features)`，以及一个可学习的偏置向量，形状为`(out_features,)`。
+
+```
+#注意全连接是特征连接是是改变最后一维的特征数的，在pytorch图片批量处理后最后需要进行view操作来降低维度到二维。
+arr=t.randn((3,4)) 
+print(arr)
+result=nn.Linear(4,5)
+#全连接就是一个输入数据点乘(输入数据维度,输出数据维度)最后得到一个（输入数据行数，输出数据维度）的数组
+print(result(arr))
+```
+#### nn.BatchNorm2d
+BatchNorm2d是用于对二维卷积层的输出进行批量归一化的操作。它的计算过程如下所示：
+
+假设输入的维度为 \[batch\_size, num\_channels, height, width\]，其中 batch\_size 表示批量大小，num\_channels 表示通道数，height 和 width 表示特征图的高度和宽度。
+
+1.  计算每个通道的均值和方差：
+    
+    *   对于每个通道，计算当前批次中所有样本的特征图在该通道上的均值和方差。
+    *   均值的计算：mean = sum(x) / N，其中 x 是当前通道上的特征图值，N 是批次大小。
+    *   方差的计算：var = sum((x - mean)^2) / N。
+2.  对于每个通道，进行归一化：
+    
+    *   对于每个样本，在当前通道上，将特征图的值减去均值，然后除以标准差（方差的平方根），以实现归一化。
+    *   归一化后的特征图为：y = (x - mean) / sqrt(var + eps)，其中 eps 是一个很小的数，以避免除以零的情况。
+3.  对于每个通道，进行缩放和平移：
+    
+    *   对于每个归一化后的特征图，通过乘以一个可学习的缩放因子（scale）和加上一个可学习的平移因子（shift），对特征图进行缩放和平移。
+    *   缩放和平移后的特征图为：y = gamma \* y + beta，其中 gamma 和 beta 是可学习的参数。
+
+最后，BatchNorm2d操作的输出为归一化、缩放和平移后的特征图。
+
+这样做的好处是可以加快神经网络的训练速度，提高模型的收敛性和泛化能力，并减少对学习率的敏感性。
+
+```
+"""
+具体来说，nn.BatchNorm2d是应用在卷积层之后、激活函数之前的操作，其目的是对每个特征通道的数据进行归一化。
+它通过对每个特征通道的数据进行标准化，使得数据的均值为0，方差为1。这样做的好处是可以防止梯度消失或爆炸的问题，
+并且有助于加速模型的收敛速度。
+除此之外，nn.BatchNorm2d还具有正则化的效果，可以减少模型的过拟合。它通过引入额外的可学习参数，实现了对每个特征通道的平移和缩放操作，以便网络可以自行学习数据的适当分布。
+"""
+arr=t.randint(0,10,(1,1,2,2)).float()#一批次一个通道，高是2，宽是2
+print(arr)
+result=nn.BatchNorm2d(num_features=1)
+#全连接就是一个输入数据点乘(输入数据维度,输出数据维度)最后得到一个（输入数据行数，输出数据维度）的数组
+print(result(arr))
+```
+输出：
+```
+tensor([[[[9., 1.],
+          [8., 9.]]]])
+tensor([[[[ 0.6727, -1.7191],
+          [ 0.3737,  0.6727]]]], grad_fn=<NativeBatchNormBackward>)
+```
+#### nn.Relu
+`nn.ReLU`是PyTorch中的一个激活函数，它将输入中的所有负值变为零，保持正值不变。具体来说，对于输入张量x，`nn.ReLU`函数的计算公式为：
+
+```
+ReLU(x) = max(0, x)
+```
+例子
+
+```
+arr=t.randint(0,10,(1,1,2,2)).float()#一批次一个通道，高是2，宽是2
+#首先进行归一化，归一化后会有负数的部分
+batchNorm2d=nn.BatchNorm2d(num_features=1)
+result=batchNorm2d(arr)
+print("归一化",result)
+relu=nn.ReLU()
+#全连接就是一个输入数据点乘(输入数据维度,输出数据维度)最后得到一个（输入数据行数，输出数据维度）的数组
+print("relu结果",relu(result))
+
+```
+输出：
+```
+归一化 tensor([[[[ 0.2773, -1.3867],
+          [ 1.3867, -0.2773]]]], grad_fn=<NativeBatchNormBackward>)
+relu结果 tensor([[[[0.2773, 0.0000],
+          [1.3867, 0.0000]]]], grad_fn=<ReluBackward0>)
+```
+#### nn.Dropout2d
+nn.Dropout2d会在训练过程中，对输入张量的每个通道的每个元素按照给定的概率进行丢弃。被丢弃的元素会被设置为零，而保留的元素则会按比例进行缩放，以保持期望值不变。
+这种随机丢弃的操作有助于在训练过程中减少过拟合现象，增强模型的泛化能力。丢弃的概率可以通过nn.Dropout2d的参数进行控制。
+需要注意的是，在测试过程中，所有的元素都会被保留，不会进行丢弃操作。nn.Dropout2d通常用于卷积神经网络中，可以放在卷积层或者全连接层之后，帮助网络更好地适应数据。
+例子
+
+```
+arr=t.randint(0,10,(1,1,4,4)).float()#一批次一个通道，高是2，宽是2
+drop=nn.Dropout2d()
+newArr=drop(arr)
+print(newArr)
+```
+输出
+
+```
+tensor([[[[ 8.,  8., 12., 12.],
+          [10., 12.,  6., 12.],
+          [ 0.,  4., 12., 16.],
+          [ 4.,  4., 18., 10.]]]])
+```
+#### nn.Softmax
+nn.Softmax是PyTorch中的一个函数，它用于计算softmax函数的输出。softmax函数通常用于多分类问题的神经网络中，它将原始的类别分数转化为概率分布。
+
+在PyTorch中，nn.Softmax可以被应用于一维或二维张量。对于一维张量，它会对张量中的每个元素进行softmax操作，并返回一个与输入张量相同形状的张量。对于二维张量，它会在指定维度上对每行进行softmax操作。
+
+softmax函数的计算公式如下：
+
+$softmax(x\_i) = exp(x\_i) / sum(exp(x\_j))$
+
+其中，$x\_i$是原始的类别分数，exp是指数函数，sum是对所有类别分数的求和。
+
+softmax函数的输出是一个概率分布，每个类别的概率值介于0和1之间，并且所有类别的概率之和为1。这样可以方便地用于多分类问题中，根据概率选择最可能的类别。
+
+在PyTorch中，可以使用nn.Softmax函数对网络的输出进行处理，以得到分类结果。
+例子
+
+```
+arr=t.randint(0,10,(1, 1, 4, 4)).float()#一批次一个通道，高是2，宽是2
+print(arr)
+#注意在哪个维度上的和等于1，比如一个4维的（维度从0开始），(1, 1, 4, 4)如果你从0维上，取出0维第一行数据/0维上所有数据行，因为只有一行所有永远都是1
+#如果是第3维上，总共有4个数据，也就是这四个数之和等于1
+#Softmax2D==nn.Softmax(dim=1)
+softmax2d=nn.Softmax(dim=3)
+newArr=softmax2d(arr)
+print(newArr)
+
+t.manual_seed(10)
+arr=t.randint(0,10,(1, 2, 4, 4)).float()#一批次2个通道，高是2，宽是2
+softmax2d=nn.Softmax2d()
+newArr=softmax2d(arr)
+print(arr)
+print(newArr)
+```
+输出
+
+```
+tensor([[[[7., 5., 2., 0.],
+          [3., 0., 8., 1.],
+          [6., 8., 8., 4.],
+          [2., 6., 3., 5.]]]])
+tensor([[[[8.7490e-01, 1.1841e-01, 5.8950e-03, 7.9781e-04],
+          [6.6846e-03, 3.3281e-04, 9.9208e-01, 9.0466e-04],
+          [6.2840e-02, 4.6433e-01, 4.6433e-01, 8.5045e-03],
+          [1.2755e-02, 6.9639e-01, 3.4671e-02, 2.5619e-01]]]])
+tensor([[[[7., 5., 2., 7.],
+          [2., 5., 7., 2.],
+          [1., 5., 6., 3.],
+          [1., 0., 6., 3.]],
+
+         [[4., 0., 6., 2.],
+          [8., 9., 2., 0.],
+          [9., 9., 4., 4.],
+          [9., 4., 4., 5.]]]])
+tensor([[[[9.5257e-01, 9.9331e-01, 1.7986e-02, 9.9331e-01],
+          [2.4726e-03, 1.7986e-02, 9.9331e-01, 8.8080e-01],
+          [3.3535e-04, 1.7986e-02, 8.8080e-01, 2.6894e-01],
+          [3.3535e-04, 1.7986e-02, 8.8080e-01, 1.1920e-01]],
+
+         [[4.7426e-02, 6.6929e-03, 9.8201e-01, 6.6929e-03],
+          [9.9753e-01, 9.8201e-01, 6.6929e-03, 1.1920e-01],
+          [9.9966e-01, 9.8201e-01, 1.1920e-01, 7.3106e-01],
+          [9.9966e-01, 9.8201e-01, 1.1920e-01, 8.8080e-01]]]])
+```
+#### nn.Sequential
+
+`nn.Sequential`和`nn.ModuleList`是PyTorch中用于组合神经网络模块的两种容器。
+
+1.  `nn.Sequential`：
+    
+    *   `nn.Sequential`是一个按照顺序排列的容器，其中的模块按照它们被添加到容器中的顺序依次执行。
+    *   可以通过在Sequential对象的构造函数中传递模块列表来创建Sequential容器，或者通过`.add_module()`方法逐个添加模块。
+    *   `nn.Sequential`适用于简单的顺序模型，其中每个模块只有一个输入和一个输出。
+2.  `nn.ModuleList`：
+    
+    *   `nn.ModuleList`是一个可以包含任意数量模块的容器，模块之间没有特定的顺序。
+    *   可以通过在ModuleList对象的构造函数中传递模块列表来创建ModuleList容器，或者通过`.append()`方法逐个添加模块。
+    *   `nn.ModuleList`适用于自定义连接和复杂的模型结构，其中模块之间可能存在多个输入和输出。
+
+总而言之，`nn.Sequential`适用于简单的顺序模型，而`nn.ModuleList`适用于自定义连接和复杂的模型结构。在实际使用中，可以根据模型的结构和需要选择合适的容器。
+使用nn.Sequential自定义一个多层感知器
+
+```
+import torch as t
+import torch.nn as nn
+#实现一个多层感知器,多层感知器（Multilayer Perceptron, MLP）的隐藏层的特征数就是神经元的个数
+class MulPerceptron(nn.Module):
+    def __init__(self,input_feature,hidden_feature,out_feature):
+        nn.Module.__init__(self)
+        #Sequential会将上一层的输出作为下层的输入
+        self.model=nn.Sequential(
+            nn.Linear(input_feature,hidden_feature),
+            nn.ReLU(),
+            nn.Linear(hidden_feature,out_feature)
+        )
+    def forward(self,x):
+        #隐藏层进行一次全连接得到（行，hidden_feature）数据矩阵
+        return self.model(x);
+        
+mp=MulPerceptron(784,512,1)
+result=mp(t.randn(200,784))
+print(result)
+
+```
+最后输出(200,1)的结果。
+
+### 损失函数
+PyTorch提供了一系列常用的损失函数，下面是其中一些常见的损失函数及其用法举例：
+
+1.  nn.MSELoss（均方误差损失函数）：
+    
+    用于回归任务，计算预测值与真实值之间的均方误差。
+    
+    `loss_fn = nn.MSELoss()
+    loss = loss_fn(output, target)` 
+    
+2.  nn.CrossEntropyLoss（交叉熵损失函数）：
+    
+    用于多分类任务，计算预测类别与真实类别之间的交叉熵损失。
+    
+    `loss_fn = nn.CrossEntropyLoss()
+    loss = loss_fn(output, target)` 
+    
+3.  nn.BCELoss（二分类交叉熵损失函数）：
+    
+    用于二分类任务，计算预测概率与真实标签之间的二分类交叉熵损失。
+    
+    `loss_fn = nn.BCELoss()
+    loss = loss_fn(output, target)` 
+    
+4.  nn.BCEWithLogitsLoss（二分类交叉熵损失函数，结合了Sigmoid函数）：
+    
+    用于二分类任务，结合了Sigmoid函数的操作，可以在计算二分类交叉熵损失时避免数值稳定性问题。
+    
+    `loss_fn = nn.BCEWithLogitsLoss()
+    loss = loss_fn(output, target)` 
+    
+5.  nn.NLLLoss（负对数似然损失函数）：
+    
+    用于多分类任务，计算预测类别的负对数似然损失。
+    
+    `loss_fn = nn.NLLLoss()
+    loss = loss_fn(output, target)` 
+    
+
+这只是一小部分PyTorch中提供的损失函数，还有其他损失函数可用于不同的任务和应用场景。你可以根据具体的需求选择合适的损失函数来进行模型训练和优化。
+#### 均方误差
+均方误差（Mean Squared Error，MSE）是一种常用的回归问题的损失函数。它衡量了预测值与真实值之间的差异的平方的平均值。
+
+对于给定的预测值和真实值，MSE的计算公式如下：
+
+MSE = (1/n) * Σ(y_pred - y_true)^2
+
+其中，n是样本数量，y\_pred是预测值，y\_true是真实值。
+
+MSE的值越小，表示预测值和真实值之间的差异越小，模型的性能越好。常用的优化算法，如梯度下降法，通过最小化MSE来调整模型的参数，以提高模型的准确性。
+```
+x=t.randn(100,1)
+y=3*x+2+t.randn(100,1) #实际值上加上一些随机噪点
+y_pre=3*x+2
+plot.plot(x,y,'.')
+plot.plot(x,y_pre)
+plot.show()
+#使用均方误差计算损失值
+criterion=nn.MSELoss()
+loss=criterion(y,y_pre)
+print(loss)
+```
+#### 交叉熵
+下面是一个使用`nn.CrossEntropyLoss`的例子，并对交叉熵的计算过程进行详细解释：
+
+```import torch
+import torch.nn as nn
+
+# 假设有4个样本，每个样本有3个类别的预测结果
+# 真实标签为[2, 1, 0, 2]
+# 预测结果为一个3维张量，每一维表示对应类别的预测概率
+outputs = torch.tensor([[0.1, 0.2, 0.7],
+                        [0.6, 0.3, 0.1],
+                        [0.8, 0.1, 0.1],
+                        [0.3, 0.5, 0.2]])
+
+labels = torch.tensor([2, 1, 0, 2])
+
+# 创建交叉熵损失函数
+loss_fn = nn.CrossEntropyLoss()
+
+# 计算损失
+loss = loss_fn(outputs, labels)
+
+print(loss)
+```
+
+输出结果为：
+
+`tensor(0.8025)` 
+
+交叉熵是一种常用的损失函数，用于衡量两个概率分布之间的相似性。在分类任务中，我们通常将模型的预测结果视为一个概率分布，其中每个类别都有一个对应的概率。
+
+在上面的例子中，我们有4个样本，每个样本有3个类别的预测结果。`outputs`是一个3维张量，每一维表示对应类别的预测概率。例如，`outputs[0]`表示第一个样本对三个类别的预测概率，分别为0.1、0.2和0.7。
+
+`labels`是一个1维张量，表示每个样本的真实类别标签。例如，`labels[0]`表示第一个样本的真实类别标签为2。
+
+交叉熵损失函数的计算过程如下：
+
+1.  首先，对于每个样本，我们需要根据预测概率和真实标签计算出对应类别的预测概率。
+    
+    在上面的例子中，对于第一个样本，预测概率为\[0.1, 0.2, 0.7\]，真实标签为2。我们只需要取出预测概率中对应真实标签的值，即0.7。
+    
+2.  接下来，我们对每个样本的预测概率进行对数转换，即计算每个预测概率的自然对数。
+    
+    在上面的例子中，对于第一个样本，对数转换后的预测概率为log(0.7)。
+    
+3.  然后，我们将对数转换后的预测概率求和，并除以样本的数量，得到平均交叉熵损失。
+    
+    在上面的例子中，我们有4个样本，因此将对数转换后的预测概率求和，并除以4，得到平均交叉熵损失。
+    
+
+最后，我们将平均交叉熵损失作为模型的损失，并用于模型的训练和优化过程。在PyTorch中，我们可以使用`nn.CrossEntropyLoss`函数来计算交叉熵损失，它会自动进行softmax操作和对数转换的计算。
+### 优化器
+`torch.optim`是PyTorch中用于优化算法的模块。它提供了各种优化算法的实现，用于更新神经网络模型的参数以最小化损失函数。
+
+在PyTorch中，我们通过创建一个优化器对象来使用`torch.optim`模块。该优化器对象将被用于更新神经网络模型的参数。
+
+以下是`torch.optim`模块中常用的优化算法：
+
+1.  SGD (Stochastic Gradient Descent): 随机梯度下降算法是最基本的优化算法之一。它通过计算损失函数对参数的梯度，并根据学习率更新参数。可以通过`torch.optim.SGD`类来实现。
+    
+2.  Adam (Adaptive Moment Estimation): Adam是一种自适应的优化算法，它结合了Momentum和RMSprop的优点。它使用动量和平方梯度的指数加权移动平均来自适应地调整学习率。可以通过`torch.optim.Adam`类来实现。
+    
+3.  Adagrad (Adaptive Gradient): Adagrad是一种自适应的优化算法，它为每个参数分配一个学习率，并根据参数的历史梯度的平方和来自适应地调整学习率。可以通过`torch.optim.Adagrad`类来实现。
+    
+4.  RMSprop (Root Mean Square Propagation): RMSprop也是一种自适应的优化算法，它使用指数加权移动平均来自适应地调整学习率。它通过除以梯度的平方和的平方根来缩放学习率。可以通过`torch.optim.RMSprop`类来实现。
+    
+
+这些优化算法都可以通过创建相应的优化器对象，并传递神经网络模型的参数和其他超参数来使用。例如，下面的代码演示了如何使用SGD优化算法(伪代码)：
+
+```
+import torch
+import torch.optim as optim
+
+# 创建神经网络模型
+model = MyModel()
+
+# 创建优化器对象，学习率为0.001
+optimizer = optim.SGD(model.parameters(), lr=0.001)
+
+# 在每个训练迭代中，使用优化器更新模型的参数
+optimizer.zero_grad()  # 清零梯度
+output = model(input)  # 前向传播
+loss = criterion(output, target)  # 计算损失
+loss.backward()  # 反向传播
+optimizer.step()  # 更新参数
+```
+在上面的代码中，model.parameters()返回神经网络模型的所有可学习参数，这些参数将被优化器更新。optimizer.zero_grad()方法用于将参数的梯度清零，loss.backward()方法用于计算梯度，optimizer.step()方法用于更新参数。
+
+除了上述常用的优化算法之外，torch.optim模块还提供了其他一些优化算法，如Adadelta、AdamW等。您可以根据自己的需求选择适合的优化算法来训练模型。
+### Letnet5分类CIFAR10
+
+```
+#%%
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
+from torchvision.datasets import CIFAR10
+#定义LeNet5模型，模型计算过程参考：https://blog.csdn.net/liaomin416100569/article/details/130677530?spm=1001.2014.3001.5501
+class LeNet5(nn.Module):
+    def __init__(self):
+        super(LeNet5, self).__init__()
+        self.features = nn.Sequential(
+            #C1 层（卷积层）：6@28×28 该层使用了 6 个卷积核，每个卷积核的大小为 5×5，这样就得到了 6 个 feature map（特征图）。
+            nn.Conv2d(3, 6, kernel_size=5),
+            nn.ReLU(inplace=True),
+            #S2 层（下采样层，也称池化层）：6@14×14,池化单元为 2×2，因此，6 个特征图的大小经池化后即变为 14×14
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            #C3 层（卷积层）：16@10×10  C3 层有 16 个卷积核，卷积模板大小为 5×5 C3 层的特征图大小为（14-5+1）×（14-5+1）= 10×10。
+            nn.Conv2d(6, 16, kernel_size=5),
+            nn.ReLU(inplace=True),
+            #S4（下采样层，也称池化层）：16@5×5,与 S2 的分析类似，池化单元大小为 2×2，因此，该层与 C3 一样共有 16 个特征图，每个特征图的大小为 5×5。
+            nn.MaxPool2d(kernel_size=2, stride=2)
+        )
+        self.classifier = nn.Sequential(
+            #LeNet-5模型中的C5层是一个全连接层。在LeNet-5模型中，前两个卷积层（C1和C3）之后是一个池化层（S2和S4），
+            # 然后是一个全连接层（C5），最后是输出层（F6）。全连接层C5的输入是S4层的输出，它将这个输入展平为一个向量，
+            # 并将其连接到输出层F6。因此，C5层是一个全连接层，而不是卷积层，这里和文中有些冲突。
+            #C5 层（卷积层）：120 该层有 120 个卷积核，每个卷积核的大小仍为 5×5，因此有 120 个特征图,特征图大小为（5-5+1）×（5-5+1）= 1×1。这样该层就刚好变成了全连接
+            nn.Linear(16 * 5 * 5, 120),
+            nn.ReLU(inplace=True),
+            #F6 层（全连接层）：84,该层有 84 个特征图，特征图大小与 C5 一样都是 1×1
+            nn.Linear(120, 84),
+            nn.ReLU(inplace=True),
+            # OUTPUT 层（输出层）：10
+            nn.Linear(84, 10)
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        #张量x在第0个维度上的大小，因为第0个维度是数据批次数（行数），s4层后的维度是(批次数，16,5,5)
+        #转换成2维就是(行数,16*5*5)，-1表示自动计算合并成最后一个维度
+        x = x.view(x.size(0), -1)
+        x = self.classifier(x)
+        return x
+model = LeNet5()
+"""
+transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])是一种数据预处理操作，用于对图像数据进行归一化处理。这个操作会将每个像素的数值减去均值(mean)并除以标准差(std)。
+在这个例子中，mean=[0.5, 0.5, 0.5]表示将每个通道的像素值减去0.5，std=[0.5, 0.5, 0.5]表示将每个通道的像素值除以0.5。这样处理后，图像的像素值会在-1到1之间。
+归一化可以帮助提高模型的训练效果和稳定性，因为它可以使输入数据的分布更加接近标准正态分布。此外，对于不同的数据集，可能需要不同的均值和标准差进行归一化操作，以使数据的分布更加合理。
+在使用PyTorch的transforms.Normalize时，通常需要将其与其他数据预处理操作一起使用，例如transforms.ToTensor()将图像转换为张量。可以通过transforms.Compose将多个预处理操作组合在一起，形成一个数据预处理管道。
+"""
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+])
+#下载训练集,data是数据数组，target是标签
+train_dataset = CIFAR10(root='./data', train=True, download=True, transform=transform)
+#下载测试集
+test_dataset = CIFAR10(root='./data', train=False, download=True, transform=transform)
+#数据批处理和打乱，一次64条数据
+train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+#使用交叉熵损失函数
+criterion = nn.CrossEntropyLoss()
+#使用随机梯度下降法优化参数，梯度下降的学习率是0.001
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+#判断是否有gpu如果有的话讲模型附加到cuda设备上
+#momentum参数通过累积之前的梯度信息，使得参数更新具有一定的惯性，从而在参数空间中更快地找到全局最优解或局部最优解。
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+#模型对数据集进行10次epoch
+num_epochs = 10
+for epoch in range(num_epochs):
+    model.train()
+    epoch_loss = 0.0
+    
+    for images, labels in train_loader:
+        images = images.to(device)
+        labels = labels.to(device)
+        
+        optimizer.zero_grad()
+        
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        epoch_loss += loss.item()
+    print(f"Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss/len(train_loader):.4f}")
+"""
+model.eval()是PyTorch中用于将模型设置为评估模式的函数。当调用model.eval()时，模型的行为会发生变化，包括：
+   1. Batch Normalization和Dropout等具有随机性的层会固定住，不再产生随机变化。
+   2. 模型的参数不会被更新，即不会进行梯度计算和反向传播。
+   3. 在推断阶段，模型会根据输入数据生成输出，而不会进行训练。
+  通常，在测试或评估模型时，需要调用model.eval()来确保模型的行为与训练时保持一致。
+这样可以避免由于Batch Normalization和Dropout等层的随机性而导致结果不稳定。在调用model.train()之前，
+应该使用model.eval()将模型切换回训练模式,要将模型切换回训练模式，可以使用model.train()方法。
+"""   
+model.eval()
+correct = 0
+total = 0
+#torch.no_grad()是一个上下文管理器，将其包裹的代码块中的所有操作都不会计算梯度。
+# 通常用于在不需要计算梯度的情况下进行推理或评估。
+with torch.no_grad():
+    for images, labels in test_loader:
+        #数据加载到显存
+        images = images.to(device)
+        labels = labels.to(device)
+        
+        outputs = model(images)
+        #获取输出数据中概率最高的那一个
+        _, predicted = torch.max(outputs.data, 1)
+        #总共数据行
+        total += labels.size(0)
+        #正确的数据行
+        correct += (predicted == labels).sum().item()
+accuracy = 100 * correct / total
+print(f"Test Accuracy: {accuracy:.2f}%")
+```
+## RNN
+### nn.RNN
+`nn.RNN`是PyTorch中的一个循环神经网络模块，用于处理序列数据。下面是`nn.RNN`的常用参数和解释：
+
+*   `input_size`：输入的特征维度。
+*   `hidden_size`：隐藏层的特征维度。
+*   `num_layers`：RNN的层数。
+*   `nonlinearity`：激活函数，默认为"tanh"。可以是"tanh"、"relu"等。
+*   `bias`：是否使用偏置，默认为True。
+*   `batch_first`：是否输入数据的第一个维度为batch大小，默认为False。
+*   `dropout`：是否在输出层应用dropout操作，默认为0，即不使用dropout。
+*   `bidirectional`：是否使用双向RNN，默认为False。
+
+这些参数可以在创建`nn.RNN`时进行设置。例如：
+
+```import torch
+import torch.nn as nn
+
+input_size = 10
+hidden_size = 20
+num_layers = 2
+
+rnn = nn.RNN(input_size, hidden_size, num_layers)
+```
+
+这样就创建了一个具有输入特征维度为10、隐藏层特征维度为20、2层的RNN模型。
+#### 传入数据格式
+`nn.RNN`的输入数据格式通常为三维张量，具体格式为：
+
+*   如果`batch_first=False`（默认值），则输入数据的形状为`(sequence_length, batch_size, input_size)`。
+*   如果`batch_first=True`，则输入数据的形状为`(batch_size, sequence_length, input_size)`。
+
+其中，
+
+*   `sequence_length`表示序列的长度，即时间步的数目。
+*   `batch_size`表示每个batch的样本数量。
+*   `input_size`表示输入特征的维度。
+
+例如，假设我们有一个batch包含3个样本，每个样本的序列长度为4，输入特征维度为5，那么输入数据的形状可以是`(4, 3, 5)`或`(3, 4, 5)`。
+
+可以使用`torch.randn()`函数生成随机输入数据进行测试，例如：
+
+```import torch
+import torch.nn as nn
+
+batch_size = 3
+sequence_length = 4
+input_size = 5
+
+input_data = torch.randn(sequence_length, batch_size, input_size)
+rnn = nn.RNN(input_size, hidden_size, num_layers)
+output, hidden = rnn(input_data)
+```
+其中，`output`是RNN每个时间步的输出，`hidden`是最后一个时间步的隐藏状态。
+#### 案例
+
+```
+"""
+PyTorch中实现了如今最常用的三种RNN：RNN（vanilla RNN）、LSTM和GRU。此外还有对应的三种RNNCell。
+RNN和RNNCell层的区别在于前者能够处理整个序列，而后者一次只处理序列中一个时间点的数据，
+前者封装更完备更易于使用，后者更具灵活性。RNN层可以通过组合调用RNNCell来实现。
+理论参考：https://blog.csdn.net/liaomin416100569/article/details/131380370?spm=1001.2014.3001.5501
+输入参数和RNN参数解释参考readme.md
+"""
+import torch as t
+import torch.nn as nn
+#注意默认（时间步，批次数，数据维度）
+sequence_length =3
+batch_size =2
+input_size =4
+input=t.randn(sequence_length,batch_size,input_size)
+print("输入数据",input)
+rnnModel=nn.RNN(input_size,3,1)
+#其中，output是RNN每个时间步的输出，hidden是最后一个时间步的隐藏状态。
+output, hidden=rnnModel(input)
+print("RNN最后时间步隐藏层",hidden)
+print("RNN最后时间步隐藏层维度",hidden.shape)
+print("RNN所有隐藏层",output)
+print("RNN所有隐藏层维度",output.shape)
+```
+输出：
+
+```
+
+输入数据 tensor([[[ 0.5364, -0.5291,  0.3117, -0.0282],
+         [-0.2012,  0.9933,  1.5328, -0.8234]],
+
+        [[ 1.3270, -1.2367,  0.5925,  1.0894],
+         [-1.8035,  0.3598, -0.4404,  0.4921]],
+
+        [[-0.6487, -0.0487, -0.9728,  0.7563],
+         [ 1.2929,  0.5146,  1.2296,  1.0124]]])
+RNN最后时间步隐藏层 tensor([[[0.2800, 0.8572, 0.3759],
+         [0.5901, 0.4742, 0.9417]]], grad_fn=<StackBackward>)
+RNN最后时间步隐藏层维度 torch.Size([1, 2, 3])
+RNN所有隐藏层 tensor([[[ 0.5862,  0.7417,  0.8068],
+         [ 0.9564,  0.5668,  0.6112]],
+
+        [[-0.1729,  0.7310,  0.9879],
+         [ 0.6202,  0.7824,  0.3075]],
+
+        [[ 0.2800,  0.8572,  0.3759],
+         [ 0.5901,  0.4742,  0.9417]]], grad_fn=<StackBackward>)
+RNN所有隐藏层维度 torch.Size([3, 2, 3])
+```
+
+### nn.LSTM
+`nn.LSTM`是PyTorch中的一个循环神经网络模块，它基于长短期记忆（Long Short-Term Memory，LSTM）的架构。LSTM是一种特殊类型的循环神经网络，通过使用门控机制来解决传统循环神经网络中的梯度消失和梯度爆炸问题，从而能够更好地处理长期依赖关系。
+
+`nn.LSTM`的主要参数包括：
+
+*   `input_size`：输入数据的特征维度。
+*   `hidden_size`：隐藏层的维度，也是LSTM单元输出的维度。
+*   `num_layers`：LSTM的层数，默认为1。
+*   `bias`：是否使用偏置，默认为True。
+*   `batch_first`：输入数据的维度顺序是否为(batch, seq, feature)，默认为False。
+*   `dropout`：是否应用dropout，用于防止过拟合，默认为0，表示不使用dropout。
+*   `bidirectional`：是否使用双向LSTM，默认为False。
+
+`nn.LSTM`的输入数据格式通常是一个三维张量，具体格式取决于`batch_first`参数的设置。如果`batch_first`为False（默认值），输入数据的维度应为(seq\_len, batch, input\_size)，其中seq\_len表示序列的长度，batch表示批次的大小，input\_size表示输入数据的特征维度。如果`batch_first`为True，输入数据的维度应为(batch, seq\_len, input\_size)。
+
+`nn.LSTM`的前向传播过程会根据输入数据的时间步长和层数进行迭代计算，并返回最后一个时间步的输出以及最后一个时间步的隐藏状态和记忆细胞状态。这些输出可以用于下游任务，如分类或回归。
+
+使用`nn.LSTM`时，可以通过调整参数来适应不同的任务和数据。此外，还可以使用`nn.LSTMCell`来构建自定义的LSTM网络。
+
+`nn.LSTM`的返回值是一个元组，包含两个元素：output和(hidden\_state, cell\_state)。
+
+1.  output：表示LSTM模型的隐藏状态输出。它是一个元组，包含了模型在每个时间步的输出结果。具体来说，output的形状是`(seq_len, batch, num_directions * hidden_size)`，其中：
+    
+    *   `seq_len`表示输入序列的长度；
+    *   `batch`表示输入数据的批次大小；
+    *   `num_directions`表示LSTM模型的方向数，通常为1或2（双向LSTM）；
+    *   `hidden_size`表示隐藏状态的维度。
+2.  (hidden\_state, cell\_state)：表示LSTM模型的最后一个时间步的隐藏状态和细胞状态。它们的形状都是`(num_layers * num_directions, batch, hidden_size)`，其中：
+    
+    *   `num_layers`表示LSTM模型的层数；
+    *   `num_directions`表示LSTM模型的方向数，通常为1或2（双向LSTM）；
+    *   `batch`表示输入数据的批次大小；
+    *   `hidden_size`表示隐藏状态的维度。
+
+这两个返回值可以用于进一步的处理和分析，比如用于序列标注、语言建模等任务。
+也就是hidden\_state是output最后一个值，每个时间步都有一个cell\_state
+案例
+
+```
+lstmModel=nn.LSTM(input_size,3,1)
+#其中，output是RNN每个时间步的输出，hidden是最后一个时间步的隐藏状态。
+output, (h, c) =lstmModel(input)
+print("LSTM隐藏层输出的维度",output.shape)
+print("LSTM隐藏层最后一个时间步输出的维度",h.shape)
+print("LSTM隐藏层最后一个时间步细胞状态",c.shape)
+```
+输出
+```
+LSTM隐藏层输出的维度 torch.Size([3, 2, 3])
+LSTM隐藏层最后一个时间步输出的维度 torch.Size([1, 2, 3])
+LSTM隐藏层最后一个时间步细胞状态 torch.Size([1, 2, 3])
+```
+### nn.GRU
+`nn.GRU`是PyTorch中的一个循环神经网络（Recurrent Neural Network，RNN）模块，它实现了门控循环单元（Gated Recurrent Unit，GRU）的功能。GRU是一种用于处理序列数据的RNN变体，它具有比传统的循环神经网络更强大的建模能力。
+
+GRU通过引入两个门控机制，即更新门（Update Gate）和重置门（Reset Gate），来控制信息的流动。这些门控机制使得GRU能够学习长期依赖关系，并且在处理长序列时能够更好地捕捉到序列中的重要信息。
+
+在`nn.GRU`模块中，可以通过设置参数来定义GRU的输入维度、隐藏状态维度、层数等。以下是`nn.GRU`的一些常用参数：
+
+*   `input_size`：输入的特征维度。
+*   `hidden_size`：隐藏状态的维度。
+*   `num_layers`：GRU的层数。
+*   `bias`：是否使用偏置。
+*   `batch_first`：如果为True，则输入数据的形状应为（batch\_size，sequence\_length，input\_size）；如果为False，则输入数据的形状应为（sequence\_length，batch\_size，input\_size）。
+*   `dropout`：dropout比例，用于控制输入数据的随机丢弃比例。
+*   `bidirectional`：是否使用双向GRU。
+
+除了上述参数之外，`nn.GRU`还提供了其他一些方法和功能，如`forward`方法用于前向传播计算，`reset_parameters`方法用于重置模型的参数等。
+案例
+```
+# gru没有细胞状态
+gruModel=nn.GRU(input_size,3,1)
+#其中，output是RNN每个时间步的输出，hidden是最后一个时间步的隐藏状态。
+output, h =gruModel(input)
+print("GRU隐藏层输出的维度",output.shape)
+print("GRU隐藏层最后一个时间步输出的维度",h.shape)
+```
+输出
+```
+GRU隐藏层输出的维度 torch.Size([3, 2, 3])
+GRU隐藏层最后一个时间步输出的维度 torch.Size([1, 2, 3])
+```
+# models
+## checkpoints
+在深度学习中，checkpoints是训练期间保存模型参数的文件。它们是在每个训练周期或某个特定时间间隔保存的，以便在训练过程中出现问题时可以恢复训练。通过保存checkpoints，我们可以在训练过程中随时停止并重新开始，而无需从头开始训练。
+
+".pt"是PyTorch中用于保存模型参数的文件扩展名。当我们训练一个模型时，我们可以将模型的参数保存在.pt文件中，以便以后在其他地方使用或加载到其他模型中。这些文件包含了模型在训练期间学到的权重和偏差等参数。在PyTorch中，我们可以使用torch.save()函数将模型参数保存为.pt文件，并使用torch.load()函数加载.pt文件中的参数。
+
+```
+import torch
+import torch.nn as nn
+#模型的保存和加载
+model=nn.Linear(3,1)
+#修改权重和偏置后保存模型
+new_weight = torch.tensor([[1.0, 2.0, 3.0]])
+new_bias = torch.tensor([4.0])
+model.weight = nn.Parameter(new_weight)
+model.bias = nn.Parameter(new_bias)
+torch.save(model.state_dict(),"./model.pt")
+
+newModel=nn.Linear(3,1)
+print("默认参数",newModel.weight,newModel.bias)
+newModel.load_state_dict(torch.load("./model.pt"))
+print("加载后",newModel.weight,newModel.bias)
+```
+输出
+```
+默认参数 Parameter containing:
+tensor([[-0.4357, -0.0781,  0.0136]], requires_grad=True) Parameter containing:
+tensor([-0.2013], requires_grad=True)
+加载后 Parameter containing:
+tensor([[1., 2., 3.]], requires_grad=True) Parameter containing:
+tensor([4.], requires_grad=True)
+```
+
+## 内置models
+在PyTorch的`torchvision.models`模块中，提供了一些已经实现好的经典神经网络模型，包括：
+
+1.  AlexNet
+2.  VGG
+3.  ResNet
+4.  SqueezeNet
+5.  DenseNet
+6.  Inception
+7.  GoogLeNet
+8.  MobileNet
+9.  ShuffleNet
+10.  ResNeXt
+11.  Wide ResNet
+12.  MNASNet
+
+这些模型可以通过`torchvision.models`模块的函数进行实例化，以便在自己的项目中使用。每个模型都有预训练的权重，也可以在自定义数据集上进行微调。你可以根据自己的需求选择适合的模型进行使用。
+
+以下使用models.resnet18分类datasets.CIFAR10
+
+```
+#%%
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torchvision.transforms as transforms
+import torchvision.datasets as datasets
+import torchvision.models as models
+
+# 定义数据预处理
+transform = transforms.Compose([
+    transforms.RandomCrop(32, padding=4),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+])
+
+# 加载CIFAR-10数据集
+train_dataset = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+test_dataset = datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
+
+# 定义模型
+#参数pretrained表示是否加载预训练的权重。如果pretrained为True，那么模型将加载在ImageNet数据集上预训练的权重。
+# 这些预训练的权重可以提供更好的初始权重，有助于模型在其他任务上进行迁移学习。如果pretrained为False，
+# 则使用随机初始化的权重进行训练。
+model = models.resnet18(pretrained=False)
+num_classes = 10
+model.fc = nn.Linear(512, num_classes)
+
+# 定义损失函数和优化器
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+
+# 训练模型
+batch_size = 64
+train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
+
+num_epochs = 10
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
+for epoch in range(num_epochs):
+    model.train()
+    epoch_loss = 0.0
+    for images, labels in train_loader:
+        images = images.to(device)
+        labels = labels.to(device)
+        
+        # 前向传播和计算损失
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        
+        # 反向传播和优化
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        epoch_loss += loss.item()
+    print(f"Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss/len(train_loader):.4f}")
+# 在测试集上评估模型
+model.eval()
+with torch.no_grad():
+    correct = 0
+    total = 0
+    for images, labels in test_loader:
+        images = images.to(device)
+        labels = labels.to(device)
+        
+        outputs = model(images)
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+    
+    accuracy = 100 * correct / total
+    print(f'Epoch [{epoch+1}/{num_epochs}], Test Accuracy: {accuracy}%')
+torch.cuda.empty_cache()
+
+```
+## torch.hub
+`torch.hub`是PyTorch中一个用于加载预训练模型的工具。它提供了一个简单的接口，可以方便地从互联网上获取训练好的模型并加载到您的代码中使用。通过使用`torch.hub`，您可以轻松地使用各种预训练模型，如图像分类、目标检测、语义分割等模型。
+
+`torch.hub`的使用非常简单，您只需要提供模型的命名空间和模型名称，它将自动下载并加载预训练模型。例如，要加载一个名为"pytorch/vision"的模型，您可以使用以下代码：
+
+`import torch
+model = torch.hub.load('pytorch/vision', 'resnet50', pretrained=True)` 
+
+上述代码将下载并加载名为"resnet50"的预训练模型，并将其存储在`model`变量中。您可以使用`model`变量进行推理、特征提取等操作。
+
+`torch.hub`还支持本地模型缓存，这意味着当您多次运行相同的代码时，它将自动从本地缓存中加载模型，而不是重新下载。这样可以提高代码的运行效率。
+
+总之，`torch.hub`是一个非常方便的工具，使您能够轻松地使用各种预训练模型，并将它们集成到您的代码中，从而加速您的深度学习项目开发。
+官网模型搜索地址：https://pytorch.org/hub/research-models
+以下是最火的6个model
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/3955c390dc3f1f0827cdff049558f886.png)
+### yolov5目标检测
+实战使用yolov5目标检测,参考官方模型文档：https://pytorch.org/hub/ultralytics_yolov5/
+注意 Python>=3.8  PyTorch>=1.7
+安装ultralytics
+
+```
+pip install -U ultralytics
+
+```
+编写程序
+```
+#%%
+
+import torch
+# Model，加载模型中的参数
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+# Images
+imgs = ['https://ultralytics.com/images/zidane.jpg']  # batch of images
+# Inference
+results = model(imgs)
+# Results
+results.print()
+results.save()  # or .show()
+results.xyxy[0]  # img1 predictions (tensor)
+```
+会在当前运行的目录上生成一个runs/detect/exp/zidane.jpg
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/3add9fe98a0400ae437f7b9872e8c9ca.png)
+### 生成动漫图像
+github项目地址：https://github.com/bryandlee/animegan2-pytorch
+可以将人物图像转换为动漫效果。
+```
+from PIL import Image
+import torch
+from matplotlib import pyplot
+model = torch.hub.load("bryandlee/animegan2-pytorch:main", "generator",pretrained="celeba_distill").eval()
+face2paint = torch.hub.load("bryandlee/animegan2-pytorch:main", "face2paint", size=512)
+image=Image.open("./images/lyf.png")
+out = face2paint(model, image)
+pyplot.imshow(out)
+pyplot.show()
+```
+原始图像
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/d8dab52114d56a4a9c4e04e207e82f71.png)
+转换后
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/d81d7092436aeae4fabf4da4f18ecaa7.png)
+
+
+
+
+## 可视化监控
+在 TensorFlow 中，最常使用的可视化工具是Tensorboard ,TensorboardX 工具使得 PyTorch 也享受到 Tensorboard 的便捷功能。
+pytorch1.8之后已经包含了tensorboardx工具，在torch.utils.tensorboard包中。
+FaceBook 也为 PyTorch 开发了一款交互式可视化工具 Visdom，它可以对实时数据进行丰富的可视化，帮助实时监控实验过程。
+### tensorboard
+Tensorboard 是 TensorFlow 的一个附加工具，用于记录训练过程的模型的参数、评价指标与图像等细节内容，并通过 Web 页面提供查看细节与过程的功能，用浏览器可视化的形式展现，帮助我们在实验时观察神经网络的训练过程，把握训练趋势。既然 Tensorboard 工具这么方便，TensorFlow 外的其它深度学习框架自然也想获取 Tensorboard 的便捷功能，于是，TensorboardX 应运而生。
+先安装Tensorboard
+```
+pip install tensorboard
+```
+我这里tensorboard要求的setuptools版本较低，在使用过程中报错
+```
+AttributeError: module 'distutils' has no attribute 'version'
+```
+降级版本即可
+
+```
+pip uninstall setuptools
+micromamba install setuptools==59.5.0
+或者用pip install setuptools==59.5.0
+```
+**工具使用规范**
+1、创建SummaryWriter 的实例：
+```
+from torch.utils.tensorboard import SummaryWriter
+# 创建一个SummaryWriter的实例
+writer = SummaryWriter(log_dir=None)
+```
+其中的 log_dir 表示保存日志的路径，默认会保存在“runs/ 当前时间 _ 主机名”文件夹中。
+##### add_scalar
+2、add_scalar方法，这个方法用来记录数字常量（比如损失函数值），它的定义如下：
+```
+add_scalar(tag, scalar_value, global_step=None, walltime=None)
+```
+*   tag：字符串类型，表示对应要监控的数据名称，**是任意自定义的**，不同名称的数据会使用不同曲线展示；
+*   scalar\_value：浮点型，表示要监控及保存的数值；
+*   global\_step：整型，表示训练的 step 数，**作为横坐标**；
+*   walltime：浮点型，表示记录发生的时间，默认为 time.time()。
+一般会使用add_scalar方法来记录训练过程的 loss、accuracy、learning rate 等数值的变化，这样就能直观地监控训练过程。每监控一个指标，就需要使用一个add_scalar方法。（如果要看x个指标就使用x次add_scalar方法）
+3、add_image方法用来记录单个图像数据（需要 Pillow 库的支持），它的定义如下
+```
+add_image(tag, img_tensor, global_step=None, walltime=None, dataformats='CHW')
+```
+*   tag、global\_step 和 walltime 的含义跟add\_scalar方法里一样
+*   img\_tensor：PyTorch 的 Tensor 类型或 NumPy 的 array 类型，表示图像数据；
+*   dataformats：字符串类型，表示图像数据的格式，默认为“CHW”，即 Channel x Height x Width，还可以是“CHW”、“HWC”或“HW”等。
+这里演示一个线性回归的例子 ，演示将epoch次数作为x，损失作为y值的的scalar图
+
+```
+#%%
+import os
+import shutil
+def delete_directory_contents(directory):
+    for filename in os.listdir(directory):  # 遍历目录下的所有文件和子目录
+        file_path = os.path.join(directory, filename)  # 构建文件或子目录的完整路径
+        if os.path.isfile(file_path):  # 如果是文件，则直接删除
+            os.remove(file_path)
+        elif os.path.isdir(file_path):  # 如果是子目录，则递归调用删除子目录中的内容
+            shutil.rmtree(file_path)
+#删除runs目录下的所有文件和目录            
+delete_directory_contents("./runs/")            
+import torch as t
+import matplotlib.pyplot as plot
+import torch.nn as nn
+from torch.utils.tensorboard import SummaryWriter
+#########例子演示梯度下降损失（每个epoch的损失）
+#其中的 log_dir 表示保存日志的路径，默认会保存在“runs/ 当前时间 _ 主机名”文件夹中。
+writer=SummaryWriter(log_dir=None)
+t.manual_seed(42)
+# 使用自动梯度实现线性回归
+x=t.randn(100,1)
+x_test=t.randn(20,1)
+y=3*x+2+t.randn(100,1) #实际值上加上一些随机噪点
+y_test=3*x+2+t.randn(100,1)
+
+class LinearModel(nn.Module):
+    def __init__(self):
+        nn.Module.__init__(self)
+        self.w=nn.Parameter(t.randn(1,1))
+        self.b=nn.Parameter(t.randn(1))
+    def forward(self,x):
+        return t.mm(x,self.w)+self.b
+model=LinearModel()
+lossf=nn.MSELoss()
+#定义优化器,第一个参数为模型的参数，参数传入后,自动获取他的梯度并且-梯度*学习率
+optim=t.optim.SGD(model.parameters(),lr=0.01)
+#训练100次，100次梯度下降，计算到最小损失时的w和b
+epochCount=100
+for epoch in range(epochCount):
+    y_pre=model(x)
+    #注意梯度清零，否则会累加
+    optim.zero_grad()  
+    loss=lossf(y_pre,y)
+    writer.add_scalar("Loss/train",loss,epoch)
+    loss.backward()
+    #更新参数w和b
+    optim.step()
+     
+plot.plot(x,y,'.')
+plot.plot(x.data.numpy(),y_pre.data.numpy())
+plot.show()
+writer.close()
+```
+运行后在runs目录下生成了日志，切换到当前安装tensorboard的环境执行命令：tensorboard --logdir=runs，
+>tensorboard 是热加载的，上面的代码比如调整epoch次数，重新运行，是实时刷新的。
+```
+(env380) D:\code\deeplearn\learn_rnn\pytorch\4.nn模块>tensorboard --logdir=runs
+TensorFlow installation not found - running with reduced feature set.
+Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
+TensorBoard 2.13.0 at http://localhost:6006/ (Press CTRL+C to quit)
+```
+访问：http://localhost:6006/
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/d452e8ea55bc4602c7f125cc64499cbd.png)
+可以看到epoch到达80左右基本损失就很小了
+我们把代码的epochCount调整到20
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/fb65a3943b45a6d8c66f40d15d584601.png)
+可以看到损失梯度下降还没有达到平缓，在看下拟合的图形
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/bfe0af06723fff29233f698299b8c3a3.png)
+再把epochCount调整到10000
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/09da09404ef86c5d074f0fa49727a201.png)
+可以看到在100左右基本就平缓了，后面的训练是多余的了，所以我们可以观察到epoch到100是最合适的
+
+##### add_histogram
+使用 `add_histogram` 方法来记录一组数据的直方图。
+
+```python
+add_histogram(tag, values, global_step=None, bins='tensorflow', walltime=None, max_bins=None)
+```
+
+**参数**
+*   **tag** (string): 数据名称
+*   **values** (torch.Tensor, numpy.array, or string/blobname): 用来构建直方图的数据
+*   **global\_step** (int, optional): 训练的 step
+*   **bins** (string, optional): 取值有 ‘tensorflow’、‘auto’、‘fd’ 等, 该参数决定了分桶的方式，详见[这里](https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html)。
+*   **walltime** (float, optional): 记录发生的时间，默认为 `time.time()`
+*   **max\_bins** (int, optional): 最大分桶数
+我们可以通过观察数据、训练参数、特征的直方图，了解到它们大致的分布情况，辅助神经网络的训练过程。
+我们来观察下假设10次产生均值是0方差是1的1000条数据，每一次的波动
+
+```
+import numpy as np
+from torch.utils.tensorboard import SummaryWriter
+
+writer = SummaryWriter()
+flag = 1
+if flag :
+    for x in range(10):
+        data_1 = np.arange(1000)
+        data_2 = np.random.normal(size=1000)
+        #直方图的结构是y轴是第多少次，x轴显示value的波动
+        writer.add_histogram("data1",data_1,x)
+        writer.add_histogram('data2',data_2,x)
+writer.close()
+```
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/5abaa65df4ff08038f87082deb920894.png)
+右侧的坐标表示循环的次数，下方的坐标表示这1000个数的分布情况
+##### 运行图 (graph)
+使用 `add_graph` 方法来可视化一个神经网络。
+
+```python
+add_graph(model, input_to_model=None, verbose=False, **kwargs)
+```
+参数
+- model (torch.nn.Module): 待可视化的网络模型
+- input_to_model (torch.Tensor or list of torch.Tensor, optional): 待输入神经网络的变量或一组变量
+在add_scalar线性回归的代码中我们打印线性模型输入x的计算图
+
+```
+model=LinearModel()
+#加入代码
+writer.add_graph(model,model.w)
+```
+![在这里插入图片描述](/docs/images/content/programming/ai/deep_learning/basic/dl_06_pytorch.md.images/e1ae4f3dfad234f890022cc52a5411a3.png)
+##### 图片add_image
+使用 `add_image` 方法来记录单个图像数据。**注意，该方法需要 `pillow` 库的支持。**
+
+```python
+add_image(tag, img_tensor, global_step=None, walltime=None, dataformats='CHW')
+```
+
+**参数**
+
+*   **tag** (string): 数据名称
+*   **img\_tensor** (torch.Tensor / numpy.array): 图像数据
+*   **global\_step** (int, optional): 训练的 step
+*   **walltime** (float, optional): 记录发生的时间，默认为 `time.time()`
+*   **dataformats** (string, optional): 图像数据的格式，默认为 `'CHW'`，即 `Channel x Height x Width`，还可以是 `'CHW'`、`'HWC'` 或 `'HW'` 等
+
+我们一般会使用 `add_image` 来实时观察生成式模型的生成效果，或者可视化分割、目标检测的结果，帮助调试模型。
+### Visdom
+后续补

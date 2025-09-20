@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
-  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <meta name="generator" content="Hugo 0.150.0">
@@ -48,7 +48,7 @@ REINFORCEMENT LEARNING MODELS（强化学习模型）：用于解决强化学习
 TIME SERIES MODELS（时间序列模型）：用于分析和预测时间序列数据的模型，如循环神经网络（RNN）、长短期记忆网络（LSTM）等。
 GRAPH MODELS（图模型）：用于处理和分析图数据的模型，如图神经网络（GNN）、图卷积网络（GCN）等。
 BERT的基本原理 BERT基于的是Transformer模型，并且仅使用Transformer模型的Encoder部分。在Transformer模型中，Encoder的输入是一串序列，输出的是对序列中每个字符的表示。同样，在BERT中，输入的是一串序列，输出的是也是对应序列中每个单词的编码。 以“He got bit by Python”为例，BERT的输入输出如下图所示： 其中输入为序列“He got bit by Python”，输出的是对每个单词的编码$R_{word}$。这样在经过了BERT处理后，即得到了对每个单词包含的上下文表示$R_{word}$。">
-    <meta property="og:url" content="http://localhost:1313/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html">
     <meta property="og:site_name" content="liaomin416100569博客">
     <meta property="og:title" content="Transformers实战02-BERT预训练模型微调 :: liaomin416100569博客">
     <meta property="og:description" content="BERT（Bidirectional Encoder Representations from Transformers）是一种基于 Transformer 模型的预训练语言表示方法，由Google研究团队于2018年提出。BERT 通过在大规模文本语料上进行无监督的预训练，学习了通用的语言表示，并且在各种自然语言处理任务中取得了显著的性能提升。
@@ -71,7 +71,7 @@ REINFORCEMENT LEARNING MODELS（强化学习模型）：用于解决强化学习
 TIME SERIES MODELS（时间序列模型）：用于分析和预测时间序列数据的模型，如循环神经网络（RNN）、长短期记忆网络（LSTM）等。
 GRAPH MODELS（图模型）：用于处理和分析图数据的模型，如图神经网络（GNN）、图卷积网络（GCN）等。
 BERT的基本原理 BERT基于的是Transformer模型，并且仅使用Transformer模型的Encoder部分。在Transformer模型中，Encoder的输入是一串序列，输出的是对序列中每个字符的表示。同样，在BERT中，输入的是一串序列，输出的是也是对应序列中每个单词的编码。 以“He got bit by Python”为例，BERT的输入输出如下图所示： 其中输入为序列“He got bit by Python”，输出的是对每个单词的编码$R_{word}$。这样在经过了BERT处理后，即得到了对每个单词包含的上下文表示$R_{word}$。">
-    <meta property="og:locale" content="en_us">
+    <meta property="og:locale" content="zh">
     <meta property="og:type" content="article">
     <meta property="article:section" content="编程开发">
     <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
@@ -101,34 +101,34 @@ BERT的基本原理 BERT基于的是Transformer模型，并且仅使用Transform
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="1657">
     <title>Transformers实战02-BERT预训练模型微调 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758267566" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758267566" defer></script>
-    <script src="/docs/js/search-lunr.js?1758267566" defer></script>
-    <script src="/docs/js/search.js?1758267566" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758332784" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758332784" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758332784" defer></script>
+    <script src="/docs/js/search.min.js?1758332784" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758267566";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758332784";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758267566" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758267566" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758267566" defer></script>
-    <script src="/docs/js/lunr/lunr.en.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758332784" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.contentLangs=['en'];
+      window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758267566" rel="stylesheet">
-    <link href="/docs/css/theme.css?1758267566" rel="stylesheet">
-    <link href="/docs/css/format-html.css?1758267566" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758332784" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
-      window.relearn.min = ``;
+      window.relearn.min = `.min`;
       window.relearn.path='\/programming\/ai\/tools_libraries\/transformers\/actions\/transformers_actions_02\/index.html';
       window.relearn.relBasePath='..\/..\/..\/..\/..\/..';
       window.relearn.relBaseUri='..\/..\/..\/..\/..\/..\/..';
-      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
       window.relearn.disableAnchorCopy=false;
       window.relearn.disableAnchorScrolling=false;
       window.relearn.disableInlineCopyToClipboard=false;
@@ -174,7 +174,7 @@ BERT的基本原理 BERT基于的是Transformer模型，并且仅使用Transform
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758332784" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html">
     <div id="R-body" class="default-animation">
@@ -312,8 +312,8 @@ window.MathJax = {
 <h1 id="bert的基本原理">BERT的基本原理</h1>
 <p>BERT基于的是Transformer模型，并且仅使用Transformer模型的Encoder部分。在Transformer模型中，Encoder的输入是一串序列，输出的是对序列中每个字符的表示。同样，在BERT中，输入的是一串序列，输出的是也是对应序列中每个单词的编码。
 以“He got bit by Python”为例，BERT的输入输出如下图所示：
-<a href="#R-image-0e9f19891051d8c6d0773723fab76702" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/77d14abf55fea6c76269fcdeb93bb7c0.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0e9f19891051d8c6d0773723fab76702"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/77d14abf55fea6c76269fcdeb93bb7c0.png"></a>
+<a href="#R-image-8da6b9f477cca4ef6ea43ebbe2ce67ac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/77d14abf55fea6c76269fcdeb93bb7c0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8da6b9f477cca4ef6ea43ebbe2ce67ac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/77d14abf55fea6c76269fcdeb93bb7c0.png"></a>
 其中输入为序列“He got bit by Python”，输出的是对每个单词的编码$R_{word}$。这样在经过了BERT处理后，即得到了对每个单词包含的上下文表示$R_{word}$。</p>
 <h2 id="分词">分词</h2>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from transformers import AutoModel, BertTokenizer
@@ -627,8 +627,8 @@ for item in range(10):
      #更新一次,其实就是进度条加上： 1/len(range(10))
      tdm.update(1)</code></pre></div>
 <p>效果
-<a href="#R-image-6c52db65c56a4bcb19667eb6d2aea525" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/b1881dfe947372cd773bd9c2f1ad131b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6c52db65c56a4bcb19667eb6d2aea525"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/b1881dfe947372cd773bd9c2f1ad131b.png"></a></p>
+<a href="#R-image-e11eae1b6a694d2a703f2942c36bf698" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/b1881dfe947372cd773bd9c2f1ad131b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e11eae1b6a694d2a703f2942c36bf698"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/actions/transformers_actions_02.md.images/b1881dfe947372cd773bd9c2f1ad131b.png"></a></p>
 <h3 id="训练模型-1">训练模型</h3>
 <p>在训练模型时，我们将每一轮 Epoch 分为训练循环和验证/测试循环。在训练循环中计算损失、优化模型的参数，在验证/测试循环中评估模型的性能，与 Pytorch 类似，Transformers 库同样实现了很多的优化器，并且相比 Pytorch 固定学习率，Transformers 库的优化器会随着训练过程逐步减小学习率（通常会产生更好的效果）。例如我们前面使用过的 AdamW 优化器
 完整的训练过程，可与使用colab来进行训练。</p>
@@ -786,7 +786,8 @@ print(pred.argmax(1) == y)</code></pre></div>
             <li class="active " data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_02/index.html">Transformers实战02-BERT预训练模型微调</a></li>
             <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_03/index.html">Transformers实战03-PEFT库使用LORA方法微调VIT图像分类。</a></li>
             <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_04/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_04/index.html">Transformers实战04-微调gpt-2生成python代码。</a></li>
-            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_05/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_05/index.html">Transformers实战05-模型量化</a></li></ul></li></ul></li></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_05/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/transformers_actions_05/index.html">Transformers实战05-模型量化</a></li></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
           </ul>
         </div>
@@ -805,8 +806,8 @@ print(pred.argmax(1) == y)</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758267566" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758267566" defer></script>
-    <script src="/docs/js/theme.js?1758267566" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758332784" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758332784" defer></script>
+    <script src="/docs/js/theme.min.js?1758332784" defer></script>
   </body>
 </html>

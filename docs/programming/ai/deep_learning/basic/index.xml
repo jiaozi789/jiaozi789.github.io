@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>深度基础 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/basic/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/programming/ai/deep_learning/basic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>深度学习02-神经网络(MLP多层感知器)</title>
+      <link>https://jiaozi789.github.io/docs/programming/ai/deep_learning/basic/dl_02_mlp/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/programming/ai/deep_learning/basic/dl_02_mlp/index.html</guid>
+      <description>神经网络 简介 神经网络是一种基于生物神经系统结构和功能特点而设计的人工神经网络模型，具有很强的自适应性和非线性映射能力。神经网络由多个神经元（或称节点）组成，这些神经元通过连接权重相互连接，构成多层的网络结构。每个神经元接收到来自其它神经元的信号，并将这些信号加权线性组合后通过激活函数进行非线性转换，最终输出给下一层神经元或输出层。&#xA;学习机器学习后，学习神经网络可以帮助你更深入地理解模式识别和人工智能领域的基础知识。神经网络在很多领域都有广泛的应用，例如计算机视觉、自然语言处理、语音识别等。学习神经网络可以让你掌握这些领域中最前沿的技术，并且能够应用这些技术来解决具体的问题。同时，神经网络的学习方法和算法也是机器学习的重要组成部分，学习神经网络可以帮助你更好地理解机器学习的原理和技术，从而更好地应用机器学习来解决实际问题。&#xA;学习路径 如果你已经学过机器学习，那么开始学习神经网络，可以从多层感知器（Multilayer Perceptron，简称 MLP）神经网络入手。 MLP 是最基本的神经网络模型之一，它的结构比较简单，易于理解和实现，同时又有很好的可扩展性和通用性，可以应用于分类、回归等多种任务。学习 MLP 之后，你可以进一步学习卷积神经网络（Convolutional Neural Networks，简称 CNN）和循环神经网络（Recurrent Neural Networks，简称 RNN），它们分别用于计算机视觉和自然语言处理等特定领域的问题。总之，建议先从 MLP 入手，逐渐深入学习其他类型的神经网络。&#xA;分类 神经网络可以分为多种不同的类型，下面列举一些常见的神经网络类型：&#xA;前馈神经网络（Feedforward Neural Network）：前馈神经网络是最基本的神经网络类型，也是深度学习中最常见的神经网络类型。它由若干个神经元按照一定的层次结构组成，每个神经元接收上一层的输出，产生本层的输出，从而实现信息的传递和处理。&#xA;卷积神经网络（Convolutional Neural Network）：卷积神经网络是一种专门用于图像处理和计算机视觉任务的神经网络类型。它通过卷积和池化等操作，可以提取图像中的特征，从而实现图像分类、目标检测、图像分割等任务。&#xA;循环神经网络（Recurrent Neural Network）：循环神经网络是一种能够处理序列数据的神经网络类型。它通过记忆单元和门控机制等方式，可以处理任意长度的序列数据，从而实现自然语言处理、语音识别等任务。&#xA;自编码器（Autoencoder）：自编码器是一种无监督学习的神经网络类型，它的目标是将输入数据进行压缩和解压缩，从而实现特征提取和降维等任务。&#xA;深度置信网络（Deep Belief Network）：深度置信网络是一种由多个受限玻尔兹曼机组成的神经网络类型。它可以通过逐层贪心预训练和微调等方式，实现高效的特征学习和分类任务。&#xA;除了以上列举的几种神经网络类型，还有众多其他的神经网络类型，如反向传播神经网络、Hopfield网络、Boltzmann机等。不同的神经网络类型适用于不同的任务和数据类型，需要根据具体的问题选择合适的神经网络类型。&#xA;多层感知器（MLP） MLP神经网络属于前馈神经网络（Feedforward Neural Network）的一种。在网络训练过程中，需要通过反向传播算法计算梯度，将误差从输出层反向传播回输入层，用于更新网络参数。这个过程中需要使用反向传播算法来计算梯度，并且在某些类型的神经网络中，例如循环神经网络（RNN），也存在反馈回路。除了MLP，其他常见的前馈神经网络包括卷积神经网络（CNN）和循环神经网络（RNN）等。&#xA;神经网络认识 我们以一个简单的例子来认识神经网络，只是为了理解其中的一些概念。 我们已知四个数据点(1,1)(-1,1)(-1,-1)(1,-1)，这四个点分别对应I~IV象限（也就是数据属于的类别），如果这时候给我们一个新的坐标点（比如(2,2)），那么它应该属于哪个象限呢？（没错，当然是第I象限，但我们的任务是要让机器知道，机器不知道有象限这个东西啊，他只能根据历史数据的经验推断），如果机器只是知道一堆数据 比如(-2,3)属于2象限，机器就需要通过这些数据总结出一个特征，这个特征可能就是根据x和y坐标的正负来判断象限了。 两层神经网络 这里我们构建一个两层神经网络，理论上两层神经网络已经可以拟合任意函数。这个神经网络的结构如下图： 首先我们去掉途中难懂的东西</description>
+    </item>
+  </channel>
+</rss>

@@ -66,6 +66,7 @@ Each array item needs the following layout:
       // Set up Lunr by declaring the fields we use
       // Also provide their boost level for the ranking
       lunrIndex = lunr(function () {
+        debugger
         this.use(lunr.multiLanguage.apply(null, window.relearn.contentLangs));
         this.ref('index');
         this.field('title', {

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
-  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <meta name="generator" content="Hugo 0.150.0">
@@ -22,7 +22,7 @@ Input Embedding为什么解决的是语义问题，没有解决位置问题？�
 Input Embedding (输入嵌入):
 input_embedding 主要解决的是词汇语义的表示问题。通过将单词映射为连续的低维向量空间，词嵌入技术（如Word2Vec、GloVe等）可以捕获单词之间的语义关系，比如单词的近义词、反义词等。这使得神经网络在处理文本时能够更好地理解单词的含义，从而提高了对语义的建模能力。 但是，词嵌入并没有直接解决词序的问题。即使单词被嵌入到向量空间中，神经网络在处理这些向量时仍然不知道它们在句子中的位置。这就是为什么我们需要进一步引入位置编码的原因。 Positional Encoding (位置编码):
 positional_encoding 解决的是序列数据的位置信息丢失问题。在自然语言处理中，文本是由单词或字符组成的序列，这些单词的排列顺序对句子的含义至关重要。通过引入位置编码，我们可以向神经网络提供关于单词在序列中位置的信息，从而使网络能够区分不同位置的单词并更好地处理序列数据。 位置编码通常是与词嵌入相加的方式来融合位置信息和语义信息。这样，神经网络在处理输入数据时既能考虑单词的语义关系，又能考虑单词在句子中的位置关系，从而更全面地理解文本数据。 因此，input_embedding 和 positional_encoding 两者都是为了帮助神经网络更好地理解文本数据，但它们解决的是不同层面的问题：input_embedding 解决的是语义表示问题，而 positional_encoding 解决的是位置信息丢失问题。这两者结合起来能够提高神经网络对文本数据的建模能力。">
-    <meta property="og:url" content="http://localhost:1313/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_02/index.html">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_02/index.html">
     <meta property="og:site_name" content="liaomin416100569博客">
     <meta property="og:title" content="Transformer模型详解02-Positional Encoding（位置编码） :: liaomin416100569博客">
     <meta property="og:description" content="什么是位置编码 在transformer的encoder和decoder的输入层中，使用了Positional Encoding，使得最终的输入满足： $$input = input_embedding &#43; positional_encoding $$
@@ -32,7 +32,7 @@ Input Embedding为什么解决的是语义问题，没有解决位置问题？�
 Input Embedding (输入嵌入):
 input_embedding 主要解决的是词汇语义的表示问题。通过将单词映射为连续的低维向量空间，词嵌入技术（如Word2Vec、GloVe等）可以捕获单词之间的语义关系，比如单词的近义词、反义词等。这使得神经网络在处理文本时能够更好地理解单词的含义，从而提高了对语义的建模能力。 但是，词嵌入并没有直接解决词序的问题。即使单词被嵌入到向量空间中，神经网络在处理这些向量时仍然不知道它们在句子中的位置。这就是为什么我们需要进一步引入位置编码的原因。 Positional Encoding (位置编码):
 positional_encoding 解决的是序列数据的位置信息丢失问题。在自然语言处理中，文本是由单词或字符组成的序列，这些单词的排列顺序对句子的含义至关重要。通过引入位置编码，我们可以向神经网络提供关于单词在序列中位置的信息，从而使网络能够区分不同位置的单词并更好地处理序列数据。 位置编码通常是与词嵌入相加的方式来融合位置信息和语义信息。这样，神经网络在处理输入数据时既能考虑单词的语义关系，又能考虑单词在句子中的位置关系，从而更全面地理解文本数据。 因此，input_embedding 和 positional_encoding 两者都是为了帮助神经网络更好地理解文本数据，但它们解决的是不同层面的问题：input_embedding 解决的是语义表示问题，而 positional_encoding 解决的是位置信息丢失问题。这两者结合起来能够提高神经网络对文本数据的建模能力。">
-    <meta property="og:locale" content="en_us">
+    <meta property="og:locale" content="zh">
     <meta property="og:type" content="article">
     <meta property="article:section" content="编程开发">
     <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
@@ -49,34 +49,34 @@ positional_encoding 解决的是序列数据的位置信息丢失问题。在自
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="788">
     <title>Transformer模型详解02-Positional Encoding（位置编码） :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758267566" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758267566" defer></script>
-    <script src="/docs/js/search-lunr.js?1758267566" defer></script>
-    <script src="/docs/js/search.js?1758267566" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758332784" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758332784" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758332784" defer></script>
+    <script src="/docs/js/search.min.js?1758332784" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758267566";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758332784";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758267566" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758267566" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758267566" defer></script>
-    <script src="/docs/js/lunr/lunr.en.min.js?1758267566" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758332784" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758332784" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.contentLangs=['en'];
+      window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758267566" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758267566" rel="stylesheet">
-    <link href="/docs/css/theme.css?1758267566" rel="stylesheet">
-    <link href="/docs/css/format-html.css?1758267566" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758332784" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758332784" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758332784" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
-      window.relearn.min = ``;
+      window.relearn.min = `.min`;
       window.relearn.path='\/programming\/ai\/tools_libraries\/transformers\/basic\/transformers_basic_02\/index.html';
       window.relearn.relBasePath='..\/..\/..\/..\/..\/..';
       window.relearn.relBaseUri='..\/..\/..\/..\/..\/..\/..';
-      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
       window.relearn.disableAnchorCopy=false;
       window.relearn.disableAnchorScrolling=false;
       window.relearn.disableInlineCopyToClipboard=false;
@@ -122,7 +122,7 @@ positional_encoding 解决的是序列数据的位置信息丢失问题。在自
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758267566" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758332784" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_02/index.html">
     <div id="R-body" class="default-animation">
@@ -223,15 +223,15 @@ window.MathJax = {
 </script>
 
 <h1 id="什么是位置编码">什么是位置编码</h1>
-<p><a href="#R-image-10fef227e405515903eee6fa2c43dd51" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/ebd227ba994d4fa4751a41bd2af8836f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-10fef227e405515903eee6fa2c43dd51"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/ebd227ba994d4fa4751a41bd2af8836f.png"></a>
+<p><a href="#R-image-eb7977e7fc26c776fe17723aa4d26018" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/ebd227ba994d4fa4751a41bd2af8836f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-eb7977e7fc26c776fe17723aa4d26018"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/ebd227ba994d4fa4751a41bd2af8836f.png"></a>
 在transformer的encoder和decoder的输入层中，使用了Positional Encoding，使得最终的输入满足：
 $$input = input_embedding + positional_encoding $$</p>
 <blockquote>
 <p>word embedding：<a href="https://blog.csdn.net/liaomin416100569/article/details/138177633?spm=1001.2014.3001.5501" rel="external" target="_blank">理解参考</a></p></blockquote>
 <p>这里，input_embedding是通过常规embedding层，将每一个token的向量维度从vocab_size映射到d_model，由于是相加关系，自然而然地，这里的positional_encoding也是一个d_model维度的向量。（在原论文里，d_model = 512）
-<a href="#R-image-e841203115b9318ec97af0cdc7754c2b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/fa4ea03032578205ebad4f9d1b1ae8eb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e841203115b9318ec97af0cdc7754c2b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/fa4ea03032578205ebad4f9d1b1ae8eb.png"></a></p>
+<a href="#R-image-789b06a50d163149b29e9ed281a251cf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/fa4ea03032578205ebad4f9d1b1ae8eb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-789b06a50d163149b29e9ed281a251cf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/fa4ea03032578205ebad4f9d1b1ae8eb.png"></a></p>
 <blockquote>
 <p>注意：在Transformer模型中，&ldquo;token&rdquo;（标记）是指输入序列中的每个元素，它通常是一个单词、一个子词或一个字符，假设我们有一个句子：&ldquo;The cat sat on the mat.&quot;，单词级别的标记： [&ldquo;The&rdquo;, &ldquo;cat&rdquo;, &ldquo;sat&rdquo;, &ldquo;on&rdquo;, &ldquo;the&rdquo;, &ldquo;mat&rdquo;, &ldquo;.&quot;]。然后被转换成词嵌入（word embeddings）和位置嵌入（position embeddings），然后这两种嵌入会被相加起来形成输入嵌入（input embeddings）。这个输入嵌入会作为模型的输入，并传递到Transformer的神经网络中进行处理,token本身不会再作为数据传递到模型中。</p></blockquote>
 <p>Input Embedding为什么解决的是语义问题，没有解决位置问题？？，语义不是有顺序才有吗？？</p>
@@ -253,8 +253,8 @@ $$input = input_embedding + positional_encoding $$</p>
 </ol>
 <p>因此，<code>input_embedding</code> 和 <code>positional_encoding</code> 两者都是为了帮助神经网络更好地理解文本数据，但它们解决的是不同层面的问题：<code>input_embedding</code> 解决的是语义表示问题，而 <code>positional_encoding</code> 解决的是位置信息丢失问题。这两者结合起来能够提高神经网络对文本数据的建模能力。</p>
 <p>在transformer的self-attention模块中，序列的输入输出如下（不了解self-attention没关系，这里只要关注它的输入输出就行）：
-<a href="#R-image-c94985b1c5faa9260e609c6246119ea4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/6274ec65de29961f1c8e88d503e8637b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c94985b1c5faa9260e609c6246119ea4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/6274ec65de29961f1c8e88d503e8637b.png"></a>
+<a href="#R-image-1fdf3b3bc3155abe70c53942cbc58bac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/6274ec65de29961f1c8e88d503e8637b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1fdf3b3bc3155abe70c53942cbc58bac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/6274ec65de29961f1c8e88d503e8637b.png"></a>
 在self-attention模型中，输入是一整排的tokens，对于人来说，我们很容易知道tokens的位置信息，比如：<br>
 （1）绝对位置信息。a1是第一个token，a2是第二个token&hellip;&hellip;<br>
 （2）相对位置信息。a2在a1的后面一位，a4在a2的后面两位&hellip;&hellip;<br>
@@ -281,8 +281,8 @@ $$input = input_embedding + positional_encoding $$</p>
 <ol>
 <li>模型可能遇见比训练时所用的序列更长的序列。不利于模型的泛化。</li>
 <li>模型的位置表示是无界的。随着序列长度的增加，位置值会越来越大。
-<a href="#R-image-8196e07978bbcc6df66f2c03e3e272ba" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/0ab17fd041832a20d818081125e6cc96.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8196e07978bbcc6df66f2c03e3e272ba"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/0ab17fd041832a20d818081125e6cc96.png"></a></li>
+<a href="#R-image-9aff715c4a789369d6cd42fb5338e167" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/0ab17fd041832a20d818081125e6cc96.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9aff715c4a789369d6cd42fb5338e167"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/0ab17fd041832a20d818081125e6cc96.png"></a></li>
 </ol>
 <h2 id="用01范围标记位置">用[0,1]范围标记位置</h2>
 <p>为了解决整型值带来的问题，可以考虑将位置值的范围限制在[0, 1]之内，其中，0表示第一个token，1表示最后一个token。比如有3个token，那么位置信息就表示成[0, 0.5, 1]；若有四个token，位置信息就表示成[0, 0.33, 0.69, 1]。
@@ -292,32 +292,32 @@ $$input = input_embedding + positional_encoding $$</p>
 <li>它能用来表示一个token在序列中的绝对位置</li>
 <li>在序列长度不同的情况下，不同序列中token的相对位置/距离也要保持一致</li>
 <li>可以用来表示模型在训练过程中从来没有看到过的句子长度。
-<a href="#R-image-5397475d60ee522904e391132e99af64" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/49f0cbb686d251db319c58dc6069989a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5397475d60ee522904e391132e99af64"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/49f0cbb686d251db319c58dc6069989a.png"></a></li>
+<a href="#R-image-c1b59d0db8535c935ee2513ae57257db" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/49f0cbb686d251db319c58dc6069989a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c1b59d0db8535c935ee2513ae57257db"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/49f0cbb686d251db319c58dc6069989a.png"></a></li>
 </ol>
 <h2 id="用二进制向量标记位置">用二进制向量标记位置</h2>
 <p>考虑到位置信息作用在input embedding上，因此比起用单一的值，更好的方案是用一个和input embedding维度一样的向量来表示位置。这时我们就很容易想到二进制编码。如下图，假设d_model = 3，那么我们的位置向量可以表示成：
-<a href="#R-image-1241a7ec41d1773447895eb5ab998efd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/6fb96ba20ffe7ae5f1cee1f5b2d11f56.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1241a7ec41d1773447895eb5ab998efd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/6fb96ba20ffe7ae5f1cee1f5b2d11f56.png"></a>
+<a href="#R-image-02ac598e9f0e90d7e71434dff667cd3a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/6fb96ba20ffe7ae5f1cee1f5b2d11f56.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-02ac598e9f0e90d7e71434dff667cd3a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/6fb96ba20ffe7ae5f1cee1f5b2d11f56.png"></a>
 这下所有的值都是有界的（位于0，1之间），且transformer中的d_model本来就足够大，基本可以把我们要的每一个位置都编码出来了。
 但是这种编码方式也存在问题：这样编码出来的位置向量，处在一个离散的空间中，不同位置间的变化是不连续的。假设d_model = 2，我们有4个位置需要编码，这四个位置向量可以表示成[0,0],[0,1],[1,0],[1,1]。我们把它的位置向量空间做出来：
-<a href="#R-image-d0bf1b2ca0d89447cbb05b5d6200a64c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/090f9247df7077cdfbd4bc1db3cb381b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d0bf1b2ca0d89447cbb05b5d6200a64c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/090f9247df7077cdfbd4bc1db3cb381b.png"></a></p>
+<a href="#R-image-3d2ea8efa5b00c61e3b35fdf04e333aa" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/090f9247df7077cdfbd4bc1db3cb381b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3d2ea8efa5b00c61e3b35fdf04e333aa"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/090f9247df7077cdfbd4bc1db3cb381b.png"></a></p>
 <h2 id="用周期函数sin来表示位置">用周期函数（sin）来表示位置</h2>
 <h3 id="sin函数">sin函数</h3>
 <p>先回顾下sin函数的几个概念，因为下面要用到sin函数：</p>
 <h4 id="周期">周期</h4>
 <p>周期是从一个最高点到下一个最高点（或任何一点到下一个相对点）：
-<a href="#R-image-959e41b244e933e0d1a60f28433f7e45" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/d6e9616b1e83b76ea6b042c961cf12c3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-959e41b244e933e0d1a60f28433f7e45"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/d6e9616b1e83b76ea6b042c961cf12c3.png"></a></p>
+<a href="#R-image-dcf4e0fc84f2802ebff6706d825089f0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/d6e9616b1e83b76ea6b042c961cf12c3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dcf4e0fc84f2802ebff6706d825089f0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/d6e9616b1e83b76ea6b042c961cf12c3.png"></a></p>
 <h4 id="振幅相移垂直位移">振幅，相移，垂直位移</h4>
 <p>振幅是从中（平）线到最高点的高度（或到最低点），也是从最高点到最低点的距离除以2。
 相移是函数比通常的位置水平向右移了多远。
-<a href="#R-image-afc1c48d7f7f52a66c8495e3d0f21ff2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/519f2ecac767213e59aa6f1bae182ab9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-afc1c48d7f7f52a66c8495e3d0f21ff2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/519f2ecac767213e59aa6f1bae182ab9.png"></a>
+<a href="#R-image-4ec14be096d1f92d9c0c5ceae5974601" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/519f2ecac767213e59aa6f1bae182ab9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4ec14be096d1f92d9c0c5ceae5974601"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/519f2ecac767213e59aa6f1bae182ab9.png"></a>
 垂直位移是函数比通常的位置垂直向上移了多远。
-<a href="#R-image-8bb4dc0daaa3816a2e2730f6b8475863" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/8220a475a9eb3794d8774b568fa21933.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8bb4dc0daaa3816a2e2730f6b8475863"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/8220a475a9eb3794d8774b568fa21933.png"></a>
+<a href="#R-image-eb1f337dc32ec7ee499e4ec6136a3e28" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/8220a475a9eb3794d8774b568fa21933.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-eb1f337dc32ec7ee499e4ec6136a3e28"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/8220a475a9eb3794d8774b568fa21933.png"></a>
 我们可以全部放进一个方程里：</p>
 <p>y = A sin(Bx + C) + D</p>
 <p>振幅是：A
@@ -328,13 +328,13 @@ $$input = input_embedding + positional_encoding $$</p>
 这是正弦的基本公式。A = 1, B = 1, C = 0 and D = 0</p>
 <p>所以振幅是1，周期是2π，没有相移或垂直移位：
 振幅 1，周期 2pi，没有相移或垂直移位
-<a href="#R-image-c0184ff5c72b166282879702745867ec" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/bea4bd7e38a6c14525514c595b9ffa50.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c0184ff5c72b166282879702745867ec"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/bea4bd7e38a6c14525514c595b9ffa50.png"></a></p>
+<a href="#R-image-d22cb299ad47c44c6d80c09cbe588aa8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/bea4bd7e38a6c14525514c595b9ffa50.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d22cb299ad47c44c6d80c09cbe588aa8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/bea4bd7e38a6c14525514c595b9ffa50.png"></a></p>
 <h4 id="频率">频率</h4>
 <p>频率是在一个时间单位里发生多少次（每 &ldquo;1&rdquo;）。
 例子：这个正弦函数在0到1之间重复了4次：
-<a href="#R-image-a228df631ae5814547e33c8c0289b7ef" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/f78f131e9df579671a9c328bd89327e8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a228df631ae5814547e33c8c0289b7ef"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/f78f131e9df579671a9c328bd89327e8.png"></a>
+<a href="#R-image-d949126b1fd8d146d3818e32436d2c9b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/f78f131e9df579671a9c328bd89327e8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d949126b1fd8d146d3818e32436d2c9b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/f78f131e9df579671a9c328bd89327e8.png"></a>
 所以频率是 4
 周期是  $\frac{1}{4}$
 其实周期和频率是相连的,周期越大，频率越小：
@@ -353,13 +353,13 @@ $$ PE_t = [sin(\frac{1}{2^0}t),sin(\frac{1}{2^1}t)&hellip;,sin(\frac{1}{2^{i-1}}
 因此，可以概括，向右旋转旋钮会增加调整参数的精度，也就是每次移动的步幅会变小，以便更精细地调整参数的值。</p>
 <p>言归正传：
 结合下图，来理解一下这样设计的含义。图中每一行表示一个$PE_t$，每一列表示$PE_t$中的第i个元素。旋钮用于调整精度，越往右边的旋钮，需要调整的精度越大，因此指针移动的步伐越小。每一排的旋钮都在上一排的基础上进行调整（函数中t的作用）。通过频率sin(12i−1t)sin(\frac{1}{2^{i-1}}t)sin(2i−11​t)来控制sin函数的波长，频率不断减小，则波长不断变大，此时sin函数对t的变动越不敏感，以此来达到越向右的旋钮，指针移动步伐越小的目的。
-<a href="#R-image-53e9b1081229e624c1ba8093c0c5a8a7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/03b3c6d8b3da34b27336e2947dcc64a0.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-53e9b1081229e624c1ba8093c0c5a8a7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/03b3c6d8b3da34b27336e2947dcc64a0.png"></a>
-<a href="#R-image-c391676b2285c43420081525a4af0a4f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/e326e8e53ffe6833863b97637cae658d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c391676b2285c43420081525a4af0a4f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/e326e8e53ffe6833863b97637cae658d.png"></a></p>
+<a href="#R-image-652fc418ba30026d1263ef87addb9ec2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/03b3c6d8b3da34b27336e2947dcc64a0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-652fc418ba30026d1263ef87addb9ec2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/03b3c6d8b3da34b27336e2947dcc64a0.png"></a>
+<a href="#R-image-0b4edf7b28ae2d6a0094192ad15a5311" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/e326e8e53ffe6833863b97637cae658d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0b4edf7b28ae2d6a0094192ad15a5311"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/e326e8e53ffe6833863b97637cae658d.png"></a></p>
 <p>由于sin是周期函数，因此从纵向来看，如果当函数的频率增大并导致波长缩短时，意味着波形在相同时间内完成了更多的周期，则不同t下的位置向量可能出现重合的情况。比如在下图中(d_model = 3），图中的点表示每个token的位置向量，颜色越深，token的位置越往后，在频率偏大的情况下，位置相连点连成了一个闭环，靠前位置（黄色）和靠后位置（棕黑色）竟然靠得非常近：
-<a href="#R-image-7bf953dc91dc6fdcff4140a48df8c466" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/5ce2f86542acc91236080c24c4dc239b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7bf953dc91dc6fdcff4140a48df8c466"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/5ce2f86542acc91236080c24c4dc239b.png"></a>
+<a href="#R-image-b4f036006d3b1766d30612d08d212a7f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/5ce2f86542acc91236080c24c4dc239b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b4f036006d3b1766d30612d08d212a7f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/5ce2f86542acc91236080c24c4dc239b.png"></a>
 为了避免这种情况，我们尽量将函数的波长拉长。一种简单的解决办法是同一把所有的频率都设成一个非常小的值。因此在transformer的论文中，采用了$\frac{1}{10000^{i/(d_{model}-1)}}$这个频率（这里i其实不是表示第i个位置，但是大致意思差不多，下面会细说）
 总结一下，到这里我们把位置向量表示为：
 $$ PE_t = [sin(w_0t),sin(w_1t)&hellip;,sin(w_{i-1}t), &hellip;,sin(w_{d_{model}-1}t)]\ $$
@@ -368,8 +368,8 @@ $$ PE_t = [sin(w_0t),sin(w_1t)&hellip;,sin(w_{i-1}t), &hellip;,sin(w_{d_{model}-
 <p>先来回顾下线性变化旋转的相关概念，后续用到。</p>
 <h3 id="线形变换旋转">线形变换——旋转</h3>
 <p>在二维坐标系中，一个位置向量的旋转公式可以由三角函数的几何意义推出。
-<a href="#R-image-69050bae013ed869bc3124eef31202d8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/7ed8d7a18603e984fa44a25093751c27.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-69050bae013ed869bc3124eef31202d8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/7ed8d7a18603e984fa44a25093751c27.png"></a>
+<a href="#R-image-a0add3009f3da6a89cdd3d56ab202361" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/7ed8d7a18603e984fa44a25093751c27.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a0add3009f3da6a89cdd3d56ab202361"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/7ed8d7a18603e984fa44a25093751c27.png"></a>
 如上图假设：</p>
 <ul>
 <li>已知：假设向量$R_{A}$=(x0，y0) 角度为：A，向右旋转了角度B，新向量$R_{A+B}$角度为：A+B，模：$|\mathbf{R}|=|\mathbf{R_{A}}|= |\mathbf{R_{A+B}}| = \sqrt{x_0^2 + y_0^2}$。</li>
@@ -475,12 +475,12 @@ pe = PositionalEncoding(20, 0)
 y = pe.forward(torch.zeros(1, 100, 20))
 plt.plot(np.arange(100), y[0, :, 4:8].data.numpy())
 plt.legend([&#34;dim %d&#34;%p for p in [4,5,6,7]])</code></pre></div>
-<p><a href="#R-image-e06a94a1200aabd667a5740da35f319c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/d852b470a070116813c0914b297c5bb2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e06a94a1200aabd667a5740da35f319c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/d852b470a070116813c0914b297c5bb2.png"></a></p>
+<p><a href="#R-image-6a090fb3f0fe7e712c37d266010b4c07" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/d852b470a070116813c0914b297c5bb2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6a090fb3f0fe7e712c37d266010b4c07"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/d852b470a070116813c0914b297c5bb2.png"></a></p>
 <h2 id="transformer位置编码可视化">Transformer位置编码可视化</h2>
 <p>下图是一串序列长度为100，位置编码维度为512的位置编码可视化结果：
-<a href="#R-image-619b4badbf73a3468fca4af24b8905fb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/cd8528c83bc8928446c9e4f065ba5144.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-619b4badbf73a3468fca4af24b8905fb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/cd8528c83bc8928446c9e4f065ba5144.png"></a></p>
+<a href="#R-image-e28a358452fab7114e96f32630adc708" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/cd8528c83bc8928446c9e4f065ba5144.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e28a358452fab7114e96f32630adc708"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_02.md.images/cd8528c83bc8928446c9e4f065ba5144.png"></a></p>
 <blockquote>
 <p>途中y轴表示单词的位置，从0开始到100，横坐标表示每个单词的512维度，颜色表示值，sin，cos函数的值在【-1，1】之间</p></blockquote>
 <p>可以发现，由于sin/cos函数的性质，位置向量的每一个值都位于[-1, 1]之间。同时，纵向来看，图的右半边几乎都是黄色的，这是因为越往后的位置，频率越小，波长越长，所以不同的t对最终的结果影响不大。而越往左边走，颜色交替的频率越频繁。
@@ -572,7 +572,8 @@ plt.show()</code></pre></div>
             <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_03/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_03/index.html">Transformer模型详解03-Self-Attention（自注意力机制）</a></li>
             <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html">Transformer模型详解04-Encoder 结构</a></li>
             <li class="" data-nav-id="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_05/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_05/index.html">Transformer模型详解05-Decoder 结构</a></li></ul></li>
-            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/index.html">transformers实战</a><ul id="R-subsections-7dfd1a2fc9789505d186535459f93268" class="collapsible-menu"></ul></li></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/tools_libraries/transformers/actions/index.html"><a class="padding" href="/docs/programming/ai/tools_libraries/transformers/actions/index.html">transformers实战</a><ul id="R-subsections-7dfd1a2fc9789505d186535459f93268" class="collapsible-menu"></ul></li></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
           </ul>
         </div>
@@ -591,8 +592,8 @@ plt.show()</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758267566" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758267566" defer></script>
-    <script src="/docs/js/theme.js?1758267566" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758332784" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758332784" defer></script>
+    <script src="/docs/js/theme.min.js?1758332784" defer></script>
   </body>
 </html>
