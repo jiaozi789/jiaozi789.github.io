@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="工具介绍 BurpSuite BurpSuite是用于“攻击”web 应用程序的集成平台（java编写），包含了许多工具。Burp Suite为这些工具设计了许多接口，以加快攻击应用程序的过程。所有工具都共享一个请求，并能处理对应的HTTP 消息、持久性、认证、代理、日志、警报。
+BurpSuite简单易懂，使用方便，而且支持插件拓展，是系统安全工程师必备的工具，在国内应用广泛，文档和教程齐全，可在bilibili上找到各式各样的学习视频学习。
+结合web渗透靶场使用bp参考：https://blog.csdn.net/liaomin416100569/article/details/128200652?spm=1001.2014.3001.5501
+burp绿色免装jdk版 百度网盘：链接：https://pan.baidu.com/s/1y7KuzSg_SKmtEP4OTRycwg?pwd=52pj 提取码：52pj
+夜神模拟器 夜神安卓模拟器 ，电脑玩手游的新一代神器，夜神安卓模拟器 是一款采用类手机界面视觉设计的PC端桌面软件，采用内核技术（基于Android7.0 [3] 版本内核针在电脑上运行深度开发），具有同类模拟器中领先运行速度和稳定的性能。 夜神安卓模拟器是一个可以让手机应用程序运行在电脑上的软件 ，由夜神团队于2015年6月份推出。
+夜神模拟器也是进行web抓包，爬虫的必备工具，随着微信小程序的普及，应用反编译成本代价越来越高，同时程序开始偏向于前后端分离，通过手机模拟器设置代理抓取数据的需求越来越高。
+夜神模拟器相对于官方模拟器来说安装简单，拓展性强。 官方文档：https://www.yeshen.com/ 其他可替代类似模拟器：
+MuMu模拟器，网易出品的模拟器，比夜神模拟器更加清爽，https://mumu.163.com/。 逍遥模拟器，百度出品 https://www.xyaz.cn/。 雷电模拟器：https://www.ldmnq.com/ 微信小程序抓包 本内容仅用于学习目的,文章参考自官网：Configuring an Android device to work with Burp Suite Professional 。
+设置代理服务器 打开burpsuite，创建一个临时项目（这里主要为了演示，也可以保存到磁盘） 开启burpsuite ，打开页签：proxy-options 新增一个proxy listeners,设置需要代理的端口，一个四位数就可以，bind to address选择你宿主机物理网卡的ip地址（打开cmd，ipconfig查看） 访问：http://192.168.20.48:8899,出现该页面就表示成功 点击右侧的CA Certificate下载根证书本地备份。">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程 :: liaomin416100569博客">
+    <meta name="twitter:description" content="工具介绍 BurpSuite BurpSuite是用于“攻击”web 应用程序的集成平台（java编写），包含了许多工具。Burp Suite为这些工具设计了许多接口，以加快攻击应用程序的过程。所有工具都共享一个请求，并能处理对应的HTTP 消息、持久性、认证、代理、日志、警报。
+BurpSuite简单易懂，使用方便，而且支持插件拓展，是系统安全工程师必备的工具，在国内应用广泛，文档和教程齐全，可在bilibili上找到各式各样的学习视频学习。
+结合web渗透靶场使用bp参考：https://blog.csdn.net/liaomin416100569/article/details/128200652?spm=1001.2014.3001.5501
+burp绿色免装jdk版 百度网盘：链接：https://pan.baidu.com/s/1y7KuzSg_SKmtEP4OTRycwg?pwd=52pj 提取码：52pj
+夜神模拟器 夜神安卓模拟器 ，电脑玩手游的新一代神器，夜神安卓模拟器 是一款采用类手机界面视觉设计的PC端桌面软件，采用内核技术（基于Android7.0 [3] 版本内核针在电脑上运行深度开发），具有同类模拟器中领先运行速度和稳定的性能。 夜神安卓模拟器是一个可以让手机应用程序运行在电脑上的软件 ，由夜神团队于2015年6月份推出。
+夜神模拟器也是进行web抓包，爬虫的必备工具，随着微信小程序的普及，应用反编译成本代价越来越高，同时程序开始偏向于前后端分离，通过手机模拟器设置代理抓取数据的需求越来越高。
+夜神模拟器相对于官方模拟器来说安装简单，拓展性强。 官方文档：https://www.yeshen.com/ 其他可替代类似模拟器：
+MuMu模拟器，网易出品的模拟器，比夜神模拟器更加清爽，https://mumu.163.com/。 逍遥模拟器，百度出品 https://www.xyaz.cn/。 雷电模拟器：https://www.ldmnq.com/ 微信小程序抓包 本内容仅用于学习目的,文章参考自官网：Configuring an Android device to work with Burp Suite Professional 。
+设置代理服务器 打开burpsuite，创建一个临时项目（这里主要为了演示，也可以保存到磁盘） 开启burpsuite ，打开页签：proxy-options 新增一个proxy listeners,设置需要代理的端口，一个四位数就可以，bind to address选择你宿主机物理网卡的ip地址（打开cmd，ipconfig查看） 访问：http://192.168.20.48:8899,出现该页面就表示成功 点击右侧的CA Certificate下载根证书本地备份。">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/security/burp_suite/action_02_fpackage/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程 :: liaomin416100569博客">
+    <meta property="og:description" content="工具介绍 BurpSuite BurpSuite是用于“攻击”web 应用程序的集成平台（java编写），包含了许多工具。Burp Suite为这些工具设计了许多接口，以加快攻击应用程序的过程。所有工具都共享一个请求，并能处理对应的HTTP 消息、持久性、认证、代理、日志、警报。
+BurpSuite简单易懂，使用方便，而且支持插件拓展，是系统安全工程师必备的工具，在国内应用广泛，文档和教程齐全，可在bilibili上找到各式各样的学习视频学习。
+结合web渗透靶场使用bp参考：https://blog.csdn.net/liaomin416100569/article/details/128200652?spm=1001.2014.3001.5501
+burp绿色免装jdk版 百度网盘：链接：https://pan.baidu.com/s/1y7KuzSg_SKmtEP4OTRycwg?pwd=52pj 提取码：52pj
+夜神模拟器 夜神安卓模拟器 ，电脑玩手游的新一代神器，夜神安卓模拟器 是一款采用类手机界面视觉设计的PC端桌面软件，采用内核技术（基于Android7.0 [3] 版本内核针在电脑上运行深度开发），具有同类模拟器中领先运行速度和稳定的性能。 夜神安卓模拟器是一个可以让手机应用程序运行在电脑上的软件 ，由夜神团队于2015年6月份推出。
+夜神模拟器也是进行web抓包，爬虫的必备工具，随着微信小程序的普及，应用反编译成本代价越来越高，同时程序开始偏向于前后端分离，通过手机模拟器设置代理抓取数据的需求越来越高。
+夜神模拟器相对于官方模拟器来说安装简单，拓展性强。 官方文档：https://www.yeshen.com/ 其他可替代类似模拟器：
+MuMu模拟器，网易出品的模拟器，比夜神模拟器更加清爽，https://mumu.163.com/。 逍遥模拟器，百度出品 https://www.xyaz.cn/。 雷电模拟器：https://www.ldmnq.com/ 微信小程序抓包 本内容仅用于学习目的,文章参考自官网：Configuring an Android device to work with Burp Suite Professional 。
+设置代理服务器 打开burpsuite，创建一个临时项目（这里主要为了演示，也可以保存到磁盘） 开启burpsuite ，打开页签：proxy-options 新增一个proxy listeners,设置需要代理的端口，一个四位数就可以，bind to address选择你宿主机物理网卡的ip地址（打开cmd，ipconfig查看） 访问：http://192.168.20.48:8899,出现该页面就表示成功 点击右侧的CA Certificate下载根证书本地备份。">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="安全攻防">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程 :: liaomin416100569博客">
+    <meta itemprop="description" content="工具介绍 BurpSuite BurpSuite是用于“攻击”web 应用程序的集成平台（java编写），包含了许多工具。Burp Suite为这些工具设计了许多接口，以加快攻击应用程序的过程。所有工具都共享一个请求，并能处理对应的HTTP 消息、持久性、认证、代理、日志、警报。
+BurpSuite简单易懂，使用方便，而且支持插件拓展，是系统安全工程师必备的工具，在国内应用广泛，文档和教程齐全，可在bilibili上找到各式各样的学习视频学习。
+结合web渗透靶场使用bp参考：https://blog.csdn.net/liaomin416100569/article/details/128200652?spm=1001.2014.3001.5501
+burp绿色免装jdk版 百度网盘：链接：https://pan.baidu.com/s/1y7KuzSg_SKmtEP4OTRycwg?pwd=52pj 提取码：52pj
+夜神模拟器 夜神安卓模拟器 ，电脑玩手游的新一代神器，夜神安卓模拟器 是一款采用类手机界面视觉设计的PC端桌面软件，采用内核技术（基于Android7.0 [3] 版本内核针在电脑上运行深度开发），具有同类模拟器中领先运行速度和稳定的性能。 夜神安卓模拟器是一个可以让手机应用程序运行在电脑上的软件 ，由夜神团队于2015年6月份推出。
+夜神模拟器也是进行web抓包，爬虫的必备工具，随着微信小程序的普及，应用反编译成本代价越来越高，同时程序开始偏向于前后端分离，通过手机模拟器设置代理抓取数据的需求越来越高。
+夜神模拟器相对于官方模拟器来说安装简单，拓展性强。 官方文档：https://www.yeshen.com/ 其他可替代类似模拟器：
+MuMu模拟器，网易出品的模拟器，比夜神模拟器更加清爽，https://mumu.163.com/。 逍遥模拟器，百度出品 https://www.xyaz.cn/。 雷电模拟器：https://www.ldmnq.com/ 微信小程序抓包 本内容仅用于学习目的,文章参考自官网：Configuring an Android device to work with Burp Suite Professional 。
+设置代理服务器 打开burpsuite，创建一个临时项目（这里主要为了演示，也可以保存到磁盘） 开启burpsuite ，打开页签：proxy-options 新增一个proxy listeners,设置需要代理的端口，一个四位数就可以，bind to address选择你宿主机物理网卡的ip地址（打开cmd，ipconfig查看） 访问：http://192.168.20.48:8899,出现该页面就表示成功 点击右侧的CA Certificate下载根证书本地备份。">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="162">
+    <title>BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/security\/burp_suite\/action_02_fpackage\/index.html';
+      window.relearn.relBasePath='..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/security/burp_suite/action_02_fpackage/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#工具介绍">工具介绍</a>
+      <ul>
+        <li><a href="#burpsuite">BurpSuite</a></li>
+        <li><a href="#夜神模拟器">夜神模拟器</a></li>
+      </ul>
+    </li>
+    <li><a href="#微信小程序抓包">微信小程序抓包</a>
+      <ul>
+        <li><a href="#设置代理服务器">设置代理服务器</a></li>
+        <li><a href="#模拟器设置网络代理">模拟器设置网络代理</a></li>
+        <li><a href="#安装代理根证书">安装代理根证书</a></li>
+        <li><a href="#测试抓包">测试抓包</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/security/index.html"><span itemprop="name">安全攻防</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/security/burp_suite/index.html"><span itemprop="name">burpsuite</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程</span><meta itemprop="position" content="4"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/security/burp_suite/action_01_web/index.html" title="BurpSuite实战教程01-web渗透安全测试(靶场搭建及常见漏洞攻防) (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/security/burp_suite/action_03_plugins/index.html" title="BurpSuite实战教程03-BurpSuite插件开发 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable security" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="burpsuite实战教程02-burpsuite夜神模拟器抓包教程">BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1 id="工具介绍">工具介绍</h1>
+<h2 id="burpsuite">BurpSuite</h2>
+<p>BurpSuite是用于“攻击”web 应用程序的集成平台（java编写），包含了许多工具。Burp Suite为这些工具设计了许多接口，以加快攻击应用程序的过程。所有工具都共享一个请求，并能处理对应的HTTP 消息、持久性、认证、代理、日志、警报。</p>
+<p>BurpSuite简单易懂，使用方便，而且支持插件拓展，是系统安全工程师必备的工具，在国内应用广泛，文档和教程齐全，可在bilibili上找到各式各样的学习视频学习。</p>
+<p>结合web渗透靶场使用bp参考：https://blog.csdn.net/liaomin416100569/article/details/128200652?spm=1001.2014.3001.5501</p>
+<p>burp绿色免装jdk版
+百度网盘：链接：https://pan.baidu.com/s/1y7KuzSg_SKmtEP4OTRycwg?pwd=52pj 提取码：52pj</p>
+<h2 id="夜神模拟器">夜神模拟器</h2>
+<p>夜神安卓模拟器  ，电脑玩手游的新一代神器，夜神安卓模拟器 是一款采用类手机界面视觉设计的PC端桌面软件，采用内核技术（基于Android7.0 [3]  版本内核针在电脑上运行深度开发），具有同类模拟器中领先运行速度和稳定的性能。
+夜神安卓模拟器是一个可以让手机应用程序运行在电脑上的软件 ，由夜神团队于2015年6月份推出。</p>
+<p>夜神模拟器也是进行web抓包，爬虫的必备工具，随着微信小程序的普及，应用反编译成本代价越来越高，同时程序开始偏向于前后端分离，通过手机模拟器设置代理抓取数据的需求越来越高。</p>
+<p>夜神模拟器相对于官方模拟器来说安装简单，拓展性强。
+官方文档：https://www.yeshen.com/
+其他可替代类似模拟器：</p>
+<ol>
+<li>MuMu模拟器，网易出品的模拟器，比夜神模拟器更加清爽，https://mumu.163.com/。</li>
+<li>逍遥模拟器，百度出品 <a href="https://www.xyaz.cn/" rel="external" target="_blank">https://www.xyaz.cn/</a>。</li>
+<li>雷电模拟器：https://www.ldmnq.com/</li>
+</ol>
+<h1 id="微信小程序抓包">微信小程序抓包</h1>
+<p>本内容仅用于学习目的,文章参考自官网：<a href="https://portswigger.net/burp/documentation/desktop/mobile/config-android-device" rel="external" target="_blank">Configuring an Android device to work with Burp Suite Professional
+</a>。</p>
+<h2 id="设置代理服务器">设置代理服务器</h2>
+<p>打开burpsuite，创建一个临时项目（这里主要为了演示，也可以保存到磁盘）
+<a href="#R-image-29fd908e511265954bfe41e959adb37d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/b40fa5e8e4f5acca1472070cdaa20fe9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-29fd908e511265954bfe41e959adb37d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/b40fa5e8e4f5acca1472070cdaa20fe9.png"></a>
+开启burpsuite ，打开页签：proxy-options 新增一个proxy listeners,设置需要代理的端口，一个四位数就可以，bind to address选择你宿主机物理网卡的ip地址（打开cmd，ipconfig查看）
+<a href="#R-image-6bd03fac8147e0d4c47d2fb7aa1fa6d6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/ed82a4a199569d1d13138376ac1d7c39.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6bd03fac8147e0d4c47d2fb7aa1fa6d6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/ed82a4a199569d1d13138376ac1d7c39.png"></a>
+访问：http://192.168.20.48:8899,出现该页面就表示成功
+<a href="#R-image-8722a9abce3a9317172fbea6134fada2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/dc4ec74a766e2bf0293f015955c8e619.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8722a9abce3a9317172fbea6134fada2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/dc4ec74a766e2bf0293f015955c8e619.png"></a>
+点击右侧的CA Certificate下载根证书本地备份。</p>
+<h2 id="模拟器设置网络代理">模拟器设置网络代理</h2>
+<p>打开夜神模拟器，修改WiFi代理，夜神模拟器的操作和手机端一样，把鼠标当做手就可以，从上面的工具栏往下滑动一下，出现飘窗上点击齿轮进入设置
+<a href="#R-image-b57b65ea3607930a540e7b3cef1ffdd5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/e69b6d0a6d80e63cdd4305f36f13be6c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b57b65ea3607930a540e7b3cef1ffdd5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/e69b6d0a6d80e63cdd4305f36f13be6c.png"></a>
+下滑到无线和网络-Wlan
+<a href="#R-image-802d9f67451efc6c4b6c7936f12c5a12" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/a021acb39d679ee7546fd8ad254e6970.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-802d9f67451efc6c4b6c7936f12c5a12"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/a021acb39d679ee7546fd8ad254e6970.png"></a>
+单击Wlan进入，使用鼠标左键按住WiredSSID弹出菜单，选择修改网络
+<a href="#R-image-dcc09ab5935b35f23b9eb811ae28dd22" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/4f0d1368697fb726b2ba5ebab69406be.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dcc09ab5935b35f23b9eb811ae28dd22"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/4f0d1368697fb726b2ba5ebab69406be.png"></a>
+点击高级选项，代理选择手工，填入之前bp中设定代理服务器ip和端口
+<a href="#R-image-fcb35a457f936a2cef8f6ac1a2300567" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/9685598cf896570093314a07ba63ff15.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fcb35a457f936a2cef8f6ac1a2300567"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/9685598cf896570093314a07ba63ff15.png"></a></p>
+<h2 id="安装代理根证书">安装代理根证书</h2>
+<p>访问代理服务器，右上角CA Certificate下载根证书：http://192.168.20.48:8899
+<a href="#R-image-e4937a40a29136ce5528e2acf080f451" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/dc4ec74a766e2bf0293f015955c8e619.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e4937a40a29136ce5528e2acf080f451"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/dc4ec74a766e2bf0293f015955c8e619.png"></a>
+将下载的der转换成pem格式</p>
+<ol>
+<li>可以用在线版本，
+<a href="http://web.chacuo.net/netsslcer2pem" rel="external" target="_blank">http://web.chacuo.net/netsslcer2pem</a></li>
+<li>也可以使用openssl（https://slproweb.com/products/Win32OpenSSL.html下载安装）来转换
+openssl x509 -inform der -in cacert.der -out cacert.pem</li>
+</ol>
+<p>因为android模拟器内部存储证书的名字必须是pem的hash值.0方式存储，所以需要知道他的hash值
+burpsuite生成的根证书hash值是 9a5ba575，所以可以直接将cacert.pem重命名为:9a5ba575.0
+当然也可以用openssl确认下</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>openssl x509 -subject_hash_old -in cacert.pem</code></pre></div>
+<p><a href="#R-image-a0690e475a35b7e84403feef88280fee" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/06377104afb9eb379c63960eaabc7036.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a0690e475a35b7e84403feef88280fee"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/06377104afb9eb379c63960eaabc7036.png"></a>
+<strong>打开模拟器，把开发者模式打开</strong></p>
+<p>打开设置-关于平板电脑,找到版本号,单击五次版本号，系统会有提示倒数多少次，进入开发者模式
+回到设置菜单就会有一个开发选项。
+<a href="#R-image-f90394b72e147f762257869be545db02" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/6becbc74bd47ef41563dc15d32027680.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f90394b72e147f762257869be545db02"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/6becbc74bd47ef41563dc15d32027680.png"></a>
+点进去开启USB调试
+<a href="#R-image-edbf998bf19f681be099d21ba38af705" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/ee527792d5fd92136ce90e29db5e33b1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-edbf998bf19f681be099d21ba38af705"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/ee527792d5fd92136ce90e29db5e33b1.png"></a>
+<strong>上传证书到模拟器</strong>
+打开文件资源管理器，进入夜神模拟器的安装目录，找到nox_adb.exe或者adb.exe程序，将他的路径加入到环境变量Path中，或者cmd直接到夜神目录执行命令
+查看模拟器设备</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>D:\Program Files\Nox\bin&gt;adb devices
+List of devices attached
+127.0.0.1:62001 device</code></pre></div>
+<p>输入nox_adb.exe connect 127.0.0.1:62001即可以连接到adb，或者是adb connect 127.0.0.1:62001
+不同模拟器拥有不同的端口</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>模拟器	端口
+逍遥游	21503
+夜神模拟器	62001
+海马玩模拟器	26944
+mumu模拟器	7555
+天天模拟器	6555
+BlueStacks	5555
+雷电安卓模拟器	5555
+天天安卓模拟器	5037
+安卓模拟器⼤师	54001
+Genymotion	5555</code></pre></div>
+<p>然后依次执行以下命令，在查看系统证书就会发现成功安装。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>adb root // 提升到root权限
+adb remount // 重新挂载system分区
+adb push D:\test\cert\9a5ba575.0 /system/etc/security/cacerts/ //将证书放到系统证书目录</code></pre></div>
+<p>如果是mumu模拟器，多开器关闭模拟器上点开设置
+<a href="#R-image-1dd5ff34d37021134b126ea88e4838eb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/d3661b932fbd8d0cd17d76d762e29da4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1dd5ff34d37021134b126ea88e4838eb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/d3661b932fbd8d0cd17d76d762e29da4.png"></a>
+修改为可写文件系统
+<a href="#R-image-80c5bcb5f50727641bd160227fee767e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/1896efe8248337411207da11619a0f16.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-80c5bcb5f50727641bd160227fee767e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/1896efe8248337411207da11619a0f16.png"></a>
+打开root权限
+<a href="#R-image-8d435326d5ee70daf55b83643ac547ce" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/e2f8a2f13ba5680cddbf6c27b21ac93b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8d435326d5ee70daf55b83643ac547ce"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/e2f8a2f13ba5680cddbf6c27b21ac93b.png"></a>
+执行命令</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>adb connect 127.0.0.1:7555
+adb shell
+mount -o remount,rw /system</code></pre></div>
+<h2 id="测试抓包">测试抓包</h2>
+<p>打开bp，打开proxy - Http History
+<a href="#R-image-73560535dc970a6cc4b4249ed1ef7277" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/fe9e3909f616ab4fe664593784bbf965.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-73560535dc970a6cc4b4249ed1ef7277"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/fe9e3909f616ab4fe664593784bbf965.png"></a></p>
+<p>打开夜神模拟器微信，打开微信就能抓到微信的登录认证的一些接口
+<a href="#R-image-54ea0cb3ee8dd0387d8cc62e893b8c6f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/3c9c0ab74c5166f2e7cd0c542290ad98.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-54ea0cb3ee8dd0387d8cc62e893b8c6f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/3c9c0ab74c5166f2e7cd0c542290ad98.png"></a>
+如果burpsuite响应的中文为乱码，User Options-Display-Http Message Dispaly将字体改为宋体即可
+<a href="#R-image-a53cbdf1493229e8b5d362b501856145" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/d959ef42c3658a242e05fe1bcf36ea16.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a53cbdf1493229e8b5d362b501856145"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/d959ef42c3658a242e05fe1bcf36ea16.png"></a>
+打开小程序，依然可以抓到，分析接口即可，比如掌上公交，选择深圳选择75路公交抓包，可以抓取到所有站点
+<a href="#R-image-d997ecf924f603aabff02e6d63f7df87" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/b6acd3efe2406e89ec96db33e32cd3b8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d997ecf924f603aabff02e6d63f7df87"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_02_fpackage.md.images/b6acd3efe2406e89ec96db33e32cd3b8.png"></a>
+由于这个接口有个SIGN签名机制，我们还其他参数不知道他签名的逻辑，如果需要爬取其他公交车路线只能通过反编译小程序来查看该签名算法了。</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="parent " data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/security/burp_suite/index.html"><a class="padding" href="/docs/security/burp_suite/index.html">burpsuite</a><ul id="R-subsections-aac6f704e7c11f3dd48357b290c8df21" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/security/burp_suite/action_01_web/index.html"><a class="padding" href="/docs/security/burp_suite/action_01_web/index.html">BurpSuite实战教程01-web渗透安全测试(靶场搭建及常见漏洞攻防)</a></li>
+            <li class="active " data-nav-id="/docs/security/burp_suite/action_02_fpackage/index.html"><a class="padding" href="/docs/security/burp_suite/action_02_fpackage/index.html">BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程</a></li>
+            <li class="" data-nav-id="/docs/security/burp_suite/action_03_plugins/index.html"><a class="padding" href="/docs/security/burp_suite/action_03_plugins/index.html">BurpSuite实战教程03-BurpSuite插件开发</a></li></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

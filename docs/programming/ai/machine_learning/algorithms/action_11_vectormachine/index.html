@@ -33,26 +33,26 @@
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="1149">
     <title>机器学习实战教程（十一）：支持向量机SVM :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -106,7 +106,7 @@
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_11_vectormachine/index.html">
     <div id="R-body" class="default-animation">
@@ -192,26 +192,26 @@ window.MathJax = {
 <p>VM的英文全称是Support Vector Machines，我们叫它支持向量机。支持向量机是我们用于分类的一种算法。让我们以一个小故事的形式，开启我们的SVM之旅吧。</p>
 <p>在很久以前的情人节，一位大侠要去救他的爱人，但天空中的魔鬼和他玩了一个游戏。</p>
 <p>魔鬼在桌子上似乎有规律放了两种颜色的球，说：&ldquo;你用一根棍分开它们？要求：尽量在放更多球之后，仍然适用。&rdquo;
-<a href="#R-image-dd491e7840e12332ca62b1b4dbb613c6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/2b3b235eafcecad963beba894d552e91.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-dd491e7840e12332ca62b1b4dbb613c6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/2b3b235eafcecad963beba894d552e91.png"></a>
+<a href="#R-image-8fbfec14c8c9c72af754626a6005aa56" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/2b3b235eafcecad963beba894d552e91.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8fbfec14c8c9c72af754626a6005aa56"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/2b3b235eafcecad963beba894d552e91.png"></a>
 于是大侠这样放，干的不错？
-<a href="#R-image-104b03c0ede482a9e3c3dbfc52d436a0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d6154cb4930abd518532988f9ab1b728.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-104b03c0ede482a9e3c3dbfc52d436a0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d6154cb4930abd518532988f9ab1b728.png"></a>
+<a href="#R-image-740058dfc630f9a69ab3661b8f031107" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d6154cb4930abd518532988f9ab1b728.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-740058dfc630f9a69ab3661b8f031107"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d6154cb4930abd518532988f9ab1b728.png"></a>
 然后魔鬼，又在桌上放了更多的球，似乎有一个球站错了阵营。显然，大侠需要对棍做出调整。
-<a href="#R-image-604e617d20d31a1693ed62d1716f706d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/270724ba42ce8f7f00ebcfc045909b8e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-604e617d20d31a1693ed62d1716f706d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/270724ba42ce8f7f00ebcfc045909b8e.png"></a>
+<a href="#R-image-56faf6c91afff8204d9a24acc0739db7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/270724ba42ce8f7f00ebcfc045909b8e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-56faf6c91afff8204d9a24acc0739db7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/270724ba42ce8f7f00ebcfc045909b8e.png"></a>
 SVM就是试图把棍放在最佳位置，好让在棍的两边有尽可能大的间隙。这个间隙就是球到棍的距离。
-<a href="#R-image-619cb868e66b3de820e5ac11d4e104c9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/f49b55ae0b5e81c6331062b0f0d216b6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-619cb868e66b3de820e5ac11d4e104c9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/f49b55ae0b5e81c6331062b0f0d216b6.png"></a>
+<a href="#R-image-ee8eaab847dd468b2f775b3e2dd8b3ba" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/f49b55ae0b5e81c6331062b0f0d216b6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ee8eaab847dd468b2f775b3e2dd8b3ba"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/f49b55ae0b5e81c6331062b0f0d216b6.png"></a>
 现在好了，即使魔鬼放了更多的球，棍仍然是一个好的分界线。
-<a href="#R-image-93e7301491532767dbb940aaa8e9209d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/906a3394bafd469c688d427b8767ee8b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-93e7301491532767dbb940aaa8e9209d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/906a3394bafd469c688d427b8767ee8b.png"></a>
+<a href="#R-image-f6a627b1260d8aeb42428d244ccfcde8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/906a3394bafd469c688d427b8767ee8b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f6a627b1260d8aeb42428d244ccfcde8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/906a3394bafd469c688d427b8767ee8b.png"></a>
 现在，大侠没有棍可以很好帮他分开两种球了，现在怎么办呢？当然像所有武侠片中一样大侠桌子一拍，球飞到空中。然后，凭借大侠的轻功，大侠抓起一张纸，插到了两种球的中间。
-<a href="#R-image-85c6ceae43879aef78350eb8773ae91e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/e4ca982b6cfaec51c6d330e28b4e71ec.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-85c6ceae43879aef78350eb8773ae91e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/e4ca982b6cfaec51c6d330e28b4e71ec.png"></a>
+<a href="#R-image-c360d8d11a858c07243ba0252cde0e84" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/e4ca982b6cfaec51c6d330e28b4e71ec.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c360d8d11a858c07243ba0252cde0e84"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/e4ca982b6cfaec51c6d330e28b4e71ec.png"></a>
 现在，从空中的魔鬼的角度看这些球，这些球看起来像是被一条曲线分开了。
-<a href="#R-image-3eef8b6099610672c668f22421edea53" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/3739ab43baa062b9680294cd6946f9a5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3eef8b6099610672c668f22421edea53"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/3739ab43baa062b9680294cd6946f9a5.png"></a>
+<a href="#R-image-3c029e0848f8adb618b206eaffe7b42f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/3739ab43baa062b9680294cd6946f9a5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3c029e0848f8adb618b206eaffe7b42f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/3739ab43baa062b9680294cd6946f9a5.png"></a>
 再之后，无聊的大人们，把这些球叫做data，把棍子叫做classifier, 找到最大间隙的trick叫做optimization，拍桌子叫做kernelling, 那张纸叫做hyperplane。</p>
 <p><strong>概述一下：</strong></p>
 <p>当一个分类问题，数据是线性可分的，也就是用一根棍就可以将两种小球分开的时候，我们只要将棍的位置放在让小球距离棍的距离最大化的位置即可，寻找这个最大间隔的过程，就叫做最优化。但是，现实往往是很残酷的，一般的数据是线性不可分的，也就是找不到一个棍将两种小球很好的分类。这个时候，我们就需要像大侠一样，将小球拍起，用一张纸代替小棍将小球进行分类。想要让数据飞起，我们需要的东西就是<!-- raw HTML omitted -->核函数(kernel)<!-- raw HTML omitted -->，用于切分小球的纸，就是<!-- raw HTML omitted -->超平面<!-- raw HTML omitted -->。</p>
@@ -220,12 +220,12 @@ SVM就是试图把棍放在最佳位置，好让在棍的两边有尽可能大�
 <p>支持向量机（support vector machines）是寻找一个超平面来对样本进行分割，分割的原则是间隔最大化，最终转化为一个凸二次规划问题来求解。它既能解决线性可分又能解决线性不可能，既能解决分类问题又能完成回归问题。</p>
 <h2 id="间隔最大化">间隔最大化</h2>
 <p>当训练样本线性可分时使用硬间隔最大化（Hard Margin SVM）或者近似线性可分时使用软件最大化（Soft Margin SVM）。当训练样本线性不可分时使用核函数和软间隔最大化。
-<a href="#R-image-c4e77580199a9a7512fb74b54f7a7713" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/16e6ebdeec1748c819ce2da52683c3d8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c4e77580199a9a7512fb74b54f7a7713"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/16e6ebdeec1748c819ce2da52683c3d8.png"></a>
+<a href="#R-image-953325f079237e8e756cff27ed644bb0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/16e6ebdeec1748c819ce2da52683c3d8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-953325f079237e8e756cff27ed644bb0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/16e6ebdeec1748c819ce2da52683c3d8.png"></a>
 在实际问题中往往都存在着决策边界不唯一的情况，这就是不适定问题。给定训练样本集
 $D = {(x_{1}, y_{1}), (x_{2}, y_{2}), \dots , (x_{m}, y_{m})}, y_{i} \in {-1, 1}$ 分类算法的基本思想就是基于训练集在样本空间中找到一个划分超平面，但是能将训练样本分开的划分超平面可能有很多，所以，应该努力地去找哪一个？
-<a href="#R-image-b23c25ca604f9b99d5dfc6ff4f5ddc90" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1a9bbe733daef46207ce9a0a9a3c3b8f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b23c25ca604f9b99d5dfc6ff4f5ddc90"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1a9bbe733daef46207ce9a0a9a3c3b8f.png"></a>
+<a href="#R-image-6c472349928bc77ae8174845ba312803" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1a9bbe733daef46207ce9a0a9a3c3b8f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6c472349928bc77ae8174845ba312803"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1a9bbe733daef46207ce9a0a9a3c3b8f.png"></a>
 而svm找到的这条直线希望距离最近的红色的点和蓝色的点，距离决策边界尽可能的远，这样就能保证模型的泛化能力。svm尝试寻找一个最优的决策边界，距离两个类别最近的样本最远，图中3个点到决策边界距离相同。这三个点就叫做支持向量(support vector)。而平行于决策边界的两条直线之间的距离就是margin,svm就是要最大化 margin，这样就把这个问题转化称为最优化问题。</p>
 <h2 id="最优化问题">最优化问题</h2>
 <h3 id="分类间隔方程">分类间隔方程</h3>
@@ -247,10 +247,10 @@ $\frac{\mid w^Tx + b \mid}{\parallel w \parallel}$，其中$\parallel w \paralle
 <p>红颜色的圆点标记为1，我们人为规定其为正样本；
 蓝颜色的五角星标记为-1，我们人为规定其为负样本。
 对每个样本点xi加上一个类别标签yi：
-<a href="#R-image-78b81c9e255144cd124281174e7d8e04" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/cca117f7d3dfb624c2601f7faee5978f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-78b81c9e255144cd124281174e7d8e04"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/cca117f7d3dfb624c2601f7faee5978f.png"></a></p>
-<p><a href="#R-image-50a4bf1317e030af76e0d525f0ac9764" class="lightbox-link"><img alt="技巧" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/dcdb62dd4b1b1d583aa4d197dab71eb2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-50a4bf1317e030af76e0d525f0ac9764"><img alt="技巧" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/dcdb62dd4b1b1d583aa4d197dab71eb2.png"></a>
+<a href="#R-image-0177dbfa2c49d4048cad2c457c981be4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/cca117f7d3dfb624c2601f7faee5978f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0177dbfa2c49d4048cad2c457c981be4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/cca117f7d3dfb624c2601f7faee5978f.png"></a></p>
+<p><a href="#R-image-59e05563f305110ffaba6fdcc8de18aa" class="lightbox-link"><img alt="技巧" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/dcdb62dd4b1b1d583aa4d197dab71eb2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-59e05563f305110ffaba6fdcc8de18aa"><img alt="技巧" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/dcdb62dd4b1b1d583aa4d197dab71eb2.png"></a>
 中间那根直线就是决策边界$w^Tx+b=0$ ,而上下两根直线意味着距离一定大于 d ，从而
 $\begin {cases} \frac{w^Tx^{(i)} + b} {\parallel w \parallel} \geq d \qquad \forall y^{(i)} = 1  \ \frac{w^Tx^{(i)} + b}{\parallel w \parallel} \leq -d \qquad \forall y^{(i)} = -1 \ \end {cases}$
 此时，假设两类样本分别为1和-1。然后将上述式子的左右两侧同时除以d，得到
@@ -273,16 +273,16 @@ $$\boxed{L(w, b, \alpha) = \frac{1}{2} \parallel w \parallel^2 + \sum_{i=1}^m \a
 <p>其中 $\alpha_i$ 就是拉格朗日乘子。这就是Hard Margin SVM。</p>
 <h1 id="soft-margin和svm正则化">Soft Margin和SVM正则化</h1>
 <p>如果在实际应用过程中有一个蓝色的点出现在红色的点附近，即两类相对较为接近，但整体跟蓝色的点差异明显，可以看做是一个特殊点或者错误的奇点，此时就会误导，导致最终的hard margin分类边界是直线1，此时模型的泛化能力就值得怀疑。正常来说应该像直线2一样忽略那个极度特殊的蓝点，保证大多数的数据到直线的距离最远，可能这才是最好的分类边界，也就是泛化能力更高。这也能间接地说明如果模型的准确率过高可能会导致模型的过拟合。</p>
-<p><a href="#R-image-ae53936005ed7d4616912cfcd9b324ee" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d11e0a244926976c2e46ad9ec623d89c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ae53936005ed7d4616912cfcd9b324ee"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d11e0a244926976c2e46ad9ec623d89c.png"></a>
+<p><a href="#R-image-ae5a6eeb631778d9231813dab24cd931" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d11e0a244926976c2e46ad9ec623d89c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ae5a6eeb631778d9231813dab24cd931"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d11e0a244926976c2e46ad9ec623d89c.png"></a>
 还有一种更一般的例子，那就是如果有一个蓝色的点混进了红色的点当中，这就导致数据集根本就是线性不可分的情况，根本找不出一条直线能够将这两类分开，在这种情况下Hard margin就不再是泛化能力强不强的问题，而是根本找不出一条直线将其分开。
-<a href="#R-image-262f0c0135c79a60253b177abc750132" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6d8d193c2524b04627125645b92714ce.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-262f0c0135c79a60253b177abc750132"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6d8d193c2524b04627125645b92714ce.png"></a>
+<a href="#R-image-4715bb2786a4789941a8311e6a667ef4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6d8d193c2524b04627125645b92714ce.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4715bb2786a4789941a8311e6a667ef4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6d8d193c2524b04627125645b92714ce.png"></a>
 因此不管才以上两种情况的哪个角度出发，都应该考虑给予svm模型部分容错能力。由此引出Soft Margin SVM。
 $min\frac{1}{2} \parallel w \parallel^2， \quad s.t. \quad y_{i} (w^Tx^{(i)} + b) \geq 1 - \zeta_{i}, \ \quad \zeta_{i} &gt;0, \quad i=1,2,\dots,m$
 相比于Hard Margin SVM，就相当于把条件放得更加宽松一些，直观从图上理解，就是相当于把上面这根直线放宽到虚线。此外，更加重要的一点是$\zeta_{i}$并不是一个固定值，而是相对应于每个样本$x_i$都有一个$\zeta_{i}$，但是对于这个$\zeta_{i}$也需要一定限制，并不是说可以无限放宽这个条件。也就是这个容错空间不能太大，因此需要对其加以限制。
-<a href="#R-image-f8536252be6879b2fff6841a1d0faca1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/47e2510b0f2caad67bd7ba6f4ff37d8b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f8536252be6879b2fff6841a1d0faca1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/47e2510b0f2caad67bd7ba6f4ff37d8b.png"></a>
+<a href="#R-image-f546b94d804244b7c545f40b1d7bb67d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/47e2510b0f2caad67bd7ba6f4ff37d8b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f546b94d804244b7c545f40b1d7bb67d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/47e2510b0f2caad67bd7ba6f4ff37d8b.png"></a>
 L1正则
 $\boxed { min(\frac{1}{2} \parallel w \parallel^2 +C \sum_{i=1}^m \zeta_{i})， \quad s.t. \quad y_{i} (w^Tx^{(i)} + b) \geq 1 - \zeta_{i}, \ \qquad \qquad \qquad \qquad \zeta_{i} \geq 0, \quad i=1,2,\dots,m }$
 引入一个新的超参数C去权衡容错能力和目标函数，其实这也可以理解为我们为其加入了L1正则项，避免模型向一个极端方向发展，使得对于极端的数据集不那么敏感，对于未知的数据有更好的泛化能力。这个所谓的L1正则跟之前的L1正则不同的是没有绝对值，只是因为已经限制了$\zeta_{i} \geq 0$，所以不加绝对值也就合理了。C越大越趋近于一个Hard Margin SVM，C越小，就意味着有更大的容错空间。svm的正则与线性回归的正则不同的是在于C的位置不同。具体原因后续理解更深刻之后再更新。
@@ -312,8 +312,8 @@ y = y[y&lt;2]
 plt.scatter(x[y==0, 0], x[y==0, 1])
 plt.scatter(x[y==1, 0], x[y==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-4bd15b4889b6f7f4452b1281eddada3a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5e2e710054afd32198a6236efe9cb615.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4bd15b4889b6f7f4452b1281eddada3a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5e2e710054afd32198a6236efe9cb615.png"></a>
+<p><a href="#R-image-51660d6ee50a785810ee17463b9bde22" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5e2e710054afd32198a6236efe9cb615.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-51660d6ee50a785810ee17463b9bde22"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5e2e710054afd32198a6236efe9cb615.png"></a>
 实现svm，先使用一个比较大的C。</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code># 标准化数据
 from sklearn.preprocessing import StandardScaler
@@ -353,8 +353,8 @@ plot_decision_boundary(svc, axis=[-3, 3, -3, 3])
 plt.scatter(x_standard[y==0, 0], x_standard[y==0, 1], color=&#39;red&#39;)
 plt.scatter(x_standard[y==1, 0], x_standard[y==1, 1], color=&#39;blue&#39;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-cc91a68d8e22ec61128babe211dcc39e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6a7b36e962f4771543a9f078a7ee2d34.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cc91a68d8e22ec61128babe211dcc39e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6a7b36e962f4771543a9f078a7ee2d34.png"></a>
+<p><a href="#R-image-2eac13a790fe743e3adaca626bb543ff" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6a7b36e962f4771543a9f078a7ee2d34.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2eac13a790fe743e3adaca626bb543ff"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6a7b36e962f4771543a9f078a7ee2d34.png"></a>
 使用一个比较小的C，对比C取不同值的效果。</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>svc2 = LinearSVC(C=0.01)
 svc2.fit(x_standard, y)
@@ -363,8 +363,8 @@ plot_decision_boundary(svc2, axis=[-3, 3, -3, 3])
 plt.scatter(x_standard[y==0, 0], x_standard[y==0, 1], color=&#39;red&#39;)
 plt.scatter(x_standard[y==1, 0], x_standard[y==1, 1], color=&#39;blue&#39;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-fa4d34ebe49aeacb80202d607aadaa70" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/565b39aa55ae400899acb2bfac2fb40e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-fa4d34ebe49aeacb80202d607aadaa70"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/565b39aa55ae400899acb2bfac2fb40e.png"></a>
+<p><a href="#R-image-761474bdc1cd31575ccc52730320f370" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/565b39aa55ae400899acb2bfac2fb40e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-761474bdc1cd31575ccc52730320f370"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/565b39aa55ae400899acb2bfac2fb40e.png"></a>
 对比两幅图可以发现，当C较小时，误将一个红色的点分到蓝色当中，这也再次验证了当C越小，就意味着有更大的容错空间。</p>
 <h1 id="svm中使用多项式特征">SVM中使用多项式特征</h1>
 <p>前面一直都在讲的是线性的svm，对于svm来说也可以解决非线性问题，类比线性回归到非线性回归的思想，首先使用多项式特征。</p>
@@ -381,15 +381,15 @@ y.shape
 plt.scatter(x[y==0, 0], x[y==0, 1])
 plt.scatter(x[y==1, 0], x[y==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-cc63360955c8fad91f53e0ee5de56324" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/57a17a4ebd47a6d6514c34845bd13546.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cc63360955c8fad91f53e0ee5de56324"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/57a17a4ebd47a6d6514c34845bd13546.png"></a>
+<p><a href="#R-image-fd4817fea4f330fd5f6202c9124400c9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/57a17a4ebd47a6d6514c34845bd13546.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fd4817fea4f330fd5f6202c9124400c9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/57a17a4ebd47a6d6514c34845bd13546.png"></a>
 接下来给数据添加一些随机噪声：</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>x, y = datasets.make_moons(noise=0.15, random_state=666)
 plt.scatter(x[y==0, 0], x[y==0, 1])
 plt.scatter(x[y==1, 0], x[y==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-b17f1ac7f729fe3368b16b436fc42070" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/15eac053aa4ccbc7e74a583d72ca9c67.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b17f1ac7f729fe3368b16b436fc42070"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/15eac053aa4ccbc7e74a583d72ca9c67.png"></a>
+<p><a href="#R-image-cb9dae1ab13280bcac32b1165b89eba9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/15eac053aa4ccbc7e74a583d72ca9c67.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cb9dae1ab13280bcac32b1165b89eba9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/15eac053aa4ccbc7e74a583d72ca9c67.png"></a>
 使用多项式，归一，线性svm</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.svm import LinearSVC
@@ -421,8 +421,8 @@ plot_decision_boundary(poly_svc, axis=[-1.5, 2.5, -1.0, 1.5])
 plt.scatter(x1[y1==0, 0], x1[y1==0, 1])
 plt.scatter(x1[y1==1, 0], x1[y1==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-92af2490c49703b81a93a3ded4b718b2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/552d6d5fd24ee0ebb1d4fa845a83e0fc.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-92af2490c49703b81a93a3ded4b718b2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/552d6d5fd24ee0ebb1d4fa845a83e0fc.png"></a>
+<p><a href="#R-image-c73e47347f42510ba8eaac9f79ce5d14" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/552d6d5fd24ee0ebb1d4fa845a83e0fc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c73e47347f42510ba8eaac9f79ce5d14"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/552d6d5fd24ee0ebb1d4fa845a83e0fc.png"></a>
 除了使用这种增加多项式特征之后再给入线性svc中之外，还有一种方法可以实现类似的功能。</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from sklearn.svm import SVC
 
@@ -447,16 +447,16 @@ plot_decision_boundary(poly_kernel_svc, axis=[-1.5, 2.5, -1.0, 1.5])
 plt.scatter(x1[y1==0, 0], x1[y1==0, 1])
 plt.scatter(x1[y1==1, 0], x1[y1==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-4c2880feba04564ed186427b8d1697e0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5d3736357e2b6399e96eeb5f24c7bec4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4c2880feba04564ed186427b8d1697e0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5d3736357e2b6399e96eeb5f24c7bec4.png"></a>
+<p><a href="#R-image-84123c517eb8f158a46682a874524143" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5d3736357e2b6399e96eeb5f24c7bec4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-84123c517eb8f158a46682a874524143"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5d3736357e2b6399e96eeb5f24c7bec4.png"></a>
 这种方法就是svm中kernel函数。接下来具体说明核函数。</p>
 <h1 id="什么是核函数">什么是核函数</h1>
 <p>在现实任务中，原始的样本空间也许并不存在一个能正确划分两类的超平面，对于这样一个问题，可将样本从原始空间映射到一个更高维的特征空间，使得样本在这个特征空间内线性可分。因此核函数的作用就是使得原本线性不可分的数据变得线性可分。下面是一个使用多项式核映射的过程。
-<a href="#R-image-1e664af7bbfa6a24fdb33b6a6acab316" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/b6e08363e7e6fdb86d486d609fd45bea.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1e664af7bbfa6a24fdb33b6a6acab316"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/b6e08363e7e6fdb86d486d609fd45bea.png"></a>
+<a href="#R-image-0979965d9c9ff3494a0100adb3629064" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/b6e08363e7e6fdb86d486d609fd45bea.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0979965d9c9ff3494a0100adb3629064"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/b6e08363e7e6fdb86d486d609fd45bea.png"></a>
 转换为以下函数后，数据变的线性可分。
-<a href="#R-image-a096d1bc70ff5a9a81867f5ef747c9c8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6fc4aab315161fc40c6e88008013baf3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a096d1bc70ff5a9a81867f5ef747c9c8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6fc4aab315161fc40c6e88008013baf3.png"></a>
+<a href="#R-image-6adb8576a4e043690411ecdbe0af4984" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6fc4aab315161fc40c6e88008013baf3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6adb8576a4e043690411ecdbe0af4984"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/6fc4aab315161fc40c6e88008013baf3.png"></a>
 常用 核函数：
 1、线性核：$k(x_{i}, x_{j}) = x_{i}^T x_{j} + c$
 2、多项式核：$k(x_{i}, x_{j}) = (x_{i}^T x_{j} + c)^d$，当d=1时退化为线性核。
@@ -470,10 +470,10 @@ plt.show()</code></pre></div>
 $K(x_i, x_j) = \exp(-\gamma ||x_i - x_j||^2)$</p>
 <p>其中，$\gamma$是一个控制高斯分布宽度的参数，$||x_i - x_j||^2$是样本点 $x_i$和$x_j$之间的欧几里得距离的平方。当 $\gamma$取值较大时，高斯分布的峰值会变得较窄，相似度的度量会更加关注两个样本点之间的距离；当$\gamma$取值较小时，高斯分布的峰值会变得较宽，相似度的度量会更加平滑，关注两个样本点之间的整体相似度。</p>
 <p>总的来说，高斯核函数是一种非常灵活、强大的相似度度量方式，可以用于许多机器学习算法中，特别是涉及到非线性分类问题时。</p>
-<p><a href="#R-image-d5e25cdfd2c029b4b3d829cb5559f732" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d222c6c879611dd29ff99c0938bc7f36.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d5e25cdfd2c029b4b3d829cb5559f732"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d222c6c879611dd29ff99c0938bc7f36.png"></a>
-<a href="#R-image-8eb0b7452fb1036cbc596b65397eeee6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/7421874594815aee0929019f21b85f85.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8eb0b7452fb1036cbc596b65397eeee6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/7421874594815aee0929019f21b85f85.png"></a>
+<p><a href="#R-image-64bf8eec0126a2e08879a0894230fd2e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d222c6c879611dd29ff99c0938bc7f36.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-64bf8eec0126a2e08879a0894230fd2e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/d222c6c879611dd29ff99c0938bc7f36.png"></a>
+<a href="#R-image-67fe0c633bdb9a21eb8bed1d3c79740a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/7421874594815aee0929019f21b85f85.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-67fe0c633bdb9a21eb8bed1d3c79740a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/7421874594815aee0929019f21b85f85.png"></a>
 接下来通过高斯核函数映射来更加直观地理解整个映射的过程。</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import numpy as np
 import matplotlib.pyplot as plt
@@ -485,8 +485,8 @@ y = np.array((x &gt;= -2) &amp; (x &lt;= 2), dtype=&#39;int&#39;)
 plt.scatter(x[y==0], [0] * len(x[y==0]))
 plt.scatter(x[y==1], [0] * len(x[y==1]))
 plt.show()</code></pre></div>
-<p><a href="#R-image-62b100b01da7b097ff99397004255ce4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1b5686771022e7bb9afcb64695dfb076.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-62b100b01da7b097ff99397004255ce4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1b5686771022e7bb9afcb64695dfb076.png"></a>
+<p><a href="#R-image-f7dc59ef20262e15c5c66bab790ecae9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1b5686771022e7bb9afcb64695dfb076.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f7dc59ef20262e15c5c66bab790ecae9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1b5686771022e7bb9afcb64695dfb076.png"></a>
 高斯核后</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>def gaussian(x, l):
     gamma = 1.0
@@ -502,11 +502,11 @@ for i,data in enumerate(x):
 plt.scatter(x_new[y==0, 0], x_new[y==0, 1])
 plt.scatter(x_new[y==1, 0], x_new[y==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-f2b66de349856cb2b62647ef427df465" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/158046a766c34d4a1668727508941e92.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f2b66de349856cb2b62647ef427df465"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/158046a766c34d4a1668727508941e92.png"></a>
+<p><a href="#R-image-5773879c19eae4eea33d0f8ccc9dc646" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/158046a766c34d4a1668727508941e92.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5773879c19eae4eea33d0f8ccc9dc646"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/158046a766c34d4a1668727508941e92.png"></a>
 其实，真正的高斯核函数实现的过程中并不是固定的$\gamma$，而是对于每一个数据点都是$\gamma$，这里写死 gamma = 1.0。
-<a href="#R-image-5389ef9886bdfa411a874a6553e86cdd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/2f7e98f5be0b735f23fb540a31e86e3f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5389ef9886bdfa411a874a6553e86cdd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/2f7e98f5be0b735f23fb540a31e86e3f.png"></a>
+<a href="#R-image-85cf38bac841436e6c5f506550235331" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/2f7e98f5be0b735f23fb540a31e86e3f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-85cf38bac841436e6c5f506550235331"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/2f7e98f5be0b735f23fb540a31e86e3f.png"></a>
 高斯函数： $g(x)= \frac{1}{\sigma \sqrt{2 \pi} } e^{-\frac{1}{2}(\frac{x - \mu}{\sigma})}$
 其中 $\mu$决定了函数的中心位置，$\sigma$决定了整个图形 的靠拢程度，  $\sigma$越小，图像越高，图像相对比较集中。相反 $\sigma$越大，图形就越分散。
 $K(x_{i},x_{j}) = e^{-\gamma \parallel x_{i} - x_{j} \parallel ^2}$
@@ -548,8 +548,8 @@ plot_decision_boundary(svc, axis=[-1.5, 2.5, -1.0, 1.5])
 plt.scatter(x[y==0, 0], x[y==0, 1])
 plt.scatter(x[y==1, 0], x[y==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-4a396175556030ac173f6231ead8ed92" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1ca48dc7be58d12381e25fc0872b7a9d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4a396175556030ac173f6231ead8ed92"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1ca48dc7be58d12381e25fc0872b7a9d.png"></a></p>
+<p><a href="#R-image-461c214174ac669bca5d6708819a7ff0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1ca48dc7be58d12381e25fc0872b7a9d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-461c214174ac669bca5d6708819a7ff0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/1ca48dc7be58d12381e25fc0872b7a9d.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>svc_gamma100 = RBFKernelSVC(gamma=100)
 svc_gamma100.fit(x, y)
 
@@ -557,8 +557,8 @@ plot_decision_boundary(svc_gamma100, axis=[-1.5, 2.5, -1.0, 1.5])
 plt.scatter(x[y==0, 0], x[y==0, 1])
 plt.scatter(x[y==1, 0], x[y==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-30e8cfc39bd7163cd9febe2215ded4d8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/71bef1a76bffc70e17421576f9de4296.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-30e8cfc39bd7163cd9febe2215ded4d8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/71bef1a76bffc70e17421576f9de4296.png"></a></p>
+<p><a href="#R-image-49621e6a5b9f1f623ba53a3535a4d3b4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/71bef1a76bffc70e17421576f9de4296.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-49621e6a5b9f1f623ba53a3535a4d3b4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/71bef1a76bffc70e17421576f9de4296.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>svc_gamma10 = RBFKernelSVC(gamma=10)
 svc_gamma10.fit(x, y)
 
@@ -566,8 +566,8 @@ plot_decision_boundary(svc_gamma10, axis=[-1.5, 2.5, -1.0, 1.5])
 plt.scatter(x[y==0, 0], x[y==0, 1])
 plt.scatter(x[y==1, 0], x[y==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-67df18b5b682abedaa01ca580bf0fee4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5d591823ac1e33512868a520cca4c045.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-67df18b5b682abedaa01ca580bf0fee4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5d591823ac1e33512868a520cca4c045.png"></a></p>
+<p><a href="#R-image-222efc5970f7201ab5cad301f6676e41" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5d591823ac1e33512868a520cca4c045.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-222efc5970f7201ab5cad301f6676e41"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/5d591823ac1e33512868a520cca4c045.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>svc_gamma01 = RBFKernelSVC(gamma=0.1)
 svc_gamma01.fit(x, y)
 
@@ -575,8 +575,8 @@ plot_decision_boundary(svc_gamma01, axis=[-1.5, 2.5, -1.0, 1.5])
 plt.scatter(x[y==0, 0], x[y==0, 1])
 plt.scatter(x[y==1, 0], x[y==1, 1])
 plt.show()</code></pre></div>
-<p><a href="#R-image-88644a8d511ea31efa0eb3015d67d0dd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/ae31eaf34f8933b8606442f0e5be068b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-88644a8d511ea31efa0eb3015d67d0dd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/ae31eaf34f8933b8606442f0e5be068b.png"></a>
+<p><a href="#R-image-a47e28aa0ba7b3c7fcc86d04647363c0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/ae31eaf34f8933b8606442f0e5be068b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a47e28aa0ba7b3c7fcc86d04647363c0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_11_vectormachine.md.images/ae31eaf34f8933b8606442f0e5be068b.png"></a>
 gamma相当于是在调节模型的复杂度，gammma越小模型复杂度越低，gamma越高模型复杂度越高。因此需要调节超参数gamma平衡过拟合和欠拟合。</p>
 <blockquote>
 <p>本文文字和例题来源：</p>
@@ -654,6 +654,8 @@ gamma相当于是在调节模型的复杂度，gammma越小模型复杂度越低
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -671,8 +673,8 @@ gamma相当于是在调节模型的复杂度，gammma越小模型复杂度越低
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

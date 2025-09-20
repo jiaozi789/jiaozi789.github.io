@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一。 gcc介绍
+Linux系统下的gcc（GNU C Compiler）是GNU推出的功能强大、性能优越的多平台编译器，是GNU的代表作品之一。
+gcc是可以在多种硬体平台上编译出可执行程序的超级编译器，其执行效率与一般的编译器相比平均效率要高20%~30%。
+gcc编译器能将C、C&#43;&#43;语言源程序、汇程式化序和目标程序编译、连接成可执行文件，如果没有给出可执行文件的名字，
+gcc将生成一个名为a.out的文件。在Linux系统中，可执行文件没有统一的后缀，系统从文件的属性来区分可执行文件和不可执 行文件。
+gcc则通过后缀来区别输入文件的类别，下面我们来介绍gcc所遵循的部分约定规则。
+.c为后缀的文件，C语言源代码文件；
+.a为后缀的文件，是由目标文件构成的档案库文件；
+.C，.cc或.cxx 为后缀的文件，是C&#43;&#43;源代码文件；
+.h为后缀的文件，是程序所包含的头文件；
+.i 为后缀的文件，是已经预处理过的C源代码文件；
+.ii为后缀的文件，是已经预处理过的C&#43;&#43;源代码文件；
+.m为后缀的文件，是Objective-C源代码文件；
+.o为后缀的文件，是编译后的目标文件；
+.s为后缀的文件，是汇编语言源代码文件；
+.S为后缀的文件，是经过预编译的汇编语言源代码文件。
+GCC安装 gcc工具默认未安装未安装在centos系统中 需要通过yum安装 通过yum group 获取到开发工具组（有些系统可能是中文）
+[root@cdh2 vc]# yum group listLoaded plugins: fastestmirrorLoading mirror speeds from cached hostfile* base: mirrors.aliyun.com* epel: mirror01.idc.hinet.net* extras: mirrors.aliyun.com* updates: mirrors.aliyun.comAvailable Environment Groups:Minimal InstallCompute NodeInfrastructure ServerFile and Print ServerCinnamon DesktopMATE DesktopBasic Web ServerVirtualization HostServer with GUIGNOME DesktopKDE Plasma WorkspacesDevelopment and Creative WorkstationInstalled Groups:Development Tools 这里找到组的名字是 Development Tools">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="linux下gcc编程01-gcc工具安装和使用 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一。 gcc介绍
+Linux系统下的gcc（GNU C Compiler）是GNU推出的功能强大、性能优越的多平台编译器，是GNU的代表作品之一。
+gcc是可以在多种硬体平台上编译出可执行程序的超级编译器，其执行效率与一般的编译器相比平均效率要高20%~30%。
+gcc编译器能将C、C&#43;&#43;语言源程序、汇程式化序和目标程序编译、连接成可执行文件，如果没有给出可执行文件的名字，
+gcc将生成一个名为a.out的文件。在Linux系统中，可执行文件没有统一的后缀，系统从文件的属性来区分可执行文件和不可执 行文件。
+gcc则通过后缀来区别输入文件的类别，下面我们来介绍gcc所遵循的部分约定规则。
+.c为后缀的文件，C语言源代码文件；
+.a为后缀的文件，是由目标文件构成的档案库文件；
+.C，.cc或.cxx 为后缀的文件，是C&#43;&#43;源代码文件；
+.h为后缀的文件，是程序所包含的头文件；
+.i 为后缀的文件，是已经预处理过的C源代码文件；
+.ii为后缀的文件，是已经预处理过的C&#43;&#43;源代码文件；
+.m为后缀的文件，是Objective-C源代码文件；
+.o为后缀的文件，是编译后的目标文件；
+.s为后缀的文件，是汇编语言源代码文件；
+.S为后缀的文件，是经过预编译的汇编语言源代码文件。
+GCC安装 gcc工具默认未安装未安装在centos系统中 需要通过yum安装 通过yum group 获取到开发工具组（有些系统可能是中文）
+[root@cdh2 vc]# yum group listLoaded plugins: fastestmirrorLoading mirror speeds from cached hostfile* base: mirrors.aliyun.com* epel: mirror01.idc.hinet.net* extras: mirrors.aliyun.com* updates: mirrors.aliyun.comAvailable Environment Groups:Minimal InstallCompute NodeInfrastructure ServerFile and Print ServerCinnamon DesktopMATE DesktopBasic Web ServerVirtualization HostServer with GUIGNOME DesktopKDE Plasma WorkspacesDevelopment and Creative WorkstationInstalled Groups:Development Tools 这里找到组的名字是 Development Tools">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/languages/gcc/linuxgcc_01-copy/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="linux下gcc编程01-gcc工具安装和使用 :: liaomin416100569博客">
+    <meta property="og:description" content="一。 gcc介绍
+Linux系统下的gcc（GNU C Compiler）是GNU推出的功能强大、性能优越的多平台编译器，是GNU的代表作品之一。
+gcc是可以在多种硬体平台上编译出可执行程序的超级编译器，其执行效率与一般的编译器相比平均效率要高20%~30%。
+gcc编译器能将C、C&#43;&#43;语言源程序、汇程式化序和目标程序编译、连接成可执行文件，如果没有给出可执行文件的名字，
+gcc将生成一个名为a.out的文件。在Linux系统中，可执行文件没有统一的后缀，系统从文件的属性来区分可执行文件和不可执 行文件。
+gcc则通过后缀来区别输入文件的类别，下面我们来介绍gcc所遵循的部分约定规则。
+.c为后缀的文件，C语言源代码文件；
+.a为后缀的文件，是由目标文件构成的档案库文件；
+.C，.cc或.cxx 为后缀的文件，是C&#43;&#43;源代码文件；
+.h为后缀的文件，是程序所包含的头文件；
+.i 为后缀的文件，是已经预处理过的C源代码文件；
+.ii为后缀的文件，是已经预处理过的C&#43;&#43;源代码文件；
+.m为后缀的文件，是Objective-C源代码文件；
+.o为后缀的文件，是编译后的目标文件；
+.s为后缀的文件，是汇编语言源代码文件；
+.S为后缀的文件，是经过预编译的汇编语言源代码文件。
+GCC安装 gcc工具默认未安装未安装在centos系统中 需要通过yum安装 通过yum group 获取到开发工具组（有些系统可能是中文）
+[root@cdh2 vc]# yum group listLoaded plugins: fastestmirrorLoading mirror speeds from cached hostfile* base: mirrors.aliyun.com* epel: mirror01.idc.hinet.net* extras: mirrors.aliyun.com* updates: mirrors.aliyun.comAvailable Environment Groups:Minimal InstallCompute NodeInfrastructure ServerFile and Print ServerCinnamon DesktopMATE DesktopBasic Web ServerVirtualization HostServer with GUIGNOME DesktopKDE Plasma WorkspacesDevelopment and Creative WorkstationInstalled Groups:Development Tools 这里找到组的名字是 Development Tools">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="linux下gcc编程01-gcc工具安装和使用 :: liaomin416100569博客">
+    <meta itemprop="description" content="一。 gcc介绍
+Linux系统下的gcc（GNU C Compiler）是GNU推出的功能强大、性能优越的多平台编译器，是GNU的代表作品之一。
+gcc是可以在多种硬体平台上编译出可执行程序的超级编译器，其执行效率与一般的编译器相比平均效率要高20%~30%。
+gcc编译器能将C、C&#43;&#43;语言源程序、汇程式化序和目标程序编译、连接成可执行文件，如果没有给出可执行文件的名字，
+gcc将生成一个名为a.out的文件。在Linux系统中，可执行文件没有统一的后缀，系统从文件的属性来区分可执行文件和不可执 行文件。
+gcc则通过后缀来区别输入文件的类别，下面我们来介绍gcc所遵循的部分约定规则。
+.c为后缀的文件，C语言源代码文件；
+.a为后缀的文件，是由目标文件构成的档案库文件；
+.C，.cc或.cxx 为后缀的文件，是C&#43;&#43;源代码文件；
+.h为后缀的文件，是程序所包含的头文件；
+.i 为后缀的文件，是已经预处理过的C源代码文件；
+.ii为后缀的文件，是已经预处理过的C&#43;&#43;源代码文件；
+.m为后缀的文件，是Objective-C源代码文件；
+.o为后缀的文件，是编译后的目标文件；
+.s为后缀的文件，是汇编语言源代码文件；
+.S为后缀的文件，是经过预编译的汇编语言源代码文件。
+GCC安装 gcc工具默认未安装未安装在centos系统中 需要通过yum安装 通过yum group 获取到开发工具组（有些系统可能是中文）
+[root@cdh2 vc]# yum group listLoaded plugins: fastestmirrorLoading mirror speeds from cached hostfile* base: mirrors.aliyun.com* epel: mirror01.idc.hinet.net* extras: mirrors.aliyun.com* updates: mirrors.aliyun.comAvailable Environment Groups:Minimal InstallCompute NodeInfrastructure ServerFile and Print ServerCinnamon DesktopMATE DesktopBasic Web ServerVirtualization HostServer with GUIGNOME DesktopKDE Plasma WorkspacesDevelopment and Creative WorkstationInstalled Groups:Development Tools 这里找到组的名字是 Development Tools">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="708">
+    <title>linux下gcc编程01-gcc工具安装和使用 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758352908" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758352908" defer></script>
+    <script src="/docs/js/search-lunr.js?1758352908" defer></script>
+    <script src="/docs/js/search.js?1758352908" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758352908";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758352908" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758352908" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758352908" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758352908" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758352908" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758352908" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758352908" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758352908" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758352908" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/languages\/gcc\/linuxgcc_01-copy\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758352908" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/languages/gcc/linuxgcc_01-copy/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li>
+              <ul>
+                <li><a href="#gcc常用选项">GCC常用选项</a></li>
+                <li><a href="#其他gcc选项">其他GCC选项</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/index.html"><span itemprop="name">编程语言</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/gcc/index.html"><span itemprop="name">c语言</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">linux下gcc编程01-gcc工具安装和使用</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/index.html" title="c语言 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_01/index.html" title="linux下gcc编程01-gcc工具安装和使用 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="linux下gcc编程01-gcc工具安装和使用">linux下gcc编程01-gcc工具安装和使用</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p><strong>一。 gcc介绍</strong></p>
+<p>    Linux系统下的gcc（GNU C <a href="https://so.csdn.net/so/search?q=Compiler&spm=1001.2101.3001.7020" rel="external" target="_blank">Compiler</a>）是GNU推出的功能强大、性能优越的多平台编译器，是GNU的代表作品之一。</p>
+<p> gcc是可以在多种硬体平台上编译出可执行程序的超级编译器，其执行效率与一般的编译器相比平均效率要高20%~30%。</p>
+<p> gcc编译器能将C、C++语言源程序、汇程式化序和目标程序编译、连接成可执行文件，如果没有给出可执行文件的名字，</p>
+<p> gcc将生成一个名为a.out的文件。在Linux系统中，可执行文件没有统一的后缀，系统从文件的属性来区分可执行文件和不可执 行文件。</p>
+<p> gcc则通过后缀来区别输入文件的类别，下面我们来介绍gcc所遵循的部分约定规则。</p>
+<p>    .c为后缀的文件，C语言源代码文件；</p>
+<p>    .a为后缀的文件，是由目标文件构成的档案库文件；</p>
+<p>    .C，.cc或.cxx 为后缀的文件，是C++源代码文件；</p>
+<p>    .h为后缀的文件，是程序所包含的头文件；</p>
+<p>    .i 为后缀的文件，是已经预处理过的C源代码文件；</p>
+<p>    .ii为后缀的文件，是已经预处理过的C++源代码文件；</p>
+<p>    .m为后缀的文件，是Objective-C源代码文件；</p>
+<p>    .o为后缀的文件，是编译后的目标文件；</p>
+<p>    .s为后缀的文件，是汇编语言源代码文件；</p>
+<p>    .S为后缀的文件，是经过预编译的汇编语言源代码文件。</p>
+<ol>
+<li>GCC安装</li>
+</ol>
+<p>gcc工具默认未安装未安装在centos系统中 需要通过yum安装 </p>
+<p>通过yum group 获取到开发工具组（有些系统可能是中文）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@cdh2 vc]# yum group list
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: mirrors.aliyun.com
+ * epel: mirror01.idc.hinet.net
+ * extras: mirrors.aliyun.com
+ * updates: mirrors.aliyun.com
+Available Environment Groups:
+   Minimal Install
+   Compute Node
+   Infrastructure Server
+   File and Print Server
+   Cinnamon Desktop
+   MATE Desktop
+   Basic Web Server
+   Virtualization Host
+   Server with GUI
+   GNOME Desktop
+   KDE Plasma Workspaces
+   Development and Creative Workstation
+Installed Groups:
+   Development Tools</code></pre></div>
+<p>这里找到组的名字是   Development Tools</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>yum groupinstall 组名AI写代码</code></pre></div>
+<p>安装完成后 执行gcc查看版本</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@cdh2 vc]# gcc --version
+gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-11)
+Copyright (C) 2015 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</code></pre></div>
+<ol start="2">
+<li>GCC编译c程序</li>
+</ol>
+<p>任意目录新建 hello.c 编写代码（linux使用vi notepad++安装nppftp插件远程编辑）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt;
+void main(){
+	printf(&#34;helloworld\n&#34;);
+}</code></pre></div>
+<p>在linux上默认 &lt;&gt; 直接搜索系统/usr/include目录下的源文件 如果是当前项目编写头文件 需要使用 &ldquo;&ldquo;应用</p>
+<p>比如 stdio.h</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@cdh2 vc]# ls /usr/include | grep stdio.h 
+stdio.h</code></pre></div>
+<p>编写完成后执行命令 编译</p>
+<p>gcc 源文件名称 -o 指定编译后生成的可执行文件名称 如果不指定默认输出为 a.out</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@cdh2 vc]# gcc hello.c -o hello
+[root@cdh2 vc]# ll
+total 16
+-rwxr-xr-x 1 root root 8511 Jun  6 19:55 hello
+-rw-r--r-- 1 root root   61 Jun  6 19:40 hello.c</code></pre></div>
+<p>执行查看效果</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@cdh2 vc]# ./hellohelloworld</code></pre></div>
+<ol start="3">
+<li>GCC编译步骤</li>
+</ol>
+<ul>
+<li>.预处理，生成预编译文件 该文件是已经处理过宏的源代码文件（.i文件）：</li>
+</ul>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>gcc -E hello.c -o hello.iA</code></pre></div>
+<ul>
+<li>.编译，生成汇编源代码（.s文件）：</li>
+</ul>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>gcc -S hello.i -o hello.s</code></pre></div>
+<ul>
+<li>汇编，编译汇编代码 生成目标文件（.o文件）：</li>
+</ul>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>gcc -c hello.s -o hello.o</code></pre></div>
+<ul>
+<li>链接，链接其他的包含的库 生成可执行文件：</li>
+</ul>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@cdh2 vc]# gcc hello.o -o hello[root@cdh2 vc]# ./hellohelloworld</code></pre></div>
+<p> </p>
+<p><strong>二。gcc命令选项</strong></p>
+<p>以下内容拷贝自互联网 备查</p>
+<h4 id="gcc常用选项">GCC常用选项</h4>
+<table>
+  <thead>
+      <tr>
+          <th>选项</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>&ndash;help&ndash;target-help</td>
+          <td>显示 gcc 帮助说明。‘target-help’是显示目标机器特定的命令行选项。</td>
+      </tr>
+      <tr>
+          <td>&ndash;version</td>
+          <td>显示 gcc 版本号和版权信息 。</td>
+      </tr>
+      <tr>
+          <td>-o<em>outfile</em></td>
+          <td>输出到指定的文件。</td>
+      </tr>
+      <tr>
+          <td>-x<em>language</em></td>
+          <td>指明使用的编程语言。允许的语言包括：c c++ assembler none 。 ‘none’意味着恢复默认行为，即根据文件的扩展名猜测源文件的语言。</td>
+      </tr>
+      <tr>
+          <td>-v</td>
+          <td>打印较多信息，显示编译器调用的程序。</td>
+      </tr>
+      <tr>
+          <td>-###</td>
+          <td>与 -v 类似，但选项被引号括住，并且不执行命令。</td>
+      </tr>
+      <tr>
+          <td>-E</td>
+          <td>仅作预处理，不进行编译、汇编和链接。如上图所示。</td>
+      </tr>
+      <tr>
+          <td>-S</td>
+          <td>仅编译到汇编语言，不进行汇编和链接。如上图所示。</td>
+      </tr>
+      <tr>
+          <td>-c</td>
+          <td>编译、汇编到目标代码，不进行链接。如上图所示。</td>
+      </tr>
+      <tr>
+          <td>-pipe</td>
+          <td>使用管道代替临时文件。</td>
+      </tr>
+      <tr>
+          <td>-combine</td>
+          <td>将多个源文件一次性传递给汇编器。</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="其他gcc选项">其他GCC选项</h4>
+<p>更多有用的GCC选项：</p>
+<table>
+  <thead>
+      <tr>
+          <th>命令</th>
+          <th>描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>-l <em>library</em> -l<em>library</em></td>
+          <td>进行链接时搜索名为library的库。 例子： $ gcc test.c -lm -o test</td>
+      </tr>
+      <tr>
+          <td>-I<em>dir</em></td>
+          <td>把<em>dir</em>加入到搜索头文件的路径列表中。 例子： $ gcc test.c -I../inc -o test</td>
+      </tr>
+      <tr>
+          <td>-L<em>dir</em></td>
+          <td>把<em>dir</em>加入到搜索库文件的路径列表中。 例子： $ gcc -I/home/foo -L/home/foo -ltest test.c -o test</td>
+      </tr>
+      <tr>
+          <td>-D<em>name</em></td>
+          <td>预定义一个名为<em>name</em>的宏，值为1。 例子： $ gcc -DTEST_CONFIG test.c -o test</td>
+      </tr>
+      <tr>
+          <td>-D<em>name</em>=<em>definition</em></td>
+          <td>预定义名为<em>name</em>，值为<em>definition</em>的宏。</td>
+      </tr>
+      <tr>
+          <td>-ggdb  -ggdb<em>level</em></td>
+          <td>为调试器 gdb 生成调试信息。<em>level</em>可以为1，2，3，默认值为2。</td>
+      </tr>
+      <tr>
+          <td>-g  -g<em>level</em></td>
+          <td>生成操作系统本地格式的调试信息。-g 和 -ggdb 并不太相同， -g 会生成 gdb 之外的信息。<em>level</em>取值同上。</td>
+      </tr>
+      <tr>
+          <td>-s</td>
+          <td>去除可执行文件中的符号表和重定位信息。用于减小可执行文件的大小。</td>
+      </tr>
+      <tr>
+          <td>-M</td>
+          <td>告诉预处理器输出一个适合make的规则，用于描述各目标文件的依赖关系。对于每个 源文件，预处理器输出 一个make规则，该规则的目标项(target)是源文件对应的目标文件名，依赖项(dependency)是源文件中 <code>#include引用的所有文件。生成的规则可 以是单行，但如果太长，就用</code>'-换行符续成多行。规则 显示在标准输出，不产生预处理过的C程序。</td>
+      </tr>
+      <tr>
+          <td>-C</td>
+          <td>告诉预处理器不要丢弃注释。配合`-E&rsquo;选项使用。</td>
+      </tr>
+      <tr>
+          <td>-P</td>
+          <td>告诉预处理器不要产生<code>#line'命令。配合</code>-E&rsquo;选项使用。</td>
+      </tr>
+      <tr>
+          <td>-static</td>
+          <td>在支持动态链接的系统上，阻止连接共享库。该选项在其它系统上 无效。</td>
+      </tr>
+      <tr>
+          <td>-nostdlib</td>
+          <td>不连接系统标准启动文件和标准库文件，只把指定的文件传递给连接器。</td>
+      </tr>
+      <tr>
+          <td>Warnings</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>-Wall</td>
+          <td>会打开一些很有用的警告选项，建议编译时加此选项。</td>
+      </tr>
+      <tr>
+          <td>-W  -Wextra</td>
+          <td>打印一些额外的警告信息。</td>
+      </tr>
+      <tr>
+          <td>-w</td>
+          <td>禁止显示所有警告信息。</td>
+      </tr>
+      <tr>
+          <td>-Wshadow</td>
+          <td>当一个局部变量遮盖住了另一个局部变量，或者全局变量时，给出警告。很有用的选项，建议打开。 -Wall 并不会打开此项。</td>
+      </tr>
+      <tr>
+          <td>-Wpointer-arith</td>
+          <td>对函数指针或者void *类型的指针进行算术操作时给出警告。也很有用。 -Wall 并不会打开此项。</td>
+      </tr>
+      <tr>
+          <td>-Wcast-qual</td>
+          <td>当强制转化丢掉了类型修饰符时给出警告。 -Wall 并不会打开此项。</td>
+      </tr>
+      <tr>
+          <td>-Waggregate-return</td>
+          <td>如果定义或调用了返回结构体或联合体的函数，编译器就发出警告。</td>
+      </tr>
+      <tr>
+          <td>-Winline</td>
+          <td>无论是声明为 inline 或者是指定了-finline-functions 选项，如果某函数不能内联，编译器都将发出警告。如果你的代码含有很多 inline 函数的话，这是很有用的选项。</td>
+      </tr>
+      <tr>
+          <td>-Werror</td>
+          <td>把警告当作错误。出现任何警告就放弃编译。</td>
+      </tr>
+      <tr>
+          <td>-Wunreachable-code</td>
+          <td>如果编译器探测到永远不会执行到的代码，就给出警告。也是比较有用的选项。</td>
+      </tr>
+      <tr>
+          <td>-Wcast-align</td>
+          <td>一旦某个指针类型强制转换导致目标所需的地址对齐增加时，编译器就发出警告。</td>
+      </tr>
+      <tr>
+          <td>-Wundef</td>
+          <td>当一个没有定义的符号出现在 #if 中时，给出警告。</td>
+      </tr>
+      <tr>
+          <td>-Wredundant-decls</td>
+          <td>如果在同一个可见域内某定义多次声明，编译器就发出警告，即使这些重复声明有效并且毫无差别。</td>
+      </tr>
+      <tr>
+          <td>Optimization</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>-O0</td>
+          <td>禁止编译器进行优化。默认为此项。</td>
+      </tr>
+      <tr>
+          <td>-O  -O1</td>
+          <td>尝试优化编译时间和可执行文件大小。</td>
+      </tr>
+      <tr>
+          <td>-O2</td>
+          <td>更多的优化，会尝试几乎全部的优化功能，但不会进行“空间换时间”的优化方法。</td>
+      </tr>
+      <tr>
+          <td>-O3</td>
+          <td>在 -O2 的基础上再打开一些优化选项：-finline-functions， -funswitch-loops 和 -fgcse-after-reload 。</td>
+      </tr>
+      <tr>
+          <td>-Os</td>
+          <td>对生成文件大小进行优化。它会打开 -O2 开的全部选项，除了会那些增加文件大小的。</td>
+      </tr>
+      <tr>
+          <td>-finline-functions</td>
+          <td>把所有简单的函数内联进调用者。编译器会探索式地决定哪些函数足够简单，值得做这种内联。</td>
+      </tr>
+      <tr>
+          <td>-fstrict-aliasing</td>
+          <td>施加最强的别名规则（aliasing rules）。</td>
+      </tr>
+      <tr>
+          <td>Standard</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>-ansi</td>
+          <td>支持符合ANSI标准的C程序。这样就会关闭GNU C中某些不兼容ANSI C的特性。</td>
+      </tr>
+      <tr>
+          <td>-std=c89  -iso9899:1990</td>
+          <td>指明使用标准 ISO C90 作为标准来编译程序。</td>
+      </tr>
+      <tr>
+          <td>-std=c99  -std=iso9899:1999</td>
+          <td>指明使用标准 ISO C99 作为标准来编译程序。</td>
+      </tr>
+      <tr>
+          <td>-std=c++98</td>
+          <td>指明使用标准 C++98 作为标准来编译程序。</td>
+      </tr>
+      <tr>
+          <td>-std=gnu9x -std=gnu99</td>
+          <td>使用 ISO C99 再加上 GNU 的一些扩展。</td>
+      </tr>
+      <tr>
+          <td>-fno-asm</td>
+          <td>不把asm, inline或typeof当作关键字，因此这些词可以用做标识符。用 <strong>asm</strong>， __inline__和__typeof__能够替代它们。 <code>-ansi' 隐含声明了</code>-fno-asm&rsquo;。</td>
+      </tr>
+      <tr>
+          <td>-fgnu89-inline</td>
+          <td>告诉编译器在 C99 模式下看到 inline 函数时使用传统的 GNU 句法。</td>
+      </tr>
+      <tr>
+          <td>C options</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>-fsigned-char  -funsigned-char</td>
+          <td>把char定义为有/无符号类型，如同signed char/unsigned char。</td>
+      </tr>
+      <tr>
+          <td>-traditional</td>
+          <td>尝试支持传统C编译器的某些方面。详见GNU C手册。</td>
+      </tr>
+      <tr>
+          <td>-fno-builtin  -fno-builtin-function</td>
+          <td>不接受没有 _<em>builtin</em> 前缀的函数作为内建函数。</td>
+      </tr>
+      <tr>
+          <td>-trigraphs</td>
+          <td>支持ANSI C的三联符（ trigraphs）。`-ansi&rsquo;选项隐含声明了此选项。</td>
+      </tr>
+      <tr>
+          <td>-fsigned-bitfields  -funsigned-bitfields</td>
+          <td>如果没有明确声明<code>signed'或</code>unsigned&rsquo;修饰符，这些选项用来定义有符号位域或无符号位域。缺省情况下，位域是有符号的，因为它们继承的基本整数类型，如int，是有符号数。</td>
+      </tr>
+      <tr>
+          <td>-Wstrict-prototypes</td>
+          <td>如果函数的声明或定义没有指出参数类型，编译器就发出警告。很有用的警告。</td>
+      </tr>
+      <tr>
+          <td>-Wmissing-prototypes</td>
+          <td>如果没有预先声明就定义了全局函数，编译器就发出警告。即使函数定义自身提供了函数原形也会产生这个警告。这个选项 的目的是检查没有在头文件中声明的全局函数。</td>
+      </tr>
+      <tr>
+          <td>-Wnested-externs</td>
+          <td>如果某extern声明出现在函数内部，编译器就发出警告。</td>
+      </tr>
+      <tr>
+          <td>C++ options</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>-ffor-scope</td>
+          <td>从头开始执行程序，也允许进行重定向。</td>
+      </tr>
+      <tr>
+          <td>-fno-rtti</td>
+          <td>关闭对 dynamic_cast 和 typeid 的支持。如果你不需要这些功能，关闭它会节省一些空间。</td>
+      </tr>
+      <tr>
+          <td>-Wctor-dtor-privacy</td>
+          <td>当一个类没有用时给出警告。因为构造函数和析构函数会被当作私有的。</td>
+      </tr>
+      <tr>
+          <td>-Wnon-virtual-dtor</td>
+          <td>当一个类有多态性，而又没有虚析构函数时，发出警告。-Wall会开启这个选项。</td>
+      </tr>
+      <tr>
+          <td>-Wreorder</td>
+          <td>如果代码中的成员变量的初始化顺序和它们实际执行时初始化顺序不一致，给出警告。</td>
+      </tr>
+      <tr>
+          <td>-Wno-deprecated</td>
+          <td>使用过时的特性时不要给出警告。</td>
+      </tr>
+      <tr>
+          <td>-Woverloaded-virtual</td>
+          <td>如果函数的声明隐藏住了基类的虚函数，就给出警告。</td>
+      </tr>
+      <tr>
+          <td>Machine Dependent Options (Intel)</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>-mtune=<em>cpu-type</em></td>
+          <td>为指定类型的 CPU 生成代码。<em>cpu-type</em>可以是：i386，i486，i586，pentium，i686，pentium4 等等。</td>
+      </tr>
+      <tr>
+          <td>-msse  -msse2  -mmmx  -mno-sse  -mno-sse2  -mno-mmx</td>
+          <td>使用或者不使用MMX，SSE，SSE2指令。</td>
+      </tr>
+      <tr>
+          <td>-m32  -m64</td>
+          <td>生成32位/64位机器上的代码。</td>
+      </tr>
+      <tr>
+          <td>-mpush-args  -mno-push-args</td>
+          <td>（不）使用 push 指令来进行存储参数。默认是使用。</td>
+      </tr>
+      <tr>
+          <td>-mregparm=<em>num</em></td>
+          <td>当传递整数参数时，控制所使用寄存器的个数。</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>三。 gcc编译动态链接库</strong></p>
+<p>动态链接库：在UNIX环境中创建共享库 (shared library)。UNIX下，共享库以so为后缀(shared object)。共享库与Windows下的DLL类似，是在程序运行时动态连接。多个进程可以连接同一个共享库。
+静态库：将库直接链接到执行文件中 使用静态库的应用程序会非常大</p>
+<p>定义个add方法 一个头文件定义 一个实现类 编译成动态链接库</p>
+<p>头文件 my.h</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+int add(int p1,int p2);</code></pre></div>
+<p>c文件 my.c</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &#34;my.h&#34;
+int add(int p1,int p2){
+    return p1+p2;
+}</code></pre></div>
+<p>将该my.c编译成 so文件(注意生成文件命名规则 比如lib开头 .so结尾 中间my就是库名称 将来连接直接使用库名称)</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>gcc my.c -shared -fPIC -o libmy.so</code></pre></div>
+<p>添加一个main.c 提供调用该动态库的逻辑</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &#34;my.h&#34;
+void main(){
+	int number=add(111,333);
+	char str[25];
+	sprintf(str, &#34;%d&#34;, number);
+	printf(str);	
+}</code></pre></div>
+<p>如果直接编译（不会自动连接so文件）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost dso]# gcc main.c -o main
+/tmp/ccebwBvM.o：在函数‘main’中：
+main.c:(.text+0x13)：对‘add’未定义的引用
+collect2: 错误：ld 返回 1</code></pre></div>
+<p>正确编译 指定库的位置 同时指定应用库的名称</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>gcc main.c -L. -lmy -o main</code></pre></div>
+<p>编译成功 使用 ./main运行 发现报错</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost dso]# ./main
+./main: error while loading shared libraries: libmy.so: cannot open shared object file: No such file or directory</code></pre></div>
+<p>虽然编译时指定了库的路径和名称 但是运行时 默认只会到 /lib /lib64 /usr/lib /usr/share/lib等目录下 或者是 </p>
+<p>LD_LIBRARY_PATH 环境变量下指定的目录中找</p>
+<p>查看 main的依赖</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost dso]# ldd main
+        linux-vdso.so.1 =&gt;  (0x00007ffdd0670000)
+        libmy.so =&gt; not found
+        libc.so.6 =&gt; /lib64/libc.so.6 (0x00007fe387a01000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007fe387dce000)</code></pre></div>
+<p>将libmy.so拷贝到/lib64目录下</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost dso]# cp ./libmy.so /lib64
+[root@localhost dso]# ldd ./main
+        linux-vdso.so.1 =&gt;  (0x00007ffd7cd49000)
+        libmy.so =&gt; /lib64/libmy.so (0x00007f67e1186000)
+        libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f67e0db9000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f67e1388000)
+[root@localhost dso]# ./main
+444</code></pre></div>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/gcc/index.html"><a class="padding" href="/docs/programming/languages/gcc/index.html">c语言</a><ul id="R-subsections-e8c9b5cff4c7849bafc19d21e0433f7f" class="collapsible-menu">
+            <li class="active " data-nav-id="/docs/programming/languages/gcc/linuxgcc_01-copy/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01-copy/index.html">linux下gcc编程01-gcc工具安装和使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_01/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01/index.html">linux下gcc编程01-gcc工具安装和使用</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/assembly/index.html"><a class="padding" href="/docs/programming/languages/assembly/index.html">汇编语言</a><ul id="R-subsections-664e07814ed6bbd77b351b341bff28e6" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758352908" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758352908" defer></script>
+    <script src="/docs/js/theme.js?1758352908" defer></script>
+  </body>
+</html>

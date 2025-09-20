@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="nginx模块 nginx作为项目的7层代理入口，对于http请求的过滤，如sql注入，xss攻击等过滤功能较弱，研究了下开源的一些waf，完全开源的https://github.com/xsec-lab/x-waf，利用lua来过滤请求，同时拥有一个管理控制台，添加规则和代理，但使用过程中，缺少文档，碰到一些问题，需要调试和增强，促使用window编译通过源代码lua和使用x-waf。
+lua-nginx-module模块 ngx_ http_lua_ module-将 Lua 的强大功能嵌入到 Nginx HTTP 服务器中。这个模块是 OpenResty 的核心组件，如果您正在使用这个模块，那么您实际上就是在使用 OpenResty。这个模块没有随 Nginx 源代码一起发布。这是 OpenResty 的一个核心组件，如果你正在使用这个模块，那么你实际上是在使用 OpenResty:)
+x-waf X-WAF是一款适用中、小企业的云WAF系统，让中、小企业也可以非常方便地拥有自己的免费云WAF。 项目已经5年未更新，可以作为研究目的，可以通过安全攻击过程分析，自行拓展规则。 文档地址：https://github.com/xsec-lab/x-waf
+主要特性
+支持对常见WEB攻击的防御，如sql注入、xss、路径穿越，阻断扫描器的扫描等 对持对CC攻击的防御 waf为反向模式，后端保护的服务器可直接用内网IP，不需暴露在公网中 支持IP、URL、Referer、User-Agent、Get、Post、Cookies参数型的防御策略 安装、部署与维护非常简单 支持在线管理waf规则 支持在线管理后端服务器 多台waf的配置可自动同步 跨平台，支持在linux、unix、mac和windows操作系统中部署 x-waf安装 linux安装 安装openresty 下载对应系统的安装包 http://openresty.org/cn/linux-packages.html debian系统安装参考：http://openresty.org/cn/linux-packages.html#debian 或者通过源码安装参考： http://openresty.org/cn/installation.html 安装完假设目录为： –prefix=/usr/local/openresty
+安装x-waf 克隆x-waf到/usr/local/openresty/nginx/conf目录
+cd /usr/local/openresty/nginx/conf &amp;&amp; git clone https://github.com/xsec-lab/x-waf 下载下来是一个x-waf 的文件夹，里面的 nginx_conf/nginx.conf 文件是一个配置好了lua和x-waf规则目录的模板文件，可以拷贝到 /usr/local/openresty/nginx/conf/nginx.conf 直接覆盖原有openresty的配置文件
+cp /usr/local/openresty/nginx/conf/x-waf/nginx_conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf 作者的代码里面url白名单部分有个错误，需要修正一下，否则会因为找不到url白名单文件，而导致白名单失效
+vi /usr/local/openresty/nginx/conf/x-waf/waf.lua
+找到 writeurl.rule，替换为 whiteUrl.rule 建立虚拟主机配置文件目录（这里主要是nginx.conf里include了，管理后台生成的代理文件目录）">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf :: liaomin416100569博客">
+    <meta name="twitter:description" content="nginx模块 nginx作为项目的7层代理入口，对于http请求的过滤，如sql注入，xss攻击等过滤功能较弱，研究了下开源的一些waf，完全开源的https://github.com/xsec-lab/x-waf，利用lua来过滤请求，同时拥有一个管理控制台，添加规则和代理，但使用过程中，缺少文档，碰到一些问题，需要调试和增强，促使用window编译通过源代码lua和使用x-waf。
+lua-nginx-module模块 ngx_ http_lua_ module-将 Lua 的强大功能嵌入到 Nginx HTTP 服务器中。这个模块是 OpenResty 的核心组件，如果您正在使用这个模块，那么您实际上就是在使用 OpenResty。这个模块没有随 Nginx 源代码一起发布。这是 OpenResty 的一个核心组件，如果你正在使用这个模块，那么你实际上是在使用 OpenResty:)
+x-waf X-WAF是一款适用中、小企业的云WAF系统，让中、小企业也可以非常方便地拥有自己的免费云WAF。 项目已经5年未更新，可以作为研究目的，可以通过安全攻击过程分析，自行拓展规则。 文档地址：https://github.com/xsec-lab/x-waf
+主要特性
+支持对常见WEB攻击的防御，如sql注入、xss、路径穿越，阻断扫描器的扫描等 对持对CC攻击的防御 waf为反向模式，后端保护的服务器可直接用内网IP，不需暴露在公网中 支持IP、URL、Referer、User-Agent、Get、Post、Cookies参数型的防御策略 安装、部署与维护非常简单 支持在线管理waf规则 支持在线管理后端服务器 多台waf的配置可自动同步 跨平台，支持在linux、unix、mac和windows操作系统中部署 x-waf安装 linux安装 安装openresty 下载对应系统的安装包 http://openresty.org/cn/linux-packages.html debian系统安装参考：http://openresty.org/cn/linux-packages.html#debian 或者通过源码安装参考： http://openresty.org/cn/installation.html 安装完假设目录为： –prefix=/usr/local/openresty
+安装x-waf 克隆x-waf到/usr/local/openresty/nginx/conf目录
+cd /usr/local/openresty/nginx/conf &amp;&amp; git clone https://github.com/xsec-lab/x-waf 下载下来是一个x-waf 的文件夹，里面的 nginx_conf/nginx.conf 文件是一个配置好了lua和x-waf规则目录的模板文件，可以拷贝到 /usr/local/openresty/nginx/conf/nginx.conf 直接覆盖原有openresty的配置文件
+cp /usr/local/openresty/nginx/conf/x-waf/nginx_conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf 作者的代码里面url白名单部分有个错误，需要修正一下，否则会因为找不到url白名单文件，而导致白名单失效
+vi /usr/local/openresty/nginx/conf/x-waf/waf.lua
+找到 writeurl.rule，替换为 whiteUrl.rule 建立虚拟主机配置文件目录（这里主要是nginx.conf里include了，管理后台生成的代理文件目录）">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_11/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf :: liaomin416100569博客">
+    <meta property="og:description" content="nginx模块 nginx作为项目的7层代理入口，对于http请求的过滤，如sql注入，xss攻击等过滤功能较弱，研究了下开源的一些waf，完全开源的https://github.com/xsec-lab/x-waf，利用lua来过滤请求，同时拥有一个管理控制台，添加规则和代理，但使用过程中，缺少文档，碰到一些问题，需要调试和增强，促使用window编译通过源代码lua和使用x-waf。
+lua-nginx-module模块 ngx_ http_lua_ module-将 Lua 的强大功能嵌入到 Nginx HTTP 服务器中。这个模块是 OpenResty 的核心组件，如果您正在使用这个模块，那么您实际上就是在使用 OpenResty。这个模块没有随 Nginx 源代码一起发布。这是 OpenResty 的一个核心组件，如果你正在使用这个模块，那么你实际上是在使用 OpenResty:)
+x-waf X-WAF是一款适用中、小企业的云WAF系统，让中、小企业也可以非常方便地拥有自己的免费云WAF。 项目已经5年未更新，可以作为研究目的，可以通过安全攻击过程分析，自行拓展规则。 文档地址：https://github.com/xsec-lab/x-waf
+主要特性
+支持对常见WEB攻击的防御，如sql注入、xss、路径穿越，阻断扫描器的扫描等 对持对CC攻击的防御 waf为反向模式，后端保护的服务器可直接用内网IP，不需暴露在公网中 支持IP、URL、Referer、User-Agent、Get、Post、Cookies参数型的防御策略 安装、部署与维护非常简单 支持在线管理waf规则 支持在线管理后端服务器 多台waf的配置可自动同步 跨平台，支持在linux、unix、mac和windows操作系统中部署 x-waf安装 linux安装 安装openresty 下载对应系统的安装包 http://openresty.org/cn/linux-packages.html debian系统安装参考：http://openresty.org/cn/linux-packages.html#debian 或者通过源码安装参考： http://openresty.org/cn/installation.html 安装完假设目录为： –prefix=/usr/local/openresty
+安装x-waf 克隆x-waf到/usr/local/openresty/nginx/conf目录
+cd /usr/local/openresty/nginx/conf &amp;&amp; git clone https://github.com/xsec-lab/x-waf 下载下来是一个x-waf 的文件夹，里面的 nginx_conf/nginx.conf 文件是一个配置好了lua和x-waf规则目录的模板文件，可以拷贝到 /usr/local/openresty/nginx/conf/nginx.conf 直接覆盖原有openresty的配置文件
+cp /usr/local/openresty/nginx/conf/x-waf/nginx_conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf 作者的代码里面url白名单部分有个错误，需要修正一下，否则会因为找不到url白名单文件，而导致白名单失效
+vi /usr/local/openresty/nginx/conf/x-waf/waf.lua
+找到 writeurl.rule，替换为 whiteUrl.rule 建立虚拟主机配置文件目录（这里主要是nginx.conf里include了，管理后台生成的代理文件目录）">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf :: liaomin416100569博客">
+    <meta itemprop="description" content="nginx模块 nginx作为项目的7层代理入口，对于http请求的过滤，如sql注入，xss攻击等过滤功能较弱，研究了下开源的一些waf，完全开源的https://github.com/xsec-lab/x-waf，利用lua来过滤请求，同时拥有一个管理控制台，添加规则和代理，但使用过程中，缺少文档，碰到一些问题，需要调试和增强，促使用window编译通过源代码lua和使用x-waf。
+lua-nginx-module模块 ngx_ http_lua_ module-将 Lua 的强大功能嵌入到 Nginx HTTP 服务器中。这个模块是 OpenResty 的核心组件，如果您正在使用这个模块，那么您实际上就是在使用 OpenResty。这个模块没有随 Nginx 源代码一起发布。这是 OpenResty 的一个核心组件，如果你正在使用这个模块，那么你实际上是在使用 OpenResty:)
+x-waf X-WAF是一款适用中、小企业的云WAF系统，让中、小企业也可以非常方便地拥有自己的免费云WAF。 项目已经5年未更新，可以作为研究目的，可以通过安全攻击过程分析，自行拓展规则。 文档地址：https://github.com/xsec-lab/x-waf
+主要特性
+支持对常见WEB攻击的防御，如sql注入、xss、路径穿越，阻断扫描器的扫描等 对持对CC攻击的防御 waf为反向模式，后端保护的服务器可直接用内网IP，不需暴露在公网中 支持IP、URL、Referer、User-Agent、Get、Post、Cookies参数型的防御策略 安装、部署与维护非常简单 支持在线管理waf规则 支持在线管理后端服务器 多台waf的配置可自动同步 跨平台，支持在linux、unix、mac和windows操作系统中部署 x-waf安装 linux安装 安装openresty 下载对应系统的安装包 http://openresty.org/cn/linux-packages.html debian系统安装参考：http://openresty.org/cn/linux-packages.html#debian 或者通过源码安装参考： http://openresty.org/cn/installation.html 安装完假设目录为： –prefix=/usr/local/openresty
+安装x-waf 克隆x-waf到/usr/local/openresty/nginx/conf目录
+cd /usr/local/openresty/nginx/conf &amp;&amp; git clone https://github.com/xsec-lab/x-waf 下载下来是一个x-waf 的文件夹，里面的 nginx_conf/nginx.conf 文件是一个配置好了lua和x-waf规则目录的模板文件，可以拷贝到 /usr/local/openresty/nginx/conf/nginx.conf 直接覆盖原有openresty的配置文件
+cp /usr/local/openresty/nginx/conf/x-waf/nginx_conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf 作者的代码里面url白名单部分有个错误，需要修正一下，否则会因为找不到url白名单文件，而导致白名单失效
+vi /usr/local/openresty/nginx/conf/x-waf/waf.lua
+找到 writeurl.rule，替换为 whiteUrl.rule 建立虚拟主机配置文件目录（这里主要是nginx.conf里include了，管理后台生成的代理文件目录）">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="1027">
+    <title>linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/programming\/languages\/gcc\/linuxgcc_11\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/languages/gcc/linuxgcc_11/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#nginx模块">nginx模块</a>
+      <ul>
+        <li><a href="#lua-nginx-module模块">lua-nginx-module模块</a></li>
+        <li><a href="#x-waf">x-waf</a></li>
+      </ul>
+    </li>
+    <li><a href="#x-waf安装">x-waf安装</a>
+      <ul>
+        <li><a href="#linux安装">linux安装</a>
+          <ul>
+            <li><a href="#安装openresty">安装openresty</a></li>
+            <li><a href="#安装x-waf">安装x-waf</a></li>
+            <li><a href="#安装x-waf-admin">安装x-waf-admin</a></li>
+          </ul>
+        </li>
+        <li><a href="#开发环境安装">开发环境安装</a>
+          <ul>
+            <li><a href="#nginx源码编译">nginx源码编译</a></li>
+            <li><a href="#安装luajit">安装luajit</a></li>
+            <li><a href="#添加lua-nginx-module">添加lua-nginx-module</a></li>
+            <li><a href="#安装lua-resty-core">安装lua-resty-core</a></li>
+            <li><a href="#安装lua-resty-lrucache">安装lua-resty-lrucache</a></li>
+            <li><a href="#解决初始化脚本兼容异常">解决初始化脚本兼容异常</a></li>
+            <li><a href="#x-waf源码安装">x-waf源码安装</a></li>
+            <li><a href="#lua-cjson安装">lua-cjson安装</a></li>
+            <li><a href="#验证">验证</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/index.html"><span itemprop="name">编程语言</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/gcc/index.html"><span itemprop="name">c语言</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_10/index.html" title="linux下gcc编程10-clion编译调试nginx (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_12/index.html" title="linux下gcc编程12-window下clion编译调试redis7.0 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="linux下gcc编程11-window下clion编译调试nginx集成lua-nginx-module安装开源x-waf">linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1 id="nginx模块">nginx模块</h1>
+<p>nginx作为项目的7层代理入口，对于http请求的过滤，如sql注入，xss攻击等过滤功能较弱，研究了下开源的一些waf，完全开源的https://github.com/xsec-lab/x-waf，利用lua来过滤请求，同时拥有一个管理控制台，添加规则和代理，但使用过程中，缺少文档，碰到一些问题，需要调试和增强，促使用window编译通过源代码lua和使用x-waf。</p>
+<h2 id="lua-nginx-module模块">lua-nginx-module模块</h2>
+<p>ngx_ http_lua_ module-将 Lua 的强大功能嵌入到 Nginx HTTP 服务器中。这个模块是 OpenResty 的核心组件，如果您正在使用这个模块，那么您实际上就是在使用 OpenResty。这个模块没有随 Nginx 源代码一起发布。这是 OpenResty 的一个核心组件，如果你正在使用这个模块，那么你实际上是在使用 OpenResty:)</p>
+<h2 id="x-waf">x-waf</h2>
+<p>X-WAF是一款适用中、小企业的云WAF系统，让中、小企业也可以非常方便地拥有自己的免费云WAF。
+项目已经5年未更新，可以作为研究目的，可以通过安全攻击过程分析，自行拓展规则。
+文档地址：https://github.com/xsec-lab/x-waf</p>
+<p><strong>主要特性</strong></p>
+<ul>
+<li>支持对常见WEB攻击的防御，如sql注入、xss、路径穿越，阻断扫描器的扫描等</li>
+<li>对持对CC攻击的防御</li>
+<li>waf为反向模式，后端保护的服务器可直接用内网IP，不需暴露在公网中</li>
+<li>支持IP、URL、Referer、User-Agent、Get、Post、Cookies参数型的防御策略</li>
+<li>安装、部署与维护非常简单</li>
+<li>支持在线管理waf规则</li>
+<li>支持在线管理后端服务器</li>
+<li>多台waf的配置可自动同步</li>
+<li>跨平台，支持在linux、unix、mac和windows操作系统中部署</li>
+</ul>
+<h1 id="x-waf安装">x-waf安装</h1>
+<h2 id="linux安装">linux安装</h2>
+<h3 id="安装openresty">安装openresty</h3>
+<p>下载对应系统的安装包
+<a href="http://openresty.org/cn/linux-packages.html" rel="external" target="_blank">http://openresty.org/cn/linux-packages.html</a>
+debian系统安装参考：http://openresty.org/cn/linux-packages.html#debian
+或者通过源码安装参考：
+<a href="http://openresty.org/cn/installation.html" rel="external" target="_blank">http://openresty.org/cn/installation.html</a>
+安装完假设目录为：
+&ndash;prefix=/usr/local/openresty</p>
+<h3 id="安装x-waf">安装x-waf</h3>
+<p>克隆x-waf到/usr/local/openresty/nginx/conf目录</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>cd /usr/local/openresty/nginx/conf &amp;&amp; git clone https://github.com/xsec-lab/x-waf</code></pre></div>
+<p>下载下来是一个x-waf 的文件夹，里面的 nginx_conf/nginx.conf 文件是一个配置好了lua和x-waf规则目录的模板文件，可以拷贝到 /usr/local/openresty/nginx/conf/nginx.conf 直接覆盖原有openresty的配置文件</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>cp /usr/local/openresty/nginx/conf/x-waf/nginx_conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf</code></pre></div>
+<p>作者的代码里面url白名单部分有个错误，需要修正一下，否则会因为找不到url白名单文件，而导致白名单失效</p>
+<p>vi /usr/local/openresty/nginx/conf/x-waf/waf.lua</p>
+<p>找到 writeurl.rule，替换为 whiteUrl.rule
+<a href="#R-image-ef664adbfe53c0ac033f53bd2ee2b71f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/93861f9fef3b4ba6221303727a07315b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef664adbfe53c0ac033f53bd2ee2b71f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/93861f9fef3b4ba6221303727a07315b.png"></a>
+建立虚拟主机配置文件目录（这里主要是nginx.conf里include了，管理后台生成的代理文件目录）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>mkdir -p /usr/local/openresty/nginx/conf/vhosts</code></pre></div>
+<p>修改配置文件</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>vi /usr/local/openresty/nginx/conf/x-waf/config.lua
+
+local _M = {
+    -- 开启WAF
+    config_waf_enable = &#34;on&#34;,
+    -- WAF防护日志目录，需要保证openresty的运行用户对该目录有访问权限，可通过修改目录的所有者为openresty的运行用户来实现，或者修改权限为777，注意执行:chmod 777 /opt/waf
+    config_log_dir = &#34;/opt/waf&#34;,
+    -- rule setting
+    config_rule_dir = &#34;/usr/local/openresty/nginx/conf/x-waf/rules&#34;,
+    -- 启用网址白名单过滤
+    config_white_url_check = &#34;on&#34;,
+    -- 启用IP白名单过滤
+    config_white_ip_check = &#34;on&#34;,
+    -- 启用IP黑名单过滤
+    config_black_ip_check = &#34;on&#34;,
+    -- 启用url过滤
+    config_url_check = &#34;on&#34;,
+    -- 启用url参数过滤
+    config_url_args_check = &#34;on&#34;,
+    -- 启用浏览器用户代理过滤
+    config_user_agent_check = &#34;on&#34;,
+    -- 启用cookie过滤
+    config_cookie_check = &#34;on&#34;,
+    -- 启用CC攻击检测
+    config_cc_check = &#34;on&#34;,
+    -- CC攻击检测阈值，10次/60秒
+    config_cc_rate = &#34;10/60&#34;,
+    -- enable/disable post filtering
+    config_post_check = &#34;on&#34;,
+    -- 检测攻击后给攻击者的输出，默认html文本串，通过config_output_html配置，或者设置为url，则通过config_waf_redirect_url配置
+    config_waf_model = &#34;html&#34;,
+    -- if config_waf_output ,setting url
+    config_waf_redirect_url = &#34;http://xxx.com&#34;,
+    config_expire_time = 600,
+    config_output_html = [[
+    &lt;html&gt;
+    &lt;head&gt;
+    &lt;meta charset=&#34;UTF-8&#34;&gt;
+    &lt;title&gt;非法访问&lt;/title&gt;
+    &lt;/head&gt;
+      &lt;body&gt;
+        &lt;div&gt;
+      &lt;div class=&#34;table&#34;&gt;
+        &lt;div&gt;
+          &lt;div class=&#34;cell&#34;&gt;
+            非法访问，您的IP为: %s
+          &lt;/div&gt;
+          &lt;div class=&#34;cell&#34;&gt;
+            如需帮助请联系客服
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+    ]],
+}</code></pre></div>
+<h3 id="安装x-waf-admin">安装x-waf-admin</h3>
+<p>管理后台安装，管理后台使用GO语言编写，可以直接下载编译好的版本直接运行即可
+<a href="https://github.com/xsec-lab/x-waf-admin/releases/download/x-waf-admin0.1/x-waf-admin0.1-linux-amd64.tar.gz" rel="external" target="_blank">https://github.com/xsec-lab/x-waf-admin/releases/download/x-waf-admin0.1/x-waf-admin0.1-linux-amd64.tar.gz</a></p>
+<p>解压</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>tar -xzf x-waf-admin0.1-linux-amd64.tar.gz</code></pre></div>
+<p>编辑配置文件</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>vi x-waf-admin/conf/app.ini
+
+RUN_MODE = dev #开发环境使用
+;RUN_MODE = prod #生产环境使用
+
+[server]
+HTTP_PORT = 5000 #管理后台端口
+API_KEY = xsec.io||secdevops.cn
+NGINX_BIN = /usr/local/openresty/nginx/sbin/nginx #指定openresty可执行文件位置
+NGINX_VHOSTS = /usr/local/openresty/nginx/conf/vhosts/ #指定虚拟主机配置文件位置
+API_SERVERS = 127.0.0.1, 你自己的IP  #指定管理后台的IP地址，加上你自己的服务器IP即可
+
+[database]
+USER = 数据库用户名
+PASSWD = 数据库密码
+HOST = 127.0.0.1:3306 #数据库地址和端口  ,数据库用来保存用户和自定义规则信息
+NAME = waf #数据库名
+
+[waf]
+RULE_PATH = /usr/local/openresty/nginx/conf/x-waf/rules/</code></pre></div>
+<p>已后台进程方式启动管理后台，启动后会自动往MySQL数据库写入配置表，如果没有配置好MySQL，管理后台会因为找不到数据库里面的用户而无法登录</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>nohup ./server &gt;&gt; x-waf.log 2&gt;&amp;1 &amp;
+tail -f x-waf.log 查看运行日志和启动启动</code></pre></div>
+<p>然后就可以访问管理后台 http://ip:5000/login/ 了，
+默认的管理后台用户是admin，密码是 <a href="mailto:x@xsec.io" rel="external" target="_blank">x@xsec.io</a>，生产环境一点要修改账户密码</p>
+<p>测试默认规则是否拦截（select.+(from|limit)	）
+http://10.10.0.117/?id=select * from dual
+<a href="#R-image-0a976c00b7f0a63b919c79fb8768113f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/5d14778c450acdf836c6783728e6db17.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0a976c00b7f0a63b919c79fb8768113f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/5d14778c450acdf836c6783728e6db17.png"></a></p>
+<p>在管理后台新增规则，比如参数数有helloworld直接拦截
+<a href="#R-image-6e4937c7cb44848c2fb6956cdc9ea276" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/7fd5b7b4f51479f68d522ed444437566.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6e4937c7cb44848c2fb6956cdc9ea276"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/7fd5b7b4f51479f68d522ed444437566.png"></a>
+http://10.10.0.117/?id=hellowold发现拦击</p>
+<h2 id="开发环境安装">开发环境安装</h2>
+<h3 id="nginx源码编译">nginx源码编译</h3>
+<p>nginx源码在clion编译参考：<a href="https://blog.csdn.net/liaomin416100569/article/details/105127557?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166910311916800192249628%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&request_id=166910311916800192249628&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-105127557-null-null.nonecase&utm_term=clion&spm=1018.2226.3001.4450" rel="external" target="_blank">nginx编译</a>
+请确保按照上面的编译通过nginx能正常运行，这里假设
+我的window代码安装在：D:\code1\nginx-master
+cygwin显示的路径为：/cygdrive/d/code1/nginx-master</p>
+<h3 id="安装luajit">安装luajit</h3>
+<p>官网：http://luajit.org/install.html
+下载openresty最新2.1版本：不要下载luajit官网的，否则报错http://luajit.org/download.html</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>git clone https://github.com/openresty/luajit2</code></pre></div>
+<p>Cygwin64 Terminal进入解压目录,编译</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code> cd luajit2 &amp;&amp; make install PREFIX=/usr/local/LuaJIT </code></pre></div>
+<p>编译过程注意 cygwin下编译出的是dll，实际命令中 还是执行拷贝的是so文件</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>$ make install PREFIX=/usr/local/LuaJIT
+==== Installing LuaJIT 2.1.0-beta3 to /usr/local/LuaJIT ====
+mkdir -p /usr/local/LuaJIT/bin /usr/local/LuaJIT/lib /usr/local/LuaJIT/include/luajit-2.1 /usr/local/LuaJIT/share/man/man1 /usr/local/LuaJIT/lib/pkgconfig /usr/local/LuaJIT/share/luajit-2.1.0-beta3/jit /usr/local/LuaJIT/share/lua/5.1 /usr/local/LuaJIT/lib/lua/5.1
+cd src &amp;&amp; install -m 0755 luajit /usr/local/LuaJIT/bin/luajit-2.1.0-beta3
+cd src &amp;&amp; test -f libluajit.a &amp;&amp; install -m 0644 libluajit.a /usr/local/LuaJIT/lib/libluajit-5.1.a || :
+rm -f /usr/local/LuaJIT/lib/libluajit-5.1.so.2.1.0 /usr/local/LuaJIT/lib/libluajit-5.1.so /usr/local/LuaJIT/lib/libluajit-5.1.so.2
+cd src &amp;&amp; test -f libluajit.so &amp;&amp; \
+  install -m 0755 libluajit.so /usr/local/LuaJIT/lib/libluajit-5.1.so.2.1.0 &amp;&amp; \
+  ldconfig -n /usr/local/LuaJIT/lib &amp;&amp; \
+  ln -sf libluajit-5.1.so.2.1.0 /usr/local/LuaJIT/lib/libluajit-5.1.so &amp;&amp; \
+  ln -sf libluajit-5.1.so.2.1.0 /usr/local/LuaJIT/lib/libluajit-5.1.so.2 || :
+cd etc &amp;&amp; install -m 0644 luajit.1 /usr/local/LuaJIT/share/man/man1
+cd etc &amp;&amp; sed -e &#34;s|^prefix=.*|prefix=/usr/local/LuaJIT|&#34; -e &#34;s|^multilib=.*|multilib=lib|&#34; luajit.pc &gt; luajit.pc.tmp &amp;&amp; \
+  install -m 0644 luajit.pc.tmp /usr/local/LuaJIT/lib/pkgconfig/luajit.pc &amp;&amp; \
+  rm -f luajit.pc.tmp
+cd src &amp;&amp; install -m 0644 lua.h lualib.h lauxlib.h luaconf.h lua.hpp luajit.h /usr/local/LuaJIT/include/luajit-2.1
+cd src/jit &amp;&amp; install -m 0644 bc.lua bcsave.lua dump.lua p.lua v.lua zone.lua dis_x86.lua dis_x64.lua dis_arm.lua dis_arm64.lua dis_arm64be.lua dis_ppc.lua dis_mips.lua dis_mipsel.lua dis_mips64.lua dis_mips64el.lua vmdef.lua /usr/local/LuaJIT/share/luajit-2.1.0-beta3/jit
+==== Successfully installed LuaJIT 2.1.0-beta3 to /usr/local/LuaJIT ====</code></pre></div>
+<p>看到这句
+rm -f /usr/local/LuaJIT/lib/libluajit-5.1.so.2.1.0 /usr/local/LuaJIT/lib/libluajit-5.1.so /usr/local/LuaJIT/lib/libluajit-5.1.so.2
+最后拷贝lib文件到/usr/local/LuaJIT/lib/libluajit-5.1.so ，但实际src下生成的是cyglua51.dll</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>cp src/cyglua51.dll /usr/local/LuaJIT/lib/libluajit-5.1.so
+cp src/cyglua51.dll /usr/local/LuaJIT/lib/libluajit-5.1.a</code></pre></div>
+<p>/etc/profile添加两个环境变量</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>export LUAJIT_LIB=/usr/local/LuaJIT/lib
+export LUAJIT_INC=/usr/local/LuaJIT/include/luajit-2.1</code></pre></div>
+<p>生效：source /etc/profile</p>
+<h3 id="添加lua-nginx-module">添加lua-nginx-module</h3>
+<p>下载ngx_devel_kit源代码到nginx源代码extend目录
+<a href="https://github.com/simplresty/ngx_devel_kit/tags" rel="external" target="_blank">https://github.com/simplresty/ngx_devel_kit/tags</a>
+下载lua-nginx-module源代码到ngxin的extend目录
+<a href="https://github.com/openresty/lua-nginx-module/tags" rel="external" target="_blank">https://github.com/openresty/lua-nginx-module/tags</a>
+<a href="#R-image-519a9e050cd7842691b2612f13cdad2f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/925330c0e42d8cd3713685bb339318b8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-519a9e050cd7842691b2612f13cdad2f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/925330c0e42d8cd3713685bb339318b8.png"></a></p>
+<p>nginx下执行</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>./auto/configure --with-ld-opt=&#34;-Wl,-rpath,/usr/local/LuaJIT/lib&#34; --add-module=./extend/ngx_devel_kit-0.3.0 --add-module=./extend/lua-nginx-module-0.10.22</code></pre></div>
+<p>生成CmakeLists.txt中添加Makefile中的編譯參數
+<a href="#R-image-8799e9380a94267cfd01d978f26977b6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/01493cc8b975f356816618e9aa2f9c13.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8799e9380a94267cfd01d978f26977b6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/01493cc8b975f356816618e9aa2f9c13.png"></a></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>set(CMAKE_C_FLAGS &#34;-I/usr/local/LuaJIT/include/luajit-2.1  -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g  -DNDK_SET_VAR&#34;)</code></pre></div>
+<p><a href="#R-image-61044b0b970afd3cee95df984c6b32d9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/0d8f08a1c5b6bbe73af93c14debea19d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-61044b0b970afd3cee95df984c6b32d9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/0d8f08a1c5b6bbe73af93c14debea19d.png"></a>
+clion运行看不到错误，编译通过后在cygwin运行，nginx运行</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>liaomin@DESKTOP-FSEDE3P /cygdrive/d/code1/nginx-master/objs
+$ ./nginx.exe -c /cygdrive/d/code1/nginx-master/conf/nginx.conf
+D:/code1/nginx-master/objs/nginx.exe: error while loading shared libraries: cyglua51.dll: cannot open shared object file: No such file or directory</code></pre></div>
+<p>拷贝luajit/src目录下cyglua51.dll到nginx源代码objs目录,如果在idea中需要拷贝到cmake-build-debug中，继续运行</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>liaomin@DESKTOP-FSEDE3P /cygdrive/d/code1/nginx-master/objs
+$ ./nginx.exe -c /cygdrive/d/code1/nginx-master/conf/nginx.conf
+nginx: [alert] detected a LuaJIT version which is not OpenResty&#39;s; many optimizations will be disabled and performance will be compromised (see https://github.com/openresty/luajit2 for OpenResty&#39;s LuaJIT or, even better, consider using the OpenResty releases from https://openresty.org/en/download.html)
+nginx: [alert] failed to load the &#39;resty.core&#39; module (https://github.com/openresty/lua-resty-core); ensure you are using an OpenResty release from https://openresty.org/en/download.html (reason: module &#39;resty.core&#39; not found:
+        no field package.preload[&#39;resty.core&#39;]
+        no file &#39;./resty/core.lua&#39;
+        no file &#39;/usr/local/share/luajit-2.1.0-beta3/resty/core.lua&#39;
+        no file &#39;/usr/local/share/lua/5.1/resty/core.lua&#39;
+        no file &#39;/usr/local/share/lua/5.1/resty/core/init.lua&#39;
+        no file &#39;./resty/core.so&#39;
+        no file &#39;/usr/local/lib/lua/5.1/resty/core.so&#39;
+        no file &#39;/usr/local/lib/lua/5.1/loadall.so&#39;
+        no file &#39;./resty.so&#39;
+        no file &#39;/usr/local/lib/lua/5.1/resty.so&#39;
+        no file &#39;/usr/local/lib/lua/5.1/loadall.so&#39;) in /cygdrive/d/code1/nginx-master/conf/nginx.conf:118</code></pre></div>
+<p>说明运行需要resty.core，继续参考https://github.com/openresty/lua-nginx-module#installation
+<a href="#R-image-d61314359f309ceb97748b853c750622" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/19cb64302485abaca9b2aabfcf3dd5c0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d61314359f309ceb97748b853c750622"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/19cb64302485abaca9b2aabfcf3dd5c0.png"></a>
+lua-resty-core和lua-resty-lrucache其实可以理解为lua-nginx-module调用初始化的一些lua脚本，负责初始化ngx变化调用nginx。
+默认安装的目录：</p>
+<h3 id="安装lua-resty-core">安装lua-resty-core</h3>
+<p>安装lua-resty-core,下载源码后，默认安装在/usr/local/lib/下</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>liaomin@DESKTOP-FSEDE3P /cygdrive/d/test/lua-resty-core-master
+$ make install
+install -d /usr/local/lib/lua//resty/core/
+install -d /usr/local/lib/lua//ngx/
+install -d /usr/local/lib/lua//ngx/ssl
+install lib/resty/*.lua /usr/local/lib/lua//resty/
+install lib/resty/core/*.lua /usr/local/lib/lua//resty/core/
+install lib/ngx/*.lua /usr/local/lib/lua//ngx/
+install lib/ngx/ssl/*.lua /usr/local/lib/lua//ngx/ssl/</code></pre></div>
+<h3 id="安装lua-resty-lrucache">安装lua-resty-lrucache</h3>
+<p>安装lua-resty-lrucache,下载源码后，默认安装在/usr/local/lib/下</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>$ make install PREFIX=usr/local   //这里注意前面别加/否则会多个/路径会报错
+install -d /usr/local/lib/lua//resty/lrucache
+install lib/resty/*.lua /usr/local/lib/lua//resty/
+install lib/resty/lrucache/*.lua /usr/local/lib/lua//resty/lrucache/</code></pre></div>
+<h3 id="解决初始化脚本兼容异常">解决初始化脚本兼容异常</h3>
+<p>lua脚本中某些调用linux系统的变量在window中不存在，导致异常，需要做处理。
+再次启动nginx，报错</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>D:\code1\nginx-master\cmake-build-debug\nginx.exe -c /cygdrive/d/code1/nginx-master/conf/nginx.conf
+nginx: [alert] failed to load the &#39;resty.core&#39; module (https://github.com/openresty/lua-resty-core); ensure you are using an OpenResty release from https://openresty.org/en/download.html (reason: module &#39;resty.core&#39; not found:
+	no field package.preload[&#39;resty.core&#39;]
+	no file &#39;./resty/core.lua&#39;
+	no file &#39;/usr/local/LuaJIT/share/luajit-2.1.0-beta3/resty/core.lua&#39;
+	no file &#39;/usr/local/share/lua/5.1/resty/core.lua&#39;
+	no file &#39;/usr/local/share/lua/5.1/resty/core/init.lua&#39;
+	no file &#39;/usr/local/LuaJIT/share/lua/5.1/resty/core.lua&#39;
+	no file &#39;/usr/local/LuaJIT/share/lua/5.1/resty/core/init.lua&#39;
+	no file &#39;./resty/core.so&#39;
+	no file &#39;/usr/local/lib/lua/5.1/resty/core.so&#39;
+	no file &#39;/usr/local/LuaJIT/lib/lua/5.1/resty/core.so&#39;
+	no file &#39;/usr/local/lib/lua/5.1/loadall.so&#39;
+	no file &#39;./resty.so&#39;
+	no file &#39;/usr/local/lib/lua/5.1/resty.so&#39;
+	no file &#39;/usr/local/LuaJIT/lib/lua/5.1/resty.so&#39;
+	no file &#39;/usr/local/lib/lua/5.1/loadall.so&#39;) in /cygdrive/d/code1/nginx-master/conf/nginx.conf:125</code></pre></div>
+<p>说是没有安装resty.core,但是已经安装了，需要在nginx.conf配置初始化lua脚本，http快中添加：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>   lua_package_path &#34;/usr/local/lib/lua/?.lua;;&#34;;</code></pre></div>
+<p>继续启动，然后又报错</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>D:\code1\nginx-master\cmake-build-debug\nginx.exe -c /cygdrive/d/code1/nginx-master/conf/nginx.conf
+nginx: [alert] failed to load the &#39;resty.core&#39; module (https://github.com/openresty/lua-resty-core); ensure you are using an OpenResty release from https://openresty.org/en/download.html (reason: /usr/local/lib/lua/resty/core/worker.lua:35: No such file or directory) in /cygdrive/d/code1/nginx-master/conf/nginx.conf:125</code></pre></div>
+<p>worker.lua:35报错，注释掉第35行。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>    ngx_lua_ffi_worker_id = C.ngx_http_lua_ffi_worker_id
+    ngx_lua_ffi_worker_pid = C.ngx_http_lua_ffi_worker_pid
+    --ngx_lua_ffi_worker_pids = C.ngx_http_lua_ffi_worker_pids
+    ngx_lua_ffi_worker_count = C.ngx_http_lua_ffi_worker_count
+    ngx_lua_ffi_worker_exiting = C.ngx_http_lua_ffi_worker_exiting</code></pre></div>
+<p>继续运行，报错</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>D:\code1\nginx-master\cmake-build-debug\nginx.exe -c /cygdrive/d/code1/nginx-master/conf/nginx.conf
+nginx: [alert] failed to load the &#39;resty.core&#39; module (https://github.com/openresty/lua-resty-core); ensure you are using an OpenResty release from https://openresty.org/en/download.html (reason: /usr/local/lib/lua/resty/core/time.lua:47: No such file or directory) in /cygdrive/d/code1/nginx-master/conf/nginx.conf:125</code></pre></div>
+<p>注释掉time.lua:47</p>
+<p>修改配置后，可以正常启动，添加测试lua脚本</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>location /hello {
+           default_type &#39;text/plain&#39;;
+           content_by_lua &#39;ngx.say(&#34;hello, lua&#34;)&#39;;
+           charset utf-8;
+        }</code></pre></div>
+<p>访问http://localhost/hello显示hello,lua</p>
+<h3 id="x-waf源码安装">x-waf源码安装</h3>
+<p>将x-waf源码拷贝到conf目录下，将config.lua的config_rule_dir配置为绝对路径
+<a href="#R-image-c9952c7c25d5e207861882e6cb85cd4f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/35a7c8808b560eb427fecf8517efcee9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c9952c7c25d5e207861882e6cb85cd4f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/35a7c8808b560eb427fecf8517efcee9.png"></a>
+拷贝x-waf下修改nginx_conf/nginx.conf到项目conf/nginx中，将x-waf lua加入到lua_package_path</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#user  nobody;
+worker_processes  1;
+
+error_log  /cygdrive/d/code1/nginx-master/objs/logs/error.log;
+#error_log  logs/error.log  notice;
+error_log  /cygdrive/d/code1/nginx-master/objs/logs/info.log  info;
+
+#pid        logs/nginx.pid;
+
+
+
+events {
+    worker_connections  24;
+}
+daemon off;
+master_process off;
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  &#39;$remote_addr - $remote_user [$time_local] &#34;$request&#34; &#39;
+    #                  &#39;$status $body_bytes_sent &#34;$http_referer&#34; &#39;
+    #                  &#39;&#34;$http_user_agent&#34; &#34;$http_x_forwarded_for&#34;&#39;;
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+    lua_package_path &#34;/cygdrive/d/code1/nginx-master/conf/x-waf/?.lua;/usr/local/lib/lua/?.lua;;&#34;;
+    #gzip  on;
+    init_by_lua_file /cygdrive/d/code1/nginx-master/conf/x-waf/init.lua;
+    access_by_lua_file /cygdrive/d/code1/nginx-master/conf/x-waf/access.lua;
+    server {
+        listen       80;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            proxy_pass http://192.168.1.35:8888/;    #这里随便代理到一个可用的web站点，http://www.baidu.com也行
+            #root   html;
+            #index  index.html index.htm;
+        }
+        location /hello {
+           default_type &#39;text/plain&#39;;
+           content_by_lua &#39;ngx.say(&#34;hello, lua&#34;)&#39;;
+           charset utf-8;
+        }
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}</code></pre></div>
+<p>注意因为window不支持共享内存，cc_attack_check这个是使用ngx.shared.limit，注释掉waf.lua _M.check()函数中_M.cc_attack_check()
+<a href="#R-image-ce1a73561683a9b2b41190e13e0f7bc1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/3d0ca03a797317d7cad77a0c81ab45af.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ce1a73561683a9b2b41190e13e0f7bc1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/3d0ca03a797317d7cad77a0c81ab45af.png"></a></p>
+<h3 id="lua-cjson安装">lua-cjson安装</h3>
+<p>配置好后，访问nginx直接错误，缺少cjson.safe模块，需要安装
+cjson官网：https://github.com/mpx/lua-cjson/tags ,下载最新的2.1.0 tags
+修改makefile</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#CJSON_LDFLAGS =     -shared   指定luajit的lib目录
+CJSON_LDFLAGS =     -shared -L/usr/local/LuaJIT/lib -llua51
+#LUA_INCLUDE_DIR =   $(PREFIX)/include 指定头文件目录
+LUA_INCLUDE_DIR =   /usr/local/LuaJIT/include/luajit-2.1</code></pre></div>
+<p>修改完成后依然有个错误</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>make PREFIX=/usr/local/LuaJIT/
+cc -c -O3 -Wall -pedantic -DNDEBUG  -I/usr/local/include -I/usr/local/LuaJIT/include/luajit-2.1 -fpic -o lua_cjson.o lua_cjson.c
+lua_cjson.c:1299:1: 错误：对‘luaL_setfuncs’的静态声明出现在非静态声明之后
+ 1299 | {</code></pre></div>
+<p>修改lua_cjson.c
+找到行数luaL_setfuncs  去掉static  编译通过</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>make PREFIX=/usr/local/LuaJIT/ install</code></pre></div>
+<h3 id="验证">验证</h3>
+<p>访问：http://localhost/?id=select * from dual
+<a href="#R-image-ff85bf5c2d7f3bfa991ad9fa378b2d17" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/a4f7299f905e035bd322f0e2c93331f0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ff85bf5c2d7f3bfa991ad9fa378b2d17"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_11.md.images/a4f7299f905e035bd322f0e2c93331f0.png"></a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/gcc/index.html"><a class="padding" href="/docs/programming/languages/gcc/index.html">c语言</a><ul id="R-subsections-e8c9b5cff4c7849bafc19d21e0433f7f" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_01/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01/index.html">linux下gcc编程01-gcc工具安装和使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_02/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_02/index.html">linux下gcc编程02-gdb调试工具使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_03/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_03/index.html">linux下gcc编程03-make工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_04/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_04/index.html">linux下gcc编程04-cmake工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_05/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_05/index.html">linux下gcc编程05-window下开发工具安装</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_06/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_06/index.html">linux下gcc编程06-c语言参考手册</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_07/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_07/index.html">linux下gcc编程07-使用linux下c库函数</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_08/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_08/index.html">linux下gcc编程08-编译linux内核</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_09/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_09/index.html">linux下gcc编程09-编写内核helloworld模块</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_10/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_10/index.html">linux下gcc编程10-clion编译调试nginx</a></li>
+            <li class="active " data-nav-id="/docs/programming/languages/gcc/linuxgcc_11/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_11/index.html">linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_12/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_12/index.html">linux下gcc编程12-window下clion编译调试redis7.0</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/assembly/index.html"><a class="padding" href="/docs/programming/languages/assembly/index.html">汇编语言</a><ul id="R-subsections-664e07814ed6bbd77b351b341bff28e6" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

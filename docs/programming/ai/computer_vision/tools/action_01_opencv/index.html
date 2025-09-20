@@ -77,26 +77,26 @@ import matplotlibimport matplotlib.pyplot as pltmatplotlib.rcParams[&#39;font.
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="1715">
     <title>图像处理实战01-OpenCV 入门指南 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -150,7 +150,7 @@ import matplotlibimport matplotlib.pyplot as pltmatplotlib.rcParams[&#39;font.
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/computer_vision/tools/action_01_opencv/index.html">
     <div id="R-body" class="default-animation">
@@ -387,11 +387,11 @@ img = cv2.merge([b, g, r])</code></pre></div>
 img2 = cv2.imread(&#39;test2.jpg&#39;, cv2.IMREAD_GRAYSCALE)
 img = cv2.addWeighted(img1, 1, img2, 2, 0)</code></pre></div>
 <p>BGR色彩空间是基于三基色而言的，三基色指的是红色、绿色和蓝色。
-<a href="#R-image-fb174df3403ac74c3dd3cc3c2cf52406" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/e418940029f5d62cbedb1403325f5ef7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-fb174df3403ac74c3dd3cc3c2cf52406"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/e418940029f5d62cbedb1403325f5ef7.png"></a></p>
+<a href="#R-image-8ad73450785278374dc114352370bdb4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/e418940029f5d62cbedb1403325f5ef7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8ad73450785278374dc114352370bdb4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/e418940029f5d62cbedb1403325f5ef7.png"></a></p>
 <p>而HSV色彩空间则是基于色调、饱和度和亮度而言的。
-<a href="#R-image-20a63505b74d77557b2e71701a672f9c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/fc83a7d743e099a25e193e7de7ba0978.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-20a63505b74d77557b2e71701a672f9c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/fc83a7d743e099a25e193e7de7ba0978.png"></a></p>
+<a href="#R-image-13de5ede98bc4cebe88c9b482b9a6bc2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/fc83a7d743e099a25e193e7de7ba0978.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-13de5ede98bc4cebe88c9b482b9a6bc2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/fc83a7d743e099a25e193e7de7ba0978.png"></a></p>
 <p>其中，色调（H）是指光的颜色，例如，彩虹中的赤、橙、黄、绿、青、蓝、紫分别表示不同的色调，在OpenCV中，色调在区间[0, 180]内取值。例如，代表红色、黄色、绿色和蓝色的色调值分别为0、30、60和120。
 饱和度（S）是指色彩的深浅。在OpenCV中，饱和度在区间[0, 255]内取值。当饱和度为0时，图像将变为灰度图像。
 亮度（V）是指光的明暗。与饱和度相同，在OpenCV中，亮度在区间[0, 255]内取值。亮度值越大，图像越亮；当亮度值为0时，图像呈纯黑色</p>
@@ -402,8 +402,8 @@ img = cv2.addWeighted(img1, 1, img2, 2, 0)</code></pre></div>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>resized = cv2.resize(img, (int(img.shape[1]/2), int(img.shape[0]/2)))</code></pre></div>
 <h4 id="仿射变换">仿射变换</h4>
 <p>仿射变换是一种仅在二维平面中发生的几何变形，变换之后的图像仍然可以保持直线的“平直性”和“平行性”，也就是说原来的直线变换之后还是直线，平行线变换之后还是平行线。常见的仿射变换效果如图所示，包含平移、旋转和倾斜。
-<a href="#R-image-a5ed3133060e8009e4e50f31479399ed" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/87f85ea0752e3a839368627c15f19c64.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a5ed3133060e8009e4e50f31479399ed"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/87f85ea0752e3a839368627c15f19c64.png"></a>
+<a href="#R-image-4a6c46d8dd9954094a1f28295d4483eb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/87f85ea0752e3a839368627c15f19c64.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4a6c46d8dd9954094a1f28295d4483eb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/87f85ea0752e3a839368627c15f19c64.png"></a>
 OpenCV通过cv2. warpAffine()方法实现仿射变换效果，其语法如下：</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code> dst = cv2.warpAffine(src, M, dsize, flags, borderMode, borderValue)</code></pre></div>
 <p>参数说明：
@@ -431,8 +431,8 @@ M = [[1, 0, 水平移动的距离],[0, 1, 垂直移动的距离]]
 新y = 原x × 0 + 原y × 1 + 垂直移动的距离 = 原y + 垂直移动的距离</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>M = np.float32([[1, 0, 100], [0, 1, 50]])
 translated = cv2.warpAffine(img, M, (img.shape[1], img.shape[0]))</code></pre></div>
-<p><a href="#R-image-eb8c5a28eaa279acf6843de886992cd6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cb7138b100213cd33acc0be1c230451b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-eb8c5a28eaa279acf6843de886992cd6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cb7138b100213cd33acc0be1c230451b.png"></a></p>
+<p><a href="#R-image-21b74df43103590861d3cb0244f604de" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cb7138b100213cd33acc0be1c230451b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-21b74df43103590861d3cb0244f604de"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cb7138b100213cd33acc0be1c230451b.png"></a></p>
 <h5 id="旋转图像">旋转图像</h5>
 <p>首先获取了img图像对象的行数和列数，并分别赋值给了rows和cols变量。接着，使用cv2.getRotationMatrix2D函数，生成了一个旋转矩阵M，
 其中第一个参数是旋转中心点的坐标，这里是图像中心点(cols/2, rows/2)；
@@ -441,12 +441,12 @@ translated = cv2.warpAffine(img, M, (img.shape[1], img.shape[0]))</code></pre></
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>rows, cols = img.shape[:2]
 M = cv2.getRotationMatrix2D((cols/2, rows/2), 30, 1)
 rotated = cv2.warpAffine(img, M, (cols, rows))</code></pre></div>
-<p><a href="#R-image-427e197a77bf76bbf311223780ba8806" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/5c0c2701114bbf256c8ae5fc282924e7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-427e197a77bf76bbf311223780ba8806"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/5c0c2701114bbf256c8ae5fc282924e7.png"></a></p>
+<p><a href="#R-image-265b411e64ad3dba9459124444cb8751" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/5c0c2701114bbf256c8ae5fc282924e7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-265b411e64ad3dba9459124444cb8751"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/5c0c2701114bbf256c8ae5fc282924e7.png"></a></p>
 <h5 id="倾斜图像">倾斜图像</h5>
 <p>OpenCV需要定位图像的3个点来计算倾斜效果，3个点的位置如图所示，这3个点分别是“左上角”点A、“右上角”点B和“左下角”点C。OpenCV会根据这3个点的位置变化来计算其他像素的位置变化。因为要保证图像的“平直性”和“平行性”，所以不需要“右下角”的点做第4个参数，右下角这个点的位置根据A、B、C 3点的变化自动计算得出。
-<a href="#R-image-c7a396044e43132b94d9d17ba5c1ed69" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/c5ffc84479919adb5b0a48ec954ed925.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c7a396044e43132b94d9d17ba5c1ed69"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/c5ffc84479919adb5b0a48ec954ed925.png"></a></p>
+<a href="#R-image-1d566ff5776d59f6976532f26b722430" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/c5ffc84479919adb5b0a48ec954ed925.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1d566ff5776d59f6976532f26b722430"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/c5ffc84479919adb5b0a48ec954ed925.png"></a></p>
 <blockquote>
 <p>“平直性”是指图像中的直线在经过仿射变换之后仍然是直线。“平行性”是指图像中的平行线在经过仿射变换之后仍然是平行线。
 让图像倾斜也是需要通过M矩阵实现的，但得出这个矩阵需要做很复杂的运算，于是OpenCV提供了getAffineTransform()方法来自动计算倾斜图像的M矩阵。getRotationMatrix2D()方法的语法如下：
@@ -456,8 +456,8 @@ M = cv2.getAffineTransform(src, dst)
 　- dst：倾斜图像的3个点坐标，格式与src一样。
 返回值说明：</p>
 <p>　- M：getAffineTransform()方法计算出的仿射矩阵。
-<a href="#R-image-2bfef7871eac60f187194b4ef22f599e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/d50a54aedcddb63cd04f8ae1866e8d6d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2bfef7871eac60f187194b4ef22f599e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/d50a54aedcddb63cd04f8ae1866e8d6d.png"></a></p>
+<a href="#R-image-899fd49e16d6762743f10ca93ef0cd67" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/d50a54aedcddb63cd04f8ae1866e8d6d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-899fd49e16d6762743f10ca93ef0cd67"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/d50a54aedcddb63cd04f8ae1866e8d6d.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>rows,cols=len(image),len(image[0])
 src=np.float32([[0,0],[cols-1,0],[0,rows-1]])
 dst=np.float32([[0,50],[cols-1,0],[0,rows-1]])
@@ -469,8 +469,8 @@ plt.show()</code></pre></div>
 <h5 id="透视图像">透视图像</h5>
 <p>如果说仿射是让图像在二维平面中变形，那么透视就是让图像在三维空间中变形。从不同的角度观察物体，会看到不同的变形画面，例如，矩形会变成不规则的四边形，直角会变成锐角或钝角，圆形会变成椭圆，等等。这种变形之后的画面就是透视图。</p>
 <p>从图像的底部观察图），眼睛距离图像底部较近，所以图像底部宽度不变，但眼睛距离图像顶部较远，图像顶部宽度就会等比缩小，于是观察者就会看到所示的透视效果。
-<a href="#R-image-4d260a243dc058bf13b5d803b6b66f7e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/25922794292362528de561a70cd7dbd8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4d260a243dc058bf13b5d803b6b66f7e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/25922794292362528de561a70cd7dbd8.png"></a>
+<a href="#R-image-6a4e8e80879dbc92f2319af54a211083" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/25922794292362528de561a70cd7dbd8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6a4e8e80879dbc92f2319af54a211083"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/25922794292362528de561a70cd7dbd8.png"></a>
 OpenCV中需要通过定位图像的4个点计算透视效果，4个点的位置如图7.16所示。OpenCV根据这4个点的位置变化来计算其他像素的位置变化。透视效果不能保证图像的“平直性”和“平行性”。
 warpPerspective()方法也需要通过M矩阵计算透视效果，但得出这个矩阵需要做很复杂的运算，于是OpenCV提供了getPerspectiveTransform()方法自动计算M矩阵。getPerspectiveTransform()方法的语法如下：</p>
 <pre><code> M = cv2.getPerspectiveTransform(src, dst,)
@@ -490,12 +490,12 @@ dImag=cv2.warpPerspective(image,M,(cols,rows))
 plt.imshow(dImag)
 plt.title(&#34;透视&#34;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-1b85baf6d76b23a02bad00a4d530c67b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/373a464ed69b99ce2b872b3e4c2c9a29.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1b85baf6d76b23a02bad00a4d530c67b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/373a464ed69b99ce2b872b3e4c2c9a29.png"></a></p>
+<p><a href="#R-image-eec9d0e23f7d82d9fd27101ab7a0478f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/373a464ed69b99ce2b872b3e4c2c9a29.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-eec9d0e23f7d82d9fd27101ab7a0478f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/373a464ed69b99ce2b872b3e4c2c9a29.png"></a></p>
 <h3 id="阈值处理">阈值处理</h3>
 <p>阈值是图像处理中一个很重要的概念，类似一个“像素值的标准线”。所有像素值都与这条“标准线”进行比较，最后得到3种结果：像素值比阈值大、像素值比阈值小或像素值等于阈值。程序根据这些结果将所有像素进行分组，然后对某一组像素进行“加深”或“变淡”操作，使得整个图像的轮廓更加鲜明，更容易被计算机或肉眼识别。
-<a href="#R-image-01be197202548787d7645469dc62280e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/594e402ae675ccb451f4a96b66706255.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-01be197202548787d7645469dc62280e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/594e402ae675ccb451f4a96b66706255.png"></a></p>
+<a href="#R-image-699285c3c2b577c0ca85656f6e8247dd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/594e402ae675ccb451f4a96b66706255.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-699285c3c2b577c0ca85656f6e8247dd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/594e402ae675ccb451f4a96b66706255.png"></a></p>
 <h4 id="阈值处理函数">阈值处理函数</h4>
 <p>图像处理的过程中，阈值的使用使得图像的像素值更单一，进而使得图像的效果更简单。首先，把一幅彩色图像转换为灰度图像，这样图像的像素值的取值范围即可简化为0~255。然后，通过阈值使得转换后的灰度图像呈现出只有纯黑色和纯白色的视觉效果。例如，当阈值为127时，把小于127的所有像素值都转换为0（即纯黑色），把大于127的所有像素值都转换为255（即纯白色）。虽然会丢失一些灰度细节，但是会更明显地保留灰度图像主体的轮廓。</p>
 <p>阈值处理在计算机视觉技术中占有十分重要的位置，它是很多高级算法的底层处理逻辑之一。因为二值图像会忽略细节，放大特征，而很多高级算法要根据物体的轮廓来分析物体特征，所以二值图像非常适合做复杂的识别运算。在进行识别运算之前，应先将图像转为灰度图像，再进行二值化处理，这样就得到了算法所需要的物体（大致）轮廓图像。</p>
@@ -536,8 +536,8 @@ plt.subplot(122)
 plt.imshow(dst,cmap=&#34;gray&#34;)
 plt.title(&#34;二值化图&#34;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-5f1d45b5e9259ab60ca1684511ec54bf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b7a7543c092ee40260e58b2d09daf1de.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5f1d45b5e9259ab60ca1684511ec54bf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b7a7543c092ee40260e58b2d09daf1de.png"></a></p>
+<p><a href="#R-image-445d64ac01482d3fee3823b1db8e3bf0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b7a7543c092ee40260e58b2d09daf1de.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-445d64ac01482d3fee3823b1db8e3bf0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b7a7543c092ee40260e58b2d09daf1de.png"></a></p>
 <blockquote>
 <p>注意像素值越大表示越白，越小越黑</p></blockquote>
 <h4 id="反二值化处理">反二值化处理</h4>
@@ -553,12 +553,12 @@ plt.subplot(122)
 plt.imshow(dst,cmap=&#34;gray&#34;)
 plt.title(&#34;二值化图&#34;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-0a930cbb4dff4c8095ca81ed4ada6a5b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/d08e65a26e186e6718f46fe4774a15d8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0a930cbb4dff4c8095ca81ed4ada6a5b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/d08e65a26e186e6718f46fe4774a15d8.png"></a></p>
+<p><a href="#R-image-0f21c1f3526e5285dc55110c1121a92c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/d08e65a26e186e6718f46fe4774a15d8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0f21c1f3526e5285dc55110c1121a92c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/d08e65a26e186e6718f46fe4774a15d8.png"></a></p>
 <blockquote>
 <p>如果ocr一般都是通过反二值化突出文字，显示出黑底白字，然后膨胀（因为白色是比较大的数字）。
-<a href="#R-image-fdfac46e64345cf449f1373c81a8d049" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ab4a967bfd68b5dd562998235f5ab3b8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-fdfac46e64345cf449f1373c81a8d049"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ab4a967bfd68b5dd562998235f5ab3b8.png"></a></p></blockquote>
+<a href="#R-image-18fcec2fced97ddf0cea71f949420414" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ab4a967bfd68b5dd562998235f5ab3b8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-18fcec2fced97ddf0cea71f949420414"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ab4a967bfd68b5dd562998235f5ab3b8.png"></a></p></blockquote>
 <h4 id="零处理">零处理</h4>
 <h5 id="低于阈值零处理">低于阈值零处理</h5>
 <p>低于阈值零处理也叫低阈值零处理，该处理将低于或等于阈值的像素值变为0，大于阈值的像素值保持原值，计算公式如下：</p>
@@ -573,8 +573,8 @@ plt.subplot(122)
 plt.imshow(dst,cmap=&#34;gray&#34;)
 plt.title(&#34;低于阈值零[置黑]处理&#34;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-f310ac11dee3e1c010b20499bea99145" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ae87c7627a40df96533d41319486fe9c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f310ac11dee3e1c010b20499bea99145"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ae87c7627a40df96533d41319486fe9c.png"></a></p>
+<p><a href="#R-image-f789c2e1084c215c6c71e396edea35a7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ae87c7627a40df96533d41319486fe9c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f789c2e1084c215c6c71e396edea35a7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ae87c7627a40df96533d41319486fe9c.png"></a></p>
 <h5 id="超出阈值零处理">超出阈值零处理</h5>
 <p>超出阈值零处理也叫超阈值零处理，该处理将大于阈值的像素值变为0，小于或等于阈值的像素值保持原值。计算公式如下：</p>
 <pre><code> if 像素值 &lt;= 阈值: 像素值 = 原值
@@ -588,8 +588,8 @@ plt.subplot(122)
 plt.imshow(dst,cmap=&#34;gray&#34;)
 plt.title(&#34;超阈值零[置黑]处理&#34;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-ba1540b2fa318ca4b8feee4e4a51283a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bf6cc6e8de8189049243c1da5dc73559.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ba1540b2fa318ca4b8feee4e4a51283a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bf6cc6e8de8189049243c1da5dc73559.png"></a></p>
+<p><a href="#R-image-756ccbb49b8d7955c54dccb647dae7d0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bf6cc6e8de8189049243c1da5dc73559.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-756ccbb49b8d7955c54dccb647dae7d0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bf6cc6e8de8189049243c1da5dc73559.png"></a></p>
 <h4 id="截断处理">截断处理</h4>
 <p>截断处理也叫截断阈值处理，该处理将图像中大于阈值的像素值变为和阈值一样的值，小于或等于阈值的像素保持原值，其公式如下：</p>
 <pre><code> if 像素 &lt;= 阈值: 像素 = 原值
@@ -603,8 +603,8 @@ plt.subplot(122)
 plt.imshow(dst,cmap=&#34;gray&#34;)
 plt.title(&#34;截断阈值处理&#34;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-59dbd2f704dcbf9cc4733ee5fb4690b3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/1889531956462612c4ba9023495bbefb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-59dbd2f704dcbf9cc4733ee5fb4690b3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/1889531956462612c4ba9023495bbefb.png"></a></p>
+<p><a href="#R-image-54ab32f24cecbe0cdce73373843352a5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/1889531956462612c4ba9023495bbefb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-54ab32f24cecbe0cdce73373843352a5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/1889531956462612c4ba9023495bbefb.png"></a></p>
 <h4 id="自适应处理">自适应处理</h4>
 <p>OpenCV提供了一种改进的阈值处理技术：图像中的不同区域使用不同的阈值。把这种改进的阈值处理技术称作自适应阈值处理也称自适应处理，自适应阈值是根据图像中某一正方形区域内的所有像素值按照指定的算法计算得到的。与前面讲解的5种阈值处理类型相比，自适应处理能更好地处理明暗分布不均的图像，获得更简单的图像效果。</p>
 <p>OpenCV提供了adaptiveThresHold()方法对图像进行自适应处理，adaptiveThresHold()方法的语法如下：
@@ -637,8 +637,8 @@ guassImg=cv2.adaptiveThreshold(grayimage,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.
 plt.imshow(guassImg,cmap=&#34;gray&#34;)
 plt.title(&#34;ADAPTIVE_THRESH_MEAN_C图&#34;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-23ea421ceeb8c5c3f90adb9bc0970f75" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/c7d1004482248ffbff8e2751188ee0f9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-23ea421ceeb8c5c3f90adb9bc0970f75"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/c7d1004482248ffbff8e2751188ee0f9.png"></a></p>
+<p><a href="#R-image-b3cb724a05d9f4a8f0dfce3d6bb73265" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/c7d1004482248ffbff8e2751188ee0f9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b3cb724a05d9f4a8f0dfce3d6bb73265"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/c7d1004482248ffbff8e2751188ee0f9.png"></a></p>
 <h4 id="otsu方法">Otsu方法</h4>
 <p>前面5种阈值处理类型的过程中，每个实例设置的阈值都是127，并不是通过算法计算得到的。对于有些图像，当阈值被设置为127时，得到的效果并不好，这时就需要一个个去尝试，直到找到最合适的阈值。</p>
 <p>逐个寻找最合适的阈值不仅工作量大，而且效率低。为此，OpenCV提供了Otsu方法。Otsu方法能够遍历所有可能的阈值，从中找到最合适的阈值。</p>
@@ -665,8 +665,8 @@ _,ostuImg=cv2.threshold(grayimage,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 plt.imshow(ostuImg,cmap=&#34;gray&#34;)
 plt.title(&#34;OTSU图&#34;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-0c5c445a6f4e257e4b95fede6e0ca189" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ffaa3ec0dbdeb55392dd9de9bc7e7156.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0c5c445a6f4e257e4b95fede6e0ca189"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ffaa3ec0dbdeb55392dd9de9bc7e7156.png"></a></p>
+<p><a href="#R-image-8f79563f0096759fe0f51c15555733e1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ffaa3ec0dbdeb55392dd9de9bc7e7156.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8f79563f0096759fe0f51c15555733e1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/ffaa3ec0dbdeb55392dd9de9bc7e7156.png"></a></p>
 <h2 id="进阶篇">进阶篇</h2>
 <h3 id="模板匹配">模板匹配</h3>
 <p>模板是被查找目标的图像，查找模板在原始图像中的哪个位置的过程就叫模板匹配。OpenCV提供的matchTemplate()方法就是模板匹配方法，其语法如下：</p>
@@ -692,11 +692,11 @@ plt.show()</code></pre></div>
 - cv2.TM_CCOEFF：相关系数匹配法，计算两个图像的相关系数，值越大越匹配。
 - cv2.TM_CCOEFF_NORMED：标准相关系数匹配法，对结果进行标准化处理。</p>
 <p>假设原图
-<a href="#R-image-c2f55e640113cc93b58cbe84e7180b2b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/223bcc443f49fb9b874240a902e85a74.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c2f55e640113cc93b58cbe84e7180b2b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/223bcc443f49fb9b874240a902e85a74.jpeg"></a></p>
+<a href="#R-image-ffd306092974b3ab8d64096b46d155e2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/223bcc443f49fb9b874240a902e85a74.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ffd306092974b3ab8d64096b46d155e2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/223bcc443f49fb9b874240a902e85a74.jpeg"></a></p>
 <p>被匹配图
-<a href="#R-image-42c53325b0e34356ff5b76536d96df95" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/57b99842370b4d210dd19d5274094ef0.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-42c53325b0e34356ff5b76536d96df95"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/57b99842370b4d210dd19d5274094ef0.jpeg"></a></p>
+<a href="#R-image-b7dcc75d2020fdb5cf1664c3781d9c54" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/57b99842370b4d210dd19d5274094ef0.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b7dcc75d2020fdb5cf1664c3781d9c54"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/57b99842370b4d210dd19d5274094ef0.jpeg"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#多目标匹配
 image=cv2.imread(&#34;./images/2.jpg&#34;);
 grayImg=cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -711,18 +711,18 @@ for y in range(len(result)):
 
 plt.imshow(showImage,cmap=&#34;gray&#34;)</code></pre></div>
 <p>匹配到结果
-<a href="#R-image-f589a5d1aeb83a83674e61cb9458606e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/0f0d85cd09170114c1bdf3ea854fddd1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f589a5d1aeb83a83674e61cb9458606e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/0f0d85cd09170114c1bdf3ea854fddd1.png"></a></p>
+<a href="#R-image-a2c36a489990fa0e7e54933fc75c1cf3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/0f0d85cd09170114c1bdf3ea854fddd1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a2c36a489990fa0e7e54933fc75c1cf3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/0f0d85cd09170114c1bdf3ea854fddd1.png"></a></p>
 <h3 id="滤波器">滤波器</h3>
 <p>在尽量保留原图像信息的情况下，去除图像内噪声、降低细节层次信息等一系列过程，叫作图像的平滑处理（或图像的模糊处理）。实现平滑处理最常用的工具就是滤波器。通过调节滤波器的参数，可以控制图像的平滑程度。OpenCV提供了种类丰富的滤波器，每种滤波器使用的算法均不同，但都能对图像中的像素值进行微调，让图像呈现平滑效果。本章将介绍均值滤波器、中值滤波器、高斯滤波器和双边滤波器的使用方法。</p>
 <p>可能会出现这样一种像素，该像素与周围像素的差别非常大，导致从视觉上就能看出该像素无法与周围像素组成可识别的图像信息，降低了整个图像的质量。这种“格格不入”的像素就是图像的噪声。如果图像中的噪声都是随机的纯黑像素或者纯白像素，这样的噪声称作“椒盐噪声”或“盐噪声”。例如如图7.1所示的就是一幅只有噪声的图像，常称为“雪花点”。</p>
 <h4 id="均值滤波器">均值滤波器</h4>
 <p>以一个像素为核心，其周围像素可以组成一个n行n列（简称n×n）的矩阵，这样的矩阵结构在滤波操作中被称为“滤波核”。矩阵的行、列数决定了滤波核的大小，滤波核大小为3×3，包含9个像素；图滤波核大小为5×5，包含25个像素。
-<a href="#R-image-1401bd98071ecd37b3104f7047cc8da2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cd245ad08ffa7e1037e70ab60f38973e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1401bd98071ecd37b3104f7047cc8da2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cd245ad08ffa7e1037e70ab60f38973e.png"></a>
+<a href="#R-image-7460e6356868039afde171ed1f6e2374" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cd245ad08ffa7e1037e70ab60f38973e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7460e6356868039afde171ed1f6e2374"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cd245ad08ffa7e1037e70ab60f38973e.png"></a>
 均值滤波器（也称为低通滤波器）可以把图像中的每一个像素都当成滤波核的核心，然后计算核内所有像素的平均值，最后让核心像素值等于这个平均值。
-<a href="#R-image-5e0786e776c04b72e644551b59c142b2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/e8c065d2d03e33fc0ad0bdd953a409d4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5e0786e776c04b72e644551b59c142b2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/e8c065d2d03e33fc0ad0bdd953a409d4.png"></a>
+<a href="#R-image-a77131c3d79dcc2fb81cd1d38425eb7e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/e8c065d2d03e33fc0ad0bdd953a409d4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a77131c3d79dcc2fb81cd1d38425eb7e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/e8c065d2d03e33fc0ad0bdd953a409d4.png"></a>
 OpenCV将均值滤波器封装成blur()方法，其语法如下：</p>
 <pre><code> dst = cv2.blur(src, ksize, anchor, borderType)
 </code></pre>
@@ -753,8 +753,8 @@ plt.imshow(cv2.cvtColor(cv2.blur(image,(5,5)), cv2.COLOR_BGR2RGB))
 plt.subplot(224)
 plt.title(&#34;滤波核(9,9)&#34;)
 plt.imshow(cv2.cvtColor(cv2.blur(image,(9,9)), cv2.COLOR_BGR2RGB))</code></pre></div>
-<p><a href="#R-image-6a3cbef8bbb7497e29a91120bf48be6b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/6e5b38bc1b366c9b3b1184b235df2408.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6a3cbef8bbb7497e29a91120bf48be6b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/6e5b38bc1b366c9b3b1184b235df2408.png"></a></p>
+<p><a href="#R-image-96de38383571ca74f48de09b3ffcb03f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/6e5b38bc1b366c9b3b1184b235df2408.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-96de38383571ca74f48de09b3ffcb03f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/6e5b38bc1b366c9b3b1184b235df2408.png"></a></p>
 <h4 id="中值滤波器">中值滤波器</h4>
 <p>中值滤波器的原理与均值滤波器非常相似，唯一的不同就是不计算像素的平均值，而是将所有像素值排序，把最中间的像素值取出，赋值给核心像素。
 OpenCV将中值滤波器封装成medianBlur()方法，其语法如下：</p>
@@ -785,15 +785,15 @@ plt.imshow(cv2.cvtColor(cv2.medianBlur(image,5), cv2.COLOR_BGR2RGB))
 plt.subplot(224)
 plt.title(&#34;滤波核(9,9)&#34;)
 plt.imshow(cv2.cvtColor(cv2.medianBlur(image,9), cv2.COLOR_BGR2RGB))</code></pre></div>
-<p><a href="#R-image-64644c4f4c06a1556850518c115053c0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/2c179634b87087ad9d2f0c29ab57d381.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-64644c4f4c06a1556850518c115053c0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/2c179634b87087ad9d2f0c29ab57d381.png"></a></p>
+<p><a href="#R-image-3ed6c7faa9f9bf76c381eacdebfa5166" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/2c179634b87087ad9d2f0c29ab57d381.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3ed6c7faa9f9bf76c381eacdebfa5166"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/2c179634b87087ad9d2f0c29ab57d381.png"></a></p>
 <h4 id="高斯滤波器">高斯滤波器</h4>
 <p>高斯滤波也被称为高斯模糊或高斯平滑，是目前应用最广泛的平滑处理算法。高斯滤波可以很好地在降低图片噪声、细节层次的同时保留更多的图像信息，经过处理的图像呈现“磨砂玻璃”的滤镜效果。
 进行均值滤波处理时，核心周围每个像素的权重都是均等的，也就是每个像素都同样重要，所以计算平均值即可。但在高斯滤波中，越靠近核心的像素权重越大，越远离核心的像素权重越小，例如5×5大小的高斯滤波卷积核的权重示意图如图11.8所示。像素权重不同不能取平均值，要从权重大的像素中取较多的信息，从权重小的像素中取较少的信息。简单概括就是“离谁更近，跟谁更像”。</p>
 <p>高斯滤波的计算过程涉及卷积运算，会有一个与滤波核大小相等的卷积核。本节仅以3×3的滤波核为例，简单地描述一下高斯滤波的计算过程。</p>
 <p>卷积核中保存的值就是核所覆盖区域的权重值，其遵循图11.8的规律。卷积核中所有权重值相加的结果为1。例如，3×3的卷积核可以是如图11.9所示的值。随着核大小、σ标准差的变化，卷积核中的值也会发生较大变化，图11.9仅是一种最简单的情况。
-<a href="#R-image-e2a2f52421238229c84260da02fcabdf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/039ac42a1208dc5e49fc019f881d1d5c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e2a2f52421238229c84260da02fcabdf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/039ac42a1208dc5e49fc019f881d1d5c.png"></a></p>
+<a href="#R-image-da5a44d0f6e68a47f5b26bd3b3ef11c3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/039ac42a1208dc5e49fc019f881d1d5c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-da5a44d0f6e68a47f5b26bd3b3ef11c3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/039ac42a1208dc5e49fc019f881d1d5c.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import matplotlib.pyplot as plt
 import matplotlib
 import cv2
@@ -812,13 +812,13 @@ plt.imshow(cv2.cvtColor(cv2.GaussianBlur(image,(5,5),0,0), cv2.COLOR_BGR2RGB))
 plt.subplot(224)
 plt.title(&#34;滤波核(9,9)&#34;)
 plt.imshow(cv2.cvtColor(cv2.GaussianBlur(image,(9,9),0,0), cv2.COLOR_BGR2RGB))</code></pre></div>
-<p><a href="#R-image-1a331e1919a5b7fa365a925082755165" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b88824f26175f174d275bda33404db7e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1a331e1919a5b7fa365a925082755165"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b88824f26175f174d275bda33404db7e.png"></a></p>
+<p><a href="#R-image-5c6b4ff75c10a6e926df7008da6d780c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b88824f26175f174d275bda33404db7e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5c6b4ff75c10a6e926df7008da6d780c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b88824f26175f174d275bda33404db7e.png"></a></p>
 <h4 id="双边滤波器">双边滤波器</h4>
 <p>不管是均值滤波、中值滤波还是高斯滤波，都会使整幅图像变得平滑，图像中的边界会变得模糊不清。双边滤波是一种在平滑处理过程中可以有效保护边界信息的滤波操作方法。</p>
 <p>双边滤波器自动判断滤波核处于“平坦”区域还是“边缘”区域：如果滤波核处于“平坦”区域，则会使用类似高斯滤波的算法进行滤波；如果滤波核处于“边缘”区域，则加大“边缘”像素的权重，尽可能地让这些像素值保持不变。
-<a href="#R-image-f8aa2552c8f6eb5a87bf4d6b409ffdc3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/46aa39c13b9b65a1caec2c35099f78eb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f8aa2552c8f6eb5a87bf4d6b409ffdc3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/46aa39c13b9b65a1caec2c35099f78eb.png"></a></p>
+<a href="#R-image-d55a77638eabdf7e5b15543320de350f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/46aa39c13b9b65a1caec2c35099f78eb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d55a77638eabdf7e5b15543320de350f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/46aa39c13b9b65a1caec2c35099f78eb.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import matplotlib.pyplot as plt
 import matplotlib
 import cv2
@@ -834,8 +834,8 @@ plt.imshow(cv2.cvtColor(cv2.GaussianBlur(image,(15,15),0,0), cv2.COLOR_BGR2RGB))
 plt.subplot(223)
 plt.title(&#34;双边滤波核(15,15)&#34;)
 plt.imshow(cv2.cvtColor(cv2.bilateralFilter(image,15,120,100), cv2.COLOR_BGR2RGB))</code></pre></div>
-<p><a href="#R-image-7ef3a5288b1c2b879c052173c46bd4b2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/4ffab5450d9c766cd7815e91309b1093.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7ef3a5288b1c2b879c052173c46bd4b2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/4ffab5450d9c766cd7815e91309b1093.png"></a></p>
+<p><a href="#R-image-f560f581a8a5edb19313991612a85de6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/4ffab5450d9c766cd7815e91309b1093.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f560f581a8a5edb19313991612a85de6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/4ffab5450d9c766cd7815e91309b1093.png"></a></p>
 <h3 id="形态学运算">形态学运算</h3>
 <p>腐蚀和膨胀是形态学的基础操作，除了开运算和闭运算以外，形态学中还有几种比较有特点的运算。OpenCV提供了一个morphologyEx()形态学方法，包含所有常用的运算，其语法如下：
 dst = cv2.morphologyEx(src, op, kernel, anchor, iterations, borderType, borderValue)
@@ -865,8 +865,8 @@ dst = cv2.morphologyEx(src, op, kernel, anchor, iterations, borderType, borderVa
 </ul>
 <h4 id="腐蚀">腐蚀</h4>
 <p>腐蚀操作可以让图像沿着自己的边界向内收缩。OpenCV通过“核”来实现收缩计算。“核”的英文名为kernel，在形态学中可以理解为“由n个像素组成的像素块”，像素块包含一个核心（核心通常在中央位置，也可以定义在其他位置）。像素块在图像的边缘移动，在移动过程中，核会将图像边缘那些与核重合但又没有越过核心的像素点都抹除，效果类似图12.1所示的过程，就像削土豆皮一样，将图像一层一层地“削薄”。
-<a href="#R-image-10938d64761bb2894d5a4a5f5837328f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b2ccdfb7999ebce7a19e07c8874e6b55.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-10938d64761bb2894d5a4a5f5837328f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b2ccdfb7999ebce7a19e07c8874e6b55.png"></a>
+<a href="#R-image-8ae2697e4c6ef92eb5bd997d57d48f22" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b2ccdfb7999ebce7a19e07c8874e6b55.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8ae2697e4c6ef92eb5bd997d57d48f22"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b2ccdfb7999ebce7a19e07c8874e6b55.png"></a>
 OpenCV将腐蚀操作封装成erode()方法，该方法的语法如下：</p>
 <pre><code> dst = cv2.erode(src, kernel, anchor, iterations, borderType, borderValue)
 </code></pre>
@@ -882,11 +882,11 @@ OpenCV将腐蚀操作封装成erode()方法，该方法的语法如下：</p>
 <li>dst：经过腐蚀之后的图像。</li>
 </ul>
 <p>图像经过腐蚀操作之后，可以抹除一些外部的细节，如图12.2所示是一个卡通小蜘蛛，如果用一个5×5的像素块作为核对小蜘蛛进行腐蚀操作，可以得到如图12.3所示的结果。小蜘蛛的腿被当成外部细节抹除了，同时小蜘蛛的眼睛变大了，因为核从内部也“削”了一圈。
-<a href="#R-image-ef1ef36a2dbb468e8cbc3ee54ed8f93a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/8a2b2d8ece3fc764f44b5f75d968f6e3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef1ef36a2dbb468e8cbc3ee54ed8f93a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/8a2b2d8ece3fc764f44b5f75d968f6e3.png"></a>
+<a href="#R-image-773a363a9ac7e58a2f88cf573919faea" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/8a2b2d8ece3fc764f44b5f75d968f6e3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-773a363a9ac7e58a2f88cf573919faea"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/8a2b2d8ece3fc764f44b5f75d968f6e3.png"></a>
 腐蚀之后
-<a href="#R-image-fb07e1ccf4180b2b14e392a5c1016648" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bd9c0cb4f656cffae5f641f36510616f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-fb07e1ccf4180b2b14e392a5c1016648"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bd9c0cb4f656cffae5f641f36510616f.png"></a></p>
+<a href="#R-image-a188290c2d76c9a72ab214a081a484b2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bd9c0cb4f656cffae5f641f36510616f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a188290c2d76c9a72ab214a081a484b2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bd9c0cb4f656cffae5f641f36510616f.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import matplotlib.pyplot as plt
 import matplotlib
 import cv2
@@ -905,12 +905,12 @@ plt.subplot(223)
 plt.title(&#34;腐蚀&#34;)
 dst = cv2.morphologyEx(image, cv2.MORPH_ERODE, zeroArray) #也可以使用这个形态学方法，效果和erode一致
 plt.imshow(dst)</code></pre></div>
-<p><a href="#R-image-c7b1ca76e4cd4b7d61acb8786034545b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/4c8a57655c62d613eb152c8658707e0d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c7b1ca76e4cd4b7d61acb8786034545b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/4c8a57655c62d613eb152c8658707e0d.png"></a></p>
+<p><a href="#R-image-38840bed406ecd9e6bef5555af11fb45" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/4c8a57655c62d613eb152c8658707e0d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-38840bed406ecd9e6bef5555af11fb45"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/4c8a57655c62d613eb152c8658707e0d.png"></a></p>
 <h4 id="膨胀">膨胀</h4>
 <p>膨胀操作与腐蚀操作相反，膨胀操作可以让图像沿着自己的边界向内扩张。同样是通过核来计算，当核在图像的边缘移动时，核会将图像边缘填补新的像素，效果类似图12.6所示的过程，就像在一面墙上反反复复地涂水泥，让墙变得越来越厚。
-<a href="#R-image-80d48c81c6b4d7a794abe30b791e1497" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/88c23274f070ee7bbb50eaa13e7d1c00.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-80d48c81c6b4d7a794abe30b791e1497"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/88c23274f070ee7bbb50eaa13e7d1c00.png"></a>
+<a href="#R-image-9b86d4e858a37d8dba65e4805c4a384d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/88c23274f070ee7bbb50eaa13e7d1c00.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9b86d4e858a37d8dba65e4805c4a384d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/88c23274f070ee7bbb50eaa13e7d1c00.png"></a>
 OpenCV将膨胀操作封装成dilate()方法，该方法的语法如下：
 dst = cv2.dilate(src, kernel, anchor, iterations, borderType, borderValue)
 参数说明：</p>
@@ -925,8 +925,8 @@ dst = cv2.dilate(src, kernel, anchor, iterations, borderType, borderValue)
 <li>dst：经过膨胀之后的图像。</li>
 </ul>
 <p>图像经过膨胀操作之后，可以放大一些外部的细节，如图12.7（a）所示的卡通小蜘蛛，如果用一个5×5的像素块作为核对小蜘蛛进行膨胀操作，可以得到如图12.7（b）所示的结果，小蜘蛛不仅腿变粗了，而且连眼睛都胖没了。
-<a href="#R-image-28562a0946381ddeac6bc393114ad209" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/6557a48bcf531ea67f7d8411d7999f05.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-28562a0946381ddeac6bc393114ad209"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/6557a48bcf531ea67f7d8411d7999f05.png"></a></p>
+<a href="#R-image-4cc8977755887d22e737b49a38636a01" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/6557a48bcf531ea67f7d8411d7999f05.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4cc8977755887d22e737b49a38636a01"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/6557a48bcf531ea67f7d8411d7999f05.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>matplotlib.rcParams[&#39;font.sans-serif&#39;] = [&#39;SimHei&#39;]  # 设置中文字体为黑体
 matplotlib.rcParams[&#39;axes.unicode_minus&#39;] = False  # 解决负号显示问题
 image=cv2.imread(&#34;./images/2.jpg&#34;);
@@ -941,12 +941,12 @@ plt.subplot(223)
 plt.title(&#34;膨胀&#34;)
 dst = cv2.morphologyEx(image, cv2.MORPH_DILATE, zeroArray) #也可以使用这个形态学方法，效果和erode一致
 plt.imshow(dst)</code></pre></div>
-<p><a href="#R-image-a5d0befdb6725432b26c5e1af0c30d4b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/28b82a2e7a28efdb105089b45d94f917.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a5d0befdb6725432b26c5e1af0c30d4b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/28b82a2e7a28efdb105089b45d94f917.png"></a></p>
+<p><a href="#R-image-9c2d334028ed9426c04ff67b05edab0f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/28b82a2e7a28efdb105089b45d94f917.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9c2d334028ed9426c04ff67b05edab0f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/28b82a2e7a28efdb105089b45d94f917.png"></a></p>
 <h4 id="开运算">开运算</h4>
 <p>开运算是将图像先进行腐蚀操作，再进行膨胀操作。开运算可以用来抹除图像外部的细节（或者噪声）。
-<a href="#R-image-32f2e7bf0bedb6af21e6890200b61ca6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/7ba2573f1e793626641cea2cd9d3d9d2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-32f2e7bf0bedb6af21e6890200b61ca6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/7ba2573f1e793626641cea2cd9d3d9d2.png"></a></p>
+<a href="#R-image-336cfe715ea19c87fb6224697690628c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/7ba2573f1e793626641cea2cd9d3d9d2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-336cfe715ea19c87fb6224697690628c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/7ba2573f1e793626641cea2cd9d3d9d2.png"></a></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import matplotlib.pyplot as plt
 import matplotlib
 import cv2
@@ -969,25 +969,25 @@ plt.title(&#34;开运算&#34;)
 dst = cv2.morphologyEx(image, cv2.MORPH_OPEN, zeroArray) #也可以使用这个形态学方法，效果和erode一致
 plt.imshow(dst)</code></pre></div>
 <p>效果图
-<a href="#R-image-2d496ccb5d0140047b02cd377d6b13ac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/24dbd517973043531176cebc8e50b8a9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2d496ccb5d0140047b02cd377d6b13ac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/24dbd517973043531176cebc8e50b8a9.png"></a></p>
+<a href="#R-image-33c517ed1b5a349904cfce3adcb9344d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/24dbd517973043531176cebc8e50b8a9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-33c517ed1b5a349904cfce3adcb9344d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/24dbd517973043531176cebc8e50b8a9.png"></a></p>
 <h4 id="闭运算">闭运算</h4>
 <p>闭运算是将图像先进行膨胀操作，再进行腐蚀操作。闭运算可以抹除图像内部的细节（或者噪声）。
-<a href="#R-image-91cfc7a2f7b911e6ce6126215f65e425" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cee3c3a0c4f9ddda80f545bd7398c172.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-91cfc7a2f7b911e6ce6126215f65e425"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cee3c3a0c4f9ddda80f545bd7398c172.png"></a></p>
+<a href="#R-image-688e2a10584d31e31e3c441e54307eec" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cee3c3a0c4f9ddda80f545bd7398c172.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-688e2a10584d31e31e3c441e54307eec"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/cee3c3a0c4f9ddda80f545bd7398c172.png"></a></p>
 <h4 id="梯度运算">梯度运算</h4>
 <p>这里的梯度是指图像梯度，可以简单地理解为像素的变化程度。如果几个连续的像素，其像素值跨度越大，则梯度值越大。</p>
 <p>梯度运算的运算过程如图12.15所示，让原图的膨胀图减原图的腐蚀图。因为膨胀图比原图大，腐蚀图比原图小，利用腐蚀图将膨胀图掏空，就得到了原图的轮廓图。
-<a href="#R-image-6d88ae47910199fed1ec86a3d6e46f44" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/8cb81f4cf3d402a7be2c9e5471c043f5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6d88ae47910199fed1ec86a3d6e46f44"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/8cb81f4cf3d402a7be2c9e5471c043f5.png"></a></p>
+<a href="#R-image-ef21aae850be02818d82f2b663f565a4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/8cb81f4cf3d402a7be2c9e5471c043f5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef21aae850be02818d82f2b663f565a4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/8cb81f4cf3d402a7be2c9e5471c043f5.png"></a></p>
 <h4 id="顶帽运算">顶帽运算</h4>
 <p>顶帽运算的运算过程如图12.17所示，让原图减原图的开运算图。因为开运算抹除图像的外部细节，“有外部细节”的图像减去“无外部细节”的图像，得到的结果就只剩外部细节了，所以经过顶帽运算之后，小蜘蛛就只剩蜘蛛腿了。
-<a href="#R-image-af7f9cbf03bc51337f1de312f7292265" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/24603f27dc91c974361b0b0e465e38db.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-af7f9cbf03bc51337f1de312f7292265"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/24603f27dc91c974361b0b0e465e38db.png"></a></p>
+<a href="#R-image-eaff4648a83b1c057c0193760581c8bf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/24603f27dc91c974361b0b0e465e38db.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-eaff4648a83b1c057c0193760581c8bf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/24603f27dc91c974361b0b0e465e38db.png"></a></p>
 <h4 id="黑帽运算">黑帽运算</h4>
 <p>黑帽运算的运算过程如图12.19所示，让原图的闭运算图减去原图。因为闭运算抹除图像的内部细节，“无内部细节”的图像减去“有内部细节”的图像，得到的结果就只剩内部细节了，所以经过黑帽运算之后，小蜘蛛就只剩下斑点、花纹和眼睛了。
-<a href="#R-image-6811cc91fc5813b3265a38e8e2d2d090" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/685f667672d1bf931a5589a3f492915d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6811cc91fc5813b3265a38e8e2d2d090"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/685f667672d1bf931a5589a3f492915d.png"></a></p>
+<a href="#R-image-d57b075821c047b188f46496ed3a7d1d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/685f667672d1bf931a5589a3f492915d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d57b075821c047b188f46496ed3a7d1d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/685f667672d1bf931a5589a3f492915d.png"></a></p>
 <h3 id="图形检测">图形检测</h3>
 <h4 id="图像轮廓">图像轮廓</h4>
 <p>轮廓是指图像中图形或物体的外边缘线条。简单的几何图形轮廓是由平滑的线构成的，容易识别，但不规则图形的轮廓可能由许多个点构成，识别起来比较困难。</p>
@@ -1057,8 +1057,8 @@ plt.subplot(223)
 cv2.rectangle(dstImg,(x,y),(x+w,y+h),(0,0,255),2)
 plt.imshow(cv2.cvtColor(dstImg, cv2.COLOR_BGR2RGB))
 plt.show()</code></pre></div>
-<p><a href="#R-image-21d0053642d984ea9a53cc5ec3befb20" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/3e23c0fa54df5daf2f16e90147a686f1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-21d0053642d984ea9a53cc5ec3befb20"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/3e23c0fa54df5daf2f16e90147a686f1.png"></a></p>
+<p><a href="#R-image-7ed5f0e47cb363569c4c5e64c02d6d88" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/3e23c0fa54df5daf2f16e90147a686f1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7ed5f0e47cb363569c4c5e64c02d6d88"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/3e23c0fa54df5daf2f16e90147a686f1.png"></a></p>
 <h4 id="轮廓拟合">轮廓拟合</h4>
 <p>拟合是指将平面上的一系列点，用一条光滑的曲线连接起来。轮廓的拟合就是将凹凸不平的轮廓用平整的几何图形体现出来。本节将介绍如何按照轮廓绘制矩形包围框和圆形包围框。</p>
 <h5 id="矩形包围框">矩形包围框</h5>
@@ -1085,8 +1085,8 @@ center, radius = cv2.minEnclosingCircle(points)
 <li>enter：元组类型，包含2个浮点值，是最小圆形包围框圆心的横坐标和纵坐标。</li>
 <li>radius：浮点类型，最小圆形包围框的半径。
 效果
-<a href="#R-image-15990db4cec2c3caa7d5a1f312af8dc0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/00c2cad2bcd8f50923a2b510539833aa.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-15990db4cec2c3caa7d5a1f312af8dc0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/00c2cad2bcd8f50923a2b510539833aa.png"></a></li>
+<a href="#R-image-87bf8241df179733ffd30ec51ab568a6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/00c2cad2bcd8f50923a2b510539833aa.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-87bf8241df179733ffd30ec51ab568a6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/00c2cad2bcd8f50923a2b510539833aa.png"></a></li>
 </ul>
 <h5 id="多边形包围框">多边形包围框</h5>
 <p>cv2.approxPolyDP 函数是 OpenCV 中针对轮廓近似的函数，其可以将轮廓中的点根据一定的精度要求进行近似，从而化简轮廓的点数，方便后续处理。
@@ -1114,13 +1114,13 @@ for i,e in enumerate([0.01,0.05,0.1,1]):
     plt.title(e)
     plt.imshow(cv2.cvtColor(img1, cv2.COLOR_BGR2RGB))
 plt.show()</code></pre></div>
-<p><a href="#R-image-3f2eceb78c4cf694c5318450b1337800" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/5e7879bcfb876afd390c28cc8f7603a9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3f2eceb78c4cf694c5318450b1337800"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/5e7879bcfb876afd390c28cc8f7603a9.png"></a></p>
+<p><a href="#R-image-fbfc1af3ba69899115e776f4b30472d4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/5e7879bcfb876afd390c28cc8f7603a9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fbfc1af3ba69899115e776f4b30472d4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/5e7879bcfb876afd390c28cc8f7603a9.png"></a></p>
 <h4 id="凸包">凸包</h4>
 <p>之前介绍了矩形包围框和圆形包围框，这2种包围框虽然已经逼近了图形的边缘，但这种包围框为了保持几何形状，与图形的真实轮廓贴合度较差。如果能找出图形最外层的端点，将这些端点连接起来，就可以围出一个包围图形的最小包围框，这种包围框叫凸包。</p>
 <p>凸包是最逼近轮廓的多边形，凸包的每一处都是凸出来的，也就是任意3个点组成的内角均小于180°。例如，图13.12就是凸包，而图13.13就不是凸包。
-<a href="#R-image-b6c0a8369fc3b069a83cbfca1da30cb2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bf7efa3abf23b3d6d10682253f067118.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b6c0a8369fc3b069a83cbfca1da30cb2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bf7efa3abf23b3d6d10682253f067118.png"></a>
+<a href="#R-image-726a30a051e1fe35798a1068cb93a294" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bf7efa3abf23b3d6d10682253f067118.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-726a30a051e1fe35798a1068cb93a294"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/bf7efa3abf23b3d6d10682253f067118.png"></a>
 OpenCV提供的convexHull()方法可以自动找出轮廓的凸包，该方法的语法如下：</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>  hull = cv2.convexHull(points, clockwise, returnPoints)</code></pre></div>
 <p>参数说明：</p>
@@ -1143,8 +1143,8 @@ hull=cv2.convexHull(sorted_contours[0])
 cv2.polylines(img1,[hull],True,(0,0,255),2)
 plt.imshow(cv2.cvtColor(img1, cv2.COLOR_BGR2RGB))
 plt.show()</code></pre></div>
-<p><a href="#R-image-eff96cfaac641ef1a164c939b7a32de5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/139645dd6d968b8560cec88b0ee54191.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-eff96cfaac641ef1a164c939b7a32de5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/139645dd6d968b8560cec88b0ee54191.png"></a></p>
+<p><a href="#R-image-831346293fcd73fc07425b095de4d22e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/139645dd6d968b8560cec88b0ee54191.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-831346293fcd73fc07425b095de4d22e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/139645dd6d968b8560cec88b0ee54191.png"></a></p>
 <h4 id="canny边缘检测">Canny边缘检测</h4>
 <p>Canny边缘检测算法是John F. Canny于1986年开发的一个多级边缘检测算法，该算法根据像素的梯度变化寻找图像边缘，最终可以绘制十分精细的二值边缘图像。</p>
 <p>OpenCV将Canny边缘检测算法封装在Canny()方法中，该方法的语法如下：</p>
@@ -1175,8 +1175,8 @@ r1=cv2.Canny(img,10,50)
 plt.subplot(222)
 plt.title(&#34;Canny&#34;)
 plt.imshow(cv2.cvtColor(r1, cv2.COLOR_BGR2RGB))</code></pre></div>
-<p><a href="#R-image-d8635525ecc0793cef3f4c65249e7cc7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/f937620e84b20f3e322a2332e06023d3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d8635525ecc0793cef3f4c65249e7cc7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/f937620e84b20f3e322a2332e06023d3.png"></a></p>
+<p><a href="#R-image-c0c7b5c2990dd97598953afdfca11f15" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/f937620e84b20f3e322a2332e06023d3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c0c7b5c2990dd97598953afdfca11f15"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/f937620e84b20f3e322a2332e06023d3.png"></a></p>
 <h4 id="霍夫直线">霍夫直线</h4>
 <p>霍夫变换是一种特征检测，通过算法识别图像的特征，从而判断图像中的特殊形状，例如直线和圆。</p>
 <h5 id="直线检测">直线检测</h5>
@@ -1220,8 +1220,8 @@ for line in lines:
     x1,y1,x2,y2=line[0]
     cv2.line(img1,(x1,y1),(x2,y2),(0,0,255),2)
 common.show(img1,&#34;直线&#34;,cmap=&#34;gray&#34;,debug=True)    </code></pre></div>
-<p><a href="#R-image-00fe2263baa3b190f9bfbab450eac737" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b07478f17e002e23190eadede1b1ca22.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-00fe2263baa3b190f9bfbab450eac737"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b07478f17e002e23190eadede1b1ca22.png"></a></p>
+<p><a href="#R-image-cee1ea336b3469a0c21555072d7e5cff" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b07478f17e002e23190eadede1b1ca22.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cee1ea336b3469a0c21555072d7e5cff"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b07478f17e002e23190eadede1b1ca22.png"></a></p>
 <h5 id="圆环检测">圆环检测</h5>
 <p>霍夫圆环变换的原理与霍夫直线变换类似。OpenCV提供的HoughCircles()方法用于检测图像中的圆环，该方法在检测过程中进行两轮筛选：第一轮筛选找出可能是圆的圆心坐标，第二轮筛选计算这些圆心坐标可能对应的半径长度。该方法最后将圆心坐标和半径封装成一个浮点型数组。</p>
 <p>HoughCircles()方法的语法如下：</p>
@@ -1273,8 +1273,8 @@ cap.release()
 cv2.destroyAllWindows()</code></pre></div>
 <h3 id="人脸检测">人脸检测</h3>
 <p>人脸识别是基于人的脸部特征信息进行身份识别的一种生物识别技术，也是计算机视觉重点发展的技术。机器学习算法诞生之后，计算机可以通过摄像头等输入设备自动分析图像中包含的内容信息，随着技术的不断发展，现在已经有了多种人脸识别的算法。本章将介绍OpenCV自带的多种图像跟踪技术和3种人脸识别技术的用法。
-<a href="#R-image-cd31e7daa5bf78a0462f0184f02ade0c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/022e1edd494e8db8285193b07349dae3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cd31e7daa5bf78a0462f0184f02ade0c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/022e1edd494e8db8285193b07349dae3.png"></a></p>
+<a href="#R-image-656eea75cab55fc7d5d0377d92bab785" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/022e1edd494e8db8285193b07349dae3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-656eea75cab55fc7d5d0377d92bab785"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/022e1edd494e8db8285193b07349dae3.png"></a></p>
 <h4 id="级联分类器">级联分类器</h4>
 <p>将一系列简单的分类器按照一定顺序级联到一起就构成了级联分类器，使用级联分类器的程序可以通过一系列简单的判断来对样本进行识别。例如，依次满足“有6条腿”“有翅膀”“有头、胸、腹”这3个条件的样本就可以被初步判断为昆虫，但如果任何一个条件不满足，则不会被认为是昆虫</p>
 <p>OpenCV提供了一些已经训练好的级联分类器，这些级联分类器以XML文件的方式保存在以下路径中：
@@ -1304,8 +1304,8 @@ OpenCV实现人脸检测需要做两步操作：加载级联分类器和使用�
 返回值说明：</li>
 <li>objects：捕捉到的目标区域数组，数组中每一个元素都是一个目标区域，每一个目标区域都包含4个值，分别是：左上角点横坐标、左上角点纵坐标、区域宽、区域高。object的格式为：[[244　203　111　111]　[432　81　133　133]]。
 原图：
-<a href="#R-image-6e6664f26d34d2f0b4b940909ad4b9d2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/23f314556a9c49f2c190e74e566cc76e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6e6664f26d34d2f0b4b940909ad4b9d2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/23f314556a9c49f2c190e74e566cc76e.png"></a></li>
+<a href="#R-image-ccdfe01775f56a65c2d4bccb96e31a3e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/23f314556a9c49f2c190e74e566cc76e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ccdfe01775f56a65c2d4bccb96e31a3e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/23f314556a9c49f2c190e74e566cc76e.png"></a></li>
 </ul>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
 
@@ -1333,8 +1333,8 @@ for (x, y, w, h) in faces:
 # 显示结果
 plot.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 plot.show()</code></pre></div>
-<p><a href="#R-image-f1a1849dc616fa979b351afbd4521a51" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b8d9bcfc8ba11a6559c38b1d24a31ed7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f1a1849dc616fa979b351afbd4521a51"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b8d9bcfc8ba11a6559c38b1d24a31ed7.png"></a></p>
+<p><a href="#R-image-80b003f2dd2a3224544071346015f4b3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b8d9bcfc8ba11a6559c38b1d24a31ed7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-80b003f2dd2a3224544071346015f4b3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/computer_vision/tools/action_01_opencv.md.images/b8d9bcfc8ba11a6559c38b1d24a31ed7.png"></a></p>
 
   <footer class="footline">
               <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
@@ -1394,6 +1394,8 @@ plot.show()</code></pre></div>
             <li class="active " data-nav-id="/docs/programming/ai/computer_vision/tools/action_01_opencv/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/tools/action_01_opencv/index.html">图像处理实战01-OpenCV 入门指南</a></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/applications/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/applications/index.html">应用案例</a><ul id="R-subsections-7fdacab544ae033be313c9cbf3aa39ac" class="collapsible-menu"></ul></li></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -1411,8 +1413,8 @@ plot.show()</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

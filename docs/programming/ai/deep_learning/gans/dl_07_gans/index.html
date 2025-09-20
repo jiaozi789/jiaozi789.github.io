@@ -81,26 +81,26 @@ GAN的产生来自于一个灵机一动的想法：
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="1354">
     <title>深度学习07-深度卷积生成对抗网络(DCGAN) :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -154,7 +154,7 @@ GAN的产生来自于一个灵机一动的想法：
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/deep_learning/gans/dl_07_gans/index.html">
     <div id="R-body" class="default-animation">
@@ -279,28 +279,28 @@ DCGAN（Deep Convolutional GAN）是GAN的一种改进版本，主要通过引�
 <p>生成对抗网络的网络结构如图7-2所示，主要包含以下两个子网络。
 • 生成器（generator）：输入一个随机噪声，生成一张图片。
 • 判别器（discriminator）：判断输入的图片是真图片还是假图片。
-<a href="#R-image-997fedb87a3ad2644b0f6642b739ec70" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/f4ad37ab2b6545ecd347fe2764ac623a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-997fedb87a3ad2644b0f6642b739ec70"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/f4ad37ab2b6545ecd347fe2764ac623a.png"></a>
+<a href="#R-image-649fa1470073d28764f86dd4b99d3c11" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/f4ad37ab2b6545ecd347fe2764ac623a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-649fa1470073d28764f86dd4b99d3c11"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/f4ad37ab2b6545ecd347fe2764ac623a.png"></a>
 训练判别器时，需要利用生成器生成的假图片和来自真实世界的真图片；训练生成器时，只用噪声生成假图片。判别器用来评估生成的假图片的质量，促使生成器相应地调整参数。</p>
 <p>生成器的目标是尽可能地生成以假乱真的图片，让判别器以为这是真的图片；判别器的目标是将生成器生成的图片和真实世界的图片区分开。可以看出这二者的目标相反，在训练过程中互相对抗，这也是它被称为生成对抗网络的原因。
 上面的描述可能有点抽象，让我们用收藏齐白石作品（齐白石作品如图7-3所示）的书画收藏家和假画贩子的例子来说明。假画贩子相当于是生成器，他们希望能够模仿大师真迹伪造出以假乱真的假画，骗过收藏家，从而卖出高价；书画收藏家则希望将赝品和真迹区分开，让真迹流传于世，销毁赝品。这里假画贩子和收藏家所交易的画，主要是齐白石画的虾。齐白石画虾可以说是画坛一绝，历来为世人所追捧。
-<a href="#R-image-99d59727051001b508a09d29ee659ae7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/fc225ec4c7f07c1db5b98ddcd59f6bdb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-99d59727051001b508a09d29ee659ae7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/fc225ec4c7f07c1db5b98ddcd59f6bdb.png"></a>
+<a href="#R-image-b119271960e44fd6b12d6ae6beb9aa2f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/fc225ec4c7f07c1db5b98ddcd59f6bdb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b119271960e44fd6b12d6ae6beb9aa2f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/fc225ec4c7f07c1db5b98ddcd59f6bdb.png"></a>
 在这个例子中，一开始假画贩子和书画收藏家都是新手，他们对真迹和赝品的概念都很模糊。假画贩子仿造出来的假画几乎都是随机涂鸦，而书画收藏家的鉴定能力很差，有不少赝品被他当成真迹，也有许多真迹被当成赝品。</p>
 <p>首先，书画收藏家收集了一大堆市面上的赝品和齐白石大师的真迹，仔细研究对比，初步学习了画中虾的结构，明白画中的生物形状弯曲，并且有一对类似钳子的“螯足”，对于不符合这个条件的假画全部过滤掉。当收藏家用这个标准到市场上进行鉴定时，假画基本无法骗过收藏家，假画贩子损失惨重。但是假画贩子自己仿造的赝品中，还是有一些蒙骗过关，这些蒙骗过关的赝品中都有弯曲的形状，并且有一对类似钳子的“螯足”。于是假画贩子开始修改仿造的手法，在仿造的作品中加入弯曲的形状和一对类似钳子的“螯足”。除了这些特点，其他地方例如颜色、线条都是随机画的。假画贩子制造出的第一版赝品如所示。
-<a href="#R-image-80c12b6f18da66992ec173c8ebf9b37e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/530db5aeff0aabb2f593b063ee0361c1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-80c12b6f18da66992ec173c8ebf9b37e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/530db5aeff0aabb2f593b063ee0361c1.png"></a>
+<a href="#R-image-2639e9d84904f03f5beb325a420287eb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/530db5aeff0aabb2f593b063ee0361c1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2639e9d84904f03f5beb325a420287eb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/530db5aeff0aabb2f593b063ee0361c1.png"></a>
 当假画贩子把这些画拿到市面上去卖时，很容易就骗过了收藏家，因为画中有一只弯曲的生物，生物前面有一对类似钳子的东西，符合收藏家认定的真迹的标准，所以收藏家就把它当成真迹买回来。随着时间的推移，收藏家买回越来越多的假画，损失惨重，于是他又闭门研究赝品和真迹之间的区别，经过反复比较对比，他发现齐白石画虾的真迹中除了有弯曲的形状，虾的触须蔓长，通身作半透明状，并且画的虾的细节十分丰富，虾的每一节之间均呈白色状。</p>
 <p>收藏家学成之后，重新出山，而假画贩子的仿造技法没有提升，所制造出来的赝品被收藏家轻松识破。于是假画贩子也开始尝试不同的画虾手法，大多都是徒劳无功，不过在众多尝试之中，还是有一些赝品骗过了收藏家的眼睛。假画贩子发现这些仿制的赝品触须蔓长，通身作半透明状，并且画的虾的细节十分丰富，如图7-5所示。于是假画贩子开始大量仿造这种画，并拿到市面上销售，许多都成功地骗过了收藏家。
-<a href="#R-image-7c3624dac6a1be27b95bae0aa91f6e5a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/d10d4996cbb974c39bc4d91e880efd7b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7c3624dac6a1be27b95bae0aa91f6e5a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/d10d4996cbb974c39bc4d91e880efd7b.png"></a>
+<a href="#R-image-4902892479637129101f0aca82ee4e5c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/d10d4996cbb974c39bc4d91e880efd7b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4902892479637129101f0aca82ee4e5c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/d10d4996cbb974c39bc4d91e880efd7b.png"></a>
 收藏家再度损失惨重，被迫关门研究齐白石的真迹和赝品之间的区别，学习齐白石真迹的特点，提升自己的鉴定能力。就这样，通过收藏家和假画贩子之间的博弈，收藏家从零开始慢慢提升了自己对真迹和赝品的鉴别能力，而假画贩子也不断地提高自己仿造齐白石真迹的水平。收藏家利用假画贩子提供的赝品，作为和真迹的对比，对齐白石画虾真迹有了更好的鉴赏能力；而假画贩子也不断尝试，提升仿造水平，提升仿造假画的质量，即使最后制造出来的仍属于赝品，但是和真迹相比也很接近了。收藏家和假画贩子二者之间互相博弈对抗，同时又不断促使着对方学习进步，达到共同提升的目的。</p>
 <p>在这个例子中，假画贩子相当于一个生成器，收藏家相当于一个判别器。一开始生成器和判别器的水平都很差，因为二者都是随机初始化的。训练过程分为两步交替进行，第一步是训练判别器（只修改判别器的参数，固定生成器），目标是把真迹和赝品区分开；第二步是训练生成器（只修改生成器的参数，固定判别器），为的是生成的假画能够被判别器判别为真迹（被收藏家认为是真迹）。这两步交替进行，进而分类器和判别器都达到了一个很高的水平。训练到最后，生成器生成的虾的图片（如图7-6所示）和齐白石的真迹几乎没有差别。
-<a href="#R-image-e5d69d1d5d9e15c8d099bb7e5a6b1379" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/8cabc7032554a05cdcce09e1f202aacf.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e5d69d1d5d9e15c8d099bb7e5a6b1379"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/8cabc7032554a05cdcce09e1f202aacf.png"></a>
+<a href="#R-image-8dcdf805bf34cf94a892c069e1004f16" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/8cabc7032554a05cdcce09e1f202aacf.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8dcdf805bf34cf94a892c069e1004f16"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/8cabc7032554a05cdcce09e1f202aacf.png"></a>
 下面我们来思考网络结构的设计。判别器的目标是判断输入的图片是真迹还是赝品，所以可以看成是一个二分类网络，我们可以设计一个简单的卷积网络。生成器的目标是从噪声中生成一张彩色图片，这里我们采用广泛使用的DCGAN（Deep Convolutional Generative Adversarial Networks）结构，即采用全卷积网络，其结构如下图所示。网络的输入是一个100维的噪声，输出是一个3×64×64的图片。这里的输入可以看成是一个100×1×1的图片，通过上卷积慢慢增大为4×4、8×8、16×16、32×32和64×64。上卷积，或称转置卷积，是一种特殊的卷积操作，类似于卷积操作的逆运算。当卷积的stride为2时，输出相比输入会下采样到一半的尺寸；而当上卷积的stride为2时，输出会上采样到输入的两倍尺寸。这种上采样的做法可以理解为图片的信息保存于100个向量之中，神经网络根据这100个向量描述的信息，前几步的上采样先勾勒出轮廓、色调等基础信息，后几步上采样慢慢完善细节。网络越深，细节越详细。
-<a href="#R-image-c0210dc150008f0d3f30b4af70039b02" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/06e69066edf40e86f40182f98376b2eb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c0210dc150008f0d3f30b4af70039b02"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/06e69066edf40e86f40182f98376b2eb.png"></a></p>
+<a href="#R-image-827b372dcec3b2fe03652919aa18a24d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/06e69066edf40e86f40182f98376b2eb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-827b372dcec3b2fe03652919aa18a24d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/06e69066edf40e86f40182f98376b2eb.png"></a></p>
 <blockquote>
 <p>该章节引用自书籍《深度学习框架pytorch，入门到实践》</p></blockquote>
 <h3 id="专业术语">专业术语</h3>
@@ -320,8 +320,8 @@ DCGAN（Deep Convolutional GAN）是GAN的一种改进版本，主要通过引�
 <li>如果原始矩阵的形状为 (m, n)，并且在每个边缘上填充了 p 行和 q 列的值，那么填充后的矩阵的形状将是 (m + 2p, n + 2q)</li>
 <li>如果原始矩阵的形状为 (m, n)，并且在每个元素之间插入一个零，那么新的矩阵是（m+m-1,n,n-1）=(2m-1,2n-1)</li>
 </ol></blockquote>
-<p><a href="#R-image-79cad8108d7bdbf6b897b3be412f2ff7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/8f95b3a45f70ddb47a96a158b63937b8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-79cad8108d7bdbf6b897b3be412f2ff7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/8f95b3a45f70ddb47a96a158b63937b8.png"></a>
+<p><a href="#R-image-7550317642d57bd8edfba552d04b548c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/8f95b3a45f70ddb47a96a158b63937b8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7550317642d57bd8edfba552d04b548c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/8f95b3a45f70ddb47a96a158b63937b8.png"></a>
 numpy已经封装了一个函数，就是pad</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code> #%%
 import numpy as np
@@ -389,19 +389,19 @@ print(zero_inserted_matrix)</code></pre></div>
 <p>参考：https://www.zhihu.com/question/48279880
 ​ 转置卷积或微步幅卷积。但是，需要指出<strong>去卷积</strong>这个名称并不是很合适，因为转置卷积并非信号/图像处理领域定义的那种真正的去卷积。从技术上讲，信号处理中的去卷积是卷积运算的逆运算。但这里却不是这种运算。后面我们会介绍为什么将这种运算称为转置卷积更自然且更合适。</p>
 <p>​ 我们可以使用常见卷积实现转置卷积。这里我们用一个简单的例子来说明，输入层为2∗2(下面蓝色的部分)，先进行填充值Padding为2∗2单位步长的零填充（下面在蓝色上下左右填充2行2列），再使用步长Stride为1的3∗3卷积核进行卷积操作（卷积一次获得一个值）则实现了上采样，上采样输出的大小为4∗4 也就是（6-3+1，6-3+1）</p>
-<p><a href="#R-image-ef80799a523182fc45c4accbd019a771" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/5c7745d972935570f3986445c0c46453.webp" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef80799a523182fc45c4accbd019a771"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/5c7745d972935570f3986445c0c46453.webp"></a>
+<p><a href="#R-image-77c21427fa81599ba8c62b0e7b5e3855" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/5c7745d972935570f3986445c0c46453.webp" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-77c21427fa81599ba8c62b0e7b5e3855"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/5c7745d972935570f3986445c0c46453.webp"></a>
 值得一提的是，可以通过各种填充和步长，我们可以将同样的2∗2输入映射到不同的图像尺寸。下图，转置卷积被应用在同一张2∗2的输入上（输入之间插入了一个零，并且周围加了2∗2的单位步长的零填充）上应用3∗3的卷积核，得到的结果（即上采样结果）大小为5∗5
-<a href="#R-image-4df0383ebb28c2d2a062aa638eb4f7d8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/db31e6ab46b3ba4025a94dea7c62d52b.webp" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4df0383ebb28c2d2a062aa638eb4f7d8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/db31e6ab46b3ba4025a94dea7c62d52b.webp"></a>
+<a href="#R-image-60da5b20f98450d986e8001f1e0eb331" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/db31e6ab46b3ba4025a94dea7c62d52b.webp" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-60da5b20f98450d986e8001f1e0eb331"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/db31e6ab46b3ba4025a94dea7c62d52b.webp"></a>
 通过观察上述例子中的转置卷积能够帮助我们构建起一些直观的认识。但为了进一步应用转置卷积，我们还需要<strong>了解计算机的矩阵乘法是如何实现的</strong>。从实现过程的角度我们可以理解为何转置卷积才是最合适的名称。</p>
 <p>​ 在卷积中，我们这样定义：用C代表卷积核，input为输入图像，output为输出图像。经过卷积（矩阵乘法）后，我们将input从大图像下采样为小图像output。这种矩阵乘法实现遵循C∗input=output。</p>
 <p>​ 下面的例子展示了这种运算在计算机内的工作方式。它将输入平展（16∗1）矩阵，并将卷积核转换为一个稀疏矩阵、（4∗16）。然后，在稀疏矩阵和平展的输入之间使用矩阵乘法。之后，再将所得到的矩阵（4∗1)转为2∗2输出。
-<a href="#R-image-e5849aee187202074906a7e4aca67fd2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/6949f86610c9224d4d2128e9aeba7627.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e5849aee187202074906a7e4aca67fd2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/6949f86610c9224d4d2128e9aeba7627.png"></a>
+<a href="#R-image-08782d76a3508f063bf8a5393a84416d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/6949f86610c9224d4d2128e9aeba7627.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-08782d76a3508f063bf8a5393a84416d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/6949f86610c9224d4d2128e9aeba7627.png"></a>
 此时，若用卷积核对应稀疏矩阵的转置$C^T$（16∗4）乘以输出的平展（4∗1）所得到的结果（16∗1）的形状和输入的形状（16∗1）相同。</p>
-<p><a href="#R-image-921340090afd988b63121fe4c50faa02" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/65d16179416942953bf3781c31fa9f16.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-921340090afd988b63121fe4c50faa02"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/65d16179416942953bf3781c31fa9f16.jpeg"></a>
+<p><a href="#R-image-4b737f3dd9380052da95bc7a98ddcaba" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/65d16179416942953bf3781c31fa9f16.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4b737f3dd9380052da95bc7a98ddcaba"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/65d16179416942953bf3781c31fa9f16.jpeg"></a>
 <strong>但值得注意的是，上述两次操作并不是可逆关系，对于同一个卷积核（因非其稀疏矩阵不是正交矩阵，结果转置操作之后并不能恢复到原始的数值，而仅仅保留原始的形状</strong>，所以转置卷积的名字由此而来。并回答了上面提到的疑问，相比于逆卷积而言转置卷积更加准确。</p>
 <h2 id="生成动漫图像">生成动漫图像</h2>
 <p>使用DCGAN训练一个模型用于生成64*64动漫图像,并通过这个例子规划神经网络的目录结构组织，大部分的开源项目的目录结构相似，以后分析开源model更加容易。</p>
@@ -478,8 +478,8 @@ gpt云平台上提供的GPU型号很多。我们按照GPU架构大致分为五�
 邮箱注册个账号即可下载，数据集下有不同的用户基于数据集的训练代码和结果。
 参考代码：https://www.kaggle.com/code/splcher/starter-anime-face-dataset</p>
 <h3 id="目录规划">目录规划</h3>
-<p><a href="#R-image-8fb6ed23df71c5a67004f397aa93276f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/678c7b15920990302bc0544c03f4f596.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8fb6ed23df71c5a67004f397aa93276f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/678c7b15920990302bc0544c03f4f596.png"></a>
+<p><a href="#R-image-96256a8e397bdd34bea22639f0d18e8f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/678c7b15920990302bc0544c03f4f596.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-96256a8e397bdd34bea22639f0d18e8f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/678c7b15920990302bc0544c03f4f596.png"></a>
 其中各个文件的主要内容和作用如下。</p>
 <p>• checkpoints/：用于保存训练好的模型，可使程序在异常退出后仍能重新载入模型，恢复训练。
 • data/：数据相关操作，包括数据预处理、dataset实现等。
@@ -761,8 +761,8 @@ class Discriminator(nn.Module):
     plt.ylabel(&#34;Loss&#34;)
     plt.legend()
     plt.show()</code></pre></div>
-<p><a href="#R-image-5d94c9c8ef0b597c210e2de5b14f0ea3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/0b165609ec16dda9b81d19d8558608e8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5d94c9c8ef0b597c210e2de5b14f0ea3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/0b165609ec16dda9b81d19d8558608e8.png"></a></p>
+<p><a href="#R-image-9361a5842588972443778098dedfd2c3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/0b165609ec16dda9b81d19d8558608e8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9361a5842588972443778098dedfd2c3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/0b165609ec16dda9b81d19d8558608e8.png"></a></p>
 <h4 id="绘制生成器图像变化">绘制生成器图像变化</h4>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>    #创建一个8*8的画布
     fig = plt.figure(figsize=(8, 8))
@@ -771,10 +771,10 @@ class Discriminator(nn.Module):
     ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)
     HTML(ani.to_jshtml())</code></pre></div>
 <p>每250次迭代就通过G生成64图片，发现越到后面图片就越清晰。
-<a href="#R-image-c10b78c6cf8211b72b287dd4110b8533" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/d1d89dcb03a6267506f68e400c4ac795.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c10b78c6cf8211b72b287dd4110b8533"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/d1d89dcb03a6267506f68e400c4ac795.png"></a>
-<a href="#R-image-6e576093f57b0cbc3e5abb29ed543ff6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/b8be963929ad8e597766d0db8269265f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6e576093f57b0cbc3e5abb29ed543ff6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/b8be963929ad8e597766d0db8269265f.png"></a></p>
+<a href="#R-image-791229293c4d00e1f78572b2a9727c2e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/d1d89dcb03a6267506f68e400c4ac795.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-791229293c4d00e1f78572b2a9727c2e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/d1d89dcb03a6267506f68e400c4ac795.png"></a>
+<a href="#R-image-9a263aef6a08b8d1d3b23129f4e31265" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/b8be963929ad8e597766d0db8269265f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9a263aef6a08b8d1d3b23129f4e31265"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/gans/dl_07_gans.md.images/b8be963929ad8e597766d0db8269265f.png"></a></p>
 <h2 id="其他项目">其他项目</h2>
 <h3 id="cyclegan">CycleGAN</h3>
 <p>参考地址：https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix</p>
@@ -842,6 +842,8 @@ class Discriminator(nn.Module):
             <li class="active " data-nav-id="/docs/programming/ai/deep_learning/gans/dl_07_gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/dl_07_gans/index.html">深度学习07-深度卷积生成对抗网络(DCGAN)</a></li></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -859,8 +861,8 @@ class Discriminator(nn.Module):
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

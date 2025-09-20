@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="burp插件开发 Burp Suite的强大除了自身提供了丰富的可供测试人员使用的功能外，其提供的支持第三方拓展插件的功能也极大地方便使用者编写自己的自定义插件。，Burp Suite支持的插件类型有Java、Python、Ruby三种。无论哪种语言的实现，开发者只要选择自己熟悉的语言，按照接口规范去实现想要的功能即可。下面我们就来看看如何开发一个Burp Extender的插件。 本章讲述的主要内容有：
+API描述 Burp插件的编写前准备 Burp插件的编写（Java语言版） api描述 打开Burp Extender的APIs的Tab页，看到的界面如下图所示： 注意不同版本的api可能不一样，我之前按照官网最新的使用maven依赖的方式，就因为BurpExtension最新版本使用初始化方法initalize和我当前版本的initalise差一个字母，导致折腾了半天，建议开发使用当前文件的api接口导出到项目源代码目录，因为maven的api压根不知道版本对应关系，我的版本:V2022.9。
+在idea中新建一个maven空项目，点击apis - save interface files到src/main/java目录 目录结构如下 具体api的用途请参考api的描述或者在apis面板上save javadoc files打开html查看 或者进入官网查看： https://portswigger.github.io/burp-extensions-montoya-api/javadoc/burp/api/montoya/MontoyaApi.html
+插件编写前准备 源代码参考 burpsuite没有详细文档描述插件如何编写，提供了很多相关的案例，需要自行阅读 https://github.com/PortSwigger/burp-extensions-montoya-api-examples
+java环境配置 首先确定你burpsuite版本需要使用的jdk，比如我的是jdk17，平时开发都使用的jdk8 修改idea的环境 点击project structure - SDKS新增jdk17 Modules上的language level如果没有17就选最大就行，我这里是13就可以了，这只是idea编译代码用到的版本 Project上的Project SDK换成17即可 pom.xml中添加">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="BurpSuite实战教程03-BurpSuite插件开发 :: liaomin416100569博客">
+    <meta name="twitter:description" content="burp插件开发 Burp Suite的强大除了自身提供了丰富的可供测试人员使用的功能外，其提供的支持第三方拓展插件的功能也极大地方便使用者编写自己的自定义插件。，Burp Suite支持的插件类型有Java、Python、Ruby三种。无论哪种语言的实现，开发者只要选择自己熟悉的语言，按照接口规范去实现想要的功能即可。下面我们就来看看如何开发一个Burp Extender的插件。 本章讲述的主要内容有：
+API描述 Burp插件的编写前准备 Burp插件的编写（Java语言版） api描述 打开Burp Extender的APIs的Tab页，看到的界面如下图所示： 注意不同版本的api可能不一样，我之前按照官网最新的使用maven依赖的方式，就因为BurpExtension最新版本使用初始化方法initalize和我当前版本的initalise差一个字母，导致折腾了半天，建议开发使用当前文件的api接口导出到项目源代码目录，因为maven的api压根不知道版本对应关系，我的版本:V2022.9。
+在idea中新建一个maven空项目，点击apis - save interface files到src/main/java目录 目录结构如下 具体api的用途请参考api的描述或者在apis面板上save javadoc files打开html查看 或者进入官网查看： https://portswigger.github.io/burp-extensions-montoya-api/javadoc/burp/api/montoya/MontoyaApi.html
+插件编写前准备 源代码参考 burpsuite没有详细文档描述插件如何编写，提供了很多相关的案例，需要自行阅读 https://github.com/PortSwigger/burp-extensions-montoya-api-examples
+java环境配置 首先确定你burpsuite版本需要使用的jdk，比如我的是jdk17，平时开发都使用的jdk8 修改idea的环境 点击project structure - SDKS新增jdk17 Modules上的language level如果没有17就选最大就行，我这里是13就可以了，这只是idea编译代码用到的版本 Project上的Project SDK换成17即可 pom.xml中添加">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/security/burp_suite/action_03_plugins/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="BurpSuite实战教程03-BurpSuite插件开发 :: liaomin416100569博客">
+    <meta property="og:description" content="burp插件开发 Burp Suite的强大除了自身提供了丰富的可供测试人员使用的功能外，其提供的支持第三方拓展插件的功能也极大地方便使用者编写自己的自定义插件。，Burp Suite支持的插件类型有Java、Python、Ruby三种。无论哪种语言的实现，开发者只要选择自己熟悉的语言，按照接口规范去实现想要的功能即可。下面我们就来看看如何开发一个Burp Extender的插件。 本章讲述的主要内容有：
+API描述 Burp插件的编写前准备 Burp插件的编写（Java语言版） api描述 打开Burp Extender的APIs的Tab页，看到的界面如下图所示： 注意不同版本的api可能不一样，我之前按照官网最新的使用maven依赖的方式，就因为BurpExtension最新版本使用初始化方法initalize和我当前版本的initalise差一个字母，导致折腾了半天，建议开发使用当前文件的api接口导出到项目源代码目录，因为maven的api压根不知道版本对应关系，我的版本:V2022.9。
+在idea中新建一个maven空项目，点击apis - save interface files到src/main/java目录 目录结构如下 具体api的用途请参考api的描述或者在apis面板上save javadoc files打开html查看 或者进入官网查看： https://portswigger.github.io/burp-extensions-montoya-api/javadoc/burp/api/montoya/MontoyaApi.html
+插件编写前准备 源代码参考 burpsuite没有详细文档描述插件如何编写，提供了很多相关的案例，需要自行阅读 https://github.com/PortSwigger/burp-extensions-montoya-api-examples
+java环境配置 首先确定你burpsuite版本需要使用的jdk，比如我的是jdk17，平时开发都使用的jdk8 修改idea的环境 点击project structure - SDKS新增jdk17 Modules上的language level如果没有17就选最大就行，我这里是13就可以了，这只是idea编译代码用到的版本 Project上的Project SDK换成17即可 pom.xml中添加">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="安全攻防">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="BurpSuite实战教程03-BurpSuite插件开发 :: liaomin416100569博客">
+    <meta itemprop="description" content="burp插件开发 Burp Suite的强大除了自身提供了丰富的可供测试人员使用的功能外，其提供的支持第三方拓展插件的功能也极大地方便使用者编写自己的自定义插件。，Burp Suite支持的插件类型有Java、Python、Ruby三种。无论哪种语言的实现，开发者只要选择自己熟悉的语言，按照接口规范去实现想要的功能即可。下面我们就来看看如何开发一个Burp Extender的插件。 本章讲述的主要内容有：
+API描述 Burp插件的编写前准备 Burp插件的编写（Java语言版） api描述 打开Burp Extender的APIs的Tab页，看到的界面如下图所示： 注意不同版本的api可能不一样，我之前按照官网最新的使用maven依赖的方式，就因为BurpExtension最新版本使用初始化方法initalize和我当前版本的initalise差一个字母，导致折腾了半天，建议开发使用当前文件的api接口导出到项目源代码目录，因为maven的api压根不知道版本对应关系，我的版本:V2022.9。
+在idea中新建一个maven空项目，点击apis - save interface files到src/main/java目录 目录结构如下 具体api的用途请参考api的描述或者在apis面板上save javadoc files打开html查看 或者进入官网查看： https://portswigger.github.io/burp-extensions-montoya-api/javadoc/burp/api/montoya/MontoyaApi.html
+插件编写前准备 源代码参考 burpsuite没有详细文档描述插件如何编写，提供了很多相关的案例，需要自行阅读 https://github.com/PortSwigger/burp-extensions-montoya-api-examples
+java环境配置 首先确定你burpsuite版本需要使用的jdk，比如我的是jdk17，平时开发都使用的jdk8 修改idea的环境 点击project structure - SDKS新增jdk17 Modules上的language level如果没有17就选最大就行，我这里是13就可以了，这只是idea编译代码用到的版本 Project上的Project SDK换成17即可 pom.xml中添加">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="627">
+    <title>BurpSuite实战教程03-BurpSuite插件开发 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/security\/burp_suite\/action_03_plugins\/index.html';
+      window.relearn.relBasePath='..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/security/burp_suite/action_03_plugins/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#burp插件开发">burp插件开发</a>
+      <ul>
+        <li><a href="#api描述">api描述</a></li>
+        <li><a href="#插件编写前准备">插件编写前准备</a>
+          <ul>
+            <li><a href="#源代码参考">源代码参考</a></li>
+            <li><a href="#java环境配置">java环境配置</a></li>
+            <li><a href="#开启调试">开启调试</a></li>
+          </ul>
+        </li>
+        <li><a href="#helloworld编写">helloworld编写</a></li>
+        <li><a href="#自定义抓包日志显示器">自定义抓包日志显示器</a>
+          <ul>
+            <li><a href="#添加请求过滤器">添加请求过滤器</a></li>
+            <li><a href="#添加http请求对象">添加http请求对象</a></li>
+            <li><a href="#添加表格数据源">添加表格数据源</a></li>
+            <li><a href="#定义burp拓展">定义burp拓展</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/security/index.html"><span itemprop="name">安全攻防</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/security/burp_suite/index.html"><span itemprop="name">burpsuite</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">BurpSuite实战教程03-BurpSuite插件开发</span><meta itemprop="position" content="4"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/security/burp_suite/action_02_fpackage/index.html" title="BurpSuite实战教程02-BurpSuite+夜神模拟器抓包教程 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><span class="topbar-control"><i class="fa-fw fas fa-chevron-right"></i></span>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable security" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="burpsuite实战教程03-burpsuite插件开发">BurpSuite实战教程03-BurpSuite插件开发</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1 id="burp插件开发">burp插件开发</h1>
+<p>Burp Suite的强大除了自身提供了丰富的可供测试人员使用的功能外，其提供的支持第三方拓展插件的功能也极大地方便使用者编写自己的自定义插件。，Burp Suite支持的插件类型有Java、Python、Ruby三种。无论哪种语言的实现，开发者只要选择自己熟悉的语言，按照接口规范去实现想要的功能即可。下面我们就来看看如何开发一个Burp Extender的插件。 本章讲述的主要内容有：</p>
+<ol>
+<li>API描述</li>
+<li>Burp插件的编写前准备</li>
+<li>Burp插件的编写（Java语言版）</li>
+</ol>
+<h2 id="api描述">api描述</h2>
+<p>打开Burp Extender的APIs的Tab页，看到的界面如下图所示：
+<a href="#R-image-40a879ea76666cee346ac4aea920ecba" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/7d3d961d1e135e6deda42cc5a1d93ef3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-40a879ea76666cee346ac4aea920ecba"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/7d3d961d1e135e6deda42cc5a1d93ef3.png"></a></p>
+<blockquote>
+<p>注意不同版本的api可能不一样，我之前按照官网最新的使用maven依赖的方式，就因为BurpExtension最新版本使用初始化方法initalize和我当前版本的initalise差一个字母，导致折腾了半天，建议开发使用当前文件的api接口导出到项目源代码目录，因为maven的api压根不知道版本对应关系，我的版本:V2022.9。</p></blockquote>
+<p>在idea中新建一个maven空项目，点击apis - save interface files到src/main/java目录
+<a href="#R-image-4aa0e568d7d724a9f9b65d878f151fcc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/2175f724fd5b14bb88a03e70b062cd71.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4aa0e568d7d724a9f9b65d878f151fcc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/2175f724fd5b14bb88a03e70b062cd71.png"></a>
+目录结构如下
+<a href="#R-image-40bcaaea1b9954e1f9ce2f4cb64f8743" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/f5153274f8eb54a1323bc75b24be9b00.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-40bcaaea1b9954e1f9ce2f4cb64f8743"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/f5153274f8eb54a1323bc75b24be9b00.png"></a>
+具体api的用途请参考api的描述或者在apis面板上save javadoc files打开html查看
+<a href="#R-image-feb5f25fab2873047aa15a8db351822c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/6b7dcfa346a63f6f657b1422a31a2a68.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-feb5f25fab2873047aa15a8db351822c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/6b7dcfa346a63f6f657b1422a31a2a68.png"></a>
+或者进入官网查看：
+<a href="https://portswigger.github.io/burp-extensions-montoya-api/javadoc/burp/api/montoya/MontoyaApi.html" rel="external" target="_blank">https://portswigger.github.io/burp-extensions-montoya-api/javadoc/burp/api/montoya/MontoyaApi.html</a></p>
+<h2 id="插件编写前准备">插件编写前准备</h2>
+<h3 id="源代码参考">源代码参考</h3>
+<p>burpsuite没有详细文档描述插件如何编写，提供了很多相关的案例，需要自行阅读
+<a href="https://github.com/PortSwigger/burp-extensions-montoya-api-examples" rel="external" target="_blank">https://github.com/PortSwigger/burp-extensions-montoya-api-examples</a></p>
+<h3 id="java环境配置">java环境配置</h3>
+<p>首先确定你burpsuite版本需要使用的jdk，比如我的是jdk17，平时开发都使用的jdk8
+<a href="#R-image-48b98c4579f93ea7d47c2b4985ebc3c5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/e08a9ca8b5e11b08435ffb4559f069c5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-48b98c4579f93ea7d47c2b4985ebc3c5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/e08a9ca8b5e11b08435ffb4559f069c5.png"></a>
+修改idea的环境
+点击project structure - SDKS新增jdk17
+<a href="#R-image-ad0c2f0883871d7e0490613f0fa03ea8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/83d134690baf3fae3832b3b31563bc9e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ad0c2f0883871d7e0490613f0fa03ea8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/83d134690baf3fae3832b3b31563bc9e.png"></a>
+Modules上的language level如果没有17就选最大就行，我这里是13就可以了，这只是idea编译代码用到的版本
+Project上的Project SDK换成17即可
+<a href="#R-image-87b46974cdb0b82dcf8468bd4dcd7e4f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/093ffb6a1a4022b17f80947bd065d404.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-87b46974cdb0b82dcf8468bd4dcd7e4f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/093ffb6a1a4022b17f80947bd065d404.png"></a>
+pom.xml中添加</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;maven.compiler.encoding&gt;UTF-8&lt;/maven.compiler.encoding&gt;
+        &lt;java.version&gt;17&lt;/java.version&gt;
+        &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+        &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+    &lt;/properties&gt;</code></pre></div>
+<p>使用maven执行mvn package确认是否使用的jdk17
+<a href="#R-image-8b00d1e6a00206bd6ec2bdc2f7def1e5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/1cebdac4f7979a44cb2f1dbfc866c2fe.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8b00d1e6a00206bd6ec2bdc2f7def1e5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/1cebdac4f7979a44cb2f1dbfc866c2fe.png"></a>
+修改pom.xml修改打包方式为jar</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>    &lt;packaging&gt;jar&lt;/packaging&gt;</code></pre></div>
+<h3 id="开启调试">开启调试</h3>
+<p>打开idea 运行的Edit Configurations,新建一个Remote，复制command line arguments for remote JVM
+Host設置為：localhost，port设置为:50055
+<a href="#R-image-74f2dbff0de1e72e519aa07e1c80cef1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/d5a09c7536ea4c5d48e1e2f253247593.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-74f2dbff0de1e72e519aa07e1c80cef1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/d5a09c7536ea4c5d48e1e2f253247593.png"></a>
+将复制内容添加到burpsuite的bat文件中
+<a href="#R-image-6ac1a3f78baa9366d952c30983fa636e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/16df02bae388c0ddbe4cd7bd6c9f8bec.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6ac1a3f78baa9366d952c30983fa636e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/16df02bae388c0ddbe4cd7bd6c9f8bec.png"></a>
+jvm参数加上即可
+<a href="#R-image-fda2bd0224379039291e76b35c4c0820" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/54fe6ffdcfe16fd51a5318309921df9c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fda2bd0224379039291e76b35c4c0820"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/54fe6ffdcfe16fd51a5318309921df9c.png"></a>
+重新启动burpsuite
+netstat -aon | findstr 50055 查看端口是否开启。</p>
+<h2 id="helloworld编写">helloworld编写</h2>
+<p>创建一个测试类：HelloWorld</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>package com.qj.bc;
+
+import burp.api.montoya.BurpExtension;
+import burp.api.montoya.MontoyaApi;
+import burp.api.montoya.logging.Logging;
+
+public class HelloWorld implements BurpExtension {
+    @Override
+    public void initialise(MontoyaApi api) {
+        Logging logging = api.logging();
+
+        // write a message to our output stream
+        logging.logToOutput(&#34;Hello output.&#34;);
+
+        // write a message to our error stream
+        logging.logToError(&#34;Hello error.&#34;);
+
+        // write a message to the Burp alerts tab
+        logging.raiseInfoEvent(&#34;Hello info event.&#34;);
+        logging.raiseDebugEvent(&#34;Hello debug event.&#34;);
+        logging.raiseErrorEvent(&#34;Hello error event.&#34;);
+        logging.raiseCriticalEvent(&#34;Hello critical event.&#34;);
+
+        // throw an exception that will appear in our error stream
+        throw new RuntimeException(&#34;Hello exception.&#34;);
+    }
+}</code></pre></div>
+<p>使用mvn package打包。
+启动远程调试
+<a href="#R-image-ff7ea0d9766d55b1f582ea723d1b329e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/92784aca870328cd7f3186beceff0a59.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ff7ea0d9766d55b1f582ea723d1b329e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/92784aca870328cd7f3186beceff0a59.png"></a>
+打开burpsuite  - Extener - Extensions - Add 加入一个
+<a href="#R-image-59b73da0cd17677971c3357ceec5952d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/6aabcb54f176bf1118693248498a665d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-59b73da0cd17677971c3357ceec5952d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/6aabcb54f176bf1118693248498a665d.png"></a>
+点击next后，断点断下
+<a href="#R-image-df620fc6be8ad5404043808bafc80ff7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/6f35de7a1de7ff3d17b493e23a7bb95e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-df620fc6be8ad5404043808bafc80ff7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/6f35de7a1de7ff3d17b493e23a7bb95e.png"></a>
+跳过断点后 查看输出和错误日志
+<a href="#R-image-a60545109cc924dad30a190587d95804" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/601ada2bfd865cbdfdcee572a02647ee.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a60545109cc924dad30a190587d95804"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/601ada2bfd865cbdfdcee572a02647ee.png"></a>
+Errors显示
+<a href="#R-image-eb257bf53585791cbe50b6a61f21a39b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/63b815cbb7cb98e07cb52539a92cf7f3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-eb257bf53585791cbe50b6a61f21a39b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/63b815cbb7cb98e07cb52539a92cf7f3.png"></a></p>
+<h2 id="自定义抓包日志显示器">自定义抓包日志显示器</h2>
+<p>需求：拦截bp的抓包日志显示到自定义的表格中，点击表格能显示请求和响应的信息。
+效果图如下
+<a href="#R-image-5ec5c22001a576f6664bf7f2a0968459" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/afdf428e6e596f794ee5fb4f45505bc9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5ec5c22001a576f6664bf7f2a0968459"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/security/burp_suite/action_03_plugins.md.images/afdf428e6e596f794ee5fb4f45505bc9.png"></a>
+官网实例参考：
+<a href="https://github.com/PortSwigger/burp-extensions-montoya-api-examples/tree/main/customlogger" rel="external" target="_blank">https://github.com/PortSwigger/burp-extensions-montoya-api-examples/tree/main/customlogger</a></p>
+<h3 id="添加请求过滤器">添加请求过滤器</h3>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>package com.qj.bc.customlogger;
+
+import burp.api.montoya.core.MessageAnnotations;
+import burp.api.montoya.core.ToolSource;
+import burp.api.montoya.http.HttpHandler;
+import burp.api.montoya.http.RequestHandlerResult;
+import burp.api.montoya.http.ResponseHandlerResult;
+import burp.api.montoya.http.message.requests.HttpRequest;
+import burp.api.montoya.http.message.responses.HttpResponse;
+
+public class MyHttpHandler implements HttpHandler
+{
+    private final MyTableModel tableModel;
+
+    public MyHttpHandler(MyTableModel tableModel)
+    {
+
+        this.tableModel = tableModel;
+    }
+
+
+    @Override
+    public RequestHandlerResult handleHttpRequest(HttpRequest request, MessageAnnotations annotations, ToolSource toolSource) {
+        return RequestHandlerResult.from(request,annotations);
+    }
+
+    /**
+     *
+     * @param request 被抓包的请求信息
+     * @param response 返回的响应信息
+     * @param annotations 消息标记，比如高亮，添加注释等。
+     * @param toolSource 这个请求来源于那个工具，比如是proxy还是爆破，还是其他的工具，比如proxy抓包的HTTP请求，爆破自定义的请求等等
+     * @return
+     */
+    @Override
+    public ResponseHandlerResult handleHttpResponse(HttpRequest request, HttpResponse response, MessageAnnotations annotations, ToolSource toolSource) {
+        tableModel.add(new HttpResponseReceived(toolSource,request,response));
+        return ResponseHandlerResult.from(response,annotations);
+    }
+}</code></pre></div>
+<h3 id="添加http请求对象">添加http请求对象</h3>
+<p>因为http拦截到有四个参数</p>
+<ol>
+<li>request 被抓包的请求信息</li>
+<li>response 返回的响应信息</li>
+<li>annotations 消息标记，比如高亮，添加注释等。</li>
+<li>toolSource 这个请求来源于那个工具，比如是proxy还是爆破，还是其他的工具，比如proxy抓包的HTTP请求，爆破自定义的攻击请求（点击start attack才能抓到）等等</li>
+</ol>
+<p>封装一个类用于包装这几个参数，因为界面上要显示请求响应，来源等信息</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>package com.qj.bc.customlogger;
+
+import burp.api.montoya.core.ToolSource;
+import burp.api.montoya.http.message.requests.HttpRequest;
+import burp.api.montoya.http.message.responses.HttpResponse;
+
+public class HttpResponseReceived {
+    private ToolSource toolSource;
+    private HttpRequest request;
+    private HttpResponse response;
+
+    public HttpResponseReceived(ToolSource toolSource, HttpRequest request, HttpResponse response) {
+        this.toolSource = toolSource;
+        this.request = request;
+        this.response = response;
+    }
+
+    public ToolSource toolSource(){
+        return toolSource;
+    }
+    public HttpRequest initiatingRequest(){
+        return request;
+    }
+    public HttpResponse getResponse(){
+        return response;
+    }
+}</code></pre></div>
+<h3 id="添加表格数据源">添加表格数据源</h3>
+<p>，这个数据最终显示在表格中，定义一个表格modal</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>package com.qj.bc.customlogger;
+import burp.api.montoya.http.message.responses.HttpResponse;
+
+import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
+import java.util.List;
+public class MyTableModel extends AbstractTableModel
+{
+    private final List&lt;HttpResponseReceived&gt; log;
+
+    public MyTableModel()
+    {
+        this.log = new ArrayList&lt;&gt;();
+    }
+
+    @Override
+    public synchronized int getRowCount()
+    {
+        return log.size();
+    }
+
+    @Override
+    public int getColumnCount()
+    {
+        return 2;
+    }
+
+    @Override
+    public String getColumnName(int column)
+    {
+        return switch (column)
+                {
+                    case 0 -&gt; &#34;Tool&#34;;
+                    case 1 -&gt; &#34;URL&#34;;
+                    default -&gt; &#34;&#34;;
+                };
+    }
+
+    @Override
+    public synchronized Object getValueAt(int rowIndex, int columnIndex)
+    {
+        HttpResponseReceived responseReceived = log.get(rowIndex);
+
+        return switch (columnIndex)
+                {
+                    case 0 -&gt; responseReceived.toolSource().toolType();
+                    case 1 -&gt; responseReceived.initiatingRequest().url();
+                    default -&gt; &#34;&#34;;
+                };
+    }
+
+    public synchronized void add(HttpResponseReceived responseReceived)
+    {
+        int index = log.size();
+        log.add(responseReceived);
+        fireTableRowsInserted(index, index);
+    }
+
+    public synchronized HttpResponseReceived get(int rowIndex)
+    {
+        return log.get(rowIndex);
+    }
+}</code></pre></div>
+<h3 id="定义burp拓展">定义burp拓展</h3>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>package com.qj.bc.customlogger;
+
+import burp.api.montoya.BurpExtension;
+import burp.api.montoya.MontoyaApi;
+import burp.api.montoya.ui.UserInterface;
+import burp.api.montoya.ui.editor.HttpRequestEditor;
+import burp.api.montoya.ui.editor.HttpResponseEditor;
+
+import javax.swing.*;
+import java.awt.*;
+
+import static burp.api.montoya.ui.editor.EditorOptions.READ_ONLY;
+
+public class CustomLogger implements BurpExtension
+{
+    private MontoyaApi api;
+
+    @Override
+    public void initialise(MontoyaApi api)
+    {
+        this.api = api;
+        MyTableModel tableModel = new MyTableModel();
+        //在burpsuite中添加一个tab页签，名字是Custom logger
+        api.userInterface().registerSuiteTab(&#34;Custom logger&#34;, constructLoggerTab(tableModel));
+        //注册一个http抓包请求拦截器，用来获取所有抓包的数据添加到表格
+        api.http().registerHttpHandler(new MyHttpHandler(tableModel));
+    }
+
+    /**
+     * 使用JSplitPane,添加一个左面是http请求的表格，下面是个http的请求和响应编辑器
+     * @param tableModel
+     * @return
+     */
+    private Component constructLoggerTab(MyTableModel tableModel)
+    {
+        // main split pane
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+
+        // tabs with request/response viewers
+        JTabbedPane tabs = new JTabbedPane();
+
+        UserInterface userInterface = api.userInterface();
+
+        HttpRequestEditor requestViewer = userInterface.createHttpRequestEditor(READ_ONLY);
+        HttpResponseEditor responseViewer = userInterface.createHttpResponseEditor(READ_ONLY);
+
+        tabs.addTab(&#34;Request&#34;, requestViewer.uiComponent());
+        tabs.addTab(&#34;Response&#34;, responseViewer.uiComponent());
+
+        splitPane.setRightComponent(tabs);
+
+        // table of log entries
+        JTable table = new JTable(tableModel)
+        {
+            /**
+             * 当表格的某个请求被选择后，需要将请求和响应的结果，设置到请求响应编辑器中
+             * @param rowIndex
+             * @param columnIndex
+             * @param toggle
+             * @param extend
+             */
+            @Override
+            public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend)
+            {
+                // show the log entry for the selected row
+                HttpResponseReceived responseReceived = tableModel.get(rowIndex);
+                requestViewer.setRequest(responseReceived.initiatingRequest());
+                responseViewer.setResponse(responseReceived.getResponse());
+
+                super.changeSelection(rowIndex, columnIndex, toggle, extend);
+            }
+        };
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        splitPane.setLeftComponent(scrollPane);
+
+        return splitPane;
+    }
+}</code></pre></div>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="parent " data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/security/burp_suite/index.html"><a class="padding" href="/docs/security/burp_suite/index.html">burpsuite</a><ul id="R-subsections-aac6f704e7c11f3dd48357b290c8df21" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/security/burp_suite/action_01_web/index.html"><a class="padding" href="/docs/security/burp_suite/action_01_web/index.html">BurpSuite实战教程01-web渗透安全测试(靶场搭建及常见漏洞攻防)</a></li>
+            <li class="" data-nav-id="/docs/security/burp_suite/action_02_fpackage/index.html"><a class="padding" href="/docs/security/burp_suite/action_02_fpackage/index.html">BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程</a></li>
+            <li class="active " data-nav-id="/docs/security/burp_suite/action_03_plugins/index.html"><a class="padding" href="/docs/security/burp_suite/action_03_plugins/index.html">BurpSuite实战教程03-BurpSuite插件开发</a></li></ul></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

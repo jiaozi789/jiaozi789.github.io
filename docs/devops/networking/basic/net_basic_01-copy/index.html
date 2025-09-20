@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一 IP分类原则
+1》ip的组建规则 ip地址一般由4个字节的数字组成 通过.分割 格式为：字节1.字节2.字节3.字节4 比如192.168.1.5（二进制表示太过复杂 一般转换为十进制表示）
+1字节（8位）的无符号整数 最大为 11111111=2的7次方&#43;2的6次方&#43;….&#43;2的0次方 =255 最小为00000000 所以最大的ip就是 255.255.255.255 最小的ip 0.0.0.0
+总共为32位bit 总共ip数为 2的32次方（4294967296）个ip地址
+2》ip的分类规则 网络位：就是区分网络的标识 相同的网络位的主机可以互相方位 比如 192.168.1.5和 192.168.1.4 位于相同的网络 192.168.1 这就是网络位 主机位：相同的网络中 允许的主机数 比如网路位 192.168.1 只有最后一个字节 标识主机位 也就是该网络最少是0 最大是255 也就 256个ip 256个主机
+将ip地址分为5类地址 （ABCDE）
+A类地址:
+前8位为网络位 也就是说主机位 有 3*8=24位 这个一般用于标识互联网 网络中存在大量的主机 A类地址 网络位首字节必须以0开头 也就是说 只有7位标识网络位 最小是 00000000-01111111 也就是第一个字节是 0-127 其中0标识任意地址 127用户网卡之间回环 所以
+A类地址 第一位 实际是从 1-126
+B类地址
+前16位为网络位 主机位为 2*8=16位 网络多 主机也多 B类地址必须以10开头 首字节 剩余6位 范围是10000000-10111111 也就是">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="计算机网络基础01-IP地址相关知识 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一 IP分类原则
+1》ip的组建规则 ip地址一般由4个字节的数字组成 通过.分割 格式为：字节1.字节2.字节3.字节4 比如192.168.1.5（二进制表示太过复杂 一般转换为十进制表示）
+1字节（8位）的无符号整数 最大为 11111111=2的7次方&#43;2的6次方&#43;….&#43;2的0次方 =255 最小为00000000 所以最大的ip就是 255.255.255.255 最小的ip 0.0.0.0
+总共为32位bit 总共ip数为 2的32次方（4294967296）个ip地址
+2》ip的分类规则 网络位：就是区分网络的标识 相同的网络位的主机可以互相方位 比如 192.168.1.5和 192.168.1.4 位于相同的网络 192.168.1 这就是网络位 主机位：相同的网络中 允许的主机数 比如网路位 192.168.1 只有最后一个字节 标识主机位 也就是该网络最少是0 最大是255 也就 256个ip 256个主机
+将ip地址分为5类地址 （ABCDE）
+A类地址:
+前8位为网络位 也就是说主机位 有 3*8=24位 这个一般用于标识互联网 网络中存在大量的主机 A类地址 网络位首字节必须以0开头 也就是说 只有7位标识网络位 最小是 00000000-01111111 也就是第一个字节是 0-127 其中0标识任意地址 127用户网卡之间回环 所以
+A类地址 第一位 实际是从 1-126
+B类地址
+前16位为网络位 主机位为 2*8=16位 网络多 主机也多 B类地址必须以10开头 首字节 剩余6位 范围是10000000-10111111 也就是">
+    <meta property="og:url" content="http://localhost:1313/docs/devops/networking/basic/net_basic_01-copy/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="计算机网络基础01-IP地址相关知识 :: liaomin416100569博客">
+    <meta property="og:description" content="一 IP分类原则
+1》ip的组建规则 ip地址一般由4个字节的数字组成 通过.分割 格式为：字节1.字节2.字节3.字节4 比如192.168.1.5（二进制表示太过复杂 一般转换为十进制表示）
+1字节（8位）的无符号整数 最大为 11111111=2的7次方&#43;2的6次方&#43;….&#43;2的0次方 =255 最小为00000000 所以最大的ip就是 255.255.255.255 最小的ip 0.0.0.0
+总共为32位bit 总共ip数为 2的32次方（4294967296）个ip地址
+2》ip的分类规则 网络位：就是区分网络的标识 相同的网络位的主机可以互相方位 比如 192.168.1.5和 192.168.1.4 位于相同的网络 192.168.1 这就是网络位 主机位：相同的网络中 允许的主机数 比如网路位 192.168.1 只有最后一个字节 标识主机位 也就是该网络最少是0 最大是255 也就 256个ip 256个主机
+将ip地址分为5类地址 （ABCDE）
+A类地址:
+前8位为网络位 也就是说主机位 有 3*8=24位 这个一般用于标识互联网 网络中存在大量的主机 A类地址 网络位首字节必须以0开头 也就是说 只有7位标识网络位 最小是 00000000-01111111 也就是第一个字节是 0-127 其中0标识任意地址 127用户网卡之间回环 所以
+A类地址 第一位 实际是从 1-126
+B类地址
+前16位为网络位 主机位为 2*8=16位 网络多 主机也多 B类地址必须以10开头 首字节 剩余6位 范围是10000000-10111111 也就是">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="运维一体化">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="计算机网络基础01-IP地址相关知识 :: liaomin416100569博客">
+    <meta itemprop="description" content="一 IP分类原则
+1》ip的组建规则 ip地址一般由4个字节的数字组成 通过.分割 格式为：字节1.字节2.字节3.字节4 比如192.168.1.5（二进制表示太过复杂 一般转换为十进制表示）
+1字节（8位）的无符号整数 最大为 11111111=2的7次方&#43;2的6次方&#43;….&#43;2的0次方 =255 最小为00000000 所以最大的ip就是 255.255.255.255 最小的ip 0.0.0.0
+总共为32位bit 总共ip数为 2的32次方（4294967296）个ip地址
+2》ip的分类规则 网络位：就是区分网络的标识 相同的网络位的主机可以互相方位 比如 192.168.1.5和 192.168.1.4 位于相同的网络 192.168.1 这就是网络位 主机位：相同的网络中 允许的主机数 比如网路位 192.168.1 只有最后一个字节 标识主机位 也就是该网络最少是0 最大是255 也就 256个ip 256个主机
+将ip地址分为5类地址 （ABCDE）
+A类地址:
+前8位为网络位 也就是说主机位 有 3*8=24位 这个一般用于标识互联网 网络中存在大量的主机 A类地址 网络位首字节必须以0开头 也就是说 只有7位标识网络位 最小是 00000000-01111111 也就是第一个字节是 0-127 其中0标识任意地址 127用户网卡之间回环 所以
+A类地址 第一位 实际是从 1-126
+B类地址
+前16位为网络位 主机位为 2*8=16位 网络多 主机也多 B类地址必须以10开头 首字节 剩余6位 范围是10000000-10111111 也就是">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="143">
+    <title>计算机网络基础01-IP地址相关知识 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758340670" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758340670" defer></script>
+    <script src="/docs/js/search-lunr.js?1758340670" defer></script>
+    <script src="/docs/js/search.js?1758340670" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758340670";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758340670" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758340670" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758340670" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758340670" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758340670" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758340670" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758340670" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758340670" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758340670" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/devops\/networking\/basic\/net_basic_01-copy\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758340670" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/devops/networking/basic/net_basic_01-copy/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/index.html"><span itemprop="name">运维一体化</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/networking/index.html"><span itemprop="name">网络技术</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/networking/basic/index.html"><span itemprop="name">网络基础</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">计算机网络基础01-IP地址相关知识</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/networking/basic/index.html" title="网络基础 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/networking/basic/net_basic_01/index.html" title="计算机网络基础01-IP地址相关知识 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable devops" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="计算机网络基础01-ip地址相关知识">计算机网络基础01-IP地址相关知识</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p><strong>一 IP分类原则</strong></p>
+<p>    1》ip的组建规则 </p>
+<p>    ip地址一般由4个字节的数字组成 通过.分割 格式为：字节1.字节2.字节3.字节4  比如192.168.1.5（<a href="https://so.csdn.net/so/search?q=%E4%BA%8C%E8%BF%9B%E5%88%B6&spm=1001.2101.3001.7020" rel="external" target="_blank">二进制</a>表示太过复杂 一般转换为十进制表示）</p>
+<p>   1字节（8位）的无符号整数 最大为 11111111=2的7次方+2的6次方+&hellip;.+2的0次方 =255  最小为00000000 所以最大的ip就是 255.255.255.255 最小的ip 0.0.0.0</p>
+<p>   总共为32位bit 总共ip数为 2的32次方（4294967296）个ip地址</p>
+<p>    2》ip的分类规则 </p>
+<p>      网络位：就是区分网络的标识  相同的网络位的主机可以互相方位  比如 192.168.1.5和 192.168.1.4 位于相同的网络 192.168.1 这就是网络位 </p>
+<p>      主机位：相同的网络中 允许的主机数 比如网路位 192.168.1  只有最后一个字节 标识主机位 也就是该网络最少是0 最大是255 也就 256个ip 256个主机</p>
+<p>      将ip地址分为5类地址 （ABCDE）</p>
+<p>       A类地址:</p>
+<p>           前8位为网络位  也就是说主机位 有 3*8=24位  这个一般用于标识互联网 网络中存在大量的主机  A类地址 网络位首字节必须以0开头  </p>
+<p>         也就是说 只有7位标识网络位  最小是 00000000-01111111  也就是第一个字节是 0-127 其中0标识任意地址  127用户网卡之间回环 所以</p>
+<p>        A类地址 第一位 实际是从 1-126</p>
+<p>       B类地址</p>
+<p>          前16位为网络位 主机位为 2*8=16位  网络多 主机也多  B类地址必须以10开头  首字节 剩余6位  范围是10000000-10111111 也就是</p>
+<p>         128-191  其中128.0.0.0和191.255.0.0为保留ip  实际范围是128.1.0.0&ndash;191.254.0.0</p>
+<p>        C类地址</p>
+<p>          前24位为网络位 主机位为 1*8=8位  网络多 主机也就2的8次方 255个 一般用于指定局域网  B类地址必须以110开头  首字节 剩余5位  范围是11000000-11011111 也就是 192-223 其中其中192.0.0.0和223.255.255.0为保留ip实际范围是192.0.1.0&ndash;223.255.254.0</p>
+<p>        D类地址同上 首字节必须 1110开头 用于组播</p>
+<p>        E类地址 首字节必须 11110开头</p>
+<p>   <a href="#R-image-b79066ecb4783aa892fbf6c867b32bfc" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic_01.md.images/e356d8b303a51221788f4faeca76c621.bmp" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b79066ecb4783aa892fbf6c867b32bfc"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic_01.md.images/e356d8b303a51221788f4faeca76c621.bmp"></a></p>
+<p><strong>二 子网掩码</strong></p>
+<p>  子网掩码(subnet mask) 必须结合IP地址一起使用。子网掩码只有一个作用，就是将某个IP地址划分成网络地址和主机地址两部分。</p>
+<p>比如A类地址 首字节是网络位  后面三字节为主机位  默认的子网掩码为  255.0.0.0   假设ip是 10.9.8.1  可以使用 10.9.8.1/8 表示ip</p>
+<p>   是 10.9.8.1  前8位表示网络位 子网掩码就是  11111111 0000000 00000000 00000000   =255.0.0.0</p>
+<p> B类地址默认子网掩码 255.255.0.0  C类地址为 255.255.255.0 </p>
+<p>VLSM（可变长度子网掩码）</p>
+<p>   比如某个局域网 ip数为 500个 C类地址明显不够用 B类地址 2的16次方=65536个 明显又多了 此时 我们需要定义可变子网掩码</p>
+<p> 如果将65536个ip用于500个ip的局域网 如果需要再需要建立一个600个ip的局域网 他就不能使用B类的ip了  所以需要通过子网掩码</p>
+<p>将B类地址划分为多个子网</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu"></ul></li>
+            <li class="parent " data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/devops/kubernetes/index.html"><a class="padding" href="/docs/devops/kubernetes/index.html">kubernetes</a><ul id="R-subsections-a6d9d4850f81ae033d42cdaa03dad084" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/devops/networking/index.html"><a class="padding" href="/docs/devops/networking/index.html">网络技术</a><ul id="R-subsections-bd6b3f75e8269a91d29691b78d3bac17" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/devops/networking/basic/index.html"><a class="padding" href="/docs/devops/networking/basic/index.html">网络基础</a><ul id="R-subsections-736e298d464a228d5f70014b04a0f7a2" class="collapsible-menu">
+            <li class="active " data-nav-id="/docs/devops/networking/basic/net_basic_01-copy/index.html"><a class="padding" href="/docs/devops/networking/basic/net_basic_01-copy/index.html">计算机网络基础01-IP地址相关知识</a></li>
+            <li class="" data-nav-id="/docs/devops/networking/basic/net_basic_01/index.html"><a class="padding" href="/docs/devops/networking/basic/net_basic_01/index.html">计算机网络基础01-IP地址相关知识</a></li>
+            <li class="" data-nav-id="/docs/devops/networking/basic/net_basic_02/index.html"><a class="padding" href="/docs/devops/networking/basic/net_basic_02/index.html">计算机网络基础02-linux虚拟网络隔离（网桥bridge，路由，虚拟网卡veth）</a></li></ul></li></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758340670" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758340670" defer></script>
+    <script src="/docs/js/theme.js?1758340670" defer></script>
+  </body>
+</html>

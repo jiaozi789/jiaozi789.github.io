@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一。 make工程管理器简介
+工程管理器是指管理较多的文件。如果有一个上百个文件的代码构成的项目，
+如果其中只有一个或少数几个文件进行了修改，按照之前所学的Gcc编译工具，就不得不把这所有的文件重新编译一遍，
+因为编译器并不知道哪些文件是最近更新的，而只知道需要包含这些文件才能把源代码编译成可执行文件，
+于是，程序员就不能不再重新输入数目如此庞大的文件名以完成最后的编译工作。
+编译过程是分为编译、汇编、链接不同阶段的，其中编译阶段仅检查语法错误以及函数与变量的声明是否正确声明了，
+在链接阶段则主要完成是函数链接和全局变量的链接。因此，那些没有改动的源代码根本不需要重新编译，而只要把它们重新链接进去就可以了。所以，人们就希望有一个工程管理器能够自动识别更新了的文件代码，同时又不需要重复输入冗长的命令行，这样，Make工程管理器也就应运而生了。
+实际上，Make工程管理器也就是个“自动编译管理器”，这里的“自动”是指它能够根据文件时间戳自动发现更新过的文件而减少编译的工作量，同时，它通过读入Makefile文件的内容来执行大量的编译工作。用户只需编写一次简单的编译语句就可以了。它大大提高了实际项目的工作效率，而且几乎所有Linux下的项目编程均会涉及到它
+1》makefile文件
+Make在执行时，需要一个命名为Makefile或者makefile的文件。Makefile文件描述了整个工程的编译，链接等规则。
+其中包括：1.工程中的哪些源文件需要编译以及如何编译；
+2需要创建哪些库文件以及如何创建这些库文件、
+3如何最后产生我们想要的可执行文件。
+2》makefile语法
+make通过定义规则来决定如何生成文件
+规则：用于说明如何生成一个或者多个目标文件，规则格式如下： 目标:依赖目标
+（以tab空格）命令
+比如
+a:hello.c
+gcc hello.c -o hello
+a就是一个目标名称:hello.c就是目标依赖的文件 这里如果没有依赖其他目标可以放置依赖的文件
+gcc hello.c -o hello 就是执行这个目标的命令 tab间隔隔开
+在源代码目录新建makefile
+a:hello.cgcc hello.c -o hello make编译
+[root@localhost vc]# makegcc hello.c -o hello 3》多文件的makefile依赖
+假设有如下案例：
+存在一个公用的头文件 a.h（用于定义全局变量和 方法定义）
+#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;int add(int p1,int p2); //该方法在mmath.c中实现void syso(char* c); //该方法在syso.c中实现 mmath.c实现add方法 内容如下：
+#include &#34;a.h&#34;int add(int p1,int p2){return p1&#43;p2;} syso.c实现syso方法">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="linux下gcc编程03-make工程管理 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一。 make工程管理器简介
+工程管理器是指管理较多的文件。如果有一个上百个文件的代码构成的项目，
+如果其中只有一个或少数几个文件进行了修改，按照之前所学的Gcc编译工具，就不得不把这所有的文件重新编译一遍，
+因为编译器并不知道哪些文件是最近更新的，而只知道需要包含这些文件才能把源代码编译成可执行文件，
+于是，程序员就不能不再重新输入数目如此庞大的文件名以完成最后的编译工作。
+编译过程是分为编译、汇编、链接不同阶段的，其中编译阶段仅检查语法错误以及函数与变量的声明是否正确声明了，
+在链接阶段则主要完成是函数链接和全局变量的链接。因此，那些没有改动的源代码根本不需要重新编译，而只要把它们重新链接进去就可以了。所以，人们就希望有一个工程管理器能够自动识别更新了的文件代码，同时又不需要重复输入冗长的命令行，这样，Make工程管理器也就应运而生了。
+实际上，Make工程管理器也就是个“自动编译管理器”，这里的“自动”是指它能够根据文件时间戳自动发现更新过的文件而减少编译的工作量，同时，它通过读入Makefile文件的内容来执行大量的编译工作。用户只需编写一次简单的编译语句就可以了。它大大提高了实际项目的工作效率，而且几乎所有Linux下的项目编程均会涉及到它
+1》makefile文件
+Make在执行时，需要一个命名为Makefile或者makefile的文件。Makefile文件描述了整个工程的编译，链接等规则。
+其中包括：1.工程中的哪些源文件需要编译以及如何编译；
+2需要创建哪些库文件以及如何创建这些库文件、
+3如何最后产生我们想要的可执行文件。
+2》makefile语法
+make通过定义规则来决定如何生成文件
+规则：用于说明如何生成一个或者多个目标文件，规则格式如下： 目标:依赖目标
+（以tab空格）命令
+比如
+a:hello.c
+gcc hello.c -o hello
+a就是一个目标名称:hello.c就是目标依赖的文件 这里如果没有依赖其他目标可以放置依赖的文件
+gcc hello.c -o hello 就是执行这个目标的命令 tab间隔隔开
+在源代码目录新建makefile
+a:hello.cgcc hello.c -o hello make编译
+[root@localhost vc]# makegcc hello.c -o hello 3》多文件的makefile依赖
+假设有如下案例：
+存在一个公用的头文件 a.h（用于定义全局变量和 方法定义）
+#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;int add(int p1,int p2); //该方法在mmath.c中实现void syso(char* c); //该方法在syso.c中实现 mmath.c实现add方法 内容如下：
+#include &#34;a.h&#34;int add(int p1,int p2){return p1&#43;p2;} syso.c实现syso方法">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/languages/gcc/linuxgcc_03-copy/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="linux下gcc编程03-make工程管理 :: liaomin416100569博客">
+    <meta property="og:description" content="一。 make工程管理器简介
+工程管理器是指管理较多的文件。如果有一个上百个文件的代码构成的项目，
+如果其中只有一个或少数几个文件进行了修改，按照之前所学的Gcc编译工具，就不得不把这所有的文件重新编译一遍，
+因为编译器并不知道哪些文件是最近更新的，而只知道需要包含这些文件才能把源代码编译成可执行文件，
+于是，程序员就不能不再重新输入数目如此庞大的文件名以完成最后的编译工作。
+编译过程是分为编译、汇编、链接不同阶段的，其中编译阶段仅检查语法错误以及函数与变量的声明是否正确声明了，
+在链接阶段则主要完成是函数链接和全局变量的链接。因此，那些没有改动的源代码根本不需要重新编译，而只要把它们重新链接进去就可以了。所以，人们就希望有一个工程管理器能够自动识别更新了的文件代码，同时又不需要重复输入冗长的命令行，这样，Make工程管理器也就应运而生了。
+实际上，Make工程管理器也就是个“自动编译管理器”，这里的“自动”是指它能够根据文件时间戳自动发现更新过的文件而减少编译的工作量，同时，它通过读入Makefile文件的内容来执行大量的编译工作。用户只需编写一次简单的编译语句就可以了。它大大提高了实际项目的工作效率，而且几乎所有Linux下的项目编程均会涉及到它
+1》makefile文件
+Make在执行时，需要一个命名为Makefile或者makefile的文件。Makefile文件描述了整个工程的编译，链接等规则。
+其中包括：1.工程中的哪些源文件需要编译以及如何编译；
+2需要创建哪些库文件以及如何创建这些库文件、
+3如何最后产生我们想要的可执行文件。
+2》makefile语法
+make通过定义规则来决定如何生成文件
+规则：用于说明如何生成一个或者多个目标文件，规则格式如下： 目标:依赖目标
+（以tab空格）命令
+比如
+a:hello.c
+gcc hello.c -o hello
+a就是一个目标名称:hello.c就是目标依赖的文件 这里如果没有依赖其他目标可以放置依赖的文件
+gcc hello.c -o hello 就是执行这个目标的命令 tab间隔隔开
+在源代码目录新建makefile
+a:hello.cgcc hello.c -o hello make编译
+[root@localhost vc]# makegcc hello.c -o hello 3》多文件的makefile依赖
+假设有如下案例：
+存在一个公用的头文件 a.h（用于定义全局变量和 方法定义）
+#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;int add(int p1,int p2); //该方法在mmath.c中实现void syso(char* c); //该方法在syso.c中实现 mmath.c实现add方法 内容如下：
+#include &#34;a.h&#34;int add(int p1,int p2){return p1&#43;p2;} syso.c实现syso方法">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="linux下gcc编程03-make工程管理 :: liaomin416100569博客">
+    <meta itemprop="description" content="一。 make工程管理器简介
+工程管理器是指管理较多的文件。如果有一个上百个文件的代码构成的项目，
+如果其中只有一个或少数几个文件进行了修改，按照之前所学的Gcc编译工具，就不得不把这所有的文件重新编译一遍，
+因为编译器并不知道哪些文件是最近更新的，而只知道需要包含这些文件才能把源代码编译成可执行文件，
+于是，程序员就不能不再重新输入数目如此庞大的文件名以完成最后的编译工作。
+编译过程是分为编译、汇编、链接不同阶段的，其中编译阶段仅检查语法错误以及函数与变量的声明是否正确声明了，
+在链接阶段则主要完成是函数链接和全局变量的链接。因此，那些没有改动的源代码根本不需要重新编译，而只要把它们重新链接进去就可以了。所以，人们就希望有一个工程管理器能够自动识别更新了的文件代码，同时又不需要重复输入冗长的命令行，这样，Make工程管理器也就应运而生了。
+实际上，Make工程管理器也就是个“自动编译管理器”，这里的“自动”是指它能够根据文件时间戳自动发现更新过的文件而减少编译的工作量，同时，它通过读入Makefile文件的内容来执行大量的编译工作。用户只需编写一次简单的编译语句就可以了。它大大提高了实际项目的工作效率，而且几乎所有Linux下的项目编程均会涉及到它
+1》makefile文件
+Make在执行时，需要一个命名为Makefile或者makefile的文件。Makefile文件描述了整个工程的编译，链接等规则。
+其中包括：1.工程中的哪些源文件需要编译以及如何编译；
+2需要创建哪些库文件以及如何创建这些库文件、
+3如何最后产生我们想要的可执行文件。
+2》makefile语法
+make通过定义规则来决定如何生成文件
+规则：用于说明如何生成一个或者多个目标文件，规则格式如下： 目标:依赖目标
+（以tab空格）命令
+比如
+a:hello.c
+gcc hello.c -o hello
+a就是一个目标名称:hello.c就是目标依赖的文件 这里如果没有依赖其他目标可以放置依赖的文件
+gcc hello.c -o hello 就是执行这个目标的命令 tab间隔隔开
+在源代码目录新建makefile
+a:hello.cgcc hello.c -o hello make编译
+[root@localhost vc]# makegcc hello.c -o hello 3》多文件的makefile依赖
+假设有如下案例：
+存在一个公用的头文件 a.h（用于定义全局变量和 方法定义）
+#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;int add(int p1,int p2); //该方法在mmath.c中实现void syso(char* c); //该方法在syso.c中实现 mmath.c实现add方法 内容如下：
+#include &#34;a.h&#34;int add(int p1,int p2){return p1&#43;p2;} syso.c实现syso方法">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="367">
+    <title>linux下gcc编程03-make工程管理 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758353478" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758353478" defer></script>
+    <script src="/docs/js/search-lunr.js?1758353478" defer></script>
+    <script src="/docs/js/search.js?1758353478" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758353478";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758353478" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758353478" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758353478" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758353478" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758353478" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758353478" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758353478" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758353478" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758353478" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/languages\/gcc\/linuxgcc_03-copy\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758353478" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/languages/gcc/linuxgcc_03-copy/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/index.html"><span itemprop="name">编程语言</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/gcc/index.html"><span itemprop="name">c语言</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">linux下gcc编程03-make工程管理</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_02/index.html" title="linux下gcc编程02-gdb调试工具使用 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_03/index.html" title="linux下gcc编程03-make工程管理 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="linux下gcc编程03-make工程管理">linux下gcc编程03-make工程管理</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p><strong>一。 make工程管理器简介</strong></p>
+<p>     工程管理器是指管理较多的文件。如果有一个上百个文件的代码构成的项目，</p>
+<p>如果其中只有一个或少数几个文件进行了修改，按照之前所学的<a href="https://so.csdn.net/so/search?q=Gcc&spm=1001.2101.3001.7020" rel="external" target="_blank">Gcc</a>编译工具，就不得不把这所有的文件重新编译一遍，</p>
+<p>因为<a href="https://so.csdn.net/so/search?q=%E7%BC%96%E8%AF%91%E5%99%A8&spm=1001.2101.3001.7020" rel="external" target="_blank">编译器</a>并不知道哪些文件是最近更新的，而只知道需要包含这些文件才能把源代码编译成<a href="https://so.csdn.net/so/search?q=%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6&spm=1001.2101.3001.7020" rel="external" target="_blank">可执行文件</a>，</p>
+<p>于是，程序员就不能不再重新输入数目如此庞大的文件名以完成最后的编译工作。</p>
+<p>     编译过程是分为编译、汇编、链接不同阶段的，其中编译阶段仅检查语法错误以及函数与变量的声明是否正确声明了，</p>
+<p>在链接阶段则主要完成是函数链接和全局变量的链接。因此，那些没有改动的源代码根本不需要重新编译，而只要把它们重新链接进去就可以了。所以，人们就希望有一个工程管理器能够自动识别更新了的文件代码，同时又不需要重复输入冗长的命令行，这样，Make工程管理器也就应运而生了。</p>
+<p>    实际上，Make工程管理器也就是个“自动编译管理器”，这里的“自动”是指它能够根据文件时间戳自动发现更新过的文件而减少编译的工作量，同时，它通过读入Makefile文件的内容来执行大量的编译工作。用户只需编写一次简单的编译语句就可以了。它大大提高了实际项目的工作效率，而且几乎所有Linux下的项目编程均会涉及到它</p>
+<p>1》makefile文件</p>
+<p>Make在执行时，需要一个命名为Makefile或者makefile的文件。Makefile文件描述了整个工程的编译，链接等规则。</p>
+<p>其中包括：1.工程中的哪些源文件需要编译以及如何编译；</p>
+<p>2需要创建哪些库文件以及如何创建这些库文件、</p>
+<p>3如何最后产生我们想要的可执行文件。</p>
+<p>2》makefile语法</p>
+<p>make通过定义规则来决定如何生成文件</p>
+<p>规则：用于说明如何生成一个或者多个目标文件，规则格式如下：
+目标:依赖目标</p>
+<p>（以tab空格）命令</p>
+<p>比如</p>
+<p> a:hello.c</p>
+<p>    gcc hello.c -o hello</p>
+<p>a就是一个目标名称:hello.c就是目标依赖的文件 这里如果没有依赖其他目标可以放置依赖的文件</p>
+<p>    gcc hello.c -o hello 就是执行这个目标的命令 tab间隔隔开</p>
+<p>在源代码目录新建makefile</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>a:hello.c
+        gcc hello.c -o hello</code></pre></div>
+<p>make编译</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost vc]# make
+gcc hello.c -o hello</code></pre></div>
+<p>3》多文件的makefile依赖</p>
+<p>假设有如下案例：</p>
+<p>存在一个公用的头文件 a.h（用于定义全局变量和 方法定义）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+int add(int p1,int p2); //该方法在mmath.c中实现
+void syso(char* c);     //该方法在syso.c中实现</code></pre></div>
+<p>mmath.c实现add方法 内容如下：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &#34;a.h&#34;
+int add(int p1,int p2){
+	return p1+p2;
+}</code></pre></div>
+<p>syso.c实现syso方法</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &#34;a.h&#34;
+void syso(char* c){
+	printf(c);
+}</code></pre></div>
+<p>main.c提供main方法入口 并且通过头文件调用add方法获取结果 调用syso输出结果</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &#34;a.h&#34;
+void main(){
+	int number=add(111,333);
+	char str[25];
+	sprintf(str, &#34;%d&#34;, number);
+	syso(str);	
+}</code></pre></div>
+<p>我们知道main.c就是将来运行的程序的入口 如果直接编译 main.c会出现没有找到两个方法实现错误</p>
+<p>因为需要先生成mmath.o，syso.o，main.o 在进行链接生成最后的文件</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost rule]# gcc main.c -o main
+/tmp/ccowuqtm.o：在函数‘main’中：
+main.c:(.text+0x13)：对‘add’未定义的引用
+main.c:(.text+0x3b)：对‘syso’未定义的引用
+collect2: 错误：ld 返回 1</code></pre></div>
+<p>需要使用makefile文件定义最后生成的程序目标需要依赖生成三个.o文件的目标 </p>
+<p>注意 make命令永远只执行第一个目标 如果这个目标依赖其他目录 依赖的目标先被执行</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>m:a b c
+	gcc mmath.o syso.o main.o -o main
+ 
+a:
+	gcc -c main.c -o main.o
+b:
+	gcc -c mmath.c -o mmath.o
+c:
+	gcc -c syso.c -o syso.o	
+clean:
+	rm -rf *.o</code></pre></div>
+<p>运行（clean目标没有被执行因为 不是第一个目标 第一个目标也没有引用它 这种目标可以使用 make 目标名称运行）：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost rule]# make
+gcc -c main.c -o main.o
+gcc -c mmath.c -o mmath.o
+gcc -c syso.c -o syso.o
+gcc mmath.o syso.o main.o -o main</code></pre></div>
+<p>运行 clean目标</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost rule]# make clean
+rm -rf *.o</code></pre></div>
+<p>为了让makefile文件可读性更好 建议目标 定义成生成的文件  如果是编译成目标文件依赖目标写成 源文件 比如</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>main:main.o mmath.o syso.o
+	gcc mmath.o syso.o main.o -o main
+ 
+main.o:main.c
+	gcc -c main.c -o main.o
+mmath.o:mmath.c
+	gcc -c mmath.c -o mmath.o
+syso.o:syso.c
+	gcc -c syso.c -o syso.o	
+.PHONY:clean #将“clean”目标声称为伪目标 不声明也可以 make clean
+clean:
+	rm -rf *.o</code></pre></div>
+<p>这样做的好处就是 目标如何和命令输出的文件名一致 在执行这个目标之前 判断是否有这个文件 有这个文件 提示 不需要创建目标 比如  执行过一次  第二次执行 </p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost rule]# make
+make: “main”是最新的。</code></pre></div>
+<p>makefile中可以定义变量 也可以使用系统变量 常用系统变量</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>$^ :代表所有的依赖
+$*：代表所有的依赖 自动去掉后缀名
+$@ :代表目标
+$&lt; :代表第一个依赖</code></pre></div>
+<p>在每个目标中 命令中可以使用这三个变量 可以通过封装的特点 减少重复代码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>main:main.o mmath.o syso.o
+	gcc $^ -o $@    #$^代表所有依赖也就是上面的main.o mmath.o syso.o $@代表目标也就是上面main
+ 
+main.o:main.c
+	gcc -c $^ -o $@
+mmath.o:mmath.c
+	gcc -c $&lt; -o $@  #$&lt;代表第一个依赖 mmath.c 当然这里就一个依赖
+syso.o:syso.c
+	gcc -c $^ -o $@	
+clean:
+	rm -rf *.o</code></pre></div>
+<p>上面的make中 gcc一旦修改 很多地方跟着修改 还可以定义一些自定义参数等 可以通过变量来定义 让程序更优雅</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>CC=gcc
+INCLIDE=.
+CFLAGS=-g -Wall -ansi -I$(INCLIDE)
+ 
+main:main.o mmath.o syso.o
+	$(CC) $(CFLAGS) $^ -o $@
+ 
+main.o:main.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+mmath.o:mmath.c
+	$(CC) $(CFLAGS) -c $&lt; -o $@
+syso.o:syso.c
+	$(CC) $(CFLAGS) -c $^ -o $@	
+clean:
+	rm -rf *.o</code></pre></div>
+<p>在其他目录 如果想直接某个目录下的make文件 可以使用 -C命令</p>
+<p>  表示进入 当前的hello目录下 执行makefile 执行目标clean</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost vc]# make -C ./hello clean
+make: 进入目录“/root/vc/hello”
+rm -rf hello
+make: 离开目录“/root/vc/hello”</code></pre></div>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/gcc/index.html"><a class="padding" href="/docs/programming/languages/gcc/index.html">c语言</a><ul id="R-subsections-e8c9b5cff4c7849bafc19d21e0433f7f" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_01/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01/index.html">linux下gcc编程01-gcc工具安装和使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_02/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_02/index.html">linux下gcc编程02-gdb调试工具使用</a></li>
+            <li class="active " data-nav-id="/docs/programming/languages/gcc/linuxgcc_03-copy/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_03-copy/index.html">linux下gcc编程03-make工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_03/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_03/index.html">linux下gcc编程03-make工程管理</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/assembly/index.html"><a class="padding" href="/docs/programming/languages/assembly/index.html">汇编语言</a><ul id="R-subsections-664e07814ed6bbd77b351b341bff28e6" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758353478" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758353478" defer></script>
+    <script src="/docs/js/theme.js?1758353478" defer></script>
+  </body>
+</html>

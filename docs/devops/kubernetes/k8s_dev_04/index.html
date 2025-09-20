@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="Operator 是 Kubernetes 的扩展软件，它利用 定制资源 管理应用及其组件。 Operator 遵循 Kubernetes 的理念，特别是在控制器 方面。 Operator操作那些有状态的基础设施服务，包括：组件升级、节点恢复、调整集群规模。一个理想化的运维平台必须是Operator自己维护有状态应用，并将人工干预降低到最低限度
+什么是Operator？ 为了理解什么是Operator，让我们先复习一下Kubernetes。Kubernetes实际是期望状态管理器。先在Kubernetes中指定应用程序期望状态（实例数，磁盘空间，镜像等），然后它会尝试把应用维持在这种状态。Kubernetes的控制平面运行在Master节点上，它包含数个controller以调和应用达到期望状态：
+检查当前的实际状态（Pod、Deployment等） 将实际状态与spec期望状态进行比较 如果实际状态与期望状态不一致，controller将会尝试协调实际状态以达到一致 比如，通过RS定义Pod拥有3个副本。当其中一个Pod down掉时，Kubernetes controller通过wacth API发现期望运行3个副本，而实际只有2个副本在运行。于是它新创建出一个Pod实例。
+controller作用 如图所示，controller在Kubernetes中发挥的作用。 通过Kubectl命令发送对象spec定义（Pod，Deployment等）到Kubernetes Master节点的API服务 Master节点调度对象运行 一旦对象运行，controller会持续检查对象并根据spec协调实际情况 通过这种方式，Kubernetes非常适合维护无状态应用。但它本身的资源类型（Pod，Deployments，Namespaces，Services，DaemonSets等）比较有限。虽然每种资源类型都预定了行为及协调方式，但它们的处理方式没有多大差别。 现在，如果您的应用更复杂并需要执行自定义操作以达到期望的运行状态，应该怎么办？
+举一个有状态应用的例子。假如一个数据库应用运行在多个节点上。如果超过半数的节点出现故障，则需要按照特定步骤从特定快照中加载数据。使用原生Kubernetes对象类型和controller则难以实现。或者为有状态应用程序扩展节点，升级到新版本或灾难恢复。这些类型的操作通常需要非常具体的步骤，并且通常需要手动干预。
+controller系统结构 使用 CRD 定制资源后，仅仅是让 Kubernetes 能够识别定制资源的身份。创建定制资源实例后，Kubernetes 只会将创建的实例存储到数据库中，并不会触发任何业务逻辑。在 数据库保存定制资源实例是没有意义的，如果需要进行业务逻辑控制，就需要创建控制器。
+Controller 的作用就是监听指定对象的新增、删除、修改等变化，并针对这些变化做出相应的响应，关于 Controller 的详细设计，可以参考 Harry (Lei) Zhang 老师在 twitter 上的分享，基本架构图如下： 图中可看出，定制资源实例的变化会通过 Informer 存入 WorkQueue，之后 Controller 会消费 WorkQueue，并对其中的数据做出业务响应。">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="K8S二次开发04-自定义operator（operator-sdk调试） :: liaomin416100569博客">
+    <meta name="twitter:description" content="Operator 是 Kubernetes 的扩展软件，它利用 定制资源 管理应用及其组件。 Operator 遵循 Kubernetes 的理念，特别是在控制器 方面。 Operator操作那些有状态的基础设施服务，包括：组件升级、节点恢复、调整集群规模。一个理想化的运维平台必须是Operator自己维护有状态应用，并将人工干预降低到最低限度
+什么是Operator？ 为了理解什么是Operator，让我们先复习一下Kubernetes。Kubernetes实际是期望状态管理器。先在Kubernetes中指定应用程序期望状态（实例数，磁盘空间，镜像等），然后它会尝试把应用维持在这种状态。Kubernetes的控制平面运行在Master节点上，它包含数个controller以调和应用达到期望状态：
+检查当前的实际状态（Pod、Deployment等） 将实际状态与spec期望状态进行比较 如果实际状态与期望状态不一致，controller将会尝试协调实际状态以达到一致 比如，通过RS定义Pod拥有3个副本。当其中一个Pod down掉时，Kubernetes controller通过wacth API发现期望运行3个副本，而实际只有2个副本在运行。于是它新创建出一个Pod实例。
+controller作用 如图所示，controller在Kubernetes中发挥的作用。 通过Kubectl命令发送对象spec定义（Pod，Deployment等）到Kubernetes Master节点的API服务 Master节点调度对象运行 一旦对象运行，controller会持续检查对象并根据spec协调实际情况 通过这种方式，Kubernetes非常适合维护无状态应用。但它本身的资源类型（Pod，Deployments，Namespaces，Services，DaemonSets等）比较有限。虽然每种资源类型都预定了行为及协调方式，但它们的处理方式没有多大差别。 现在，如果您的应用更复杂并需要执行自定义操作以达到期望的运行状态，应该怎么办？
+举一个有状态应用的例子。假如一个数据库应用运行在多个节点上。如果超过半数的节点出现故障，则需要按照特定步骤从特定快照中加载数据。使用原生Kubernetes对象类型和controller则难以实现。或者为有状态应用程序扩展节点，升级到新版本或灾难恢复。这些类型的操作通常需要非常具体的步骤，并且通常需要手动干预。
+controller系统结构 使用 CRD 定制资源后，仅仅是让 Kubernetes 能够识别定制资源的身份。创建定制资源实例后，Kubernetes 只会将创建的实例存储到数据库中，并不会触发任何业务逻辑。在 数据库保存定制资源实例是没有意义的，如果需要进行业务逻辑控制，就需要创建控制器。
+Controller 的作用就是监听指定对象的新增、删除、修改等变化，并针对这些变化做出相应的响应，关于 Controller 的详细设计，可以参考 Harry (Lei) Zhang 老师在 twitter 上的分享，基本架构图如下： 图中可看出，定制资源实例的变化会通过 Informer 存入 WorkQueue，之后 Controller 会消费 WorkQueue，并对其中的数据做出业务响应。">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/devops/kubernetes/k8s_dev_04/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="K8S二次开发04-自定义operator（operator-sdk调试） :: liaomin416100569博客">
+    <meta property="og:description" content="Operator 是 Kubernetes 的扩展软件，它利用 定制资源 管理应用及其组件。 Operator 遵循 Kubernetes 的理念，特别是在控制器 方面。 Operator操作那些有状态的基础设施服务，包括：组件升级、节点恢复、调整集群规模。一个理想化的运维平台必须是Operator自己维护有状态应用，并将人工干预降低到最低限度
+什么是Operator？ 为了理解什么是Operator，让我们先复习一下Kubernetes。Kubernetes实际是期望状态管理器。先在Kubernetes中指定应用程序期望状态（实例数，磁盘空间，镜像等），然后它会尝试把应用维持在这种状态。Kubernetes的控制平面运行在Master节点上，它包含数个controller以调和应用达到期望状态：
+检查当前的实际状态（Pod、Deployment等） 将实际状态与spec期望状态进行比较 如果实际状态与期望状态不一致，controller将会尝试协调实际状态以达到一致 比如，通过RS定义Pod拥有3个副本。当其中一个Pod down掉时，Kubernetes controller通过wacth API发现期望运行3个副本，而实际只有2个副本在运行。于是它新创建出一个Pod实例。
+controller作用 如图所示，controller在Kubernetes中发挥的作用。 通过Kubectl命令发送对象spec定义（Pod，Deployment等）到Kubernetes Master节点的API服务 Master节点调度对象运行 一旦对象运行，controller会持续检查对象并根据spec协调实际情况 通过这种方式，Kubernetes非常适合维护无状态应用。但它本身的资源类型（Pod，Deployments，Namespaces，Services，DaemonSets等）比较有限。虽然每种资源类型都预定了行为及协调方式，但它们的处理方式没有多大差别。 现在，如果您的应用更复杂并需要执行自定义操作以达到期望的运行状态，应该怎么办？
+举一个有状态应用的例子。假如一个数据库应用运行在多个节点上。如果超过半数的节点出现故障，则需要按照特定步骤从特定快照中加载数据。使用原生Kubernetes对象类型和controller则难以实现。或者为有状态应用程序扩展节点，升级到新版本或灾难恢复。这些类型的操作通常需要非常具体的步骤，并且通常需要手动干预。
+controller系统结构 使用 CRD 定制资源后，仅仅是让 Kubernetes 能够识别定制资源的身份。创建定制资源实例后，Kubernetes 只会将创建的实例存储到数据库中，并不会触发任何业务逻辑。在 数据库保存定制资源实例是没有意义的，如果需要进行业务逻辑控制，就需要创建控制器。
+Controller 的作用就是监听指定对象的新增、删除、修改等变化，并针对这些变化做出相应的响应，关于 Controller 的详细设计，可以参考 Harry (Lei) Zhang 老师在 twitter 上的分享，基本架构图如下： 图中可看出，定制资源实例的变化会通过 Informer 存入 WorkQueue，之后 Controller 会消费 WorkQueue，并对其中的数据做出业务响应。">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="运维一体化">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="K8S二次开发04-自定义operator（operator-sdk调试） :: liaomin416100569博客">
+    <meta itemprop="description" content="Operator 是 Kubernetes 的扩展软件，它利用 定制资源 管理应用及其组件。 Operator 遵循 Kubernetes 的理念，特别是在控制器 方面。 Operator操作那些有状态的基础设施服务，包括：组件升级、节点恢复、调整集群规模。一个理想化的运维平台必须是Operator自己维护有状态应用，并将人工干预降低到最低限度
+什么是Operator？ 为了理解什么是Operator，让我们先复习一下Kubernetes。Kubernetes实际是期望状态管理器。先在Kubernetes中指定应用程序期望状态（实例数，磁盘空间，镜像等），然后它会尝试把应用维持在这种状态。Kubernetes的控制平面运行在Master节点上，它包含数个controller以调和应用达到期望状态：
+检查当前的实际状态（Pod、Deployment等） 将实际状态与spec期望状态进行比较 如果实际状态与期望状态不一致，controller将会尝试协调实际状态以达到一致 比如，通过RS定义Pod拥有3个副本。当其中一个Pod down掉时，Kubernetes controller通过wacth API发现期望运行3个副本，而实际只有2个副本在运行。于是它新创建出一个Pod实例。
+controller作用 如图所示，controller在Kubernetes中发挥的作用。 通过Kubectl命令发送对象spec定义（Pod，Deployment等）到Kubernetes Master节点的API服务 Master节点调度对象运行 一旦对象运行，controller会持续检查对象并根据spec协调实际情况 通过这种方式，Kubernetes非常适合维护无状态应用。但它本身的资源类型（Pod，Deployments，Namespaces，Services，DaemonSets等）比较有限。虽然每种资源类型都预定了行为及协调方式，但它们的处理方式没有多大差别。 现在，如果您的应用更复杂并需要执行自定义操作以达到期望的运行状态，应该怎么办？
+举一个有状态应用的例子。假如一个数据库应用运行在多个节点上。如果超过半数的节点出现故障，则需要按照特定步骤从特定快照中加载数据。使用原生Kubernetes对象类型和controller则难以实现。或者为有状态应用程序扩展节点，升级到新版本或灾难恢复。这些类型的操作通常需要非常具体的步骤，并且通常需要手动干预。
+controller系统结构 使用 CRD 定制资源后，仅仅是让 Kubernetes 能够识别定制资源的身份。创建定制资源实例后，Kubernetes 只会将创建的实例存储到数据库中，并不会触发任何业务逻辑。在 数据库保存定制资源实例是没有意义的，如果需要进行业务逻辑控制，就需要创建控制器。
+Controller 的作用就是监听指定对象的新增、删除、修改等变化，并针对这些变化做出相应的响应，关于 Controller 的详细设计，可以参考 Harry (Lei) Zhang 老师在 twitter 上的分享，基本架构图如下： 图中可看出，定制资源实例的变化会通过 Informer 存入 WorkQueue，之后 Controller 会消费 WorkQueue，并对其中的数据做出业务响应。">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="2012">
+    <title>K8S二次开发04-自定义operator（operator-sdk调试） :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/devops\/kubernetes\/k8s_dev_04\/index.html';
+      window.relearn.relBasePath='..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/devops/kubernetes/k8s_dev_04/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#什么是operator">什么是Operator？</a>
+      <ul>
+        <li><a href="#controller作用">controller作用</a></li>
+        <li><a href="#controller系统结构">controller系统结构</a></li>
+        <li><a href="#operator自定义controller">Operator自定义controller</a></li>
+        <li><a href="#构建operator">构建Operator</a></li>
+        <li><a href="#编写你自己的-operator">编写你自己的 Operator</a></li>
+      </ul>
+    </li>
+    <li><a href="#使用operator-sdk编写">使用operator sdk编写</a>
+      <ul>
+        <li><a href="#工作流程">工作流程</a></li>
+        <li><a href="#快速开始">快速开始</a>
+          <ul>
+            <li><a href="#前置安装">前置安装</a>
+              <ul>
+                <li><a href="#安装gcc和make">安装gcc和make</a></li>
+                <li><a href="#golang">golang</a></li>
+                <li><a href="#安装docker">安装docker</a></li>
+                <li><a href="#安装docker-registry">安装docker registry</a></li>
+                <li><a href="#安装kubectl">安装kubectl</a></li>
+              </ul>
+            </li>
+            <li><a href="#安装operator-sdk">安装operator-sdk</a></li>
+            <li><a href="#operator-sdk实例">operator-sdk实例</a>
+              <ul>
+                <li><a href="#创建项目">创建项目</a></li>
+                <li><a href="#创建api">创建api</a></li>
+                <li><a href="#实现controller">实现controller</a></li>
+                <li><a href="#运行operator">运行operator</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/index.html"><span itemprop="name">运维一体化</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/kubernetes/index.html"><span itemprop="name">kubernetes</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">K8S二次开发04-自定义operator（operator-sdk调试）</span><meta itemprop="position" content="4"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/kubernetes/k8s_dev_03/index.html" title="K8S二次开发03-CRD资源详解 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/kubernetes/k8s_dev_05/index.html" title="K8S二次开发05-使用clientgo自定义ingresscontroller (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable devops" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="k8s二次开发04-自定义operatoroperator-sdk调试">K8S二次开发04-自定义operator（operator-sdk调试）</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p>Operator 是 Kubernetes 的扩展软件，它利用 定制资源 管理应用及其组件。 Operator 遵循 Kubernetes 的理念，特别是在控制器 方面。
+Operator操作那些有状态的基础设施服务，包括：组件升级、节点恢复、调整集群规模。一个理想化的运维平台必须是Operator自己维护有状态应用，并将人工干预降低到最低限度</p>
+<h1 id="什么是operator">什么是Operator？</h1>
+<p>为了理解什么是Operator，让我们先复习一下Kubernetes。Kubernetes实际是期望状态管理器。先在Kubernetes中指定应用程序期望状态（实例数，磁盘空间，镜像等），然后它会尝试把应用维持在这种状态。Kubernetes的控制平面运行在Master节点上，它包含数个controller以调和应用达到期望状态：</p>
+<ul>
+<li>检查当前的实际状态（Pod、Deployment等）</li>
+<li>将实际状态与spec期望状态进行比较</li>
+<li>如果实际状态与期望状态不一致，controller将会尝试协调实际状态以达到一致</li>
+</ul>
+<p>比如，通过RS定义Pod拥有3个副本。当其中一个Pod down掉时，Kubernetes controller通过wacth API发现期望运行3个副本，而实际只有2个副本在运行。于是它新创建出一个Pod实例。</p>
+<h2 id="controller作用">controller作用</h2>
+<p>如图所示，controller在Kubernetes中发挥的作用。
+<a href="#R-image-5aa29e2e4de0591ec8e0b040efca4ba3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/fecdc107d98dda9ad50ecd4d79b7d9fb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5aa29e2e4de0591ec8e0b040efca4ba3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/fecdc107d98dda9ad50ecd4d79b7d9fb.png"></a></p>
+<ul>
+<li>通过Kubectl命令发送对象spec定义（Pod，Deployment等）到Kubernetes Master节点的API服务</li>
+<li>Master节点调度对象运行</li>
+<li>一旦对象运行，controller会持续检查对象并根据spec协调实际情况</li>
+</ul>
+<p>通过这种方式，Kubernetes非常适合维护无状态应用。但它本身的资源类型（Pod，Deployments，Namespaces，Services，DaemonSets等）比较有限。虽然每种资源类型都预定了行为及协调方式，但它们的处理方式没有多大差别。
+现在，如果您的应用更复杂并需要执行自定义操作以达到期望的运行状态，应该怎么办？</p>
+<p>举一个有状态应用的例子。假如一个数据库应用运行在多个节点上。如果超过半数的节点出现故障，则需要按照特定步骤从特定快照中加载数据。使用原生Kubernetes对象类型和controller则难以实现。或者为有状态应用程序扩展节点，升级到新版本或灾难恢复。这些类型的操作通常需要非常具体的步骤，并且通常需要手动干预。</p>
+<h2 id="controller系统结构">controller系统结构</h2>
+<p>使用 CRD 定制资源后，仅仅是让 Kubernetes 能够识别定制资源的身份。创建定制资源实例后，Kubernetes 只会将创建的实例存储到数据库中，并不会触发任何业务逻辑。在  数据库保存定制资源实例是没有意义的，如果需要进行业务逻辑控制，就需要创建控制器。</p>
+<p>Controller 的作用就是监听指定对象的新增、删除、修改等变化，并针对这些变化做出相应的响应，关于 Controller 的详细设计，可以参考 Harry (Lei) Zhang 老师在 twitter 上的分享，基本架构图如下：
+<a href="#R-image-7cd42df05e6bb51f7b2bfed405495ace" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/39fafb0ece4b6fe6e8933edf666179ed.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7cd42df05e6bb51f7b2bfed405495ace"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/39fafb0ece4b6fe6e8933edf666179ed.png"></a>
+图中可看出，定制资源实例的变化会通过 Informer 存入 WorkQueue，之后 Controller 会消费 WorkQueue，并对其中的数据做出业务响应。</p>
+<p>Operator 其实就是图中除了 API Server 和 etcd 的剩余部分。由于 Client、Informer 和 WorkQueue 是高度相似的，所以有很多项目可以自动化生成 Controller 之外的业务逻辑（如 Client、Informer、Lister），因此用户只需要专注于 Controller 中的业务逻辑即可。</p>
+<h2 id="operator自定义controller">Operator自定义controller</h2>
+<p>Operator通过扩展Kubernetes定义Custom Controller，观察应用并根据实际状态执行自定义任务。应用被定义为Kubernetes对象：Custom Resource （CR），它包含yaml spec和被API服务接受对象类型（K8s kind）。这样，您可以在自定义规范中定义要观察的任何特定条件，并在实例与规范不匹配时协调实例。虽然Operator controller主要使用自定义组件，但它与原生Kubernetes controller协调方式非常类似。
+<a href="#R-image-8375025b28d3d1ed403e8c0fb640ee6a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/b9044ab1fdbf06a90a97ce06b8d82c4c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8375025b28d3d1ed403e8c0fb640ee6a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/b9044ab1fdbf06a90a97ce06b8d82c4c.png"></a></p>
+<p>Operator通过Custom Controller协调应用spec。虽然API服务知道Custom Controller，但Operator可以独立运行在集群内部或外部。</p>
+<h2 id="构建operator">构建Operator</h2>
+<p>为了创建自定义Operator，我们需要如下资源：</p>
+<ol>
+<li>Custom Resource（CR）spec，定义我们要观测的应用对象，以及为CR定义的API</li>
+<li>Custom Controller，用来观测CR</li>
+<li>Custom code，决定Custom Controller如何协调CR</li>
+<li>Operator，管理Custom Controller</li>
+<li>Deployment，定义Operator和自定义资源</li>
+</ol>
+<p>所有上述内容都可以通过手工编写Go代码和spec，或通过kubebuilder等工具生成Kubernetes API。但最简单的方式（也是我们在这里使用的方法）是使用CoreOS operator-sdk为这些组件生成模版。它允许您通过CLI命令生成spec、controller以及Operator框架。一旦生成后，您可以在spec中定义自定义字段并编写协调的自定义代码。我们将在本教程的下一部分中展开介绍。</p>
+<h2 id="编写你自己的-operator">编写你自己的 Operator</h2>
+<p>如果生态系统中没可以实现你目标的 Operator，你可以自己编写代码。</p>
+<p>你还可以使用任何支持 Kubernetes API 客户端 的语言或运行时来实现 Operator（即控制器）。</p>
+<p>以下是一些库和工具，你可用于编写自己的云原生 Operator。</p>
+<p>说明： 本部分链接到提供 Kubernetes 所需功能的第三方项目。Kubernetes 项目作者不负责这些项目。此页面遵循CNCF 网站指南，按字母顺序列出项目。要将项目添加到此列表中，请在提交更改之前阅读内容指南。
+<a href="https://juju.is/" rel="external" target="_blank">Charmed Operator Framework</a>
+<a href="https://book.kubebuilder.io/" rel="external" target="_blank">kubebuilder</a>
+<a href="https://buehler.github.io/dotnet-operator-sdk/" rel="external" target="_blank">KubeOps (dotnet operator SDK)</a>
+<a href="https://kudo.dev/" rel="external" target="_blank">KUDO (Kubernetes 通用声明式 Operator)</a>
+<a href="https://metacontroller.github.io/metacontroller/intro.html" rel="external" target="_blank">Metacontroller，可与 Webhooks 结合使用，以实现自己的功能。</a>
+<a href="https://operatorframework.io/" rel="external" target="_blank">Operator Framework</a>
+<a href="https://github.com/flant/shell-operator" rel="external" target="_blank">shell-operator</a></p>
+<h1 id="使用operator-sdk编写">使用operator sdk编写</h1>
+<p>operator sdk项目是Operator Framework的一个组件，这是一个开源工具包，以有效，自动化和可扩展的方式管理Kubernetes原生应用程序，称为Operators。更多介绍内容，请阅读博客。
+Operators 可以在Kubernetes之上轻松地管理复杂有状态的应用程序。然而，由于诸如使用低级API，编写样板以及缺乏模块导致重复性工作等挑战，导致目前编写Operator可能很困难。
+Operator SDK是一个框架，旨在简化Operator的编写，它提供如下功能：</p>
+<ul>
+<li>高级API和抽象，更直观地编写操作逻辑</li>
+<li>用于脚手架和代码生成的工具，可以快速引导新项目</li>
+<li>扩展以涵盖常见的操作员用例</li>
+</ul>
+<h2 id="工作流程">工作流程</h2>
+<p>SDK提供以下工作流程来开发新的Operator：</p>
+<ul>
+<li>使用SDK命令行界面（CLI）创建新的Operator项目</li>
+<li>通过添加自定义资源定义（CRD）定义新资源API</li>
+<li>使用SDK API监控指定的资源</li>
+<li>在指定的处理程序中定义Operator协调逻辑(对比期望状态与实际状态)，并使用SDK API与资源进行交互</li>
+<li>使用SDK CLI构建并生成Operator部署manifests
+Operator使用SDK在用户自定义的处理程序中以高级API处理监视资源的事件，并采取措施来reconcile（对比期望状态与实际状态）应用程序的状态。</li>
+</ul>
+<h2 id="快速开始">快速开始</h2>
+<p>先给出我的环境，注意operator-sdk支持通过代码安装，在window上通过idea等工具搭配golang开发，有环境的可直接使用macos。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">开发操作系统：</span>window
+</span></span><span style="display:flex;"><span>k8s: <span style="color:#ae81ff">1.23.3</span>
+</span></span><span style="display:flex;"><span>k8s部署<span style="color:#960050;background-color:#1e0010">：</span>debian<span style="color:#f92672">|</span>dockerdesktop自带的k8s</span></span></code></pre></div>
+<h3 id="前置安装">前置安装</h3>
+<ul>
+<li>安装gcc和make。</li>
+<li>安装golang1.17以上版本。</li>
+<li>一个可进入的公共的docker registry服务，并且准备一个域名作为registry服务的域名。</li>
+</ul>
+<h4 id="安装gcc和make">安装gcc和make</h4>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apt<span style="color:#f92672">-</span>get install gcc automake autoconf libtool make</span></span></code></pre></div>
+<p>window下直接安装cygwin，选择gcc和make等组件即可，我已经提前安装，如果不知道怎么安装可参考：https://blog.csdn.net/liaomin416100569/article/details/105127557?spm=1001.2014.3001.5501。</p>
+<h4 id="golang">golang</h4>
+<p>安装 golang 17以上版本</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>wget https:<span style="color:#75715e">//studygolang.com/dl/golang/go1.17.linux-amd64.tar.gz
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>tar zxvf go1<span style="color:#ae81ff">.17</span>.linux<span style="color:#f92672">-</span>amd64.tar.gz 
+</span></span></code></pre></div>
+<p>我这直接解压在/root下，/etc/profile添加环境变量</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">export</span> GOPATH<span style="color:#f92672">=/</span>root<span style="color:#f92672">/</span>go
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> GOROOT<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>{GOPATH}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> GOARCH<span style="color:#f92672">=</span><span style="color:#ae81ff">386</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> GOOS<span style="color:#f92672">=</span>linux
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> GOTOOLS<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>GOROOT<span style="color:#f92672">/</span>pkg<span style="color:#f92672">/</span>tool
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> PATH<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>PATH:<span style="color:#960050;background-color:#1e0010">$</span>GOROOT<span style="color:#f92672">/</span>bin:<span style="color:#960050;background-color:#1e0010">$</span>GOPATH<span style="color:#f92672">/</span>bin</span></span></code></pre></div>
+<p>让配置生效 并修改golang的私服</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>source <span style="color:#f92672">/</span>etc<span style="color:#f92672">/</span>profile <span style="color:#f92672">&amp;&amp;</span> go env <span style="color:#f92672">-</span>w GOPROXY<span style="color:#f92672">=</span>https:<span style="color:#75715e">//mirrors.aliyun.com/goproxy/
+</span></span></span></code></pre></div>
+<p>检测是否安装成功</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">~/</span>go<span style="color:#960050;background-color:#1e0010">#</span> go version                   
+</span></span><span style="display:flex;"><span>go version go1<span style="color:#ae81ff">.17</span> linux<span style="color:#f92672">/</span>amd64
+</span></span><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">~/</span>go<span style="color:#960050;background-color:#1e0010">#</span> go env <span style="color:#f92672">|</span> grep GOPROXY
+</span></span><span style="display:flex;"><span>GOPROXY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://mirrors.aliyun.com/goproxy/&#34;</span></span></span></code></pre></div>
+<h4 id="安装docker">安装docker</h4>
+<p>开发本机需安装docker，operator的controller需要生成docker镜像
+linux机器使用 yum或者apt-get安装 docker-ce即可
+window安装docker desktop即可。</p>
+<h4 id="安装docker-registry">安装docker registry</h4>
+<p>安装可用的docker registry | nexus | harbor
+harbor安装参考：https://blog.csdn.net/liaomin416100569/article/details/86599571
+这里直接选择docker registry (我的ip：10.10.0.115，后续设置一个本地域名:jiaozi.com)</p>
+<blockquote>
+<p>这里为了简单，就不设置账号密码权限了。</p></blockquote>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>docker run <span style="color:#f92672">-</span>d <span style="color:#f92672">-</span>p <span style="color:#ae81ff">5000</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5000</span> <span style="color:#f92672">--</span>name registry <span style="color:#f92672">--</span>restart<span style="color:#f92672">=</span>always <span style="color:#f92672">-</span>v <span style="color:#f92672">/</span>opt<span style="color:#f92672">/</span>registry<span style="color:#f92672">/</span>data:<span style="color:#f92672">/</span>var<span style="color:#f92672">/</span>lib<span style="color:#f92672">/</span>registry docker.io<span style="color:#f92672">/</span>registry</span></span></code></pre></div>
+<p>检测存在的镜像</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span> curl http:<span style="color:#75715e">//127.0.0.1:5000/v2/_catalog
+</span></span></span></code></pre></div>
+<p>在开发的window和k8s的worker节点 linux(/etc/docker/daemon.json)设置，改后重启;</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;insecure-registries&#34;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;jiaozi.com:5000&#34;</span>
+</span></span><span style="display:flex;"><span>  ],</span></span></code></pre></div>
+<p>在开发的本地机器和k8s的worker节点绑定hosts</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">正在</span> Ping jiaozi.com [<span style="color:#ae81ff">10.10.0.115</span>] <span style="color:#960050;background-color:#1e0010">具有</span> <span style="color:#ae81ff">32</span> <span style="color:#960050;background-color:#1e0010">字节的数据</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">来自</span> <span style="color:#ae81ff">10.10.0.115</span> <span style="color:#960050;background-color:#1e0010">的回复</span><span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">字节</span><span style="color:#f92672">=</span><span style="color:#ae81ff">32</span> <span style="color:#960050;background-color:#1e0010">时间</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1</span>ms TTL<span style="color:#f92672">=</span><span style="color:#ae81ff">63</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">来自</span> <span style="color:#ae81ff">10.10.0.115</span> <span style="color:#960050;background-color:#1e0010">的回复</span><span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">字节</span><span style="color:#f92672">=</span><span style="color:#ae81ff">32</span> <span style="color:#960050;background-color:#1e0010">时间</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1</span>ms TTL<span style="color:#f92672">=</span><span style="color:#ae81ff">63</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">来自</span> <span style="color:#ae81ff">10.10.0.115</span> <span style="color:#960050;background-color:#1e0010">的回复</span><span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">字节</span><span style="color:#f92672">=</span><span style="color:#ae81ff">32</span> <span style="color:#960050;background-color:#1e0010">时间</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1</span>ms TTL<span style="color:#f92672">=</span><span style="color:#ae81ff">63</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">10.10.0.115</span> <span style="color:#960050;background-color:#1e0010">的</span> Ping <span style="color:#960050;background-color:#1e0010">统计信息</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">数据包</span><span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">已发送</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">，已接收</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">，丢失</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> (<span style="color:#ae81ff">0</span><span style="color:#f92672">%</span> <span style="color:#960050;background-color:#1e0010">丢失</span>)<span style="color:#960050;background-color:#1e0010">，</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">往返行程的估计时间</span>(<span style="color:#960050;background-color:#1e0010">以毫秒为单位</span>)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">最短</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>ms<span style="color:#960050;background-color:#1e0010">，最长</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>ms<span style="color:#960050;background-color:#1e0010">，平均</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>ms</span></span></code></pre></div>
+<p>测试上传一个镜像</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>docker pull nginx <span style="color:#f92672">&amp;&amp;</span> docker tag nginx jiaozi.com:<span style="color:#ae81ff">5000</span><span style="color:#f92672">/</span>nginx <span style="color:#f92672">&amp;&amp;</span> docker push jiaozi.com:<span style="color:#ae81ff">5000</span><span style="color:#f92672">/</span>nginx  <span style="color:#f92672">&amp;&amp;</span> curl jiaozi.com<span style="color:#f92672">/</span><span style="color:#ae81ff">5000</span><span style="color:#f92672">/</span>v2<span style="color:#f92672">/</span>_catalog
+</span></span><span style="display:flex;"><span>{<span style="color:#e6db74">&#34;repositories&#34;</span><span style="color:#f92672">:</span>[<span style="color:#e6db74">&#34;nginx&#34;</span>]}</span></span></code></pre></div>
+<h4 id="安装kubectl">安装kubectl</h4>
+<p>让开发的机器可以通过kubectl访问集群，一般用window开发的 话，新版的docker desktop都带上内置的k8s，自然自带kubectl命令，可将远程k8s集群的初始化时生成的config文件拷贝到出来</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>Your Kubernetes control<span style="color:#f92672">-</span>plane has initialized successfully<span style="color:#f92672">!</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>To start <span style="color:#66d9ef">using</span> your cluster, you need to run the following as a regular user:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  mkdir <span style="color:#f92672">-</span>p <span style="color:#960050;background-color:#1e0010">$</span>HOME<span style="color:#f92672">/</span>.kube
+</span></span><span style="display:flex;"><span>  sudo cp <span style="color:#f92672">-</span>i <span style="color:#f92672">/</span>etc<span style="color:#f92672">/</span>kubernetes<span style="color:#f92672">/</span>admin.conf <span style="color:#960050;background-color:#1e0010">$</span>HOME<span style="color:#f92672">/</span>.kube<span style="color:#f92672">/</span>config
+</span></span><span style="display:flex;"><span>  sudo chown <span style="color:#960050;background-color:#1e0010">$</span>(id <span style="color:#f92672">-</span>u)<span style="color:#f92672">:</span><span style="color:#960050;background-color:#1e0010">$</span>(id <span style="color:#f92672">-</span>g) <span style="color:#960050;background-color:#1e0010">$</span>HOME<span style="color:#f92672">/</span>.kube<span style="color:#f92672">/</span>config
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Alternatively, <span style="color:#66d9ef">if</span> you are the root user, you can run:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">export</span> KUBECONFIG<span style="color:#f92672">=/</span>etc<span style="color:#f92672">/</span>kubernetes<span style="color:#f92672">/</span>admin.conf</span></span></code></pre></div>
+<p>一般就是/etc/kubernetes/admin.conf，放到window的  %USERPROFILE%/.kube/config文件即可</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>C:<span style="color:#960050;background-color:#1e0010">\</span>Users<span style="color:#960050;background-color:#1e0010">\</span>liaomin<span style="color:#f92672">&gt;</span>echo <span style="color:#f92672">%</span>USERPROFILE<span style="color:#f92672">%</span>
+</span></span><span style="display:flex;"><span>C:<span style="color:#960050;background-color:#1e0010">\</span>Users<span style="color:#960050;background-color:#1e0010">\</span>liaomin mkdir <span style="color:#f92672">%</span>USERPROFILE<span style="color:#f92672">%</span><span style="color:#960050;background-color:#1e0010">\</span>.kube
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">将</span>admin.conf重命名为config文件即可</span></span></code></pre></div>
+<p><a href="#R-image-81fd994a2c612fe1f9c76581522213a2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/632aea0b9b437bfa7bb96459825c8f80.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-81fd994a2c612fe1f9c76581522213a2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/632aea0b9b437bfa7bb96459825c8f80.png"></a>
+测试</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>C:<span style="color:#960050;background-color:#1e0010">\</span>Users<span style="color:#960050;background-color:#1e0010">\</span>liaomin<span style="color:#960050;background-color:#1e0010">\</span>.kube<span style="color:#f92672">&gt;</span>kubectl get pods
+</span></span><span style="display:flex;"><span>NAME       READY   STATUS    RESTARTS        AGE
+</span></span><span style="display:flex;"><span>dnsutils   <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1</span>     Running   <span style="color:#ae81ff">123</span> (<span style="color:#ae81ff">22</span>m ago)   <span style="color:#ae81ff">5</span>d2h
+</span></span><span style="display:flex;"><span>nginx      <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1</span>     Running   <span style="color:#ae81ff">1</span> (<span style="color:#ae81ff">22</span>m ago)     <span style="color:#ae81ff">5</span>d3h</span></span></code></pre></div>
+<h3 id="安装operator-sdk">安装operator-sdk</h3>
+<p>安装过程请参考：https://sdk.operatorframework.io/docs/installation/
+非macos建议源代码安装，window的话先安装cygwin，打开cygwin Terminal 执行命令。</p>
+<blockquote>
+<p>window下升级go  go get golang.org/dl/go<!-- raw HTML omitted --> &amp;&amp; go<!-- raw HTML omitted --> download  下载完成后，window下直接安装在，%USERPROFILE%\sdk 目录下，可直接修改path到 %USERPROFILE%\sdk\go<!-- raw HTML omitted -->\bin目录下。</p></blockquote>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>git clone https:<span style="color:#75715e">//github.com/operator-framework/operator-sdk
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cd <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span>sdk
+</span></span><span style="display:flex;"><span>git checkout master
+</span></span><span style="display:flex;"><span>make install</span></span></code></pre></div>
+<p>安装完成后</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">~/</span>go<span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span>sdk version
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span>sdk version: <span style="color:#e6db74">&#34;v1.17.0-3-g158da144-dirty&#34;</span>, commit: <span style="color:#e6db74">&#34;158da1444dc400bcc7402e4e47787d56a9b4f4ad&#34;</span>, kubernetes version: <span style="color:#e6db74">&#34;v1.21&#34;</span>, go version: <span style="color:#e6db74">&#34;go1.17&#34;</span>, GOOS: <span style="color:#e6db74">&#34;linux&#34;</span>, GOARCH: <span style="color:#e6db74">&#34;amd64&#34;</span></span></span></code></pre></div>
+<blockquote>
+<p>window安装完成后目录为：
+$ which operator-sdk
+/cygdrive/c/Users/liaomin/go/bin/operator-sdk</p></blockquote>
+<h3 id="operator-sdk实例">operator-sdk实例</h3>
+<p>以下实例参考自官方文档：https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/
+功能实现如下：
+将创建一个简单的案例项目</p>
+<ol>
+<li>如果不存在即创建一个nginx Deployment</li>
+<li>确保deploy的大小和CR文件制定的大小一致</li>
+<li>更新nginx CR的状态（同步名字相同的PODS状态）</li>
+</ol>
+<h4 id="创建项目">创建项目</h4>
+<p>初始化一个新的项目包含以下内容 :</p>
+<ul>
+<li>go.mod  项目依赖。</li>
+<li>PROJECT 存储项目的配置。</li>
+<li>Makefile  一些常用的make targets。</li>
+<li>config目录下许多YAML files 用于项目发布。</li>
+<li>main.go 用于创建 manager，运行项目controllers。</li>
+</ul>
+<blockquote>
+<p>更加详细的目录结果信息可查看kubebuilder文档：https://book.kubebuilder.io/cronjob-tutorial/basic-project.html</p></blockquote>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>liaomin<span style="color:#960050;background-color:#1e0010">@</span>DESKTOP<span style="color:#f92672">-</span>FSEDE3P <span style="color:#f92672">/</span>cygdrive<span style="color:#f92672">/</span>d<span style="color:#f92672">/</span>code1<span style="color:#f92672">/</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span>sdk init <span style="color:#f92672">--</span>domain jiaozi.com <span style="color:#f92672">--</span>repo github.com<span style="color:#f92672">/</span>lzeqian<span style="color:#f92672">/</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span>
+</span></span><span style="display:flex;"><span>Writing kustomize manifests <span style="color:#66d9ef">for</span> you to edit...
+</span></span><span style="display:flex;"><span>Writing scaffold <span style="color:#66d9ef">for</span> you to edit...
+</span></span><span style="display:flex;"><span>Get controller runtime:
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span> go get sigs.k8s.io<span style="color:#f92672">/</span>controller<span style="color:#f92672">-</span>runtime<span style="color:#960050;background-color:#1e0010">@</span>v0<span style="color:#ae81ff">.11.0</span>
+</span></span><span style="display:flex;"><span>Update dependencies:
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span> go mod tidy
+</span></span><span style="display:flex;"><span>Next: define a resource with:
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span>sdk create api</span></span></code></pre></div>
+<h4 id="创建api">创建api</h4>
+<p>通过脚手架生成一个crd和controller的api，没有没有指定&ndash;resource &ndash;controller，将会通过交互通过用户确认是否生成，命令执行时相关的golang依赖将自动下载安装。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span>sdk create api <span style="color:#f92672">--</span>group test <span style="color:#f92672">--</span>version v1alpha1 <span style="color:#f92672">--</span>kind HelloWorld <span style="color:#f92672">--</span>resource <span style="color:#f92672">--</span>controller</span></span></code></pre></div>
+<p>生成了一个api和controller目录包含api的结构体定义和controller代码。
+如果使用cygwin terminal去执行一般都会报错</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span>sdk create api <span style="color:#f92672">--</span>group test <span style="color:#f92672">--</span>version v1alpha1 <span style="color:#f92672">--</span>kind HelloWorld <span style="color:#f92672">--</span>resource <span style="color:#f92672">--</span>controller
+</span></span><span style="display:flex;"><span>Writing kustomize manifests <span style="color:#66d9ef">for</span> you to edit...
+</span></span><span style="display:flex;"><span>Writing scaffold <span style="color:#66d9ef">for</span> you to edit...
+</span></span><span style="display:flex;"><span>api<span style="color:#960050;background-color:#1e0010">\</span>v1alpha1<span style="color:#960050;background-color:#1e0010">\</span>helloworld_types.go
+</span></span><span style="display:flex;"><span>controllers<span style="color:#960050;background-color:#1e0010">\</span>helloworld_controller.go
+</span></span><span style="display:flex;"><span>Update dependencies:
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span> go mod tidy
+</span></span><span style="display:flex;"><span>Running make:
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span> make generate
+</span></span><span style="display:flex;"><span>go: creating <span style="color:#66d9ef">new</span> go.mod: module tmp
+</span></span><span style="display:flex;"><span>Downloading sigs.k8s.io<span style="color:#f92672">/</span>controller<span style="color:#f92672">-</span>tools<span style="color:#f92672">/</span>cmd<span style="color:#f92672">/</span>controller<span style="color:#f92672">-</span>gen<span style="color:#960050;background-color:#1e0010">@</span>v0<span style="color:#ae81ff">.8.0</span>
+</span></span><span style="display:flex;"><span>go get: installing executables with <span style="color:#960050;background-color:#1e0010">&#39;</span>go get<span style="color:#960050;background-color:#1e0010">&#39;</span> in module mode is deprecated.
+</span></span><span style="display:flex;"><span>        To adjust and download dependencies of the current module, use <span style="color:#960050;background-color:#1e0010">&#39;</span>go get <span style="color:#f92672">-</span>d<span style="color:#960050;background-color:#1e0010">&#39;</span>.
+</span></span><span style="display:flex;"><span>        To install <span style="color:#66d9ef">using</span> requirements of the current module, use <span style="color:#960050;background-color:#1e0010">&#39;</span>go install<span style="color:#960050;background-color:#1e0010">&#39;</span>.
+</span></span><span style="display:flex;"><span>        To install ignoring the current module, use <span style="color:#960050;background-color:#1e0010">&#39;</span>go install<span style="color:#960050;background-color:#1e0010">&#39;</span> with a version,
+</span></span><span style="display:flex;"><span>        like <span style="color:#960050;background-color:#1e0010">&#39;</span>go install example.com<span style="color:#f92672">/</span>cmd<span style="color:#960050;background-color:#1e0010">@</span>latest<span style="color:#960050;background-color:#1e0010">&#39;</span>.
+</span></span><span style="display:flex;"><span>        For more information, see https:<span style="color:#75715e">//golang.org/doc/go-get-install-deprecation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        or run <span style="color:#960050;background-color:#1e0010">&#39;</span>go help get<span style="color:#960050;background-color:#1e0010">&#39;</span> or <span style="color:#960050;background-color:#1e0010">&#39;</span>go help install<span style="color:#960050;background-color:#1e0010">&#39;</span>.
+</span></span><span style="display:flex;"><span>cannot install, GOBIN must be an absolute path
+</span></span><span style="display:flex;"><span>make: <span style="color:#f92672">***</span> [Makefile:<span style="color:#ae81ff">142</span><span style="color:#960050;background-color:#1e0010">：</span>controller<span style="color:#f92672">-</span>gen] <span style="color:#960050;background-color:#1e0010">错误</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>Error: failed to create API: unable to run post<span style="color:#f92672">-</span>scaffold tasks of <span style="color:#e6db74">&#34;base.go.kubebuilder.io/v3&#34;</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span> exit status <span style="color:#ae81ff">2</span></span></span></code></pre></div>
+<p>通过错误可以知道是在执行make generate时下载sigs.k8s.io/controller-tools/cmd/controller-gen@v0.8.0报错，错误是GOBIN must be an absolute path，说明GOBIN对应的路径是错的导致下载的包无法写入，通过查看Makefile的generate任务会调用一个自定义函数go-get-tool</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e"># go-get-tool will &#39;go get&#39; any package $2 and install it to $1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>PROJECT_DIR :<span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">$</span>(shell dirname <span style="color:#960050;background-color:#1e0010">$</span>(abspath <span style="color:#960050;background-color:#1e0010">$</span>(lastword <span style="color:#960050;background-color:#1e0010">$</span>(MAKEFILE_LIST))))
+</span></span><span style="display:flex;"><span>define go<span style="color:#f92672">-</span>get<span style="color:#f92672">-</span>tool
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">@</span>[ <span style="color:#f92672">-</span>f <span style="color:#960050;background-color:#1e0010">$</span>(<span style="color:#ae81ff">1</span>) ] <span style="color:#f92672">||</span> { \
+</span></span><span style="display:flex;"><span>set <span style="color:#f92672">-</span>e ;\
+</span></span><span style="display:flex;"><span>TMP_DIR<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$$</span>(mktemp <span style="color:#f92672">-</span>d) ;\
+</span></span><span style="display:flex;"><span>cd <span style="color:#960050;background-color:#1e0010">$$</span>TMP_DIR ;\
+</span></span><span style="display:flex;"><span>go mod init tmp ;\
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;Downloading $(2) $(PROJECT_DIR)&#34;</span> ;\
+</span></span><span style="display:flex;"><span>GOBIN<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>(PROJECT_DIR)<span style="color:#f92672">/</span>bin go get <span style="color:#960050;background-color:#1e0010">$</span>(<span style="color:#ae81ff">2</span>) ;\
+</span></span><span style="display:flex;"><span>rm <span style="color:#f92672">-</span>rf <span style="color:#960050;background-color:#1e0010">$$</span>TMP_DIR ;\
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>endef</span></span></code></pre></div>
+<p>发现其中一句：GOBIN=$(PROJECT_DIR)/bin go get $(2) ;<br>
+设置GOBIN=当前项目目录/bin目录然后执行 go get命令，打印GOBIN发现路径是：/cygdrive/d/code1/helloworld-operator，对于goget来说程序内部肯定是不能识别这个路径，但是命令行是可以识别的，比如mkdir  /cygdrive/d/code1/helloworld-operator/aa是可行的，我只需要将
+PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST)))) 替换为实际的目录即可
+修改PROJECT_DIR=你项目的根目录即可</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e"># go-get-tool will &#39;go get&#39; any package $2 and install it to $1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>PROJECT_DIR :<span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">$</span>(shell dirname <span style="color:#960050;background-color:#1e0010">$</span>(abspath <span style="color:#960050;background-color:#1e0010">$</span>(lastword <span style="color:#960050;background-color:#1e0010">$</span>(MAKEFILE_LIST))))
+</span></span><span style="display:flex;"><span>PROJECT_DIR :<span style="color:#f92672">=</span> D:<span style="color:#f92672">/</span>code1<span style="color:#f92672">/</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>define go<span style="color:#f92672">-</span>get<span style="color:#f92672">-</span>tool
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">@</span>[ <span style="color:#f92672">-</span>f <span style="color:#960050;background-color:#1e0010">$</span>(<span style="color:#ae81ff">1</span>) ] <span style="color:#f92672">||</span> { \
+</span></span><span style="display:flex;"><span>set <span style="color:#f92672">-</span>e ;\
+</span></span><span style="display:flex;"><span>TMP_DIR<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$$</span>(mktemp <span style="color:#f92672">-</span>d) ;\
+</span></span><span style="display:flex;"><span>cd <span style="color:#960050;background-color:#1e0010">$$</span>TMP_DIR ;\
+</span></span><span style="display:flex;"><span>go mod init tmp ;\
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;Downloading $(2) $(PROJECT_DIR)&#34;</span> ;\
+</span></span><span style="display:flex;"><span>GOBIN<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>(PROJECT_DIR)<span style="color:#f92672">/</span>bin go get <span style="color:#960050;background-color:#1e0010">$</span>(<span style="color:#ae81ff">2</span>) ;\
+</span></span><span style="display:flex;"><span>rm <span style="color:#f92672">-</span>rf <span style="color:#960050;background-color:#1e0010">$$</span>TMP_DIR ;\
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>endef</span></span></code></pre></div>
+<p>修改完成后正常执行，并且根目录生成了bin目录，并且下载了controller-gen
+<a href="#R-image-f32fbeca75f89e51421fb11aac40858d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/8217f75b3deb3628b97d0326c5aac294.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f32fbeca75f89e51421fb11aac40858d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/8217f75b3deb3628b97d0326c5aac294.png"></a>
+修改api/v1alpha1/helloworld_types.go 文件</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>package v1alpha1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">import</span> (
+</span></span><span style="display:flex;"><span>	metav1 <span style="color:#e6db74">&#34;k8s.io/apimachinery/pkg/apis/meta/v1&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">最后发布后的cr就是这样
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">kubectl get memcached/memcached-sample -o yaml
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">apiVersion: cache.example.com/v1alpha1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">kind: Memcached
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">metadata:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  clusterName: &#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  creationTimestamp: 2018-03-31T22:51:08Z
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  generation: 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  name: memcached-sample
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  namespace: default
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  resourceVersion: &#34;245453&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  selfLink: /apis/cache.example.com/v1alpha1/namespaces/default/memcacheds/memcached-sample
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  uid: 0026cc97-3536-11e8-bd83-0800274106a1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">spec:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  size: 3
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">status:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  nodes:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  - memcached-sample-6fd7c98d8-7dqdr
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  - memcached-sample-6fd7c98d8-g5k7v
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  - memcached-sample-6fd7c98d8-m7vn7
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// HelloWorldSpec 定义上面spec的部分
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>type HelloWorldSpec <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//对应crd自定义字段 spec.size
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	Size int32 <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;size&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// HelloWorldStatus定义HelloWorld的状态观察
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>type HelloWorldStatus <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	Nodes []string <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;nodes&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//表示下面这个结构是yaml的根 同时添加子资源状态和scale
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//+kubebuilder:object:root=true
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//+kubebuilder:subresource:status
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// HelloWorld是 helloworlds API的定义
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>type HelloWorld <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	metav1.TypeMeta   <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;,inline&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>	metav1.ObjectMeta <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;metadata,omitempty&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	Spec   HelloWorldSpec   <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;spec,omitempty&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>	Status HelloWorldStatus <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;status,omitempty&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//+kubebuilder:object:root=true
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// HelloWorldList 包含多个 HelloWorld
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>type HelloWorldList <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	metav1.TypeMeta <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;,inline&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>	metav1.ListMeta <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;metadata,omitempty&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>	Items           []HelloWorld <span style="color:#960050;background-color:#1e0010">`</span>json:<span style="color:#e6db74">&#34;items&#34;</span><span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>func <span style="color:#a6e22e">init</span>() {
+</span></span><span style="display:flex;"><span>	SchemeBuilder.Register(<span style="color:#f92672">&amp;</span>HelloWorld{}, <span style="color:#f92672">&amp;</span>HelloWorldList{})
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+<p>执行命令</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>make generate</span></span></code></pre></div>
+<blockquote>
+<p>该命令会执行controller-gen 工具更新 api/v1alpha1/zz_generated.deepcopy.go</p></blockquote>
+<p>执行命令</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>make manifests</span></span></code></pre></div>
+<blockquote>
+<p>将执行 controller-gen生成 CRD文件： config/crd/bases/test.jiaozi.com_helloworlds.yaml</p></blockquote>
+<p>生成的crd文件和定义的go代码是一致的</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#f92672">---</span>
+</span></span><span style="display:flex;"><span>apiVersion: apiextensions.k8s.io<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>kind: CustomResourceDefinition
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  annotations:
+</span></span><span style="display:flex;"><span>    controller<span style="color:#f92672">-</span>gen.kubebuilder.io<span style="color:#f92672">/</span>version: v0<span style="color:#ae81ff">.8.0</span>
+</span></span><span style="display:flex;"><span>  creationTimestamp: null
+</span></span><span style="display:flex;"><span>  name: helloworlds.test.jiaozi.com
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  group: test.jiaozi.com
+</span></span><span style="display:flex;"><span>  names:
+</span></span><span style="display:flex;"><span>    kind: HelloWorld
+</span></span><span style="display:flex;"><span>    listKind: HelloWorldList
+</span></span><span style="display:flex;"><span>    plural: helloworlds
+</span></span><span style="display:flex;"><span>    singular: helloworld
+</span></span><span style="display:flex;"><span>  scope: Namespaced
+</span></span><span style="display:flex;"><span>  versions:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span> name: v1alpha1
+</span></span><span style="display:flex;"><span>    schema:
+</span></span><span style="display:flex;"><span>      openAPIV3Schema:
+</span></span><span style="display:flex;"><span>        description: <span style="color:#960050;background-color:#1e0010">表示下面这个结构是</span>yaml的根 <span style="color:#960050;background-color:#1e0010">同时添加子资源状态和</span>scale HelloWorld是 helloworlds API的定义
+</span></span><span style="display:flex;"><span>        properties:
+</span></span><span style="display:flex;"><span>          apiVersion:
+</span></span><span style="display:flex;"><span>            description: <span style="color:#960050;background-color:#1e0010">&#39;</span>APIVersion defines the versioned schema of <span style="color:#66d9ef">this</span> representation
+</span></span><span style="display:flex;"><span>              of an object. Servers should convert recognized schemas to the latest
+</span></span><span style="display:flex;"><span>              internal value, and may reject unrecognized values. More info: https:<span style="color:#75715e">//git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            type: string
+</span></span><span style="display:flex;"><span>          kind:
+</span></span><span style="display:flex;"><span>            description: <span style="color:#960050;background-color:#1e0010">&#39;</span>Kind is a string value representing the REST resource <span style="color:#66d9ef">this</span>
+</span></span><span style="display:flex;"><span>              object represents. Servers may infer <span style="color:#66d9ef">this</span> from the endpoint the client
+</span></span><span style="display:flex;"><span>              submits requests to. Cannot be updated. In CamelCase. More info: https:<span style="color:#75715e">//git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            type: string
+</span></span><span style="display:flex;"><span>          metadata:
+</span></span><span style="display:flex;"><span>            type: object
+</span></span><span style="display:flex;"><span>          spec:
+</span></span><span style="display:flex;"><span>            description: HelloWorldSpec <span style="color:#960050;background-color:#1e0010">定义上面</span>spec的部分
+</span></span><span style="display:flex;"><span>            properties:
+</span></span><span style="display:flex;"><span>              size:
+</span></span><span style="display:flex;"><span>                description: <span style="color:#960050;background-color:#1e0010">对应</span>crd自定义字段 spec.size
+</span></span><span style="display:flex;"><span>                format: int32
+</span></span><span style="display:flex;"><span>                type: integer
+</span></span><span style="display:flex;"><span>            required:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span> size
+</span></span><span style="display:flex;"><span>            type: object
+</span></span><span style="display:flex;"><span>          status:
+</span></span><span style="display:flex;"><span>            description: HelloWorldStatus定义HelloWorld的状态观察
+</span></span><span style="display:flex;"><span>            properties:
+</span></span><span style="display:flex;"><span>              nodes:
+</span></span><span style="display:flex;"><span>                items:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                type: array
+</span></span><span style="display:flex;"><span>            required:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span> nodes
+</span></span><span style="display:flex;"><span>            type: object
+</span></span><span style="display:flex;"><span>        type: object
+</span></span><span style="display:flex;"><span>    served: true
+</span></span><span style="display:flex;"><span>    storage: true
+</span></span><span style="display:flex;"><span>    subresources:
+</span></span><span style="display:flex;"><span>      status: {}
+</span></span><span style="display:flex;"><span>status:
+</span></span><span style="display:flex;"><span>  acceptedNames:
+</span></span><span style="display:flex;"><span>    kind: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    plural: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>  conditions: []
+</span></span><span style="display:flex;"><span>  storedVersions: []</span></span></code></pre></div>
+<h4 id="实现controller">实现controller</h4>
+<p>开发过程中使用的api接口包参考：</p>
+<ol>
+<li>corev1 &ldquo;k8s.io/api/core/v1&rdquo; 核心api，提供核心结构和接口，yaml中常用的Spec定义在此。</li>
+<li>metav1 &ldquo;k8s.io/apimachinery/pkg/apis/meta/v1&rdquo; yaml中常用的metadata定义，ObjectMeta,LabelSelector等基本在此。</li>
+<li>appsv1 &ldquo;k8s.io/api/apps/v1&rdquo; 常用的创建的crd或者已经存在的rd等都在此，比如Deployments,Pod,Service等等。</li>
+</ol>
+<p>实现controller代码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>package controllers
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;context&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/go-logr/logr&#34;</span>
+</span></span><span style="display:flex;"><span>	appsv1 <span style="color:#e6db74">&#34;k8s.io/api/apps/v1&#34;</span>
+</span></span><span style="display:flex;"><span>	corev1 <span style="color:#e6db74">&#34;k8s.io/api/core/v1&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/apimachinery/pkg/api/errors&#34;</span>
+</span></span><span style="display:flex;"><span>	metav1 <span style="color:#e6db74">&#34;k8s.io/apimachinery/pkg/apis/meta/v1&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/apimachinery/pkg/types&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;reflect&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;sigs.k8s.io/controller-runtime/pkg/controller/controllerutil&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/apimachinery/pkg/runtime&#34;</span>
+</span></span><span style="display:flex;"><span>	ctrl <span style="color:#e6db74">&#34;sigs.k8s.io/controller-runtime&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;sigs.k8s.io/controller-runtime/pkg/client&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;sigs.k8s.io/controller-runtime/pkg/log&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	testv1alpha1 <span style="color:#e6db74">&#34;github.com/lzeqian/helloworld-operator/api/v1alpha1&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// HelloWorldReconciler reconciles a HelloWorld object
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>type HelloWorldReconciler <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	client.Client
+</span></span><span style="display:flex;"><span>	Log    logr.Logger <span style="color:#75715e">//日志打印
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	Scheme <span style="color:#f92672">*</span>runtime.Scheme
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//+kubebuilder:rbac:groups=test.jiaozi.com,resources=helloworlds,verbs=get;list;watch;create;update;patch;delete
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//+kubebuilder:rbac:groups=test.jiaozi.com,resources=helloworlds/status,verbs=get;update;patch
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//+kubebuilder:rbac:groups=test.jiaozi.com,resources=helloworlds/finalizers,verbs=update
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Reconcile is part of the main kubernetes reconciliation loop which aims to
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// move the current state of the cluster closer to the desired state.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// TODO(user): Modify the Reconcile function to compare the state specified by
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// the HelloWorld object against the actual cluster state, and then
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// perform operations to make the cluster state reflect the state specified by
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// the user.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// For more details, check Reconcile and its Result here:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>func (r <span style="color:#f92672">*</span>HelloWorldReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+</span></span><span style="display:flex;"><span>	_ <span style="color:#f92672">=</span> log.FromContext(ctx)
+</span></span><span style="display:flex;"><span>	r.Log.Info(<span style="color:#e6db74">&#34;recondile被调用&#34;</span> <span style="color:#f92672">+</span> req.Namespace <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;-&#34;</span> <span style="color:#f92672">+</span> req.Name)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// TODO(user): your logic here
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	helloworld :<span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>testv1alpha1.HelloWorld{}
+</span></span><span style="display:flex;"><span>	err :<span style="color:#f92672">=</span> r.Client.Get(ctx, req.NamespacedName, helloworld)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//如果是找不到异常 说明这个cr已经被删除了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> errors.IsNotFound(err) {
+</span></span><span style="display:flex;"><span>			r.Log.Info(<span style="color:#e6db74">&#34;crd资源已经被删除&#34;</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">//停止loop循环不在订阅事件。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">return</span> ctrl.Result{}, nil
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//返回错误，但是继续监听事件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">return</span> ctrl.Result{}, err
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//找到了cr就可以确认cr下的deploy是否存在
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	nginxDeployFound :<span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>appsv1.Deployment{}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//获取当前namespace下的deploy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	errDeploy :<span style="color:#f92672">=</span> r.Client.Get(ctx, types.NamespacedName{Name: helloworld.Name, Namespace: helloworld.Namespace}, nginxDeployFound)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> errDeploy <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//不存在，需要创建
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> errors.IsNotFound(errDeploy) {
+</span></span><span style="display:flex;"><span>			r.Log.Info(<span style="color:#e6db74">&#34;不存在deploy，新建deploy&#34;</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">//类似于yaml的语法创建ngxindeploy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			nginxDeploy :<span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>appsv1.Deployment{
+</span></span><span style="display:flex;"><span>				ObjectMeta: metav1.ObjectMeta{
+</span></span><span style="display:flex;"><span>					Name:      helloworld.Name,
+</span></span><span style="display:flex;"><span>					Namespace: helloworld.Namespace,
+</span></span><span style="display:flex;"><span>				},
+</span></span><span style="display:flex;"><span>				Spec: appsv1.DeploymentSpec{
+</span></span><span style="display:flex;"><span>					Replicas: <span style="color:#f92672">&amp;</span>helloworld.Spec.Size,
+</span></span><span style="display:flex;"><span>					Selector: <span style="color:#f92672">&amp;</span>metav1.LabelSelector{
+</span></span><span style="display:flex;"><span>						MatchLabels: map[string]string{
+</span></span><span style="display:flex;"><span>							<span style="color:#e6db74">&#34;hello_name&#34;</span><span style="color:#f92672">:</span> helloworld.Name,
+</span></span><span style="display:flex;"><span>						},
+</span></span><span style="display:flex;"><span>					},
+</span></span><span style="display:flex;"><span>					Template: corev1.PodTemplateSpec{
+</span></span><span style="display:flex;"><span>						ObjectMeta: metav1.ObjectMeta{
+</span></span><span style="display:flex;"><span>							Labels: map[string]string{
+</span></span><span style="display:flex;"><span>								<span style="color:#e6db74">&#34;hello_name&#34;</span><span style="color:#f92672">:</span> helloworld.Name,
+</span></span><span style="display:flex;"><span>							},
+</span></span><span style="display:flex;"><span>						},
+</span></span><span style="display:flex;"><span>						Spec: corev1.PodSpec{
+</span></span><span style="display:flex;"><span>							Containers: []corev1.Container{
+</span></span><span style="display:flex;"><span>								{
+</span></span><span style="display:flex;"><span>									Image: <span style="color:#e6db74">&#34;nginx&#34;</span>,
+</span></span><span style="display:flex;"><span>									Name:  <span style="color:#e6db74">&#34;nginx&#34;</span>,
+</span></span><span style="display:flex;"><span>									Ports: []corev1.ContainerPort{{
+</span></span><span style="display:flex;"><span>										ContainerPort: <span style="color:#ae81ff">80</span>,
+</span></span><span style="display:flex;"><span>										Name:          <span style="color:#e6db74">&#34;nginx&#34;</span>,
+</span></span><span style="display:flex;"><span>									}},
+</span></span><span style="display:flex;"><span>								},
+</span></span><span style="display:flex;"><span>							},
+</span></span><span style="display:flex;"><span>						},
+</span></span><span style="display:flex;"><span>					},
+</span></span><span style="display:flex;"><span>				},
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			controllerutil.SetControllerReference(helloworld, nginxDeploy, r.Scheme)
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> err1 :<span style="color:#f92672">=</span> r.Client.Create(ctx, nginxDeploy); err1 <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>				r.Log.Info(<span style="color:#e6db74">&#34;不存在deploy，新建deploy失败&#34;</span>)
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">return</span> ctrl.Result{}, errDeploy
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			r.Log.Info(<span style="color:#e6db74">&#34;不存在deploy，新建deploy成功&#34;</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> ctrl.Result{Requeue: true}, nil
+</span></span><span style="display:flex;"><span>		} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> ctrl.Result{}, errDeploy
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//如果err是空的说明找到了一个已经存在的deploy,需要判断deploy实际的个数和预期crd上的个数是否一致的
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#f92672">*</span>nginxDeployFound.Spec.Replicas <span style="color:#f92672">!=</span> helloworld.Spec.Size {
+</span></span><span style="display:flex;"><span>		r.Log.Info(<span style="color:#e6db74">&#34;deploy对应pod数量错误，更新deploy为helloword的size&#34;</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//修改原始的对象的spec.replicas
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		nginxDeployFound.Spec.Replicas <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>helloworld.Spec.Size
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//更新deploy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> err <span style="color:#f92672">=</span> r.Update(ctx, nginxDeployFound); err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> ctrl.Result{}, err
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> ctrl.Result{Requeue: true}, nil
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//更新找到的deploy的pod的数量更新到helloworld的status.nodes上
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	podList :<span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>corev1.PodList{}
+</span></span><span style="display:flex;"><span>	listOpts :<span style="color:#f92672">=</span> []client.ListOption{
+</span></span><span style="display:flex;"><span>		client.InNamespace(helloworld.Namespace),
+</span></span><span style="display:flex;"><span>		client.MatchingLabels(map[string]string{
+</span></span><span style="display:flex;"><span>			<span style="color:#e6db74">&#34;hello_name&#34;</span><span style="color:#f92672">:</span> helloworld.Name,
+</span></span><span style="display:flex;"><span>		}),
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> err <span style="color:#f92672">=</span> r.List(ctx, podList, listOpts...); err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> ctrl.Result{}, err
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 更新pod的实际个数的名字写入到helloworld的status上
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	podNames :<span style="color:#f92672">=</span> []string{}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> pn :<span style="color:#f92672">=</span> range podList.Items {
+</span></span><span style="display:flex;"><span>		podNames <span style="color:#f92672">=</span> append(podNames, podList.Items[pn].Name)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#f92672">!</span>reflect.DeepEqual(podNames, helloworld.Status.Nodes) {
+</span></span><span style="display:flex;"><span>		helloworld.Status.Nodes <span style="color:#f92672">=</span> podNames
+</span></span><span style="display:flex;"><span>		r.Log.Info(<span style="color:#e6db74">&#34;更新状态多helloword的子status&#34;</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> err :<span style="color:#f92672">=</span> r.Status().Update(ctx, helloworld); err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> ctrl.Result{}, err
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> ctrl.Result{}, nil
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// for表示监控的cr的类型，Owns表示监控的第二资源也就是cr需要控制的资源
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>func (r <span style="color:#f92672">*</span>HelloWorldReconciler) SetupWithManager(mgr ctrl.Manager) error {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> ctrl.NewControllerManagedBy(mgr).
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//watch HelloWorld这个crd作为一监控资源
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		For(<span style="color:#f92672">&amp;</span>testv1alpha1.HelloWorld{}).
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//watch Deployment作为第二个监控资源
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		Owns(<span style="color:#f92672">&amp;</span>appsv1.Deployment{}).
+</span></span><span style="display:flex;"><span>		Complete(r)
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+<h4 id="运行operator">运行operator</h4>
+<p>运行operator支持以下三种方式。</p>
+<ol>
+<li>controller作为一个go应用运行在集群之外方式运行。</li>
+<li>作为一个deployment直接将程序打包成镜像运行在集群内部。</li>
+<li>使用oolm方式部署。</li>
+</ol>
+<blockquote>
+<p>注意这里运行operator实际上是有3步</p>
+<ol>
+<li>将crd的定义安装到集群。</li>
+<li>运行controller监控cr的资源创建/删除/修改等，实际运行的程序就是运行controller，controller可以运行在集群外和集群内均可。</li>
+<li>创建一个cr，触发controller。</li>
+</ol></blockquote>
+<p>其中2和3方式适合生产部署：可参考：https://master.sdk.operatorframework.io/docs/building-operators/golang/tutorial/#run-the-operator
+这里演示第一种方式，因为方便调试，我这使用idea在window下环境。
+前置条件：window安装kubectl参考前面的章节。
+确保能正常执行kubectl命令</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>D:<span style="color:#960050;background-color:#1e0010">\</span>code1<span style="color:#960050;background-color:#1e0010">\</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;</span>kubectl get pods
+</span></span><span style="display:flex;"><span>NAME       READY   STATUS    RESTARTS        AGE
+</span></span><span style="display:flex;"><span>dnsutils   <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1</span>     Running   <span style="color:#ae81ff">290</span> (<span style="color:#ae81ff">59</span>m ago)   <span style="color:#ae81ff">12</span>d
+</span></span><span style="display:flex;"><span>nginx      <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1</span>     Running   <span style="color:#ae81ff">1</span> (<span style="color:#ae81ff">7</span>d ago)      <span style="color:#ae81ff">12</span>d</span></span></code></pre></div>
+<h5 id="修改配置">修改配置</h5>
+<p>注意该配置修改，如果是本地调试可以不执行，如果使用2-3方式运行是必选项
+配置镜像，修改Makefile
+注释掉</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#f92672">-</span>IMG <span style="color:#f92672">?=</span> controller:latest</span></span></code></pre></div>
+<p>修改为你自己的registry私服</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>IMAGE_TAG_BASE <span style="color:#f92672">?=</span> jiaozi.com:<span style="color:#ae81ff">5000</span><span style="color:#f92672">/</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># BUNDLE_IMG defines the image:tag used for the bundle.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=&lt;some-registry&gt;/&lt;project-name-bundle&gt;:&lt;tag&gt;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>BUNDLE_IMG <span style="color:#f92672">?=</span> <span style="color:#960050;background-color:#1e0010">$</span>(IMAGE_TAG_BASE)<span style="color:#f92672">-</span>bundle:v<span style="color:#960050;background-color:#1e0010">$</span>(VERSION)</span></span></code></pre></div>
+<p>修改Dockerfile
+注释掉代码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#USER 65532:65532</span></span></span></code></pre></div>
+<p>将基础镜像</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>FROM gcr.io<span style="color:#f92672">/</span>distroless<span style="color:#f92672">/</span><span style="color:#66d9ef">static</span><span style="color:#f92672">:</span>nonroot</span></span></code></pre></div>
+<p>替换为：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>FROM alpine:latest</span></span></code></pre></div>
+<p>去除单元测试
+修改makefile</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>docker<span style="color:#f92672">-</span>build: test <span style="color:#960050;background-color:#1e0010">##</span> Build docker image with the manager.</span></span></code></pre></div>
+<p>为</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>docker<span style="color:#f92672">-</span>build:  <span style="color:#960050;background-color:#1e0010">##</span> Build docker image with the manager.</span></span></code></pre></div>
+<p>执行命令，构建镜像，推送到私服</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>make docker<span style="color:#f92672">-</span>build docker<span style="color:#f92672">-</span>push</span></span></code></pre></div>
+<h5 id="打印日志">打印日志</h5>
+<p>打印日志主要是方便调试。
+main.go中创建Reconciler部分添加参数</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> err <span style="color:#f92672">=</span> (<span style="color:#f92672">&amp;</span>controllers.HelloWorldReconciler{
+</span></span><span style="display:flex;"><span>		Client: mgr.GetClient(),
+</span></span><span style="display:flex;"><span>		Log:    ctrl.Log.WithName(<span style="color:#e6db74">&#34;helloworld&#34;</span>),
+</span></span><span style="display:flex;"><span>		Scheme: mgr.GetScheme(),
+</span></span><span style="display:flex;"><span>	}).SetupWithManager(mgr); err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>		setupLog.Error(err, <span style="color:#e6db74">&#34;unable to create controller&#34;</span>, <span style="color:#e6db74">&#34;controller&#34;</span>, <span style="color:#e6db74">&#34;HelloWorld&#34;</span>)
+</span></span><span style="display:flex;"><span>		os.Exit(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>	}</span></span></code></pre></div>
+<p>HelloWorldReconciler结构体定义添加Log</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>type HelloWorldReconciler <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	client.Client
+</span></span><span style="display:flex;"><span>	Log    logr.Logger <span style="color:#75715e">//日志打印
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	Scheme <span style="color:#f92672">*</span>runtime.Scheme
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+<p>可在方法中使用</p>
+<ul>
+<li>r.Log.Info(&ldquo;crd资源已经被删除&rdquo;)  打印info日志</li>
+<li>r.Log.Error(&ldquo;异常信息&rdquo;) 打印error日志</li>
+</ul>
+<h5 id="安装crd">安装crd</h5>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>make install</span></span></code></pre></div>
+<p>查看安装</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>D:<span style="color:#960050;background-color:#1e0010">\</span>code1<span style="color:#960050;background-color:#1e0010">\</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;</span>kubectl get crd <span style="color:#f92672">|</span> grep hello
+</span></span><span style="display:flex;"><span>helloworlds.test.jiaozi.com                           <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">28</span>T10:<span style="color:#ae81ff">30</span><span style="color:#f92672">:</span><span style="color:#ae81ff">42</span>Z</span></span></code></pre></div>
+<p>查看定义</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>D:<span style="color:#960050;background-color:#1e0010">\</span>code1<span style="color:#960050;background-color:#1e0010">\</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;</span>kubectl explain helloworlds.test.jiaozi.com
+</span></span><span style="display:flex;"><span>KIND:     HelloWorld
+</span></span><span style="display:flex;"><span>VERSION:  test.jiaozi.com<span style="color:#f92672">/</span>v1alpha1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIPTION:
+</span></span><span style="display:flex;"><span>     <span style="color:#960050;background-color:#1e0010">表示下面这个结构是</span>yaml的根 <span style="color:#960050;background-color:#1e0010">同时添加子资源状态和</span>scale
+</span></span><span style="display:flex;"><span>     HelloWorld是 helloworlds API的定义
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FIELDS:
+</span></span><span style="display:flex;"><span>   apiVersion   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>     APIVersion defines the versioned schema of <span style="color:#66d9ef">this</span> representation of an
+</span></span><span style="display:flex;"><span>     object. Servers should convert recognized schemas to the latest internal
+</span></span><span style="display:flex;"><span>     value, and may reject unrecognized values. More info:
+</span></span><span style="display:flex;"><span>     https:<span style="color:#75715e">//git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>   kind <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>     Kind is a string value representing the REST resource <span style="color:#66d9ef">this</span> object
+</span></span><span style="display:flex;"><span>     represents. Servers may infer <span style="color:#66d9ef">this</span> from the endpoint the client submits
+</span></span><span style="display:flex;"><span>     requests to. Cannot be updated. In CamelCase. More info:
+</span></span><span style="display:flex;"><span>     https:<span style="color:#75715e">//git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>   metadata     <span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>     Standard object<span style="color:#960050;background-color:#1e0010">&#39;</span>s metadata. More info:
+</span></span><span style="display:flex;"><span>     https:<span style="color:#75715e">//git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>   spec <span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>     HelloWorldSpec <span style="color:#960050;background-color:#1e0010">定义上面</span>spec的部分
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   status       <span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>     HelloWorldStatus定义HelloWorld的状态观察</span></span></code></pre></div>
+<h5 id="运行controller">运行controller</h5>
+<p>运行controller watch cr的创建/删除/修改</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>D:<span style="color:#960050;background-color:#1e0010">\</span>code1<span style="color:#960050;background-color:#1e0010">\</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;</span>make run .
+</span></span><span style="display:flex;"><span><span style="color:#f92672">/</span>cygdrive<span style="color:#f92672">/</span>d<span style="color:#f92672">/</span>code1<span style="color:#f92672">/</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>controller<span style="color:#f92672">-</span>gen rbac:roleName<span style="color:#f92672">=</span>manager<span style="color:#f92672">-</span>role crd webhook paths<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;./...&#34;</span> output:crd:artifacts:config<span style="color:#f92672">=</span>config<span style="color:#f92672">/</span>crd<span style="color:#f92672">/</span>bases
+</span></span><span style="display:flex;"><span><span style="color:#f92672">/</span>cygdrive<span style="color:#f92672">/</span>d<span style="color:#f92672">/</span>code1<span style="color:#f92672">/</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>controller<span style="color:#f92672">-</span>gen object:headerFile<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hack</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">boilerplate.go.txt&#34;</span> paths<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;./...&#34;</span>
+</span></span><span style="display:flex;"><span>go fmt .<span style="color:#f92672">/</span>...
+</span></span><span style="display:flex;"><span>go vet .<span style="color:#f92672">/</span>...
+</span></span><span style="display:flex;"><span>go run .<span style="color:#f92672">/</span>main.go
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460445940803254e+09</span>  INFO    controller<span style="color:#f92672">-</span>runtime.metrics      Metrics server is starting to listen    {<span style="color:#e6db74">&#34;addr&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;:8080&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460445940819194e+09</span>  INFO    setup   starting manager
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460445940819194e+09</span>  INFO    Starting server {<span style="color:#e6db74">&#34;kind&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;health probe&#34;</span>, <span style="color:#e6db74">&#34;addr&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;[::]:8081&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460445940819194e+09</span>  INFO    Starting server {<span style="color:#e6db74">&#34;path&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/metrics&#34;</span>, <span style="color:#e6db74">&#34;kind&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;metrics&#34;</span>, <span style="color:#e6db74">&#34;addr&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;[::]:8080&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.646044594082426e+09</span>   INFO    controller.helloworld   Starting EventSource    {<span style="color:#e6db74">&#34;reconciler group&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;test.jiaozi.com&#34;</span>, <span style="color:#e6db74">&#34;reconciler kind&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;HelloWorld&#34;</span>, <span style="color:#e6db74">&#34;source&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;kind source: *v1alpha1.HelloWorld&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460445940830188e+09</span>  INFO    controller.helloworld   Starting EventSource    {<span style="color:#e6db74">&#34;reconciler group&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;test.jiaozi.com&#34;</span>, <span style="color:#e6db74">&#34;reconciler kind&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;HelloWorld&#34;</span>, <span style="color:#e6db74">&#34;source&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;kind source: *v1.Deployment&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460445940830188e+09</span>  INFO    controller.helloworld   Starting Controller     {<span style="color:#e6db74">&#34;reconciler group&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;test.jiaozi.com&#34;</span>, <span style="color:#e6db74">&#34;reconciler kind&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;HelloWorld&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460445941841855e+09</span>  INFO    controller.helloworld   Starting workers        {<span style="color:#e6db74">&#34;reconciler group&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;test.jiaozi.com&#34;</span>, <span style="color:#e6db74">&#34;reconciler kind&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;HelloWorld&#34;</span>, <span style="color:#e6db74">&#34;worker count&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>}</span></span></code></pre></div>
+<p>在项目根目录创建一个cr 使用命令执行</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: test.jiaozi.com<span style="color:#f92672">/</span>v1alpha1
+</span></span><span style="display:flex;"><span>kind: HelloWorld
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: helloworld<span style="color:#f92672">-</span>sample
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  size: <span style="color:#ae81ff">2</span></span></span></code></pre></div>
+<p>kubectl apply -f helloworld.yaml
+可看到controller的控制台出现了直接log打印的日志</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ae81ff">1.6460447152888484e+09</span>  INFO    helloworld      recondile被调用default<span style="color:#f92672">-</span>helloworld<span style="color:#f92672">-</span>sample
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460447152893913e+09</span>  INFO    helloworld      <span style="color:#960050;background-color:#1e0010">不存在</span>deploy<span style="color:#960050;background-color:#1e0010">，新建</span>deploy
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460447152947052e+09</span>  INFO    helloworld      <span style="color:#960050;background-color:#1e0010">不存在</span>deploy<span style="color:#960050;background-color:#1e0010">，新建</span>deploy成功
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.646044715295705e+09</span>   INFO    helloworld      recondile被调用default<span style="color:#f92672">-</span>helloworld<span style="color:#f92672">-</span>sample
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460447153962688e+09</span>  INFO    helloworld      <span style="color:#960050;background-color:#1e0010">更新状态多</span>helloword的子status
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.6460447154029741e+09</span>  INFO    helloworld      recondile被调用default<span style="color:#f92672">-</span>helloworld<span style="color:#f92672">-</span>sample</span></span></code></pre></div>
+<p>查看deploy和pod的个数</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>D:<span style="color:#960050;background-color:#1e0010">\</span>code1<span style="color:#960050;background-color:#1e0010">\</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;</span>kubectl get deploy
+</span></span><span style="display:flex;"><span>NAME                READY   UP<span style="color:#f92672">-</span>TO<span style="color:#f92672">-</span>DATE   AVAILABLE   AGE
+</span></span><span style="display:flex;"><span>helloworld<span style="color:#f92672">-</span>sample   <span style="color:#ae81ff">2</span><span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">2</span>            <span style="color:#ae81ff">2</span>           <span style="color:#ae81ff">60</span>s
+</span></span><span style="display:flex;"><span>D:<span style="color:#960050;background-color:#1e0010">\</span>code1<span style="color:#960050;background-color:#1e0010">\</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;</span>kubectl get pod <span style="color:#f92672">|</span> grep hello
+</span></span><span style="display:flex;"><span>helloworld<span style="color:#f92672">-</span>sample<span style="color:#f92672">-</span><span style="color:#ae81ff">569448757</span><span style="color:#f92672">-</span>pdq7q   <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1</span>     Running   <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">75</span>s
+</span></span><span style="display:flex;"><span>helloworld<span style="color:#f92672">-</span>sample<span style="color:#f92672">-</span><span style="color:#ae81ff">569448757</span><span style="color:#f92672">-</span>x4b9p   <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1</span>     Running   <span style="color:#ae81ff">0</span>               <span style="color:#ae81ff">75</span>s</span></span></code></pre></div>
+<h5 id="调试controller">调试controller</h5>
+<p>首先生成exe文件</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>go build</span></span></code></pre></div>
+<p><a href="#R-image-5b942c854a3cbb37886bd93a5aa4386c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/96cbf3398504182eefbb2edb8c24096a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5b942c854a3cbb37886bd93a5aa4386c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/96cbf3398504182eefbb2edb8c24096a.png"></a>
+安装dlv，如果下载有错，多下载几次，最好设置代理</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>go get <span style="color:#f92672">-</span>u github.com<span style="color:#f92672">/</span>go<span style="color:#f92672">-</span>delve<span style="color:#f92672">/</span>delve<span style="color:#f92672">/</span>cmd<span style="color:#f92672">/</span>dlv</span></span></code></pre></div>
+<p><del>打开idea help-edit custom properties，新增dlv参数位置（该步骤省略）：</del></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>dlv.path<span style="color:#f92672">=</span>C:<span style="color:#f92672">/</span>Users<span style="color:#f92672">/</span>liaomin<span style="color:#f92672">/</span>go<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>dlv.exe</span></span></code></pre></div>
+<p>执行dlv命令开放2345端口</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>dlv exec <span style="color:#f92672">--</span>headless <span style="color:#f92672">--</span>listen <span style="color:#e6db74">&#34;:2345&#34;</span> <span style="color:#f92672">--</span>log <span style="color:#f92672">--</span>api<span style="color:#f92672">-</span>version <span style="color:#ae81ff">2</span> .<span style="color:#f92672">/</span>helloworld<span style="color:#f92672">-</span><span style="color:#66d9ef">operator</span>.exe</span></span></code></pre></div>
+<p>idea创建一个go remote
+<a href="#R-image-7f75e940d7996517b36599eddecc73ce" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/d65859fe9c2b136964c60950be8c98bf.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7f75e940d7996517b36599eddecc73ce"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/d65859fe9c2b136964c60950be8c98bf.png"></a>
+host和port默认即可，确认后，程序开始正常运行，可以在controller下断点，执行kubectl新增/删除cr资源可正常调试
+<a href="#R-image-60704f9056f83ad5b85760d142480a44" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/7b252a370210fdd7b0fe25a875974695.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-60704f9056f83ad5b85760d142480a44"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_04.md.images/7b252a370210fdd7b0fe25a875974695.png"></a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu"></ul></li>
+            <li class="parent " data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/devops/kubernetes/index.html"><a class="padding" href="/docs/devops/kubernetes/index.html">kubernetes</a><ul id="R-subsections-a6d9d4850f81ae033d42cdaa03dad084" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_01/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_01/index.html">K8S二次开发01-各种资源对象的理解和定义</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_02/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_02/index.html">K8S二次开发02-kubeadm安装k8s集群</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_03/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_03/index.html">K8S二次开发03-CRD资源详解</a></li>
+            <li class="active " data-nav-id="/docs/devops/kubernetes/k8s_dev_04/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_04/index.html">K8S二次开发04-自定义operator（operator-sdk调试）</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_05/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_05/index.html">K8S二次开发05-使用clientgo自定义ingresscontroller</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/devops/networking/index.html"><a class="padding" href="/docs/devops/networking/index.html">网络技术</a><ul id="R-subsections-bd6b3f75e8269a91d29691b78d3bac17" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

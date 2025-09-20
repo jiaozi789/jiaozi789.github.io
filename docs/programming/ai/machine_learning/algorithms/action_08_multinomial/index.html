@@ -37,26 +37,26 @@ import numpy as npimport matplotlib.pyplot as pltx = np.random.uniform(-3, 3, 
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="858">
     <title>机器学习实战教程（八）：多项式回归 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -110,7 +110,7 @@ import numpy as npimport matplotlib.pyplot as pltx = np.random.uniform(-3, 3, 
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_08_multinomial/index.html">
     <div id="R-body" class="default-animation">
@@ -211,12 +211,12 @@ window.MathJax = {
 <p>线性回归研究的是一个因变量与一个自变量之间的回归问题。
 多项式回归是指在线性回归的基础上，通过增加非线性特征来拟合非线性数据的方法。多项式回归模型可以用一个 n 次多项式函数来近似描述目标变量和输入变量之间的关系。例如，对于只有一个自变量
 x 的情况，可以将拟合函数写作：
-<a href="#R-image-d28822a39b3b479338b3717556eb7bf0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/2e0d741c67e2e2635ba1b240ba2aac0b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d28822a39b3b479338b3717556eb7bf0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/2e0d741c67e2e2635ba1b240ba2aac0b.png"></a>
+<a href="#R-image-9b76553000f0f9e802a71c012e9a4941" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/2e0d741c67e2e2635ba1b240ba2aac0b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9b76553000f0f9e802a71c012e9a4941"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/2e0d741c67e2e2635ba1b240ba2aac0b.png"></a>
 其中
 y 表示目标变量，x 表示自变量，
-<a href="#R-image-659355937bc77ce6755969f19382f088" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/a1f2a63f24b72389288e856f31b95735.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-659355937bc77ce6755969f19382f088"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/a1f2a63f24b72389288e856f31b95735.png"></a>是模型的参数。模型的目标是通过调整参数来使预测值与真实值的误差最小化。</p>
+<a href="#R-image-1b0764cf780cc1a2dec0e26439169cb9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/a1f2a63f24b72389288e856f31b95735.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1b0764cf780cc1a2dec0e26439169cb9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/a1f2a63f24b72389288e856f31b95735.png"></a>是模型的参数。模型的目标是通过调整参数来使预测值与真实值的误差最小化。</p>
 <p>多项式回归可以通过 Scikit-Learn 的 PolynomialFeatures 类来实现，它可以将原始的自变量数据转化为包含了多项式特征的新自变量数据。这样，我们就可以使用线性回归算法来处理增广后的非线性特征，从而得到多项式回归模型。</p>
 <h2 id="拟合实例">拟合实例</h2>
 <p>生成一个多项式的模拟数据 y=3<em>x+2</em>x**2</p>
@@ -228,8 +228,8 @@ X = x.reshape(-1, 1)
 y =  3*x+ 2*x**2+ np.random.normal(0, 1, size=100)
 plt.scatter(x, y)
 plt.show()</code></pre></div>
-<p><a href="#R-image-e35e7dfdec5726e7ff1f91cc35e1d0e1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/7e893e71b32b49803797a6888d40f218.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e35e7dfdec5726e7ff1f91cc35e1d0e1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/7e893e71b32b49803797a6888d40f218.png"></a>
+<p><a href="#R-image-f9f66f5268503863062978ce85d08bb2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/7e893e71b32b49803797a6888d40f218.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f9f66f5268503863062978ce85d08bb2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/7e893e71b32b49803797a6888d40f218.png"></a>
 如果直接使用线性回归，看一下效果：</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from sklearn.linear_model import LinearRegression
 
@@ -239,8 +239,8 @@ y_predict = lin_reg.predict(X)
 plt.scatter(x, y)
 plt.plot(x, y_predict, color=&#39;r&#39;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-9d9d6c135a687bf0896cba67fd33116e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/28a470c5794942b5fbd71922ce698358.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9d9d6c135a687bf0896cba67fd33116e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/28a470c5794942b5fbd71922ce698358.png"></a>
+<p><a href="#R-image-bed2ae91b64d734895726edd64c480ab" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/28a470c5794942b5fbd71922ce698358.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bed2ae91b64d734895726edd64c480ab"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/28a470c5794942b5fbd71922ce698358.png"></a>
 很显然，拟合效果并不好。那么解决呢？
 解决方案：添加一个特征。  x**2</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>X2 = np.hstack([X, X**2])
@@ -250,8 +250,8 @@ y_predict2 = lin_reg2.predict(X2)
 plt.scatter(x, y)
 plt.plot(np.sort(x), y_predict2[np.argsort(x)], color=&#39;r&#39;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-89e3e7d31b6f8ecd18ac8a0457ea9201" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/981347a8bf373e614ab1ed6fdb2bd28d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-89e3e7d31b6f8ecd18ac8a0457ea9201"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/981347a8bf373e614ab1ed6fdb2bd28d.png"></a>
+<p><a href="#R-image-11c2d6685a6320359b533bd602f27c5d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/981347a8bf373e614ab1ed6fdb2bd28d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-11c2d6685a6320359b533bd602f27c5d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/981347a8bf373e614ab1ed6fdb2bd28d.png"></a>
 这样就比直线拟合要好很多,斜率和截距是。</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[2.9391452  1.94366894]
 0.04332751905483523</code></pre></div>
@@ -291,8 +291,8 @@ plt.show()
 print(lin_reg2.coef_)
 # array([0.90802935, 1.04112467])
 print(lin_reg2.intercept_)</code></pre></div>
-<p><a href="#R-image-57b1be9193a6db47e50917d9d64af6b6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/147811c5ebc8cbc64bc5d6a4b2617a33.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-57b1be9193a6db47e50917d9d64af6b6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/147811c5ebc8cbc64bc5d6a4b2617a33.png"></a>
+<p><a href="#R-image-64ead44dace87faf0b0d8d0b71835769" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/147811c5ebc8cbc64bc5d6a4b2617a33.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-64ead44dace87faf0b0d8d0b71835769"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/147811c5ebc8cbc64bc5d6a4b2617a33.png"></a>
 输出截距和斜率</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[3.02468873 1.94228967]
 0.41539122650325755</code></pre></div>
@@ -330,8 +330,8 @@ print(x3)</code></pre></div>
  [   1.    5.    6.   25.   30.   36.  125.  150.  180.  216.]
  [   1.    7.    8.   49.   56.   64.  343.  392.  448.  512.]
  [   1.    9.   10.   81.   90.  100.  729.  810.  900. 1000.]]</code></pre></div>
-<p><a href="#R-image-c8f195a3437f48827d1d8eb60b8844c8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/00901a077dbca2293be548d865244840.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c8f195a3437f48827d1d8eb60b8844c8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/00901a077dbca2293be548d865244840.png"></a>
+<p><a href="#R-image-0905888887f3638823a7627572796f4c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/00901a077dbca2293be548d865244840.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0905888887f3638823a7627572796f4c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/00901a077dbca2293be548d865244840.png"></a>
 那么这10列，分别对应着什么？通过PolynomiaFeatures，将所有的可能组合，升维的方式呈指数型增长。这也会带来一定的问题。 如何解决这种爆炸式的增长？如果不控制一下，试想x和x[^100]相比差异就太大了。这就是传说中的过拟合。</p>
 <h2 id="sklearn中的pipeline">sklearn中的Pipeline</h2>
 <p>sklearn中的Pipeline是一个工具，可以将多个数据预处理步骤（transformer）和一个机器学习模型（estimator）串联在一起，形成一个完整的机器学习流程。Pipeline 中的每个步骤都是一个包含 fit 和 transform 方法的对象，其中 fit 方法用于拟合训练数据，transform 方法用于对数据进行转换。</p>
@@ -379,8 +379,8 @@ plt.show()</code></pre></div>
 </ul>
 <p>函数返回的是一个数值，表示两个数组之间的均方误差。</p>
 <p>均方误差是回归模型中使用广泛的一种衡量模型预测能力的指标。均方误差越小说明模型的预测越准确。它的定义是：将每个样本预测值与真实值之间的偏差进行平方后求和，再除以样本总数得到的平均值，即
-<a href="#R-image-89e145182827a683989f5f34cf3e9c16" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/1d6003991f15993927b3df2741387f13.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-89e145182827a683989f5f34cf3e9c16"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/1d6003991f15993927b3df2741387f13.png"></a></p>
+<a href="#R-image-f5282b92df7c0f33bf3a72af95524ef8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/1d6003991f15993927b3df2741387f13.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f5282b92df7c0f33bf3a72af95524ef8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/1d6003991f15993927b3df2741387f13.png"></a></p>
 <blockquote>
 <p>均方误差越小就意味着模型的预测能力越准确</p></blockquote>
 <h2 id="拟合效果">拟合效果</h2>
@@ -397,8 +397,8 @@ plt.show()
 print(&#34;线性均方误差&#34;,mean_squared_error(y, y_predict))</code></pre></div>
 <p>输出：3.0750025765636577
 显然，直接使用简单的一次线性回归，拟合的结果就是欠拟合(underfiting)，
-<a href="#R-image-06294ee43bdbd226107b13b9d0a580d2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/e74058c8902f1f7bf936530e9d8238f7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-06294ee43bdbd226107b13b9d0a580d2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/e74058c8902f1f7bf936530e9d8238f7.png"></a></p>
+<a href="#R-image-b97c49dd611fa0308f5f2f2010dc44e8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/e74058c8902f1f7bf936530e9d8238f7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b97c49dd611fa0308f5f2f2010dc44e8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/e74058c8902f1f7bf936530e9d8238f7.png"></a></p>
 <h3 id="二次多项式拟合">二次多项式拟合</h3>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PolynomialFeatures
@@ -424,8 +424,8 @@ plt.plot(np.sort(x), y_predict[np.argsort(x)], color=&#39;r&#39;)
 plt.show()</code></pre></div>
 <p>输出：1.0987392142417856
 二次多项式回归的拟合程度要高于线性回归。
-<a href="#R-image-c605d78f51627c53200d03f6c5f67d00" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/9efedc399a95c6b52b168637ba4571ae.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c605d78f51627c53200d03f6c5f67d00"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/9efedc399a95c6b52b168637ba4571ae.png"></a></p>
+<a href="#R-image-cdc060709a538f446806d5e1ad1e4270" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/9efedc399a95c6b52b168637ba4571ae.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cdc060709a538f446806d5e1ad1e4270"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/9efedc399a95c6b52b168637ba4571ae.png"></a></p>
 <h3 id="十次多项式拟合">十次多项式拟合</h3>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>poly10_reg = PolynomialRegression(degree=10)
 poly10_reg.fit(X, y)
@@ -436,8 +436,8 @@ plt.scatter(x, y)
 plt.plot(np.sort(x), y10_predict[np.argsort(x)], color=&#39;r&#39;)
 plt.show()</code></pre></div>
 <p>输出：1.0508466763764202
-<a href="#R-image-2d529a6a1d64a286154591661f5733a3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/6975d23c4f02b2c41ab797ff9cd9f291.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2d529a6a1d64a286154591661f5733a3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/6975d23c4f02b2c41ab797ff9cd9f291.png"></a></p>
+<a href="#R-image-19bd8f22104e93a28a91e9768e0a99be" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/6975d23c4f02b2c41ab797ff9cd9f291.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-19bd8f22104e93a28a91e9768e0a99be"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/6975d23c4f02b2c41ab797ff9cd9f291.png"></a></p>
 <h3 id="百次多项式拟合">百次多项式拟合</h3>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>poly10_reg = PolynomialRegression(degree=100)
 poly10_reg.fit(X, y)
@@ -448,8 +448,8 @@ plt.scatter(x, y)
 plt.plot(np.sort(x), y10_predict[np.argsort(x)], color=&#39;r&#39;)
 plt.show()</code></pre></div>
 <p>输出：0.6870911922673567
-<a href="#R-image-b6be8825ca855ce3df24f19448b9788e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/b0bcb450c857ed0f8efc0298d7531857.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b6be8825ca855ce3df24f19448b9788e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/b0bcb450c857ed0f8efc0298d7531857.png"></a></p>
+<a href="#R-image-59c33dcc384096b594f9d14dba90abdf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/b0bcb450c857ed0f8efc0298d7531857.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-59c33dcc384096b594f9d14dba90abdf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/b0bcb450c857ed0f8efc0298d7531857.png"></a></p>
 <h3 id="百次多项式生成数据集测试">百次多项式生成数据集测试</h3>
 <p>从上面的图形看出uniform生成的数据预测的y值都在-1到10之间，我们使用相同的模型预测下 x=3的值</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>y_plot = poly100_reg.predict([[3]])
@@ -465,8 +465,8 @@ plt.scatter(x, y)
 plt.plot(x_plot[:,0], y_plot, color=&#39;r&#39;)
 # plt.axis([-3, 3, -1, 10])
 plt.show()</code></pre></div>
-<p><a href="#R-image-998e3285c7a72afab8c0ab7fe30e7e0d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/331ae065da11cff0f94bb5f7510e387b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-998e3285c7a72afab8c0ab7fe30e7e0d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/331ae065da11cff0f94bb5f7510e387b.png"></a>
+<p><a href="#R-image-10fdbb9735e09eb81f155e532baea999" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/331ae065da11cff0f94bb5f7510e387b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-10fdbb9735e09eb81f155e532baea999"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/331ae065da11cff0f94bb5f7510e387b.png"></a>
 这样因为x=3图形都乱了，我们截图图形x从-3到3 y从-1到10</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>from sklearn.preprocessing import PolynomialFeatures
 x_plot = np.linspace(-3, 3, 100).reshape(100, 1)
@@ -475,8 +475,8 @@ plt.scatter(x, y)
 plt.plot(x_plot[:,0], y_plot, color=&#39;r&#39;)
 plt.axis([-3, 3, -1, 10])
 plt.show()</code></pre></div>
-<p><a href="#R-image-347f9946723ce29fdf3ec4600d1301f1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/b31d9b79618684d2ee6409a2b8af1032.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-347f9946723ce29fdf3ec4600d1301f1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/b31d9b79618684d2ee6409a2b8af1032.png"></a></p>
+<p><a href="#R-image-8da6a0e3554d14bae0e52df6e8a7b748" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/b31d9b79618684d2ee6409a2b8af1032.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8da6a0e3554d14bae0e52df6e8a7b748"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/b31d9b79618684d2ee6409a2b8af1032.png"></a></p>
 <blockquote>
 <p>说明通过训练集训练出的模型对测试集没有很好的表现能力</p></blockquote>
 <h1 id="解决过拟合问题">解决过拟合问题</h1>
@@ -531,14 +531,14 @@ poly100_reg.fit(x_train, y_train)
 y100_predict = poly100_reg.predict(x_test)
 mean_squared_error(y_test, y100_predict)</code></pre></div>
 <p>输出结果：14440175276.314638
-<a href="#R-image-6865385534f8736fa235d05da6440263" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/f547f041c0bad624de22d4f247a74689.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6865385534f8736fa235d05da6440263"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/f547f041c0bad624de22d4f247a74689.png"></a></p>
+<a href="#R-image-42b6b03bfa7bdca6b1e4b8108f29f8da" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/f547f041c0bad624de22d4f247a74689.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-42b6b03bfa7bdca6b1e4b8108f29f8da"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/f547f041c0bad624de22d4f247a74689.png"></a></p>
 <p>小结：对于模型复杂度与模型准确率中寻找泛化能力最好的地方。</p>
 <ol>
 <li>欠拟合：underfitting，算法所训练的模型不能完整表述数据关系。</li>
 <li>过拟合：overfitting，算法所训练的模型过多地表达数据间的噪音关系。
-<a href="#R-image-07450a8089be197a3439441762068374" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/457b5bce8c0e1c23284ba6fe98e8f868.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-07450a8089be197a3439441762068374"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/457b5bce8c0e1c23284ba6fe98e8f868.png"></a></li>
+<a href="#R-image-8874fc6351e6b55d544db9e24269a024" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/457b5bce8c0e1c23284ba6fe98e8f868.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8874fc6351e6b55d544db9e24269a024"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/457b5bce8c0e1c23284ba6fe98e8f868.png"></a></li>
 </ol>
 <h3 id="学习曲线">学习曲线</h3>
 <p>机器学习的学习曲线是一种图形化表示机器学习算法在训练数据上表现的方式，通常以训练数据集大小或训练迭代次数为横轴，以模型性能指标（如准确率、误差等）为纵轴。这条曲线可以帮助我们了解算法的学习过程，评估学习效果和调整模型。</p>
@@ -574,8 +574,8 @@ y = 0.5 * x**2 + x + 2 + np.random.normal(0, 1, size=100)
 
 x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=10)</code></pre></div>
 <p>使用线性回归，图像是欠拟合（欠拟合指模型不能在训练集上获得足够低的误差），训练数据误差都达到2.0了
-<a href="#R-image-ff3d8828d12cadda7e1817b5961a8fd8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/f19dc8ab2e61e8186a6147be8377e470.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ff3d8828d12cadda7e1817b5961a8fd8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/f19dc8ab2e61e8186a6147be8377e470.png"></a>
+<a href="#R-image-8b543e1ba110968542288883615209f0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/f19dc8ab2e61e8186a6147be8377e470.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8b543e1ba110968542288883615209f0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/f19dc8ab2e61e8186a6147be8377e470.png"></a>
 使用二项式回顾，图像是最佳拟合</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>def PolynomialRegression(degree):
     return Pipeline([
@@ -585,13 +585,13 @@ x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=10)</code
     ])
 poly2_reg = PolynomialRegression(degree=2)
 plot_learning_curve(poly2_reg, x_train, x_test, y_train, y_test)</code></pre></div>
-<p><a href="#R-image-a2520ed959d4a5ba9586e0c828679275" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/1d09425105b4c2bc92833ef1d6422d69.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a2520ed959d4a5ba9586e0c828679275"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/1d09425105b4c2bc92833ef1d6422d69.png"></a>
+<p><a href="#R-image-c14564721dc644fa3351fbd0e3a2ce59" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/1d09425105b4c2bc92833ef1d6422d69.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c14564721dc644fa3351fbd0e3a2ce59"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/1d09425105b4c2bc92833ef1d6422d69.png"></a>
 使用20项式，过拟合（过拟合则是指模型在训练集上表现很好，但在测试集上却表现很差）</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>poly2_reg = PolynomialRegression(degree=20)
 plot_learning_curve(poly2_reg, x_train, x_test, y_train, y_test)</code></pre></div>
-<p><a href="#R-image-9a389ba5f72e32b771c81e4f866dcb70" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/7ffb3d1dca479098ad62eddc8dda46b0.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9a389ba5f72e32b771c81e4f866dcb70"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/7ffb3d1dca479098ad62eddc8dda46b0.png"></a></p>
+<p><a href="#R-image-6b38c9ae2d1fd002ab4e81e060d09649" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/7ffb3d1dca479098ad62eddc8dda46b0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6b38c9ae2d1fd002ab4e81e060d09649"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_08_multinomial.md.images/7ffb3d1dca479098ad62eddc8dda46b0.png"></a></p>
 
   <footer class="footline">
               <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
@@ -662,6 +662,8 @@ plot_learning_curve(poly2_reg, x_train, x_test, y_train, y_test)</code></pre></d
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -679,8 +681,8 @@ plot_learning_curve(poly2_reg, x_train, x_test, y_train, y_test)</code></pre></d
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

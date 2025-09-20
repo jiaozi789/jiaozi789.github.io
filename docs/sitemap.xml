@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://jiaozi789.github.io/docs/devops/networking/packet_capture/net_android_fpackage/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/security/burp_suite/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/kubernetes/k8s_dev_01/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/kubernetes/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/tools_libraries/transformers/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
@@ -49,6 +69,26 @@
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
+    <loc>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic_01/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic_02/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/kubernetes/k8s_dev_02/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/tools_libraries/transformers/actions/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
@@ -81,6 +121,18 @@
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
+    <loc>https://jiaozi789.github.io/docs/devops/networking/basic/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/networking/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/networking/packet_capture/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/computer_vision/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
@@ -88,7 +140,23 @@
     <loc>https://jiaozi789.github.io/docs/programming/plugins/chrome/index.html</loc>
   </url>
   <url>
+    <loc>https://jiaozi789.github.io/docs/devops/kubernetes/k8s_dev_03/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/kubernetes/k8s_dev_04/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/devops/kubernetes/k8s_dev_05/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/programming/ai/deep_learning/cnn/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/security/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
@@ -159,7 +227,67 @@
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>
+    <loc>https://jiaozi789.github.io/docs/security/burp_suite/action_01_web/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/security/burp_suite/action_02_fpackage/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/security/burp_suite/action_03_plugins/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://jiaozi789.github.io/docs/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_01/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_02/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_03/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_04/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_05/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_06/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_07/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_08/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_09/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_10/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_11/index.html</loc>
+    <lastmod>2025-09-18T16:55:17+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_12/index.html</loc>
     <lastmod>2025-09-18T16:55:17+08:00</lastmod>
   </url>
   <url>

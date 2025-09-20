@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一。 c语言标准库介绍
+stdlib里的是常用系统函数，跟系统调用相关的，比如内存申请malloc和释放free stdio是标准io函数，比如printf和scanf函数 所有参考函数 来自 ：http://www.he11oworld.com/c-shouce/ http://www.runoob.com/cprogramming/c-tutorial.html
+二。c语言参考案例
+宏定义
+宏是在gcc编译预处理阶段就会执行的代码 //#pragma命令可以让编程者让编译器执行某些事 #include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出 &#34;&#34;首先在当前目录下寻找，如果找不到，再到系统目录中寻找&lt;&gt;直接去系统目录中找#define True 0#define toString(s) #s#define concat(x,y) x ## y#define add(a,b) a&#43;b#define max(a,b) a&gt;b?a:bvoid myadd(int a,int b) {}int main() {printf(&#34;%s\n&#34;,toString(&#34;替换&#34;));//#s 预编译阶段这里编程 printf(&#34;%s\n&#34;,&#34;替换\n&#34;)int xy=100;printf(&#34;%d\n&#34;,concat(x,y)); //x##y连接成 xy 预编译 这里 printf(&#34;%d\n&#34;,xy)printf(&#34;%d\n&#34;,add(10,11)); //这里直接被替换成 printf(&#34;%d\n&#34;,10&#43;11);int a=100;int b=10;printf(&#34;%d\n&#34;,max(a,b)); //这里直接被替换成 printf(&#34;%d\n&#34;,a&gt;b?a:b);/*** 下列参数在不同的编译器可能会有所不同, 但是一般是可用的:__LINE__ 和 __FILE__ 变量表示正在处理的当前行和当前文件.__DATE__ 变量表示当前日期,格式为month/day/year(月/日/年).__TIME__ 变量描述当前的时间,格式为hour:minute:second(时:分:秒)._cplusplus 变量只在编译一个C&#43;&#43;程序时定义.__STDC__ 变量在编译一个C程序时定义,编译C&#43;&#43;时也有可能定义.*///获取当前的文件名 当前行号printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );#line 10 &#34;a.cpp&#34; //下一行就变成第10行了 文件名改成了a.cpp可以动修改上面两个变量的值int i=1000;printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );#ifdef True //是否定义这个宏 上面已经定义了 不管真假 if系列 #if, #ifdef, #ifndef, #else, #elif, #endifprintf(&#34;Hello, World!\n&#34;);#endif#if True //判断宏是否大于0的值printf(&#34;Hello, World!\n&#34;);#endif//#undef命令取消一个先前已定义的宏变量, 譬如一个用#define定义的变量.#undef Truereturn 0;} 关于指针和函数的指针 记录下">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="linux下gcc编程06-c语言参考手册 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一。 c语言标准库介绍
+stdlib里的是常用系统函数，跟系统调用相关的，比如内存申请malloc和释放free stdio是标准io函数，比如printf和scanf函数 所有参考函数 来自 ：http://www.he11oworld.com/c-shouce/ http://www.runoob.com/cprogramming/c-tutorial.html
+二。c语言参考案例
+宏定义
+宏是在gcc编译预处理阶段就会执行的代码 //#pragma命令可以让编程者让编译器执行某些事 #include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出 &#34;&#34;首先在当前目录下寻找，如果找不到，再到系统目录中寻找&lt;&gt;直接去系统目录中找#define True 0#define toString(s) #s#define concat(x,y) x ## y#define add(a,b) a&#43;b#define max(a,b) a&gt;b?a:bvoid myadd(int a,int b) {}int main() {printf(&#34;%s\n&#34;,toString(&#34;替换&#34;));//#s 预编译阶段这里编程 printf(&#34;%s\n&#34;,&#34;替换\n&#34;)int xy=100;printf(&#34;%d\n&#34;,concat(x,y)); //x##y连接成 xy 预编译 这里 printf(&#34;%d\n&#34;,xy)printf(&#34;%d\n&#34;,add(10,11)); //这里直接被替换成 printf(&#34;%d\n&#34;,10&#43;11);int a=100;int b=10;printf(&#34;%d\n&#34;,max(a,b)); //这里直接被替换成 printf(&#34;%d\n&#34;,a&gt;b?a:b);/*** 下列参数在不同的编译器可能会有所不同, 但是一般是可用的:__LINE__ 和 __FILE__ 变量表示正在处理的当前行和当前文件.__DATE__ 变量表示当前日期,格式为month/day/year(月/日/年).__TIME__ 变量描述当前的时间,格式为hour:minute:second(时:分:秒)._cplusplus 变量只在编译一个C&#43;&#43;程序时定义.__STDC__ 变量在编译一个C程序时定义,编译C&#43;&#43;时也有可能定义.*///获取当前的文件名 当前行号printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );#line 10 &#34;a.cpp&#34; //下一行就变成第10行了 文件名改成了a.cpp可以动修改上面两个变量的值int i=1000;printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );#ifdef True //是否定义这个宏 上面已经定义了 不管真假 if系列 #if, #ifdef, #ifndef, #else, #elif, #endifprintf(&#34;Hello, World!\n&#34;);#endif#if True //判断宏是否大于0的值printf(&#34;Hello, World!\n&#34;);#endif//#undef命令取消一个先前已定义的宏变量, 譬如一个用#define定义的变量.#undef Truereturn 0;} 关于指针和函数的指针 记录下">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_06/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="linux下gcc编程06-c语言参考手册 :: liaomin416100569博客">
+    <meta property="og:description" content="一。 c语言标准库介绍
+stdlib里的是常用系统函数，跟系统调用相关的，比如内存申请malloc和释放free stdio是标准io函数，比如printf和scanf函数 所有参考函数 来自 ：http://www.he11oworld.com/c-shouce/ http://www.runoob.com/cprogramming/c-tutorial.html
+二。c语言参考案例
+宏定义
+宏是在gcc编译预处理阶段就会执行的代码 //#pragma命令可以让编程者让编译器执行某些事 #include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出 &#34;&#34;首先在当前目录下寻找，如果找不到，再到系统目录中寻找&lt;&gt;直接去系统目录中找#define True 0#define toString(s) #s#define concat(x,y) x ## y#define add(a,b) a&#43;b#define max(a,b) a&gt;b?a:bvoid myadd(int a,int b) {}int main() {printf(&#34;%s\n&#34;,toString(&#34;替换&#34;));//#s 预编译阶段这里编程 printf(&#34;%s\n&#34;,&#34;替换\n&#34;)int xy=100;printf(&#34;%d\n&#34;,concat(x,y)); //x##y连接成 xy 预编译 这里 printf(&#34;%d\n&#34;,xy)printf(&#34;%d\n&#34;,add(10,11)); //这里直接被替换成 printf(&#34;%d\n&#34;,10&#43;11);int a=100;int b=10;printf(&#34;%d\n&#34;,max(a,b)); //这里直接被替换成 printf(&#34;%d\n&#34;,a&gt;b?a:b);/*** 下列参数在不同的编译器可能会有所不同, 但是一般是可用的:__LINE__ 和 __FILE__ 变量表示正在处理的当前行和当前文件.__DATE__ 变量表示当前日期,格式为month/day/year(月/日/年).__TIME__ 变量描述当前的时间,格式为hour:minute:second(时:分:秒)._cplusplus 变量只在编译一个C&#43;&#43;程序时定义.__STDC__ 变量在编译一个C程序时定义,编译C&#43;&#43;时也有可能定义.*///获取当前的文件名 当前行号printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );#line 10 &#34;a.cpp&#34; //下一行就变成第10行了 文件名改成了a.cpp可以动修改上面两个变量的值int i=1000;printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );#ifdef True //是否定义这个宏 上面已经定义了 不管真假 if系列 #if, #ifdef, #ifndef, #else, #elif, #endifprintf(&#34;Hello, World!\n&#34;);#endif#if True //判断宏是否大于0的值printf(&#34;Hello, World!\n&#34;);#endif//#undef命令取消一个先前已定义的宏变量, 譬如一个用#define定义的变量.#undef Truereturn 0;} 关于指针和函数的指针 记录下">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="linux下gcc编程06-c语言参考手册 :: liaomin416100569博客">
+    <meta itemprop="description" content="一。 c语言标准库介绍
+stdlib里的是常用系统函数，跟系统调用相关的，比如内存申请malloc和释放free stdio是标准io函数，比如printf和scanf函数 所有参考函数 来自 ：http://www.he11oworld.com/c-shouce/ http://www.runoob.com/cprogramming/c-tutorial.html
+二。c语言参考案例
+宏定义
+宏是在gcc编译预处理阶段就会执行的代码 //#pragma命令可以让编程者让编译器执行某些事 #include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出 &#34;&#34;首先在当前目录下寻找，如果找不到，再到系统目录中寻找&lt;&gt;直接去系统目录中找#define True 0#define toString(s) #s#define concat(x,y) x ## y#define add(a,b) a&#43;b#define max(a,b) a&gt;b?a:bvoid myadd(int a,int b) {}int main() {printf(&#34;%s\n&#34;,toString(&#34;替换&#34;));//#s 预编译阶段这里编程 printf(&#34;%s\n&#34;,&#34;替换\n&#34;)int xy=100;printf(&#34;%d\n&#34;,concat(x,y)); //x##y连接成 xy 预编译 这里 printf(&#34;%d\n&#34;,xy)printf(&#34;%d\n&#34;,add(10,11)); //这里直接被替换成 printf(&#34;%d\n&#34;,10&#43;11);int a=100;int b=10;printf(&#34;%d\n&#34;,max(a,b)); //这里直接被替换成 printf(&#34;%d\n&#34;,a&gt;b?a:b);/*** 下列参数在不同的编译器可能会有所不同, 但是一般是可用的:__LINE__ 和 __FILE__ 变量表示正在处理的当前行和当前文件.__DATE__ 变量表示当前日期,格式为month/day/year(月/日/年).__TIME__ 变量描述当前的时间,格式为hour:minute:second(时:分:秒)._cplusplus 变量只在编译一个C&#43;&#43;程序时定义.__STDC__ 变量在编译一个C程序时定义,编译C&#43;&#43;时也有可能定义.*///获取当前的文件名 当前行号printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );#line 10 &#34;a.cpp&#34; //下一行就变成第10行了 文件名改成了a.cpp可以动修改上面两个变量的值int i=1000;printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );#ifdef True //是否定义这个宏 上面已经定义了 不管真假 if系列 #if, #ifdef, #ifndef, #else, #elif, #endifprintf(&#34;Hello, World!\n&#34;);#endif#if True //判断宏是否大于0的值printf(&#34;Hello, World!\n&#34;);#endif//#undef命令取消一个先前已定义的宏变量, 譬如一个用#define定义的变量.#undef Truereturn 0;} 关于指针和函数的指针 记录下">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="687">
+    <title>linux下gcc编程06-c语言参考手册 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/programming\/languages\/gcc\/linuxgcc_06\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/languages/gcc/linuxgcc_06/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/index.html"><span itemprop="name">编程语言</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/gcc/index.html"><span itemprop="name">c语言</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">linux下gcc编程06-c语言参考手册</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_05/index.html" title="linux下gcc编程05-window下开发工具安装 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_07/index.html" title="linux下gcc编程07-使用linux下c库函数 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="linux下gcc编程06-c语言参考手册">linux下gcc编程06-c语言参考手册</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p><strong>一。 c语言标准库介绍</strong></p>
+<p>stdlib里的是常用系统函数，跟系统调用相关的，比如内存申请malloc和释放free
+stdio是标准io函数，比如printf和scanf函数
+所有参考函数 来自 ：<a href="http://www.he11oworld.com/c-shouce/" rel="external" target="_blank">http://www.he11oworld.com/c-shouce/</a>
+                                  <a href="http://www.runoob.com/cprogramming/c-tutorial.html" rel="external" target="_blank">http://www.runoob.com/cprogramming/c-tutorial.html</a></p>
+<p><strong>二。c语言参考案例</strong></p>
+<p> 宏定义</p>
+<p>宏是在gcc编译预处理阶段就会执行的代码  </p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>//#pragma命令可以让编程者让编译器执行某些事 
+#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出 &#34;&#34;首先在当前目录下寻找，如果找不到，再到系统目录中寻找
+&lt;&gt;直接去系统目录中找
+ 
+#define True  0
+#define toString(s) #s
+#define concat(x,y) x ## y
+#define add(a,b) a+b
+#define max(a,b) a&gt;b?a:b
+ 
+void myadd(int a,int b) {
+ 
+}
+ 
+int main() {
+    printf(&#34;%s\n&#34;,toString(&#34;替换&#34;));//#s 预编译阶段这里编程 printf(&#34;%s\n&#34;,&#34;替换\n&#34;)
+    int xy=100;
+    printf(&#34;%d\n&#34;,concat(x,y)); //x##y连接成 xy 预编译 这里 printf(&#34;%d\n&#34;,xy)
+ 
+    printf(&#34;%d\n&#34;,add(10,11)); //这里直接被替换成  printf(&#34;%d\n&#34;,10+11);
+ 
+    int a=100;
+    int b=10;
+    printf(&#34;%d\n&#34;,max(a,b)); //这里直接被替换成  printf(&#34;%d\n&#34;,a&gt;b?a:b);
+ 
+    /**
+     * 下列参数在不同的编译器可能会有所不同, 但是一般是可用的:
+        __LINE__ 和 __FILE__ 变量表示正在处理的当前行和当前文件.
+        __DATE__ 变量表示当前日期,格式为month/day/year(月/日/年).
+        __TIME__ 变量描述当前的时间,格式为hour:minute:second(时:分:秒).
+        _cplusplus 变量只在编译一个C++程序时定义.
+        __STDC__ 变量在编译一个C程序时定义,编译C++时也有可能定义.
+     */
+    //获取当前的文件名 当前行号
+    printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );
+#line 10 &#34;a.cpp&#34; //下一行就变成第10行了 文件名改成了a.cpp可以动修改上面两个变量的值
+    int i=1000;
+    printf(&#34;%s--%d\n&#34;, __FILE__,__LINE__ );
+ 
+#ifdef True //是否定义这个宏 上面已经定义了 不管真假 if系列 #if, #ifdef, #ifndef, #else, #elif, #endif
+    printf(&#34;Hello, World!\n&#34;);
+#endif
+#if True   //判断宏是否大于0的值
+    printf(&#34;Hello, World!\n&#34;);
+#endif
+//#undef命令取消一个先前已定义的宏变量, 譬如一个用#define定义的变量.
+#undef True
+ 
+    return 0;
+}</code></pre></div>
+<p>关于指针和函数的指针 记录下</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include  &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &#34;string.h&#34;
+ 
+int add(int x,int y);
+int main() {
+    int (*p)(int,int); //定义函数指针 使用 (*名称) 注意 p可以是指向了一个int返回值 两个int型函数的指针
+    int *p1(int,int);//这是一个函数定义 返回一个 int*
+    int p2(int,int); //这也是函数定义返回一个int
+    p=add;
+    int result=(*p)(11,12);
+    printf(&#34;%d\n&#34;,result);
+ 
+    int i=10;
+    printf(&#34;%d\n&#34;,&amp;i);//拿到i的地址
+    printf(&#34;%d\n&#34;,i);// 输出i的值
+    printf(&#34;%d\n&#34;,*&amp;i);//*地址 就可以拿到对应地址的值 也就是10
+    int *g; //定义了指针 g就是个地址
+    g=&amp;i;
+    printf(&#34;%d\n&#34;,*g);//*地址 就可以拿到对应地址的值 也就是10
+}
+ 
+int add(int x,int y){
+    return x+y;
+}</code></pre></div>
+<p>基本数据类型</p>
+<p>C语言包含5个基本数据类型: <strong>void</strong>, <strong>integer</strong>, <strong>float</strong>, <strong>double</strong>, 和 <strong>char</strong>.</p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>void</td>
+          <td>空类型</td>
+      </tr>
+      <tr>
+          <td>int</td>
+          <td>整型</td>
+      </tr>
+      <tr>
+          <td>float</td>
+          <td>浮点类型</td>
+      </tr>
+      <tr>
+          <td>double</td>
+          <td>双精度浮点类型</td>
+      </tr>
+      <tr>
+          <td>char</td>
+          <td>字符类型</td>
+      </tr>
+  </tbody>
+</table>
+<p>一些基本数据类型能够被 <strong>signed</strong>, <strong>unsigned</strong>, <strong>short</strong>, 和 <strong>long</strong> 修饰. 当类型修饰符单独使用的时候, 默认的类型是 <strong>int</strong>. 下表是所有可能出现的数据类型:</p>
+<table>
+  <thead>
+      <tr>
+          <th>bool</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>char</td>
+      </tr>
+      <tr>
+          <td>unsigned char</td>
+      </tr>
+      <tr>
+          <td>signed char</td>
+      </tr>
+      <tr>
+          <td>int</td>
+      </tr>
+      <tr>
+          <td>unsigned int</td>
+      </tr>
+      <tr>
+          <td>signed int</td>
+      </tr>
+      <tr>
+          <td>short int</td>
+      </tr>
+      <tr>
+          <td>unsigned short int</td>
+      </tr>
+      <tr>
+          <td>signed short int</td>
+      </tr>
+      <tr>
+          <td>long int</td>
+      </tr>
+      <tr>
+          <td>signed long int</td>
+      </tr>
+      <tr>
+          <td>unsigned long int</td>
+      </tr>
+      <tr>
+          <td>float</td>
+      </tr>
+      <tr>
+          <td>double</td>
+      </tr>
+      <tr>
+          <td>long double</td>
+      </tr>
+      <tr>
+          <td>wchar_t</td>
+      </tr>
+  </tbody>
+</table>
+<p>基本数据类型的大小以及能够表示的数据范围是与编译器和硬件平台有关的. &ldquo;cfloat&rdquo; (或者 &ldquo;float.h&rdquo;) 头文件往往定义了基本数据类型能够表示的数据的最大值和最小值. 你也可以使用 <a href="http://www.he11oworld.com/c-shouce/index/shouce/keywords_details.html#sizeof" rel="external" target="_blank">sizeof</a> 来获得类型的大小(字节数) . 然而, 很多平台使用了一些数据类型的标准大小，如. <strong>int</strong> 和 <strong>float</strong> 通常占用 32位, <strong>char</strong> 占用 8位, <strong>double</strong> 通常占用64位. <strong>bools</strong> 通常以 8位 来实现.</p>
+<p>io操作</p>
+<p>c语言在stdio.h中提供了三个宏 stdout, stdin, stderr 分别为标准输出，标准输入，标准错误 ，stdin的默认是从键盘输入，stdout和stderr的默认是输出到屏幕上。但是stdout和stderr二者输出是有区别的： 
+  stdout输出和printf输出一样，带有缓存区的输出，先将数据输到缓存区里在遇到换行或者程序结束后输出到屏幕。 
+  stderr输出和cerr、flush函数类似，它也是错误输出，直接输出到屏幕，不经过缓存区</p>
+<p>具体库函数 查看 （<a href="http://www.runoob.com/cprogramming/c-standard-library-stdio-h.html" rel="external" target="_blank">http://www.runoob.com/cprogramming/c-standard-library-stdio-h.html</a>）</p>
+<p>标准的输入输出一些简单操作</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>    char s[20];
+    int i;
+    printf(&#34;请输入一个字符串：&#34;);
+    scanf(&#34;%s %d&#34;,s,&amp;i);//空格隔开接受两个参数  比如 abc 100 s就是abc i就是100
+    size_t si=strlen(s);
+    printf(&#34;%s 长度：%d\n&#34;,s,si);
+ 
+ 
+    //输出一个字符串 98 对应acscii的 b 到stdout中
+    putchar(98);
+    //从标准输入流 stdin中获取一个字符串
+    int ac=getchar();
+ 
+    char s1[20];
+    //将第三个字符串通过第二个格式化字符串 格式化到s1变量中
+    sprintf(s1,&#34;%d&#34;,20);
+    printf(s1);</code></pre></div>
+<p>文件操作(所有f开头的函数)  参考（<a href="http://www.runoob.com/cprogramming/c-standard-library-stdio-h.html" rel="external" target="_blank">http://www.runoob.com/cprogramming/c-standard-library-stdio-h.html</a>）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出
+ 
+void testRead(){
+    //返回一个文件对象 注意关闭 后面的模式有以下几种
+    /**
+        模式	描述
+        &#34;r&#34;	打开一个用于读取的文件。该文件必须存在。
+        &#34;w&#34;	创建一个用于写入的空文件。如果文件名称与已存在的文件相同，则会删除已有文件的内容，文件被视为一个新的空文件。
+        &#34;a&#34;	追加到一个文件。写操作向文件末尾追加数据。如果文件不存在，则创建文件。
+        &#34;r+&#34;	打开一个用于更新的文件，可读取也可写入。该文件必须存在。
+        &#34;w+&#34;	创建一个用于读写的空文件。
+        &#34;a+&#34;	打开一个用于读取和追加的文件。
+     * **/
+    FILE* ff=fopen(&#34;c:/a.txt&#34;,&#34;r&#34;);
+    //fgetc读取一个字符
+    printf(&#34;%c\n&#34;,fgetc(ff));
+ 
+    //读取一行
+    /*也可以使用fgets 需要设置缓冲区
+     *  FILE *fp;
+        char str[256];
+        fgets(str, 256, fp);
+     * */
+    char sz[256];
+    fseek(ff,0,SEEK_SET);//设置指针为0 因为之前读取过一个字符 重头开始读
+    fscanf(ff,&#34;%s&#34;,sz);
+    printf(&#34;%s\n&#34;,sz);
+    /**
+     * fseek第三个参数表示从哪里开始移动指针 头开始 当前位置开始 末尾开始
+     * origin:表示指针移动的起始位置，可设置为以下三种情况之一：
+        SEEK_SET: 文件开始位置
+        SEEK_CUR: 文件当前位置
+        SEEK_END: 文件结束位置
+     */
+    fseek(ff,0,SEEK_END);//设置ff指针到离文件末尾0个距离 当然返回了文件的长度
+    int length=ftell(ff);//ftell获取当前指针的位置 已经到末尾了就是文件的长度
+    printf(&#34;文件长度:%d&#34;,length);
+ 
+}
+ 
+void readAll(){
+    FILE* ff=fopen(&#34;c:/a.txt&#34;,&#34;r&#34;);
+    //判断是否到达末尾
+    while(!feof(ff)){
+        char sz[256];
+        fscanf(ff,&#34;%s&#34;,sz);
+        printf(&#34;%s\n&#34;,sz);
+    }
+    fclose(ff);
+}
+ 
+void testWrite(){
+    FILE* ff=fopen(&#34;c:/a.txt&#34;,&#34;a&#34;);
+    fputc(100,ff);
+    //打印到文件中  ff替换成stdout就输出到控制台
+    fprintf(ff,&#34;\n%s&#34;,&#34;hello&#34;);
+    fclose(ff);
+}
+ 
+ 
+int main() {
+ 
+    testRead();
+    //从标准输入流 读取一个字符串 也就是控制台会卡顿
+    char c=fgetc(stdin);
+    //将内容写到标准输出 也就是控制台
+    fputc(98,stdout);
+    return 0;
+}</code></pre></div>
+<p>字符串处理</p>
+<p>  string .h 头文件定义了一个变量类型、一个宏和各种操作字符数组的函数。</p>
+<p> c语言中字符串的定义 使用 char * a或者 char a[20] 这种连续的字符
+ 详细参考 <a href="http://www.runoob.com/cprogramming/c-standard-library-string-h.html" rel="external" target="_blank">http://www.runoob.com/cprogramming/c-standard-library-string-h.html</a></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出
+#include &lt;string.h&gt;
+ 
+ 
+int main() {
+    char * a=&#34;hello&#34;;//指针类型字符串内存根据指定的字符决定的
+    //未给定字符的char* 是个NULL值 只有指针才可以判断NULL 字符串应该是 “”
+    char * a1=NULL;
+    a1=&#34;good&#34;;
+    char b[100]=&#34;zs&#34;;
+    printf(&#34;%s %s  %s\n&#34;,a,b,a1);
+    printf(&#34;字符串的长度:%d\n&#34;,strlen(a));
+    char s[200]=&#34;hello &#34;;
+    //------将 b的内容追加到s上
+    strcat(s,b);
+    printf(&#34;拼接后字符串:%s\n&#34;,s);
+    //-------找到一个字符串在另一个字符的位置
+    char * src=&#34;a.txt&#34;;
+    char desrc=&#39;.&#39;;
+    printf(&#34;找到字符的位置后面的值:%s\n&#34;,strchr(src,desrc));//输出 .txt
+    //--------字符串转换大小写 指针定义的字符串无法转换 char *a=&#34;&#34; 不能转换  使用数组定义的可以转换  char a[]=&#34;abc&#34;
+    char hl[200]=&#34;hello&#34;;
+    strupr(hl);//strlwr()转换小写
+    printf(&#34;转换大写:%s\n&#34;,hl);
+    //--------切割字符串
+    char h2[200]=&#34;zs,ls,ww&#34;;
+    /*
+    char* cc=strtok(h2,&#34;,&#34;);//返回第一个字符 接下来的字符strtok(NULL,&#34;,&#34;)
+    char* scc=strtok(NULL,&#34;,&#34;);
+    char* tcc=strtok(NULL,&#34;,&#34;);
+    printf(&#34;切割的字符串是:%s--%s--%s\n&#34;,cc,scc,tcc);*/
+    char* cl=strtok(h2,&#34;,&#34;);
+    while(cl!=NULL){
+        printf(&#34;切割的字符串是:%s\n&#34;,cl);
+        cl=strtok(NULL,&#34;,&#34;);
+    }
+ 
+    //--------比较字符串
+    printf(&#34;字符串是否相等:%d\n&#34;,strcmp(&#34;a&#34;,&#34;b&#34;));//0相等 -1不相等
+    //--------一个字符串在另一个字符串的位置
+    printf(&#34;字符串的位置是:%s\n&#34;,strstr(&#34;a_b&#34;,&#34;_&#34;));//和strchr一样
+ 
+   
+ 
+    return 0;
+}</code></pre></div>
+<p>数学库
+参考 <a href="http://www.runoob.com/cprogramming/c-standard-library-math-h.html" rel="external" target="_blank">http://www.runoob.com/cprogramming/c-standard-library-math-h.html</a></p>
+<p>日期和时间库</p>
+<p>参考 <a href="http://www.runoob.com/cprogramming/c-standard-library-time-h.html" rel="external" target="_blank">http://www.runoob.com/cprogramming/c-standard-library-time-h.html</a></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出
+#include &lt;string.h&gt;
+#include &#34;time.h&#34;
+ 
+ 
+int main() {
+    //获取 UTC=GMT（格林威治时间）的时间戳(1970-01-01 00:00:00 UTC）起经过的时间，以秒为单位)
+    //中国是东八区 离格林威治8个区
+    //时间区 决定了你要+多少个小时 东八区+8个小时
+    //时间戳统一是 GMT 不同地区时间戳都是相同的
+    time_t tt;
+    time(&amp;tt);
+    printf(&#34;时间戳:%d\n&#34;,tt);
+    //通过时间戳获取一个本地时区的格式化时间 格式：Www Mmm dd hh:mm:ss yyyy
+    printf(&#34;格式化时间：%s\n&#34;,ctime(&amp;tt));
+ 
+    struct tm * gmtm=gmtime(&amp;tt);
+    printf(&#34;gmt时间年份是:%d-%d-%d\n&#34;,gmtm-&gt;tm_year+1900,gmtm-&gt;tm_mon+1,gmtm-&gt;tm_mday);
+    printf(&#34;gmt时间ascii年份是:%s\n&#34;,asctime(gmtm));//等价于ctime
+ 
+    //传入时间戳 获取本地时区的时间
+    struct tm* tmm;
+    tmm=localtime(&amp;tt);
+    printf(&#34;年份是:%d-%d-%d\n&#34;,tmm-&gt;tm_year+1900,tmm-&gt;tm_mon+1,tmm-&gt;tm_mday);
+ 
+ 
+    return 0;
+}</code></pre></div>
+<p>内存处理</p>
+<p>stdlib.h 定义了常用的一些函数 比如内存分配释放，变量类型转换，环境变量，随机数等一些处理函数</p>
+<p>参考 <a href="http://www.runoob.com/cprogramming/c-standard-library-stdlib-h.html" rel="external" target="_blank">http://www.runoob.com/cprogramming/c-standard-library-stdlib-h.html</a></p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出
+#include &lt;string.h&gt;
+#include &#34;stdlib.h&#34;
+ 
+ 
+int main() {
+ 
+    typedef struct {
+        int i;
+        float j;
+        char s[20];
+    } A;
+ 
+    //void *calloc( size_t num, size_t size ); 函数返回一个指向num 数组空间，每一数组元素的大小为size。如果错误发生返回NULL。
+    A* c=calloc(10, sizeof(A));//创建了10个A结构 连续的 每个结构体大小可以通过sizeof算出来 A*就是个A结构的数组
+    c[0].i=10;
+    c[0].j=100;
+    realloc(c,11);//重新将cc分为了11个结构体
+    printf(&#34;输出结果:%d&#34;,c[0].i);
+ 
+ 
+    free(c);
+ 
+    A* a=(A*)malloc(sizeof(A)); //创建一个A对象
+    a[0].i=100;
+    printf(&#34;输出结果:%d&#34;,a[0].i);
+    free(a);
+    return 0;
+}</code></pre></div>
+<p> </p>
+<p>类型转换</p>
+<p>stdlib.h 定义了常用的一些函数 比如内存分配释放，变量类型转换，环境变量，随机数等一些处理函数</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出
+#include &#34;stdlib.h&#34;
+ 
+ 
+int main() {
+ 
+    float r= atof(&#34;12.34&#34;);//字符串转换成float类型;
+    printf(&#34;%.2f\n&#34;,r);
+ 
+    int i=atoi(&#34;12&#34;);
+    printf(&#34;%d\n&#34;,i);
+ 
+    //任意类型转换成char*字符串
+    char c[20];
+    sprintf(c,&#34;%d&#34;,20);//格式字符串自定义都可以转换
+    printf(&#34;%s\n&#34;,c);
+    return 0;
+}</code></pre></div>
+<p>其他c函数</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出
+#include &#34;stdlib.h&#34;
+ 
+ 
+int main() {
+ 
+    char * path=getenv(&#34;PATH&#34;);
+    printf(&#34;path:%s&#34;,path);
+ 
+    system(&#34;notepad&#34;); //调用系统的命令
+ 
+    int k=rand();
+    printf(&#34;随机数:%d&#34;,k);
+    return 0;
+}</code></pre></div>
+<p>linux库函数参考文档 <a href="/docs/programming/languages/gcc/LinuxC%E5%B8%B8%E7%94%A8%E5%BA%93%E5%87%BD%E6%95%B0%E6%89%8B%E5%86%8C.rar">c语言手册</a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/gcc/index.html"><a class="padding" href="/docs/programming/languages/gcc/index.html">c语言</a><ul id="R-subsections-e8c9b5cff4c7849bafc19d21e0433f7f" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_01/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01/index.html">linux下gcc编程01-gcc工具安装和使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_02/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_02/index.html">linux下gcc编程02-gdb调试工具使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_03/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_03/index.html">linux下gcc编程03-make工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_04/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_04/index.html">linux下gcc编程04-cmake工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_05/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_05/index.html">linux下gcc编程05-window下开发工具安装</a></li>
+            <li class="active " data-nav-id="/docs/programming/languages/gcc/linuxgcc_06/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_06/index.html">linux下gcc编程06-c语言参考手册</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_07/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_07/index.html">linux下gcc编程07-使用linux下c库函数</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_08/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_08/index.html">linux下gcc编程08-编译linux内核</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_09/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_09/index.html">linux下gcc编程09-编写内核helloworld模块</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_10/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_10/index.html">linux下gcc编程10-clion编译调试nginx</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_11/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_11/index.html">linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_12/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_12/index.html">linux下gcc编程12-window下clion编译调试redis7.0</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/assembly/index.html"><a class="padding" href="/docs/programming/languages/assembly/index.html">汇编语言</a><ul id="R-subsections-664e07814ed6bbd77b351b341bff28e6" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

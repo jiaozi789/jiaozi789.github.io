@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>网络基础 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/devops/networking/basic/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/devops/networking/basic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>计算机网络基础00-网络分层</title>
+      <link>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic/index.html</guid>
+      <description>一.计算机网络分类&#xA;覆盖范围分为：&#xA;局域网 LAN（：Local Area Network） 高数据传输 低延迟 低误码率 组件成本低&#xA;城域网 MAN （MetroPolitan Area Network） 主要使用光纤传输&#xA;广域网 WAN (Wide Area Network) 主要使用光纤传输&#xA;互联网 (Network)&#xA;二.计算机网络拓扑结构&#xA;用于描述计算机 网线以及其他网络设备的配置方式 是网络物理布局的一种方式&#xA;1.总线型拓扑 所有的计算机通过一条总线来进行连接 如果一台机器发送数据其他的机器就必须先暂停发送等待 发送效率较低&#xA;2.星型拓扑 目前最流行网络拓扑 主要是使用一个中心的集线器或者交换机来进行管理 所以的pc连接该中心 发送和接受数据 每台pc可以单独发送接受数据不受其他pc机器影响&#xA;常见的公司星型网络架构 不同网络之间形成了一个树形网络架构&#xA;不同公司内部搭建局域网 通过isp运营商接入外部城域网将多个城市网络接入广域网&#xA;3.环型拓扑 pc机器之间使用环形结构通信 比如 pc1 发送数据给pc3 必须经过pc2 一般不使用在局域网 </description>
+    </item>
+    <item>
+      <title>计算机网络基础01-IP地址相关知识</title>
+      <link>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic_01/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic_01/index.html</guid>
+      <description>一 IP分类原则&#xA;1》ip的组建规则 ip地址一般由4个字节的数字组成 通过.分割 格式为：字节1.字节2.字节3.字节4 比如192.168.1.5（二进制表示太过复杂 一般转换为十进制表示）&#xA;1字节（8位）的无符号整数 最大为 11111111=2的7次方+2的6次方+….+2的0次方 =255 最小为00000000 所以最大的ip就是 255.255.255.255 最小的ip 0.0.0.0&#xA;总共为32位bit 总共ip数为 2的32次方（4294967296）个ip地址&#xA;2》ip的分类规则 网络位：就是区分网络的标识 相同的网络位的主机可以互相方位 比如 192.168.1.5和 192.168.1.4 位于相同的网络 192.168.1 这就是网络位 主机位：相同的网络中 允许的主机数 比如网路位 192.168.1 只有最后一个字节 标识主机位 也就是该网络最少是0 最大是255 也就 256个ip 256个主机&#xA;将ip地址分为5类地址 （ABCDE）&#xA;A类地址:&#xA;前8位为网络位 也就是说主机位 有 3*8=24位 这个一般用于标识互联网 网络中存在大量的主机 A类地址 网络位首字节必须以0开头 也就是说 只有7位标识网络位 最小是 00000000-01111111 也就是第一个字节是 0-127 其中0标识任意地址 127用户网卡之间回环 所以&#xA;A类地址 第一位 实际是从 1-126&#xA;B类地址&#xA;前16位为网络位 主机位为 2*8=16位 网络多 主机也多 B类地址必须以10开头 首字节 剩余6位 范围是10000000-10111111 也就是</description>
+    </item>
+    <item>
+      <title>计算机网络基础02-linux虚拟网络隔离（网桥bridge，路由，虚拟网卡veth）</title>
+      <link>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic_02/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/devops/networking/basic/net_basic_02/index.html</guid>
+      <description>简单概述 通过linux的虚拟网络隔离，来模拟熟悉交换机，路由器，网卡,网桥等物理设备间的关系和区别。 以下几个概念：&#xA;network namespace：实现网络虚拟化的重要功能，它能创建多个隔离的网络空间，它们有独自的网络栈信息。不管是虚拟机还是容器，运行的时候仿佛自己就在独立的网络中。 veth：VETH(Virtual Ethernet )是Linux提供的另外一种特殊的网络设备，中文称为虚拟网卡接口。它总是成对出现，要创建就创建一个pair。一个Pair中的veth就像一个网络线缆的两个端点，数据从一个端点进入，必然从另外一个端点流出。每个veth都可以被赋予IP地址，并参与三层网络路由过程，可以实现不同netns之间网络通信。 物理网卡是服务器上实际的网络接口设备：物理网卡指的是服务器上实际的网络接口设备，通过ip link可查看设备，其中eth0一般是第一个网卡，ethn表示第n个,通过ip address查看ip地址。 liaomin@DESKTOP-FSEDE3P:~$ ip link&#xD;16: eth0: &lt;BROADCAST,MULTICAST,UP&gt; mtu 1500 group default qlen 1&#xD;link/ether 78:24:af:33:df:11&#xD;20: eth1: &lt;BROADCAST,MULTICAST,UP&gt; mtu 1500 group default qlen 1&#xD;link/ether 7a:15:df:c5:e6:d5&#xD;1: lo: &lt;LOOPBACK,UP&gt; mtu 1500 group default qlen 1&#xD;link/loopback 00:00:00:00:00:00 网桥：是一种虚拟设备，可以将 Linux 内部多个网络接口连接起来，一个网络接口接收到网络数据包后，会复制到其他网络接口中，Bridge 是二层设备，仅用来处理二层的通讯。Bridge 使用 MAC 地址表来决定怎么转发帧（Frame）。Bridge 会从 host 之间的通讯数据包中学习 MAC 地址。 如上图所示，当网络接口A接收到数据包后，网桥 会将数据包复制并且发送给连接到 网桥 的其他网络接口（如上图中的网卡B和网卡C）。</description>
+    </item>
+  </channel>
+</rss>

@@ -45,26 +45,26 @@
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="323">
     <title>机器学习实战教程（二）：线性回归 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -118,7 +118,7 @@
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/basic/action_02_linear/index.html">
     <div id="R-body" class="default-animation">
@@ -212,12 +212,12 @@ window.MathJax = {
 <h2 id="11-正态分布"><!-- raw HTML omitted -->1.1 正态分布<!-- raw HTML omitted --></h2>
 <p>正态分布（Normal distribution），也称“常态分布”，又名高斯分布（Gaussian distribution），最早由A.棣莫弗在求二项分布的渐近公式中得到。C.F.高斯在研究测量误差时从另一个角度导出了它。P.S.拉普拉斯和高斯研究了它的性质。是一个在数学、物理及工程等领域都非常重要的概率分布，在统计学的许多方面有着重大的影响力。
 以下两图来自网络 对于正态分布的理解更加简单：
-<a href="#R-image-0d133224b7244d2caf700963714428ed" class="lightbox-link"><img alt="正态分布概念" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/cf95f8cb53ad1e2e9b34df26d59d1555.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0d133224b7244d2caf700963714428ed"><img alt="正态分布概念" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/cf95f8cb53ad1e2e9b34df26d59d1555.png"></a>
-<a href="#R-image-6bc4c4aaa0dc9e28d9f389aaa65b3203" class="lightbox-link"><img alt="正态分布密度函数" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/664e88d6c60a33516f00b773736f35b1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6bc4c4aaa0dc9e28d9f389aaa65b3203"><img alt="正态分布密度函数" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/664e88d6c60a33516f00b773736f35b1.png"></a>
-<a href="#R-image-47fc6240064c13a9f92e105246eec31c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/e3fbec55c476d81d3893b611b319d8fa.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-47fc6240064c13a9f92e105246eec31c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/e3fbec55c476d81d3893b611b319d8fa.png"></a>
+<a href="#R-image-75f53c771345c25cef6908ec4cbf2fe4" class="lightbox-link"><img alt="正态分布概念" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/cf95f8cb53ad1e2e9b34df26d59d1555.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-75f53c771345c25cef6908ec4cbf2fe4"><img alt="正态分布概念" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/cf95f8cb53ad1e2e9b34df26d59d1555.png"></a>
+<a href="#R-image-38fc278034977ac1e5a196fedfcb0086" class="lightbox-link"><img alt="正态分布密度函数" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/664e88d6c60a33516f00b773736f35b1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-38fc278034977ac1e5a196fedfcb0086"><img alt="正态分布密度函数" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/664e88d6c60a33516f00b773736f35b1.png"></a>
+<a href="#R-image-5793654e4fc5a14b64fefd545af6eddd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/e3fbec55c476d81d3893b611b319d8fa.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5793654e4fc5a14b64fefd545af6eddd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/e3fbec55c476d81d3893b611b319d8fa.png"></a>
 高斯函数是一种常见的概率密度函数，也被称为正态分布函数。具体地说，高斯函数描述了随机变量在某个区间内取值的概率密度，其形式为：
 $f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$
 其中，
@@ -240,8 +240,8 @@ $f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$
 <li>e - 误差，预测值和真实值之间的误差；</li>
 </ul>
 <p>假设我们将数据 （x1， y1），（x2， y2），（x3， y3）…….（xn， yn）的 n 个点拟合到上面的回归线上。
-<a href="#R-image-a420dd633118f23844666df8f299f757" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/e1bb1c0db00ad04ea649d06a990b85ad.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a420dd633118f23844666df8f299f757"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/e1bb1c0db00ad04ea649d06a990b85ad.png"></a>
+<a href="#R-image-4a2c4a087c099ab4c3af88404f76560d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/e1bb1c0db00ad04ea649d06a990b85ad.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4a2c4a087c099ab4c3af88404f76560d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/e1bb1c0db00ad04ea649d06a990b85ad.png"></a>
 其中，ei 是第 i 个观测值与我们回归线预测值之间的差值。
 比如 函数 y=3x+5  假设统计数据存在 (5,19),(1,9)。
 其中b1=3就是斜率， b0=5就是截距， (5,19)就是第1个值 x1=5 y1=19。
@@ -249,16 +249,16 @@ $f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$
 ei=20-19=1 误差为1。
 在线性回归中， 我们只有统计数据 下面蓝色的点即为统计数据。
 我们需要通过这些蓝色的统计数据 计算出一条最佳的拟合线，计算出截距和斜率。
-<a href="#R-image-d9f5dd4c1204281902f2fcfc40e85d52" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/9f4a2fed1d5332275e35e5cde20a7adc.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d9f5dd4c1204281902f2fcfc40e85d52"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/9f4a2fed1d5332275e35e5cde20a7adc.jpeg"></a>
+<a href="#R-image-14e0e19c629e0c44a1a36f46316065db" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/9f4a2fed1d5332275e35e5cde20a7adc.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-14e0e19c629e0c44a1a36f46316065db"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/9f4a2fed1d5332275e35e5cde20a7adc.jpeg"></a>
 一般计算就是通过将所有数据的误差平方求和求的最小值也就是最佳的拟合方程
-<a href="#R-image-9ef5223c472d8dd853d59af1f1252385" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/7348c76cf0d606218eaf27167786bbc6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9ef5223c472d8dd853d59af1f1252385"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/7348c76cf0d606218eaf27167786bbc6.png"></a>
+<a href="#R-image-69324d24757194358cc9cb557c2f711d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/7348c76cf0d606218eaf27167786bbc6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-69324d24757194358cc9cb557c2f711d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/7348c76cf0d606218eaf27167786bbc6.png"></a>
 我们如何最小化平方误差总和（SSE）呢？
 请记住，b1 和 b0 对我们来说仍然是未知的。
 在最小二乘法中，我们通过选择 b1 和 b0 的值来最小化平方误差总和（SSE），如下：
-<a href="#R-image-d1b145291a27adea695da010abffe024" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/6460040ae59cf4880e5ef07501e18e44.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d1b145291a27adea695da010abffe024"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/6460040ae59cf4880e5ef07501e18e44.png"></a>
+<a href="#R-image-4cd2817200cf406ecf068269cdce14b2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/6460040ae59cf4880e5ef07501e18e44.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4cd2817200cf406ecf068269cdce14b2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/6460040ae59cf4880e5ef07501e18e44.png"></a>
 最小二乘法最容易理解解释（https://www.matongxue.com/madocs/818.html）
 关于最小二分法需要掌握数学中，导数，极限，偏导概念才能实现推导出该公式
 一定要弄明白，请移步梯度下降法解决线性回归问题 ：
@@ -287,8 +287,8 @@ ei=20-19=1 误差为1。
 <p>这里使用sklearn中提供的波士顿房价 ，房价和房间数量的关系来演示简单线性回归，明显房间数量越多，面积越大，自然房价越高，成正向线性关系。</p>
 <h3 id="221-加载数据集">2.2.1 加载数据集</h3>
 <p>波士顿房价数据集特征介绍
-<a href="#R-image-67f8004120873d67b655880b1e21ec94" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/0b63f35acd66362ff23cb68400e08019.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-67f8004120873d67b655880b1e21ec94"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/0b63f35acd66362ff23cb68400e08019.png"></a>
+<a href="#R-image-07c4798307b58f7d125b8c9585626dd0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/0b63f35acd66362ff23cb68400e08019.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-07c4798307b58f7d125b8c9585626dd0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/0b63f35acd66362ff23cb68400e08019.png"></a>
 编程加载数据处理</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np;
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plot;
@@ -333,8 +333,8 @@ ei=20-19=1 误差为1。
 </span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>scatter(xtrain[:,<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],ytrain,c<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>)
 </span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>show();</span></span></code></pre></div>
 <p>图像效果：
-<a href="#R-image-f5383cf1be1245d7ef8767b8dcb10047" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/746675b7b8f81ac1aac5323c1ce843c4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f5383cf1be1245d7ef8767b8dcb10047"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/746675b7b8f81ac1aac5323c1ce843c4.png"></a></p>
+<a href="#R-image-fb335556e89b90c5d51c6d97cfc90167" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/746675b7b8f81ac1aac5323c1ce843c4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fb335556e89b90c5d51c6d97cfc90167"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/746675b7b8f81ac1aac5323c1ce843c4.png"></a></p>
 <h3 id="222使用线程回归计算系数和截距">2,2.2使用线程回归计算系数和截距</h3>
 <p>使用sklearn的LinearRegression类实现机器训练和预测</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#创建线程回归的类</span>
@@ -349,14 +349,14 @@ ei=20-19=1 误差为1。
 </span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>plot(xtrain[:,<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],xtrain[:,<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>lr<span style="color:#f92672">.</span>coef_<span style="color:#f92672">+</span>lr<span style="color:#f92672">.</span>intercept_);
 </span></span><span style="display:flex;"><span>plot<span style="color:#f92672">.</span>show();</span></span></code></pre></div>
 <p>得到的散点图和线性方程图下：
-<a href="#R-image-de622ac6284d506f05f4861fc9771ce2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/2c7affbf017eafcb7e4933ac6c73ca95.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-de622ac6284d506f05f4861fc9771ce2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/2c7affbf017eafcb7e4933ac6c73ca95.png"></a>
+<a href="#R-image-49613f1c12d9afcbd335117035a6269b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/2c7affbf017eafcb7e4933ac6c73ca95.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-49613f1c12d9afcbd335117035a6269b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/2c7affbf017eafcb7e4933ac6c73ca95.png"></a>
 注意这里离线较远的点对数据的影响较大 可以选择过滤掉这些 y&gt;50以上的数据</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>xtrain<span style="color:#f92672">=</span>xtrain[ytrain<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">50</span>]
 </span></span><span style="display:flex;"><span>ytrain<span style="color:#f92672">=</span>ytrain[ytrain<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">50</span>]</span></span></code></pre></div>
 <p>得到图像
-<a href="#R-image-7c020d270572404922d611a396906471" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/45c963e2ea7bf9a6e04d1bf63a57a9fa.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7c020d270572404922d611a396906471"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/45c963e2ea7bf9a6e04d1bf63a57a9fa.png"></a></p>
+<a href="#R-image-0614f60b03aa21ce42b916fcb52d6dfe" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/45c963e2ea7bf9a6e04d1bf63a57a9fa.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0614f60b03aa21ce42b916fcb52d6dfe"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_02_linear.md.images/45c963e2ea7bf9a6e04d1bf63a57a9fa.png"></a></p>
 <h2 id="23-多元线性回归">2.3 多元线性回归</h2>
 <p>上面的简单线性回归仅仅是对房间数量一个特征做了预测其实房价本身是由多个因素引起的
 多元线性回归模型的一般形式为
@@ -458,6 +458,8 @@ Yi=β0+β1X1i+β2X2i+…+βkXki+μi i=1,2,…,n
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -475,8 +477,8 @@ Yi=β0+β1X1i+β2X2i+…+βkXki+μi i=1,2,…,n
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

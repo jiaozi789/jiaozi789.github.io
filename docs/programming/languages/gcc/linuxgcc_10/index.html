@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="@[toc]
+1。clion简介 CLion是Jetbrains公司旗下新推出的一款专为开发C/C&#43;&#43;所设计的跨平台IDE，它是以IntelliJ为基础设计的，同时还包含了许多智能功能来提高开发人员的生产力。
+同样支持python哦，相信使用过IntelliJ idea开发过java的盆友都很清楚该IDE的强大，所以做为Jetbrains旗下的c/c&#43;&#43;开发工具CLion同样包含了许多智能功能来提高开发人员的生产力，提高开发人员的工作效率
+1.1 clion安装 1.1.1 centos clion内置使用cmake来管理编译c/c&#43;&#43;项目，linux环境可以先按照开发工具包
+yum groupinstall Development Tools window请安装Cygwin 和MinGW，window安装教程参考其他博客。 下载你想要任何版本的clion，下载地址 下载tar.gz版本服务器解压：
+tar -zxvf CLion-2019.2.1.tar.gz 假设解压地址：/soft/clion-2019.2.1，可执行文件位于：/soft/clion-2019.2.1/bin/clion.sh 桌面新建一个快捷方式 ，如桌面新建一个clion.desktop 内容:
+[Desktop Entry]Name=clionExec=/soft/clion-2019.2.1/bin/clion.shType=ApplicationIcon=/soft/clion-2019.2.1/bin/clion.pngTerminal=false 左面会自动生成一个图片图标，点击后自动启动clion 1.1.1 win10 clion安装通centos一致，解压即可使用，linux本身不支持gcc和linux命令需要模拟环境。
+1.1.1.1 cygwin安装 linux支持两款模拟linux编译环境，cygwin和mingw,比较两个差异。 1、从目标上说MinGW 是让Windows 用户可以用上GNU 工具，比如GCC。Cygwin 提供完整的类Unix 环境，Windows 用户不仅可以使用GNU 工具，理论上Linux 上的程序只要用Cygwin 重新编译，就可以在Windows 上运行。 2、从能力上说如果程序只用到C/C&#43;&#43; 标准库，可以用MinGW 或Cygwin 编译。如果程序还用到了POSIX API，则只能用Cygwin 编译。 3、从依赖上说程序经MinGW 编译后可以直接在Windows 上面运行。程序经Cygwin 编译后运行，需要依赖安装时附带的cygwin1.dll。
+并且cygwin是个完全模拟unix，unix相关库都可以直接通过管理工具下载安装，如gcc，pcre，zlib，无需重复编译。 安装包下载：https://cygwin.com/install.html，64位管理工具 点击安装工具，步骤中选择163或者aliyun私服 对于新手来说，需安装Base，Devel，Libs，Net，System，Utils几个模块">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="linux下gcc编程10-clion编译调试nginx :: liaomin416100569博客">
+    <meta name="twitter:description" content="@[toc]
+1。clion简介 CLion是Jetbrains公司旗下新推出的一款专为开发C/C&#43;&#43;所设计的跨平台IDE，它是以IntelliJ为基础设计的，同时还包含了许多智能功能来提高开发人员的生产力。
+同样支持python哦，相信使用过IntelliJ idea开发过java的盆友都很清楚该IDE的强大，所以做为Jetbrains旗下的c/c&#43;&#43;开发工具CLion同样包含了许多智能功能来提高开发人员的生产力，提高开发人员的工作效率
+1.1 clion安装 1.1.1 centos clion内置使用cmake来管理编译c/c&#43;&#43;项目，linux环境可以先按照开发工具包
+yum groupinstall Development Tools window请安装Cygwin 和MinGW，window安装教程参考其他博客。 下载你想要任何版本的clion，下载地址 下载tar.gz版本服务器解压：
+tar -zxvf CLion-2019.2.1.tar.gz 假设解压地址：/soft/clion-2019.2.1，可执行文件位于：/soft/clion-2019.2.1/bin/clion.sh 桌面新建一个快捷方式 ，如桌面新建一个clion.desktop 内容:
+[Desktop Entry]Name=clionExec=/soft/clion-2019.2.1/bin/clion.shType=ApplicationIcon=/soft/clion-2019.2.1/bin/clion.pngTerminal=false 左面会自动生成一个图片图标，点击后自动启动clion 1.1.1 win10 clion安装通centos一致，解压即可使用，linux本身不支持gcc和linux命令需要模拟环境。
+1.1.1.1 cygwin安装 linux支持两款模拟linux编译环境，cygwin和mingw,比较两个差异。 1、从目标上说MinGW 是让Windows 用户可以用上GNU 工具，比如GCC。Cygwin 提供完整的类Unix 环境，Windows 用户不仅可以使用GNU 工具，理论上Linux 上的程序只要用Cygwin 重新编译，就可以在Windows 上运行。 2、从能力上说如果程序只用到C/C&#43;&#43; 标准库，可以用MinGW 或Cygwin 编译。如果程序还用到了POSIX API，则只能用Cygwin 编译。 3、从依赖上说程序经MinGW 编译后可以直接在Windows 上面运行。程序经Cygwin 编译后运行，需要依赖安装时附带的cygwin1.dll。
+并且cygwin是个完全模拟unix，unix相关库都可以直接通过管理工具下载安装，如gcc，pcre，zlib，无需重复编译。 安装包下载：https://cygwin.com/install.html，64位管理工具 点击安装工具，步骤中选择163或者aliyun私服 对于新手来说，需安装Base，Devel，Libs，Net，System，Utils几个模块">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_10/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="linux下gcc编程10-clion编译调试nginx :: liaomin416100569博客">
+    <meta property="og:description" content="@[toc]
+1。clion简介 CLion是Jetbrains公司旗下新推出的一款专为开发C/C&#43;&#43;所设计的跨平台IDE，它是以IntelliJ为基础设计的，同时还包含了许多智能功能来提高开发人员的生产力。
+同样支持python哦，相信使用过IntelliJ idea开发过java的盆友都很清楚该IDE的强大，所以做为Jetbrains旗下的c/c&#43;&#43;开发工具CLion同样包含了许多智能功能来提高开发人员的生产力，提高开发人员的工作效率
+1.1 clion安装 1.1.1 centos clion内置使用cmake来管理编译c/c&#43;&#43;项目，linux环境可以先按照开发工具包
+yum groupinstall Development Tools window请安装Cygwin 和MinGW，window安装教程参考其他博客。 下载你想要任何版本的clion，下载地址 下载tar.gz版本服务器解压：
+tar -zxvf CLion-2019.2.1.tar.gz 假设解压地址：/soft/clion-2019.2.1，可执行文件位于：/soft/clion-2019.2.1/bin/clion.sh 桌面新建一个快捷方式 ，如桌面新建一个clion.desktop 内容:
+[Desktop Entry]Name=clionExec=/soft/clion-2019.2.1/bin/clion.shType=ApplicationIcon=/soft/clion-2019.2.1/bin/clion.pngTerminal=false 左面会自动生成一个图片图标，点击后自动启动clion 1.1.1 win10 clion安装通centos一致，解压即可使用，linux本身不支持gcc和linux命令需要模拟环境。
+1.1.1.1 cygwin安装 linux支持两款模拟linux编译环境，cygwin和mingw,比较两个差异。 1、从目标上说MinGW 是让Windows 用户可以用上GNU 工具，比如GCC。Cygwin 提供完整的类Unix 环境，Windows 用户不仅可以使用GNU 工具，理论上Linux 上的程序只要用Cygwin 重新编译，就可以在Windows 上运行。 2、从能力上说如果程序只用到C/C&#43;&#43; 标准库，可以用MinGW 或Cygwin 编译。如果程序还用到了POSIX API，则只能用Cygwin 编译。 3、从依赖上说程序经MinGW 编译后可以直接在Windows 上面运行。程序经Cygwin 编译后运行，需要依赖安装时附带的cygwin1.dll。
+并且cygwin是个完全模拟unix，unix相关库都可以直接通过管理工具下载安装，如gcc，pcre，zlib，无需重复编译。 安装包下载：https://cygwin.com/install.html，64位管理工具 点击安装工具，步骤中选择163或者aliyun私服 对于新手来说，需安装Base，Devel，Libs，Net，System，Utils几个模块">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="linux下gcc编程10-clion编译调试nginx :: liaomin416100569博客">
+    <meta itemprop="description" content="@[toc]
+1。clion简介 CLion是Jetbrains公司旗下新推出的一款专为开发C/C&#43;&#43;所设计的跨平台IDE，它是以IntelliJ为基础设计的，同时还包含了许多智能功能来提高开发人员的生产力。
+同样支持python哦，相信使用过IntelliJ idea开发过java的盆友都很清楚该IDE的强大，所以做为Jetbrains旗下的c/c&#43;&#43;开发工具CLion同样包含了许多智能功能来提高开发人员的生产力，提高开发人员的工作效率
+1.1 clion安装 1.1.1 centos clion内置使用cmake来管理编译c/c&#43;&#43;项目，linux环境可以先按照开发工具包
+yum groupinstall Development Tools window请安装Cygwin 和MinGW，window安装教程参考其他博客。 下载你想要任何版本的clion，下载地址 下载tar.gz版本服务器解压：
+tar -zxvf CLion-2019.2.1.tar.gz 假设解压地址：/soft/clion-2019.2.1，可执行文件位于：/soft/clion-2019.2.1/bin/clion.sh 桌面新建一个快捷方式 ，如桌面新建一个clion.desktop 内容:
+[Desktop Entry]Name=clionExec=/soft/clion-2019.2.1/bin/clion.shType=ApplicationIcon=/soft/clion-2019.2.1/bin/clion.pngTerminal=false 左面会自动生成一个图片图标，点击后自动启动clion 1.1.1 win10 clion安装通centos一致，解压即可使用，linux本身不支持gcc和linux命令需要模拟环境。
+1.1.1.1 cygwin安装 linux支持两款模拟linux编译环境，cygwin和mingw,比较两个差异。 1、从目标上说MinGW 是让Windows 用户可以用上GNU 工具，比如GCC。Cygwin 提供完整的类Unix 环境，Windows 用户不仅可以使用GNU 工具，理论上Linux 上的程序只要用Cygwin 重新编译，就可以在Windows 上运行。 2、从能力上说如果程序只用到C/C&#43;&#43; 标准库，可以用MinGW 或Cygwin 编译。如果程序还用到了POSIX API，则只能用Cygwin 编译。 3、从依赖上说程序经MinGW 编译后可以直接在Windows 上面运行。程序经Cygwin 编译后运行，需要依赖安装时附带的cygwin1.dll。
+并且cygwin是个完全模拟unix，unix相关库都可以直接通过管理工具下载安装，如gcc，pcre，zlib，无需重复编译。 安装包下载：https://cygwin.com/install.html，64位管理工具 点击安装工具，步骤中选择163或者aliyun私服 对于新手来说，需安装Base，Devel，Libs，Net，System，Utils几个模块">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="1083">
+    <title>linux下gcc编程10-clion编译调试nginx :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/programming\/languages\/gcc\/linuxgcc_10\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/languages/gcc/linuxgcc_10/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#1clion简介">1。clion简介</a>
+      <ul>
+        <li><a href="#11-clion安装">1.1 clion安装</a>
+          <ul>
+            <li><a href="#111-centos">1.1.1 centos</a></li>
+            <li><a href="#111-win10">1.1.1 win10</a>
+              <ul>
+                <li><a href="#1111-cygwin安装">1.1.1.1 cygwin安装</a></li>
+                <li><a href="#1111-clion配置">1.1.1.1 clion配置</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#2-nginx开发">2. nginx开发</a>
+      <ul>
+        <li><a href="#21-nginx编译">2.1 nginx编译</a></li>
+        <li><a href="#22-转换cmake">2.2 转换cmake</a></li>
+        <li><a href="#23-nginx调试">2.3 nginx调试</a></li>
+        <li><a href="#24-nginx模块开发">2.4 nginx模块开发</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-window下nginx开发">3. window下nginx开发</a>
+      <ul>
+        <li><a href="#31-nginx编译">3.1 nginx编译</a></li>
+        <li><a href="#31-手工添加handler">3.1 手工添加handler</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/index.html"><span itemprop="name">编程语言</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/gcc/index.html"><span itemprop="name">c语言</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">linux下gcc编程10-clion编译调试nginx</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_09/index.html" title="linux下gcc编程09-编写内核helloworld模块 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_11/index.html" title="linux下gcc编程11-window下clion编译调试nginx+集成lua-nginx-module+安装开源x-waf (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="linux下gcc编程10-clion编译调试nginx">linux下gcc编程10-clion编译调试nginx</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p>@[toc]</p>
+<h1 id="1clion简介">1。clion简介</h1>
+<p>CLion是Jetbrains公司旗下新推出的一款专为开发C/C++所设计的跨平台IDE，它是以IntelliJ为基础设计的，同时还包含了许多智能功能来提高开发人员的生产力。</p>
+<p>同样支持python哦，相信使用过IntelliJ idea开发过java的盆友都很清楚该IDE的强大，所以做为Jetbrains旗下的c/c++开发工具CLion同样包含了许多智能功能来提高开发人员的生产力，提高开发人员的工作效率</p>
+<h2 id="11-clion安装">1.1 clion安装</h2>
+<h3 id="111-centos">1.1.1 centos</h3>
+<p>clion内置使用cmake来管理编译c/c++项目，linux环境可以先按照开发工具包</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>yum groupinstall Development Tools</code></pre></div>
+<p>window请安装Cygwin 和MinGW，window安装教程参考其他博客。
+下载你想要任何版本的clion，<a href="https://www.jetbrains.com/clion/download/other.html" rel="external" target="_blank">下载地址</a>
+下载tar.gz版本服务器解压：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>tar -zxvf CLion-2019.2.1.tar.gz</code></pre></div>
+<p>假设解压地址：/soft/clion-2019.2.1，可执行文件位于：/soft/clion-2019.2.1/bin/clion.sh
+桌面新建一个快捷方式 ，如桌面新建一个clion.desktop 内容:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[Desktop Entry]
+Name=clion
+Exec=/soft/clion-2019.2.1/bin/clion.sh
+Type=Application
+Icon=/soft/clion-2019.2.1/bin/clion.png
+Terminal=false</code></pre></div>
+<p>左面会自动生成一个图片图标，点击后自动启动clion
+<a href="#R-image-367107a5dbe2cc72bcbacc3ca581214b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/a8ed5774c6bfed30db5a81bef1a24b45.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-367107a5dbe2cc72bcbacc3ca581214b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/a8ed5774c6bfed30db5a81bef1a24b45.png"></a></p>
+<h3 id="111-win10">1.1.1 win10</h3>
+<p>clion安装通centos一致，解压即可使用，linux本身不支持gcc和linux命令需要模拟环境。</p>
+<h4 id="1111-cygwin安装">1.1.1.1 cygwin安装</h4>
+<p>linux支持两款模拟linux编译环境，cygwin和mingw,比较两个差异。
+1、从目标上说MinGW 是让Windows 用户可以用上GNU 工具，比如GCC。Cygwin 提供完整的类Unix 环境，Windows 用户不仅可以使用GNU 工具，理论上Linux 上的程序只要用Cygwin 重新编译，就可以在Windows 上运行。
+2、从能力上说如果程序只用到C/C++ 标准库，可以用MinGW 或Cygwin 编译。如果程序还用到了POSIX API，则只能用Cygwin 编译。
+3、从依赖上说程序经MinGW 编译后可以直接在Windows 上面运行。程序经Cygwin 编译后运行，需要依赖安装时附带的cygwin1.dll。</p>
+<p>并且cygwin是个完全模拟unix，unix相关库都可以直接通过管理工具下载安装，如gcc，pcre，zlib，无需重复编译。
+安装包下载：https://cygwin.com/install.html，<a href="https://cygwin.com/setup-x86_64.exe" rel="external" target="_blank">64位管理工具</a>
+点击安装工具，步骤中选择163或者aliyun私服
+<a href="#R-image-d79e9f94379aa05ebd94c4c9752a8113" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/b0ecf1e76bce646e60c5de8f2e076f6e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d79e9f94379aa05ebd94c4c9752a8113"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/b0ecf1e76bce646e60c5de8f2e076f6e.png"></a>
+对于新手来说，需安装Base，Devel，Libs，Net，System，Utils几个模块</p>
+<ul>
+<li>Base中安装shell，core包，sed，tar，which等模块</li>
+<li>Devel中安装auomake，gcc，git，gdb，make，mingw，其他源码包等模块。</li>
+<li>Net中安装包含网络（nfs，ftp,http），openss等模块。</li>
+<li>System中安装系统相关，包括：usb驱动，ext2文件系统，监控等模块</li>
+<li>Utils中安装时间，hash，文件归档等帮助相关模块。</li>
+</ul>
+<p>安装完大概占用系统空间 18G （注意选择磁盘空间）。
+如果发现某些包忘记安装，可重新打开管理工具安装。
+安装完成后，cygwin在桌面上新增了一个 Cygwin64 Terminal工具，用于直接打开shell窗口。
+<!-- raw HTML omitted -->该工具[/根目录]位于你安装的cygwin64根目录，工作目录：/home/window用户名。<!-- raw HTML omitted -->
+<a href="#R-image-b5e578210576253ca7086ecb58a854b5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/8a2bd23165536c364618c168e6648e79.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b5e578210576253ca7086ecb58a854b5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/8a2bd23165536c364618c168e6648e79.png"></a>
+其他盘符目录格式为：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>GVT@DESKTOP-V14R68B /
+$ cd f:/
+GVT@DESKTOP-V14R68B /cygdrive/f</code></pre></div>
+<p>如果需要在clion或者shell中引用其他盘，需要路径为：/cygdrive/f （表示f盘）</p>
+<h4 id="1111-clion配置">1.1.1.1 clion配置</h4>
+<p>clion选择 File-Setting-Build,Execution,Deployment-Toolchains选择cygwin-选择目录
+<a href="#R-image-14051cbd4fc640786adab569076faaad" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/9c114d075560c6cd7668c2d0386abf99.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-14051cbd4fc640786adab569076faaad"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/9c114d075560c6cd7668c2d0386abf99.png"></a>
+此时可以新建c语言项目进行开发调试了。</p>
+<h1 id="2-nginx开发">2. nginx开发</h1>
+<h2 id="21-nginx编译">2.1 nginx编译</h2>
+<p>下载nginx源码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>git clone https://github.com/nginx/nginx.git</code></pre></div>
+<p>nginx使用automake编译源码，clion使用cmake编译源码，可喜的是最终两种编译方式最终都会生成makefile，可以理解技术是相通的，在automake执行时可以让其生成cmakelist.txt或者将生成的makefile转换成cmakelist.xt。
+完全懂cmake和make和automake技术的同学，转换不是难事，不懂的就麻烦，不过有用心的同学已经提供了这样的脚本，这里就不自己去编写了,参考：<a href="https://github.com/Toudsour/nginx_cmake" rel="external" target="_blank">nginx_cmake</a></p>
+<h2 id="22-转换cmake">2.2 转换cmake</h2>
+<p>针对该脚本和clion和cmakelist.txt位置问题，步骤尚未调整
+1.将src中的cmake复制进nginx/auto里边
+修改cmake文件(两处#********部分)</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#!/usr/bin/env bash
+#NGX_CMAKE_FILE=$NGX_OBJS/CMakeLists.txt
+#********此处生成到项目跟目录，修改$NGX_OBJS/CMakeLists.txt为CMakeLists.txt
+NGX_CMAKE_FILE=CMakeLists.txt
+NGX_CMAKE_TMP=$NGX_OBJS/tmp
+
+#output includes
+cmake_ngx_incs=`echo $CORE_INCS $NGX_OBJS $HTTP_INCS $MAIL_INCS\
+             | sed -e &#34;s/  *\([^ ][^ ]*\)/$ngx_regex_cont\1/g&#34; \
+                   -e &#34;s/\//$ngx_regex_dirsep/g&#34;`
+cat &lt;&lt; END                                  &gt; $NGX_CMAKE_TMP
+cmake_minimum_required(VERSION 3.6)
+include_directories(
+    .
+    $cmake_ngx_incs)
+END
+
+#output src
+cmake_ngx_src=&#34;$CORE_SRCS $HTTP_SRCS $MAIL_SRCS $NGX_MISC_SRCS $NGX_ADDON_SRCS $NGX_SHARED_SRCS&#34;
+
+cmake_ngx_src=`echo $cmake_ngx_src | sed -e &#34;s/  *\([^ ][^ ]*\)/$ngx_regex_cont\1/g&#34;\
+                             -e &#34;s/\//$ngx_regex_dirsep/g&#34;`
+
+#******** 次数将ngx_modules.c修改为$NGX_OBJS/ngx_modules.c
+cat &lt;&lt; END                                    &gt;&gt; $NGX_CMAKE_TMP
+set(SOURCE_FILES
+    $NGX_OBJS/ngx_modules.c
+    $cmake_ngx_src)
+END
+
+#output target
+cat &lt;&lt; END                                   &gt;&gt; $NGX_CMAKE_TMP
+add_executable(nginx \${SOURCE_FILES})
+END
+
+
+#output lib
+echo ${CORE_LIBS}
+CMAKE_CORE_LIBS=`echo ${CORE_LIBS} | sed -e &#34;s/-l//g&#34;`
+
+cat &lt;&lt; END                                   &gt;&gt; $NGX_CMAKE_TMP
+target_link_libraries(nginx $CMAKE_CORE_LIBS)
+END
+
+if [ -f $NGX_CMAKE_TMP ]
+then
+    (cat $NGX_CMAKE_TMP | sed -e &#34;s/\\\//g&#34;) &gt; $NGX_CMAKE_FILE
+    rm $NGX_CMAKE_TMP
+fi</code></pre></div>
+<p><a href="#R-image-498b4f85a727aba875ab4868eb88af74" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/5b7538ad6191e4a9da272156529ddbeb.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-498b4f85a727aba875ab4868eb88af74"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/5b7538ad6191e4a9da272156529ddbeb.jpeg"></a>
+这个ngx_modules.c是nginx编译后记录所有模块的字典文件，nginx就是根据这个文件知道要执行哪些模块，所有通过./auto/configure &ndash;add-module=/root/CLionProjects/nginx/src/http/mymodule的所有模块都被会生成写入到这个文件。
+2.将nginx/auto/configure中的. auto/make内容上加上. auto/cmake
+<a href="#R-image-c5f1b8784cffcaee178fd1996d3c005a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/a67e1f29bd2806107405d5e276f6b61f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c5f1b8784cffcaee178fd1996d3c005a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/a67e1f29bd2806107405d5e276f6b61f.png"></a>
+3.正常编译Nginx(若没有指定目录,则相关文件在objs/下)
+clion打开teminal窗口 执行命令:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>./auto/configure</code></pre></div>
+<p>nginx默认需要依赖的pcre,zlib等需要安装devel库 <a href="https://blog.csdn.net/liaomin416100569/article/details/72897641" rel="external" target="_blank">参考博文</a>：
+<a href="https://blog.csdn.net/liaomin416100569/article/details/72897641" rel="external" target="_blank">https://blog.csdn.net/liaomin416100569/article/details/72897641</a>
+<a href="#R-image-595ce34e065c04ed8a175552ce14233c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/e4c2c4881d190c745451b29f2538ef24.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-595ce34e065c04ed8a175552ce14233c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/e4c2c4881d190c745451b29f2538ef24.png"></a>
+这里./configure目录就是检查依赖关系，最终生成ngx_modules.c，最终编译还得靠CmakeLists.txt。
+ok到这里编译基本可以通过了 ，此时可以打开main方法的类:src/core/nginx.c运行了。
+点击修改运行配置将配置文件指向当前项目conf/nginx.conf方便调试：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>Program arguments中设置
+ -c  /root/CLionProjects/nginx/conf/nginx.conf</code></pre></div>
+<p><a href="#R-image-3810d49f9b5cb4e44fe7c07e27c56083" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/e44c9dab0384b9bdb38ecbe06381560c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3810d49f9b5cb4e44fe7c07e27c56083"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/e44c9dab0384b9bdb38ecbe06381560c.png"></a>
+此时运行可能会报错 ，缺少/usr/local/nginx或者/usr/local/nginx/logs目录，这是因为你配置时未指定prefix默认启动的日志和进程等运行时信息都会写入这个目录，新建这两个目录即可。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>mkdir -p /usr/local/nginx/logs</code></pre></div>
+<h2 id="23-nginx调试">2.3 nginx调试</h2>
+<p>经过上述转换过程基本可以启动nginx了，并且可通过命令查看到nginx进程了，但是进程在clion中一启用就自动结束了，但是系统中有进程，细心的就知道了，这是因为daemon引起的。
+nginx.conf中取消daemon:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>daemon off;</code></pre></div>
+<p>修改后发现进程虽然不自动关闭，但是关闭clion进程，linux还是存在worker进程，细心的就知道了停止的是master进程，这是master-worker进程模式引起的，此时因为取消master模式：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>master_process off;</code></pre></div>
+<p>此时就可以愉快的在clion中断点任意调试，方便代码阅读和确认。
+比如在src/http/ngx_http_connection.c方法ngx_http_process_request中下断点，所有请求都被被这个函数处理，通过curl访问:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>curl localhost</code></pre></div>
+<p><a href="#R-image-104052c2567ce8e1f8242a5c8bf2f70a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/2b474e4d59e4265e8cb485056bfb4340.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-104052c2567ce8e1f8242a5c8bf2f70a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/2b474e4d59e4265e8cb485056bfb4340.png"></a></p>
+<h2 id="24-nginx模块开发">2.4 nginx模块开发</h2>
+<p>关于nginx模块开发建议参考tengine开发人员编写的 <a href="http://tengine.taobao.org/book/index.html" rel="external" target="_blank">《nginx开发从入门到精通》</a>,实在是经典阿，4个小时阅读完成并完成helloworld，感谢。</p>
+<ol>
+<li>首先阅读下nginx架构和nginx封装的数据结构
+<a href="http://tengine.taobao.org/book/chapter_02.html" rel="external" target="_blank">http://tengine.taobao.org/book/chapter_02.html</a></li>
+<li>接下来阅读handler模块（这篇读完基本可以开发指令了）
+<a href="http://tengine.taobao.org/book/chapter_03.html" rel="external" target="_blank">http://tengine.taobao.org/book/chapter_03.html</a>
+接下来我编写一个say指令位于location指令下，访问时输出say内容.
+src/http/下新增一个mymodule目录:新建文件ngx_http_helloworld_module.c文件，内容：</li>
+</ol>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>/*
+ * Copyright (C) Igor Sysoev
+ * Copyright (C) Nginx, Inc.
+ */
+
+
+#include &lt;ngx_config.h&gt;
+#include &lt;ngx_core.h&gt;
+#include &lt;ngx_http.h&gt;
+/**
+ * 定义一个结构体用于接受配置
+ */
+typedef struct
+{
+    ngx_str_t hello_string;
+}ngx_http_hello_loc_conf_t;
+
+/**
+ *
+ * @param cf 该参数里面保存从配置文件读取到的原始字符串以及相关的一些信息。特别注意的是这个参数的args字段是一个ngx_str_t类型的数组，
+ *          该数组的首个元素是这个配置指令本身，第二个元素是指令的第一个参数，第三个元素是第二个参数，依次类推。
+ * @param cmd 这个配置指令对应的ngx_command_t结构。
+ * @param conf 就是定义的存储这个配置值的结构体，比如在上面展示的那个ngx_http_hello_loc_conf_t。当解析这个hello_string变量的时候，
+ *          传入的conf就指向一个ngx_http_hello_loc_conf_t类型的变量。用户在处理的时候可以使用类型转换，转换成自己知道的类型，再进行字段的赋值。
+ * @return 处理成功时，返回NGX_OK，否则返回NGX_CONF_ERROR或者是一个自定义的错误信息的字符串。
+ */
+static char *ngx_http_hello_string(ngx_conf_t *cf, ngx_command_t *cmd,
+                                   void *conf);
+/**
+ * 调用该函数创建本模块位于location block的配置信息存储结构。每个在配置中指明的location创建一个。该函数执行成功，返回创建的配置对象。失败的话，返回NULL。
+ * @param cf
+ * @return
+ */
+static void *ngx_http_hello_create_loc_conf(ngx_conf_t *cf);
+
+static ngx_int_t
+ngx_http_hello_init(ngx_conf_t *cf);
+
+/**
+ * say指令默认没有值使用默认值
+ */
+static u_char ngx_hello_default_string[] = &#34;Hello, world!&#34;;
+
+
+
+/**
+ * 参数1:定义指令名称
+ * 参数2:指令位置 接受一个参数或者没有参数
+ * 参数3:这是一个函数指针，当nginx在解析配置的时候，如果遇到这个配置指令，将会把读取到的值传递给这个函数进行分解处理。因为具体每个配置指令的值如何处理，只
+ *  有定义这个配置指令的人是最清楚的。来看一下这个函数指针要求的函数原型。
+ */
+static ngx_command_t ngx_http_hello_commands[] = {
+        {
+                ngx_string(&#34;say&#34;),
+                NGX_HTTP_LOC_CONF|NGX_CONF_NOARGS|NGX_CONF_TAKE1,
+                ngx_http_hello_string,
+                NGX_HTTP_LOC_CONF_OFFSET,
+                offsetof(ngx_http_hello_loc_conf_t, hello_string),
+                NULL },
+
+        ngx_null_command
+};
+
+/**
+ * nginx加载模块时生命周期函数定义 ,other :http://tengine.taobao.org/book/chapter_03.html
+ * 这是一个ngx_http_module_t类型的静态变量。这个变量实际上是提供一组回调函数指针，这些函数有在创建存储配置信息的对象的函数，也有在创建前和创建后会调用的函数。这些函数都将被nginx在合适的时间进行调用。
+ *  preconfiguration:
+ 	    在创建和读取该模块的配置信息之前被调用。
+    postconfiguration:
+        在创建和读取该模块的配置信息之后被调用。
+ */
+static ngx_http_module_t ngx_http_hello_module_ctx = {
+        NULL,                          /* preconfiguration */
+        ngx_http_hello_init,           /* postconfiguration */
+
+        NULL,                          /* create main configuration */
+        NULL,                          /* init main configuration */
+
+        NULL,                          /* create server configuration */
+        NULL,                          /* merge server configuration */
+
+        ngx_http_hello_create_loc_conf, /* create location configuration */
+        NULL                            /* merge location configuration */
+};
+
+ngx_module_t ngx_http_hello_module = {
+        NGX_MODULE_V1,
+        &amp;ngx_http_hello_module_ctx,    /* module context */
+        ngx_http_hello_commands,       /* module directives */
+        NGX_HTTP_MODULE,               /* module type */
+        NULL,                          /* init master */
+        NULL,                          /* init module */
+        NULL,                          /* init process */
+        NULL,                          /* init thread */
+        NULL,                          /* exit thread */
+        NULL,                          /* exit process */
+        NULL,                          /* exit master */
+        NGX_MODULE_V1_PADDING
+};
+
+
+static void *ngx_http_hello_create_loc_conf(ngx_conf_t *cf)
+{
+    ngx_http_hello_loc_conf_t* local_conf = NULL;
+    local_conf = ngx_pcalloc(cf-&gt;pool, sizeof(ngx_http_hello_loc_conf_t));
+    if (local_conf == NULL)
+    {
+        return NULL;
+    }
+
+    ngx_str_null(&amp;local_conf-&gt;hello_string);
+
+    return local_conf;
+}
+/**
+ *
+ * @param cf 该参数里面保存从配置文件读取到的原始字符串以及相关的一些信息。特别注意的是这个参数的args字段是一个ngx_str_t类型的数组，
+ *          该数组的首个元素是这个配置指令本身，第二个元素是指令的第一个参数，第三个元素是第二个参数，依次类推。
+ * @param cmd 这个配置指令对应的ngx_command_t结构。
+ * @param conf 就是定义的存储这个配置值的结构体，比如在上面展示的那个ngx_http_hello_loc_conf_t。当解析这个hello_string变量的时候，
+ *          传入的conf就指向一个ngx_http_hello_loc_conf_t类型的变量。用户在处理的时候可以使用类型转换，转换成自己知道的类型，再进行字段的赋值。
+ * @return 处理成功时，返回NGX_OK，否则返回NGX_CONF_ERROR或者是一个自定义的错误信息的字符串。
+ */
+static char *
+ngx_http_hello_string(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+
+    ngx_http_hello_loc_conf_t* local_conf;
+
+
+    local_conf = conf;
+    char* rv = ngx_conf_set_str_slot(cf, cmd, conf);
+
+    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, &#34;hello_string:%s&#34;, local_conf-&gt;hello_string.data);
+
+    return rv;
+}
+
+
+static ngx_int_t
+ngx_http_hello_handler(ngx_http_request_t *r)
+{
+    ngx_int_t    rc;
+    ngx_buf_t   *b;
+    ngx_chain_t  out;
+    ngx_http_hello_loc_conf_t* my_conf;
+    u_char ngx_hello_string[1024] = {0};
+    ngx_uint_t content_length = 0;
+
+    ngx_log_error(NGX_LOG_EMERG, r-&gt;connection-&gt;log, 0, &#34;ngx_http_hello_handler is called!&#34;);
+
+    my_conf = ngx_http_get_module_loc_conf(r, ngx_http_hello_module);
+    if (my_conf-&gt;hello_string.len == 0 )
+    {
+        ngx_log_error(NGX_LOG_EMERG, r-&gt;connection-&gt;log, 0, &#34;hello_string is empty!&#34;);
+        return NGX_DECLINED;
+    }
+    ngx_sprintf(ngx_hello_string, &#34;%s&#34;, my_conf-&gt;hello_string.data);
+
+    ngx_log_error(NGX_LOG_EMERG, r-&gt;connection-&gt;log, 0, &#34;hello_string:%s&#34;, ngx_hello_string);
+    content_length = ngx_strlen(ngx_hello_string);
+
+    /* we response to &#39;GET&#39; and &#39;HEAD&#39; requests only */
+    if (!(r-&gt;method &amp; (NGX_HTTP_GET|NGX_HTTP_HEAD))) {
+        return NGX_HTTP_NOT_ALLOWED;
+    }
+
+    /* discard request body, since we don&#39;t need it here */
+    rc = ngx_http_discard_request_body(r);
+
+    if (rc != NGX_OK) {
+        return rc;
+    }
+
+    /* set the &#39;Content-type&#39; header */
+    /*
+     *r-&gt;headers_out.content_type.len = sizeof(&#34;text/html&#34;) - 1;
+     *r-&gt;headers_out.content_type.data = (u_char *)&#34;text/html&#34;;
+     */
+    ngx_str_set(&amp;r-&gt;headers_out.content_type, &#34;text/html&#34;);
+
+
+    /* send the header only, if the request type is http &#39;HEAD&#39; */
+    if (r-&gt;method == NGX_HTTP_HEAD) {
+        r-&gt;headers_out.status = NGX_HTTP_OK;
+        r-&gt;headers_out.content_length_n = content_length;
+
+        return ngx_http_send_header(r);
+    }
+
+    /* allocate a buffer for your response body */
+    b = ngx_pcalloc(r-&gt;pool, sizeof(ngx_buf_t));
+    if (b == NULL) {
+        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    /* attach this buffer to the buffer chain */
+    out.buf = b;
+    out.next = NULL;
+
+    /* adjust the pointers of the buffer */
+    b-&gt;pos = ngx_hello_string;
+    b-&gt;last = ngx_hello_string + content_length;
+    b-&gt;memory = 1;    /* this buffer is in memory */
+    b-&gt;last_buf = 1;  /* this is the last buffer in the buffer chain */
+
+    /* set the status line */
+    r-&gt;headers_out.status = NGX_HTTP_OK;
+    r-&gt;headers_out.content_length_n = content_length;
+
+    /* send the headers of your response */
+    rc = ngx_http_send_header(r);
+
+    if (rc == NGX_ERROR || rc &gt; NGX_OK || r-&gt;header_only) {
+        return rc;
+    }
+
+    /* send the buffer chain of your response */
+    return ngx_http_output_filter(r, &amp;out);
+}
+/**
+ * 配置文件读取完毕后需要去挂载handler
+ * 为了更精细地控制对于客户端请求的处理过程，nginx把这个处理过程划分成了11个阶段。他们从前到后
+ *  NGX_HTTP_POST_READ_PHASE:
+ 	读取请求内容阶段
+    NGX_HTTP_SERVER_REWRITE_PHASE:
+        Server请求地址重写阶段
+    NGX_HTTP_FIND_CONFIG_PHASE:
+        配置查找阶段:
+    NGX_HTTP_REWRITE_PHASE:
+        Location请求地址重写阶段
+    NGX_HTTP_POST_REWRITE_PHASE:
+        请求地址重写提交阶段
+    NGX_HTTP_PREACCESS_PHASE:
+        访问权限检查准备阶段
+    NGX_HTTP_ACCESS_PHASE:
+        访问权限检查阶段
+    NGX_HTTP_POST_ACCESS_PHASE:
+        访问权限检查提交阶段
+    NGX_HTTP_TRY_FILES_PHASE:
+        配置项try_files处理阶段
+    NGX_HTTP_CONTENT_PHASE:
+        内容产生阶段
+    NGX_HTTP_LOG_PHASE:
+        日志模块处理阶段
+ * 一般情况下，我们自定义的模块，大多数是挂载在NGX_HTTP_CONTENT_PHASE阶段的。挂载的动作一般是在模块上下文调用的postconfiguration函数中。
+ * @param cf
+ * @return
+ */
+static ngx_int_t
+ngx_http_hello_init(ngx_conf_t *cf)
+{
+    ngx_http_handler_pt        *h;
+    ngx_http_core_main_conf_t  *cmcf;
+
+    cmcf = ngx_http_conf_get_module_main_conf(cf, ngx_http_core_module);
+
+    h = ngx_array_push(&amp;cmcf-&gt;phases[NGX_HTTP_CONTENT_PHASE].handlers);
+    if (h == NULL) {
+        return NGX_ERROR;
+    }
+
+    *h = ngx_http_hello_handler;
+
+    return NGX_OK;
+}</code></pre></div>
+<p>源代码同目录新增config文件</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>ngx_addon_name=ngx_http_hello_module
+HTTP_MODULES=&#34;$HTTP_MODULES ngx_http_hello_module&#34;
+NGX_ADDON_SRCS=&#34;$NGX_ADDON_SRCS $ngx_addon_dir/ngx_http_helloworld_module.c&#34;</code></pre></div>
+<p>重新configure生成新ngx_module.c</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>./auto/configure --add-module=/root/CLionProjects/nginx/src/http/mymodule</code></pre></div>
+<p><a href="#R-image-c06cc216ec7cb7248447d8a090b2ff03" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/63b36f33728513e9491960d057e66da6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c06cc216ec7cb7248447d8a090b2ff03"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/63b36f33728513e9491960d057e66da6.png"></a>
+conf/nginx.conf中添加say：helloworld</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>       location / {
+            say   &#34;helloworld&#34;;
+            root   html;
+            index  index.html index.htm;
+        }</code></pre></div>
+<p><a href="#R-image-cc4679e682146a7086706a10d78d9abd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/f2d7ea9911fba8f2a3629162ca58c341.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cc4679e682146a7086706a10d78d9abd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/f2d7ea9911fba8f2a3629162ca58c341.png"></a>
+最终打印：helloworld</p>
+<h1 id="3-window下nginx开发">3. window下nginx开发</h1>
+<h2 id="31-nginx编译">3.1 nginx编译</h2>
+<p>如果直接使用linux下编译的CMakeLists.txt，则会出现</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[ 10%] Building C object CMakeFiles/nginx.dir/src/os/unix/ngx_linux_init.c.o    
+/cygdrive/f/code/c/nginx/src/os/unix/ngx_linux_init.c: In function &#39;ngx_os_specific_init&#39;:
+/cygdrive/f/code/c/nginx/src/os/unix/ngx_linux_init.c:36:21: error: storage size of &#39;u&#39; isn&#39;t known
+   36 |     struct utsname  u;
+      |                     ^
+/cygdrive/f/code/c/nginx/src/os/unix/ngx_linux_init.c:38:9: warning: implicit declaration of function &#39;uname&#39;; did you mean &#39;rename&#39;? [-Wimplicit-function-declaration]
+   38 |     if (uname(&amp;u) == -1) {
+      |         ^~~~~
+      |         rename
+make[3]: *** [CMakeFiles/nginx.dir/build.make:908: CMakeFiles/nginx.dir/src/os/unix/ngx_linux_init.c.o] Error 1</code></pre></div>
+<p>实际上是因为cmakelist.txt文件以下三行引起：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>	src/os/unix/ngx_linux_init.c 
+	src/event/modules/ngx_epoll_module.c 
+	src/os/unix/ngx_linux_sendfile_chain.c </code></pre></div>
+<p>替换成：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>	event/modules/ngx_select_module.c
+	event/modules/ngx_poll_module.c</code></pre></div>
+<p>如果不想替换，可以直接使用之间的2.2转换cmake后，使用cygwin直接编译生成的cmakelist.txt自然就是我所讲的没换内容。
+打开Cygwin64 Terminal</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>GVT@DESKTOP-V14R68B /cygdrive/f/code/c/nginx
+</span></span><span style="display:flex;"><span>$ pwd
+</span></span><span style="display:flex;"><span>/cygdrive/f/code/c/nginx
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>GVT@DESKTOP-V14R68B /cygdrive/f/code/c/nginx
+</span></span><span style="display:flex;"><span>$ ./auto/configure</span></span></code></pre></div>
+<p><a href="#R-image-3a97bbc37c14492d860c31fe9380eb76" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/58de96855d8e0b21f5c4f30db54785d0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3a97bbc37c14492d860c31fe9380eb76"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/58de96855d8e0b21f5c4f30db54785d0.png"></a>
+同nginx设置当前项目nginx.conf，比如代码在f：/code/c/nginx/conf/nginx.conf，指定必须按照cygwin路径来指定： -c /cygdrive/f/code/c/nginx/conf/nginx.conf。
+<a href="#R-image-317410c34e86761d8d8ce174fea2e986" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/04f67a954c59057a5a23449137036cb7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-317410c34e86761d8d8ce174fea2e986"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/04f67a954c59057a5a23449137036cb7.png"></a>
+打开Cygwin64 Terminal，创建目录/usr/local/nginx/logs。
+接下来直接运行,报错：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>F:<span style="color:#ae81ff">\c</span>ode<span style="color:#ae81ff">\c\n</span>ginx<span style="color:#ae81ff">\c</span>make-build-debug<span style="color:#ae81ff">\n</span>ginx.exe -c /cygdrive/f/code/c/nginx/conf/nginx.conf
+</span></span><span style="display:flex;"><span>nginx: <span style="color:#f92672">[</span>emerg<span style="color:#f92672">]</span> the maximum number of files supported by <span style="color:#66d9ef">select</span><span style="color:#f92672">()</span> is <span style="color:#ae81ff">64</span></span></span></code></pre></div>
+<p>通过搜索源码：the maximum number of files 发现416行逻辑，调试下断点：
+<a href="#R-image-fc90614e3affffd930291b7cb66eb5f2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/6c196dbeedc2dad677e7be379c1016b7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fc90614e3affffd930291b7cb66eb5f2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_10.md.images/6c196dbeedc2dad677e7be379c1016b7.png"></a>
+发现nginx.conf配置的连接数不能大于FD_SETSIZE对应的64,将</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>events <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    worker_connections  1024;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span></span></span></code></pre></div>
+<p>修改为小于64将不会出现这个问题。</p>
+<h2 id="31-手工添加handler">3.1 手工添加handler</h2>
+<p>由于开发一个handler，configure在window的速度太慢所有直接手工修改ngx_modules.c和CmakeLists.txt。</p>
+<ul>
+<li>ngx_modules.c 用于指定所有存在的模块信息（这个必须要configure一次才有）。</li>
+<li>CmakeLists.txt 需要应用模块信息对应的c文件。</li>
+</ul>
+<p>ngx_modules.c修改：</p>
+<ol>
+<li>添加模块外部定义应用。</li>
+</ol>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>extern ngx_module_t  ngx_http_hello_module;</span></span></code></pre></div>
+<ol start="2">
+<li>添加到nginx模块数组，将来nginx直接从这拿。</li>
+</ol>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ngx_modules<span style="color:#f92672">[]={</span>
+</span></span><span style="display:flex;"><span> 。。。
+</span></span><span style="display:flex;"><span> &amp;ngx_http_hello_module,
+</span></span><span style="display:flex;"><span> NULL
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span></span></span></code></pre></div>
+<ol start="3">
+<li>添加到nginx模块名称数组，将来nginx直接从这拿。</li>
+</ol>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>char *ngx_module_names<span style="color:#f92672">[]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span> 。。。
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#34;ngx_http_hello_module&#34;</span>,
+</span></span><span style="display:flex;"><span> NULL
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span></span></span></code></pre></div>
+<ol start="4">
+<li>nginx.conf配置指令say</li>
+</ol>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>        location / <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            say   <span style="color:#e6db74">&#34;helloworld&#34;</span>;
+</span></span><span style="display:flex;"><span>            root   html;
+</span></span><span style="display:flex;"><span>            index  index.html index.htm;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span></span></span></code></pre></div>
+<p>启动:curl localhost，打印：helloworld。</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/gcc/index.html"><a class="padding" href="/docs/programming/languages/gcc/index.html">c语言</a><ul id="R-subsections-e8c9b5cff4c7849bafc19d21e0433f7f" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_01/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01/index.html">linux下gcc编程01-gcc工具安装和使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_02/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_02/index.html">linux下gcc编程02-gdb调试工具使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_03/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_03/index.html">linux下gcc编程03-make工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_04/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_04/index.html">linux下gcc编程04-cmake工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_05/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_05/index.html">linux下gcc编程05-window下开发工具安装</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_06/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_06/index.html">linux下gcc编程06-c语言参考手册</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_07/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_07/index.html">linux下gcc编程07-使用linux下c库函数</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_08/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_08/index.html">linux下gcc编程08-编译linux内核</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_09/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_09/index.html">linux下gcc编程09-编写内核helloworld模块</a></li>
+            <li class="active " data-nav-id="/docs/programming/languages/gcc/linuxgcc_10/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_10/index.html">linux下gcc编程10-clion编译调试nginx</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_11/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_11/index.html">linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_12/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_12/index.html">linux下gcc编程12-window下clion编译调试redis7.0</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/assembly/index.html"><a class="padding" href="/docs/programming/languages/assembly/index.html">汇编语言</a><ul id="R-subsections-664e07814ed6bbd77b351b341bff28e6" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

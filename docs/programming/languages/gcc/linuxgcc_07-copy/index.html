@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一 。linux c库函数简介
+linux下用于c编程的头文件 位于以下目录
+/usr/local/include/usr/lib/gcc-lib/target/version/include/usr/target/include/usr/include 库文件一般位于
+/usr/lib或/lib或/lib64 二。常用库函数分类示例
+1.文件操作库
+参考linuxc常用c函数手册 文件操作篇（http://net.pku.edu.cn/~yhf/linux_c/）
+#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出#include &#34;string.h&#34;/*** fcntl.h，是unix标准中通用的头文件，其中包含的相关函数有 open，fcntl，shutdown，unlink，fclose等！* 就是定义了文件操作的常量*/#include &lt;fcntl.h&gt;#include &#34;stdlib.h&#34;/*** unistd.h 是 C 和 C&#43;&#43; 程序设计语言中提供对 POSIX 操作系统 API 的访问功能的头文件的名称* unistd.h 中所定义的接口通常都是大量针对系统调用的封装（英语：wrapper functions），如 fork、pipe 以及各种 I/O 原语（read、write、close getpid() 等等）*/#include &#34;unistd.h&#34;/*** 是Unix/Linux系统的基本系统数据类型的头文件，含有size_t，time_t，pid_t等类型。*/#include &#34;sys/types.h&#34;#define READ_SIZE 140int main() {/*-------获取当前的进程id*/pid_t pt=getpid();//pid_t在sys/types.h中 getpid()在unistd.h中printf(&#34;当前程序的进程id：%d\n&#34;,pt);/*-------打开一个文件描述符*/int fileDescp=open(&#34;c:/a1.txt&#34;,O_RDONLY);//open函数unistd中 常量O_RDONLY定义在fcntl.hchar s[READ_SIZE];memset(s,&#39;\0&#39;,READ_SIZE);//将所有的字节初始化 \0/*-------读取指定长度字节*///注意项目设置的什么字符集 读取文件时 如果文件不是该字符集就会读出乱码read(fileDescp,s,READ_SIZE);printf(&#34;读取字符串:%s\n&#34;,s);/*-------读取全部数据*/lseek(fileDescp,SEEK_SET,0);//设置从0开始读取memset(s,&#39;\0&#39;,READ_SIZE);while((read(fileDescp,s,READ_SIZE))&gt;0){printf(&#34;读取到的数据 :%s\n&#34;,s);}/*-------关闭文件描述符*/close(fileDescp);/*-------读取全部数据*///创建一个文件指定权限 权限数字参考 http://www.runoob.com/linux/linux-file-attr-permission.htmlint fd1 = creat(&#34;c:/test.log&#34;,777);write(fd1, s, strlen(s));close(fd1);//getchar();//return 0;} 2.进程操作库">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="linux下gcc编程07-使用linux下c库函数 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一 。linux c库函数简介
+linux下用于c编程的头文件 位于以下目录
+/usr/local/include/usr/lib/gcc-lib/target/version/include/usr/target/include/usr/include 库文件一般位于
+/usr/lib或/lib或/lib64 二。常用库函数分类示例
+1.文件操作库
+参考linuxc常用c函数手册 文件操作篇（http://net.pku.edu.cn/~yhf/linux_c/）
+#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出#include &#34;string.h&#34;/*** fcntl.h，是unix标准中通用的头文件，其中包含的相关函数有 open，fcntl，shutdown，unlink，fclose等！* 就是定义了文件操作的常量*/#include &lt;fcntl.h&gt;#include &#34;stdlib.h&#34;/*** unistd.h 是 C 和 C&#43;&#43; 程序设计语言中提供对 POSIX 操作系统 API 的访问功能的头文件的名称* unistd.h 中所定义的接口通常都是大量针对系统调用的封装（英语：wrapper functions），如 fork、pipe 以及各种 I/O 原语（read、write、close getpid() 等等）*/#include &#34;unistd.h&#34;/*** 是Unix/Linux系统的基本系统数据类型的头文件，含有size_t，time_t，pid_t等类型。*/#include &#34;sys/types.h&#34;#define READ_SIZE 140int main() {/*-------获取当前的进程id*/pid_t pt=getpid();//pid_t在sys/types.h中 getpid()在unistd.h中printf(&#34;当前程序的进程id：%d\n&#34;,pt);/*-------打开一个文件描述符*/int fileDescp=open(&#34;c:/a1.txt&#34;,O_RDONLY);//open函数unistd中 常量O_RDONLY定义在fcntl.hchar s[READ_SIZE];memset(s,&#39;\0&#39;,READ_SIZE);//将所有的字节初始化 \0/*-------读取指定长度字节*///注意项目设置的什么字符集 读取文件时 如果文件不是该字符集就会读出乱码read(fileDescp,s,READ_SIZE);printf(&#34;读取字符串:%s\n&#34;,s);/*-------读取全部数据*/lseek(fileDescp,SEEK_SET,0);//设置从0开始读取memset(s,&#39;\0&#39;,READ_SIZE);while((read(fileDescp,s,READ_SIZE))&gt;0){printf(&#34;读取到的数据 :%s\n&#34;,s);}/*-------关闭文件描述符*/close(fileDescp);/*-------读取全部数据*///创建一个文件指定权限 权限数字参考 http://www.runoob.com/linux/linux-file-attr-permission.htmlint fd1 = creat(&#34;c:/test.log&#34;,777);write(fd1, s, strlen(s));close(fd1);//getchar();//return 0;} 2.进程操作库">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/languages/gcc/linuxgcc_07-copy/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="linux下gcc编程07-使用linux下c库函数 :: liaomin416100569博客">
+    <meta property="og:description" content="一 。linux c库函数简介
+linux下用于c编程的头文件 位于以下目录
+/usr/local/include/usr/lib/gcc-lib/target/version/include/usr/target/include/usr/include 库文件一般位于
+/usr/lib或/lib或/lib64 二。常用库函数分类示例
+1.文件操作库
+参考linuxc常用c函数手册 文件操作篇（http://net.pku.edu.cn/~yhf/linux_c/）
+#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出#include &#34;string.h&#34;/*** fcntl.h，是unix标准中通用的头文件，其中包含的相关函数有 open，fcntl，shutdown，unlink，fclose等！* 就是定义了文件操作的常量*/#include &lt;fcntl.h&gt;#include &#34;stdlib.h&#34;/*** unistd.h 是 C 和 C&#43;&#43; 程序设计语言中提供对 POSIX 操作系统 API 的访问功能的头文件的名称* unistd.h 中所定义的接口通常都是大量针对系统调用的封装（英语：wrapper functions），如 fork、pipe 以及各种 I/O 原语（read、write、close getpid() 等等）*/#include &#34;unistd.h&#34;/*** 是Unix/Linux系统的基本系统数据类型的头文件，含有size_t，time_t，pid_t等类型。*/#include &#34;sys/types.h&#34;#define READ_SIZE 140int main() {/*-------获取当前的进程id*/pid_t pt=getpid();//pid_t在sys/types.h中 getpid()在unistd.h中printf(&#34;当前程序的进程id：%d\n&#34;,pt);/*-------打开一个文件描述符*/int fileDescp=open(&#34;c:/a1.txt&#34;,O_RDONLY);//open函数unistd中 常量O_RDONLY定义在fcntl.hchar s[READ_SIZE];memset(s,&#39;\0&#39;,READ_SIZE);//将所有的字节初始化 \0/*-------读取指定长度字节*///注意项目设置的什么字符集 读取文件时 如果文件不是该字符集就会读出乱码read(fileDescp,s,READ_SIZE);printf(&#34;读取字符串:%s\n&#34;,s);/*-------读取全部数据*/lseek(fileDescp,SEEK_SET,0);//设置从0开始读取memset(s,&#39;\0&#39;,READ_SIZE);while((read(fileDescp,s,READ_SIZE))&gt;0){printf(&#34;读取到的数据 :%s\n&#34;,s);}/*-------关闭文件描述符*/close(fileDescp);/*-------读取全部数据*///创建一个文件指定权限 权限数字参考 http://www.runoob.com/linux/linux-file-attr-permission.htmlint fd1 = creat(&#34;c:/test.log&#34;,777);write(fd1, s, strlen(s));close(fd1);//getchar();//return 0;} 2.进程操作库">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="linux下gcc编程07-使用linux下c库函数 :: liaomin416100569博客">
+    <meta itemprop="description" content="一 。linux c库函数简介
+linux下用于c编程的头文件 位于以下目录
+/usr/local/include/usr/lib/gcc-lib/target/version/include/usr/target/include/usr/include 库文件一般位于
+/usr/lib或/lib或/lib64 二。常用库函数分类示例
+1.文件操作库
+参考linuxc常用c函数手册 文件操作篇（http://net.pku.edu.cn/~yhf/linux_c/）
+#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出#include &#34;string.h&#34;/*** fcntl.h，是unix标准中通用的头文件，其中包含的相关函数有 open，fcntl，shutdown，unlink，fclose等！* 就是定义了文件操作的常量*/#include &lt;fcntl.h&gt;#include &#34;stdlib.h&#34;/*** unistd.h 是 C 和 C&#43;&#43; 程序设计语言中提供对 POSIX 操作系统 API 的访问功能的头文件的名称* unistd.h 中所定义的接口通常都是大量针对系统调用的封装（英语：wrapper functions），如 fork、pipe 以及各种 I/O 原语（read、write、close getpid() 等等）*/#include &#34;unistd.h&#34;/*** 是Unix/Linux系统的基本系统数据类型的头文件，含有size_t，time_t，pid_t等类型。*/#include &#34;sys/types.h&#34;#define READ_SIZE 140int main() {/*-------获取当前的进程id*/pid_t pt=getpid();//pid_t在sys/types.h中 getpid()在unistd.h中printf(&#34;当前程序的进程id：%d\n&#34;,pt);/*-------打开一个文件描述符*/int fileDescp=open(&#34;c:/a1.txt&#34;,O_RDONLY);//open函数unistd中 常量O_RDONLY定义在fcntl.hchar s[READ_SIZE];memset(s,&#39;\0&#39;,READ_SIZE);//将所有的字节初始化 \0/*-------读取指定长度字节*///注意项目设置的什么字符集 读取文件时 如果文件不是该字符集就会读出乱码read(fileDescp,s,READ_SIZE);printf(&#34;读取字符串:%s\n&#34;,s);/*-------读取全部数据*/lseek(fileDescp,SEEK_SET,0);//设置从0开始读取memset(s,&#39;\0&#39;,READ_SIZE);while((read(fileDescp,s,READ_SIZE))&gt;0){printf(&#34;读取到的数据 :%s\n&#34;,s);}/*-------关闭文件描述符*/close(fileDescp);/*-------读取全部数据*///创建一个文件指定权限 权限数字参考 http://www.runoob.com/linux/linux-file-attr-permission.htmlint fd1 = creat(&#34;c:/test.log&#34;,777);write(fd1, s, strlen(s));close(fd1);//getchar();//return 0;} 2.进程操作库">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="842">
+    <title>linux下gcc编程07-使用linux下c库函数 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758354478" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758354478" defer></script>
+    <script src="/docs/js/search-lunr.js?1758354478" defer></script>
+    <script src="/docs/js/search.js?1758354478" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758354478";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758354478" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758354478" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758354478" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758354478" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758354478" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758354478" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758354478" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758354478" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758354478" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/languages\/gcc\/linuxgcc_07-copy\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758354478" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/languages/gcc/linuxgcc_07-copy/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/index.html"><span itemprop="name">编程语言</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/gcc/index.html"><span itemprop="name">c语言</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">linux下gcc编程07-使用linux下c库函数</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_06/index.html" title="linux下gcc编程06-c语言参考手册 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_07/index.html" title="linux下gcc编程07-使用linux下c库函数 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="linux下gcc编程07-使用linux下c库函数">linux下gcc编程07-使用linux下c库函数</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p><strong>一 。linux c库函数简介</strong></p>
+<p>linux下用于c编程的头文件 位于以下目录</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>/usr/local/include
+/usr/lib/gcc-lib/target/version/include
+/usr/target/include
+/usr/include</code></pre></div>
+<p>库文件一般位于</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>/usr/lib或/lib或/lib64</code></pre></div>
+<p><strong>二。常用库函数分类示例</strong></p>
+<p>1.文件操作库</p>
+<p>  参考linuxc常用c函数手册 文件操作篇（<a href="http://net.pku.edu.cn/~yhf/linux_c/" rel="external" target="_blank">http://net.pku.edu.cn/~yhf/linux_c/</a>）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;stdio.h&gt; //包含io流的库 标准的输入和输出
+#include &#34;string.h&#34;
+/**
+ * fcntl.h，是unix标准中通用的头文件，其中包含的相关函数有 open，fcntl，shutdown，unlink，fclose等！
+ * 就是定义了文件操作的常量
+ */
+#include &lt;fcntl.h&gt;
+#include &#34;stdlib.h&#34;
+/**
+ * unistd.h 是 C 和 C++ 程序设计语言中提供对 POSIX 操作系统 API 的访问功能的头文件的名称
+ * unistd.h 中所定义的接口通常都是大量针对系统调用的封装（英语：wrapper functions），如 fork、pipe 以及各种 I/O 原语（read、write、close getpid() 等等）
+ */
+#include &#34;unistd.h&#34;
+/**
+ * 是Unix/Linux系统的基本系统数据类型的头文件，含有size_t，time_t，pid_t等类型。
+ */
+#include &#34;sys/types.h&#34;
+ 
+#define READ_SIZE 140
+int main() {
+ 
+    /*-------获取当前的进程id*/
+    pid_t pt=getpid();//pid_t在sys/types.h中 getpid()在unistd.h中
+    printf(&#34;当前程序的进程id：%d\n&#34;,pt);
+    /*-------打开一个文件描述符*/
+    int fileDescp=open(&#34;c:/a1.txt&#34;,O_RDONLY);//open函数unistd中 常量O_RDONLY定义在fcntl.h
+    char s[READ_SIZE];
+    memset(s,&#39;\0&#39;,READ_SIZE);//将所有的字节初始化 \0
+    /*-------读取指定长度字节*/
+    //注意项目设置的什么字符集 读取文件时 如果文件不是该字符集就会读出乱码
+    read(fileDescp,s,READ_SIZE);
+    printf(&#34;读取字符串:%s\n&#34;,s);
+    /*-------读取全部数据*/
+    lseek(fileDescp,SEEK_SET,0);//设置从0开始读取
+    memset(s,&#39;\0&#39;,READ_SIZE);
+    while((read(fileDescp,s,READ_SIZE))&gt;0){
+        printf(&#34;读取到的数据 :%s\n&#34;,s);
+    }
+    /*-------关闭文件描述符*/
+    close(fileDescp);
+    /*-------读取全部数据*/
+    //创建一个文件指定权限 权限数字参考 http://www.runoob.com/linux/linux-file-attr-permission.html
+    int fd1 = creat(&#34;c:/test.log&#34;,777);
+    write(fd1, s, strlen(s));
+    close(fd1);
+    //getchar();
+    //return 0;
+}</code></pre></div>
+<p>2.进程操作库</p>
+<p>》》父子进程
+ </p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include  &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &#34;string.h&#34;
+#include &lt;sys/unistd.h&gt;
+#include &lt;sys/wait.h&gt;
+void childProcessTest();
+int main() {
+    childProcessTest();
+}
+ 
+/**
+ * 演示子进程例子
+ */
+void childProcessTest(){
+    //------------获取进程id
+    pid_t pid=getpid();
+    printf(&#34;获取当前进程id:%d\n&#34;,pid);
+ 
+    int i=100;
+    pid_t cpid;
+    //------------fork()会创建一个子进程 父子进程都会调用fork 父进程返回子进程的id 子进程=0
+    //            注意如果父进程先运行完 子进程也会自动停止 不会执行完成代码
+    //            进程子进程之前的变量都会生成一个拷贝 不能共享
+    /**
+     * fork（）与vfock（）都是创建一个子进程，那他们有什么区别呢？总结有以下三点区别：
+        1.  fork  （）：子进程拷贝父进程的数据段，代码段
+            vfork （ ）：子进程与父进程共享数据段
+        2.  fork （）父子进程的执行次序不确定
+            vfork 保证子进程先运行，在调用exec 或exit 之前与父进程数据是共享的,在它调用exec
+             或exit 之后父进程才可能被调度运行。
+     */
+    if((cpid=fork())&gt;0){
+        //父进程执行
+        i++;
+        printf(&#34;父进程i=:%d\n&#34;,i);
+        int status;
+        //------------wait（）函数在wait.h中 等待子进程退出 一直阻塞 status可以获取到子进程传递状态数字 通过WEXITSTATUS宏转换才能获取到11
+        //           waitpid(cpid,&amp;status,0); waitpid假设有多个子进程的情况下可以等待某个指定pid的子进程
+        pid_t cc=wait(&amp;status);
+        printf(&#34;父进程获取到子进程%d的退出状态码:%d\n&#34;,cc,WEXITSTATUS(status));
+    }else{
+        //子进程执行
+        //------------getppid()取得父进程的进程识别码
+        printf(&#34;子进程id:%d,子进程获取父进程id:%d\n&#34;,getpid(),getppid());
+        //------------sleep()让进程暂停执行一段时间 单位秒
+        sleep(3);
+        i++;
+        printf(&#34;子进程i=:%d\n&#34;,i);
+        //------------退出当前进程将参数11返回给父线程 并且会传递SIGCHLD信号给父进程，父进程可以由wait函数取得子进程结束状态。
+        exit(11);
+    }
+}</code></pre></div>
+<p>》》system和exec族函数区别
+ </p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include  &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &#34;string.h&#34;
+#include &lt;sys/unistd.h&gt;
+#include &lt;sys/wait.h&gt;
+ 
+int main() {
+    //system()会调用fork()产生子进程，由子进程来调用
+    system(&#34;dir c:/&#34;);
+ 
+    //----------execl将当前execl后面所有代码替换成 execl执行 内容 后面代码不执行 第一个参数必须全路径 参数2表示文件名 参数三才表示第一个参数
+    //execl(&#34;C:\\Windows\\System32\\notepad&#34;,&#34;notepad&#34;,&#34;c:/a.txt&#34;,NULL);
+    //----------从PATH 环境变量中查找文件并执行 第一个路径不加全路径
+    //execlp(&#34;notepad&#34;,&#34;notepad&#34;,&#34;c:/a.txt&#34;,NULL);
+    //----------和exel一模一样 不从path中找 只有两个参数 第二个参数定义在一个数组中
+    char * args[]={&#34;notepad&#34;,&#34;c:/a.txt&#34;,NULL};
+    execv(&#34;C:\\Windows\\System32\\notepad&#34;,args);
+    printf(&#34;测试是否打印&#34;);
+ 
+}</code></pre></div>
+<p>》》进程IPC（进程通信）</p>
+<p>linux常用的进程间的通讯方式</p>
+<p>（1）、管道(pipe)：管道可用于具有亲缘关系的进程间的通信，是一种半双工的方式，数据只能单向流动，允许一个进程和另一个与它有共同祖先的进程之间进行通信。</p>
+<p>（2）、命名管道(named pipe)：命名管道克服了管道没有名字的限制，同时除了具有管道的功能外（也是半双工），它还允许无亲缘关系进程间的通信。命名管道在文件系统中有对应的文件名。命名管道通过命令mkfifo或系统调用mkfifo来创建。</p>
+<p>（3）、信号（signal）：信号是比较复杂的通信方式，用于通知接收进程有某种事件发生了，除了进程间通信外，进程还可以发送信号给进程本身；linux除了支持Unix早期信号语义函数sigal外，还支持语义符合Posix.1标准的信号函数sigaction（实际上，该函数是基于BSD的，BSD为了实现可靠信号机制，又能够统一对外接口，用sigaction函数重新实现了signal函数）。</p>
+<p>（4）、消息队列：消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺</p>
+<p>（5）、共享内存：使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。</p>
+<p>（6）、内存映射：内存映射允许任何多个进程间通信，每一个使用该机制的进程通过把一个共享的文件映射到自己的进程地址空间来实现它。</p>
+<p>（7）、信号量（semaphore）：主要作为进程间以及同一进程不同线程之间的同步手段。</p>
+<p>（8）、套接字（Socket）：更为一般的进程间通信机制，可用于不同机器之间的进程间通信。起初是由Unix系统的BSD分支开发出来的，但现在一般可以移植到其它类Unix系统上：Linux和System V的变种都支持套接字。</p>
+<p>代码写了前5个 </p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include  &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &#34;string.h&#34;
+#include &lt;sys/unistd.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;sys/fcntl.h&gt;
+ 
+#include &lt;sys/types.h&gt;
+#include &lt;sys/msg.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/shm.h&gt;
+#include &lt;sys/mman.h&gt;
+#define BSIZE 200
+#define FIFO &#34;c:/alink&#34;
+ 
+ 
+/**
+ * (1)无名管道
+ *  用于具有亲缘关系父子的进程间的通信，是一种半双工的方式，数据只能单向流动，允许一个进程和另一个与它有共同祖先的进程之间进行通信
+ *   pipe (int __fildes[2]); 产生管道 数组0读管道， 数组1表示写管道
+ *   这里模拟父进程给子进程写入一个hello my son
+ */
+void pipeTest(){
+ 
+    int __fildes[2];
+    pipe(__fildes);
+    pid_t  pid;
+    char buffer[BSIZE];
+    //父子进程都会有读写管道的拷贝
+    if((pid=fork())&gt;0){//父进程写 关闭读的管道
+        close(__fildes[0]);
+        memset(buffer,&#39;\0&#39;,BSIZE);
+        char* writeChar=&#34;hello my 儿子&#34;;
+        memcpy(buffer,writeChar, strlen(writeChar));
+        write(__fildes[1],buffer,BSIZE);
+        close(__fildes[1]);
+        wait(NULL);
+ 
+    }else{//子进程读 关闭写的管道
+        sleep(2);
+        close(__fildes[1]);
+        read(__fildes[0],buffer,BSIZE);
+        printf(&#34;子进程读取到数据:%s&#34;,buffer);
+        close(__fildes[0]);
+ 
+    }
+}
+/**
+ * （2）管道克服了管道没有名字的限制，同时除了具有管道的功能外（也是半双工），它还允许无亲缘关系进程间的通信。
+ * 命名管道在文件系统中有对应的文件名。命名管道通过命令mkfifo或系统调用mkfifo来创建。
+ * 这里模拟父进程给子进程写入一个hello my son
+ * @return
+ */
+void namePipeTest(){
+    //-------------unlink()会删除参数pathname指定的文件。如果该文件名为最后连接点，但有其他进程打开了此文件，则在所有关于此文件的文件描述词皆关闭后才会删除。如果参数pathname为一符号连接，则此连接会被删除。
+    //返回值 成功则返回0，失败返回-1，错误原因存于errno
+    unlink(FIFO);
+    if(errno==EROFS){
+        printf(&#34;文件存在于只读文件系统内&#34;);
+    }
+    //--------------mkfifo注意在 &lt;sys/stat.h&gt;头文件中
+    /*
+    kfifo()会依参数pathname建立特殊的FIFO文件，该文件必须不存在，而参数mode为该文件的权限（mode%~umask），因此umask值也会影响到FIFO文件的权限。Mkfifo()建立的FIFO文件其他进程都可以用读写一般文件的方式存取。当使用open()来打开FIFO文件时，O_NONBLOCK旗标会有影响
+    fifo类似于队列 阻塞队列 没有数据读 默认阻塞等到有数据写入 O_NONBLOCK表示不阻塞
+     1、当使用O_NONBLOCK 旗标时，打开FIFO 文件来读取的操作会立刻返回，但是若还没有其他进程打开FIFO 文件来读取，则写入的操作会返回ENXIO 错误代码。
+    2、没有使用O_NONBLOCK 旗标时，打开FIFO 来读取的操作会等到其他进程打开FIFO文件来写入才正常返回。同样地，打开FIFO文件来写入的操作会等到其他进程打开FIFO 文件来读取后才正常返回。
+ 
+     打开管道失败，一般要注意打开的方式，一般不能以读写方式打开，要么只读打开，要么只写打开
+      一定是有读的管道打开才能有写的管道
+ 
+     */
+    mkfifo(FIFO,0777);//其实就是一个文件而已 必须使用八进制的0777
+    pid_t  pid;
+    char buffer[BSIZE];
+    //模拟情景让父进程暂停1秒 子进程打开了读的管道（一定要先打开读管道否则无法操作） 接下来子进程休息2s 父进程开始写入数据 子进程等待完成后 读取管道数据
+    if((pid=fork())&gt;0) {//父进程写 关闭读的管道
+        sleep(1);
+        int fd=open(FIFO,O_WRONLY|O_NONBLOCK);
+        printf(&#34;文件描述符:%d\n&#34;,fd);
+        memset(buffer,&#39;\0&#39;,BSIZE);
+        char* writeChar=&#34;hello my 儿子&#34;;
+        memcpy(buffer,writeChar, strlen(writeChar));
+        write(fd,buffer,BSIZE);
+        close(fd);
+        wait(NULL);
+    }else{
+        int fd=open(FIFO,O_RDONLY|O_NONBLOCK);
+        sleep(2);
+        printf(&#34;文件描述符:%d\n&#34;,fd);
+        read(fd,buffer,BSIZE);
+        printf(&#34;子进程读取到数据:%s\n&#34;,buffer);
+        close(fd);
+    }
+}
+void handler(int sig){
+    if(sig==SIGINT){
+        printf(&#34;接受到中断指令&#34;);
+    }
+}
+/**
+ * （3）、信号（signal）：信号是比较复杂的通信方式，用于通知接收进程有某种事件发生了，除了进程间通信外，进程还可以发送信号给进程本身；
+ *   linux除了支持Unix早期信号语义函数sigal外，还支持语义符合Posix.1标准的信号函数sigaction（实际上，该函数是基于BSD的，BSD为了实现可靠信号机制，
+ *  又能够统一对外接口，用sigaction函数重新实现了signal函数）。
+ *  ctrl-c 是发送 SIGINT 信号，终止一个进程；进程无法再重续。
+    ctrl-z 是发送 SIGSTOP信号，挂起一个进程；进程从前台转入后台并暂停，可以用bg使其后台继续运行，fg使其转入前台运行。
+    ctrl-\ 发送 SIGQUIT 信号给前台进程组中的所有进程，终止前台进程并生成 core 文件。
+ 
+    SIGINT
+      程序终止(interrupt)信号, 在用户键入INTR字符(通常是Ctrl-C)时发出，用于通知前台进程组终止进程。
+    SIGQUIT
+    和SIGINT类似, 但由QUIT字符(通常是Ctrl-\)来控制. 进程在因收到SIGQUIT退出时会产生core文件, 在这个意义上类似于一个程序错误信号。
+  1 SIGTERM
+    程序结束(terminate)信号, 与SIGKILL不同的是该信号可以被阻塞和处理。通常用来要求程序自己正常退出，shell命令kill缺省产生这个信号。如果进程终止不了，我们才会尝试SIGKILL。
+   SIGSTOP
+    停止(stopped)进程的执行. 注意它和terminate以及interrupt的区别:该进程还未结束, 只是暂停执行. 本信号不能被阻塞, 处理或忽略.
+ 
+   模拟父线程等待信号 子线程发送一个信号 或者在linux使用 kill -s SIGINT 进程号 或者 ctrl+c中断
+ */
+void signTest(){
+    pid_t  pid;
+    char buffer[BSIZE];
+    if((pid=fork())&gt;0) {//父进程写 关闭读的管道
+        signal(SIGINT,handler);//SIGINT信号绑定到这个函数 自动回调
+        pause();//暂停等待信号
+    }else{
+        sleep(1);
+        kill(getppid(),SIGINT);
+    }
+ 
+}
+ 
+struct MsgS{
+    long mtype;
+    char data[100];
+};
+/**
+ * （4）、消息队列：消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加消息，
+ * 被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺
+ *
+ */
+void msgQueueTest(){
+    //char* path=&#34;/bkey&#34;
+    //creat(path,0777);
+    //key_t  k=ftok(path,2);//文件必须存在才能创建成功key
+    //printf(&#34;获取到的key:%d\n&#34;,k);
+    struct MsgS msg;
+    //这里重点注意 msgget  cygwin没有实现 返回 88的errorno 去linux下编译运行才能正常 否则qid一直是-1
+    int qid=msgget(IPC_PRIVATE,IPC_CREAT|0644);//msg.h头文件中定义  ftok产生一个或者使用IPC_PRIVATE
+    printf(&#34;错误number :%d\n&#34;,errno);
+    printf(&#34;消息队列编号:%d\n&#34;,qid);//必须是大于0的数字才是创建成功的
+    pid_t  pid;
+    char buffer[BSIZE];
+    if((pid=fork())&gt;0) {//父进程写
+        sleep(2);
+        //发送两个消息
+        msg.mtype=2;//注意这里定义类型为2
+        strcpy(msg.data,&#34;hello child&#34;);
+        int flag =msgsnd(qid,&amp;msg,sizeof(struct MsgS),0);
+        if ( flag &lt; 0 )
+        {
+            perror(&#34;send message error&#34;) ;
+            return  ;
+        }
+        struct MsgS msg1;
+        msg1.mtype=1;//这里类型是1
+        strcpy(msg1.data,&#34;hello child1&#34;);
+        msgsnd(qid,&amp;msg1,sizeof(struct MsgS),0);
+        if ( flag &lt; 0 )
+        {
+            perror(&#34;send message error&#34;) ;
+            return  ;
+        }
+    }else{
+        //指定接受类型为1的所以 输出hello child1
+        msgrcv(qid,&amp;msg,sizeof(struct MsgS),1,0);//看其他人写的减去类型long的长度 sizeof(struct MsgS) -sizeof(long) 不明白 减不减都ok
+        printf(&#34;接受到消息:%s\n&#34;,msg.data);
+ 
+    }
+}
+ 
+/**
+ * （5）、共享内存：使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。
+ * 往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。
+ */
+void testShareMemory(){
+    char path[200];
+#ifdef __linux
+    strcpy(path,&#34;/mykey&#34;);
+#endif
+#ifdef WINVER
+    strcpy(path,&#34;c:/mykey&#34;);
+#endif
+    printf(&#34;路径是:%s\n&#34;,path);
+    creat(path,0644);
+    key_t kt;
+    kt=ftok(path,2);
+    //创建一片共享内存 大小:100
+    int shmid=shmget(kt,100,IPC_CREAT|0644);//在头文件 sys/shm.h  cygwin未实现
+    printf(&#34;key是:%d，共享内存id:%d\n&#34;,kt,shmid);
+    printf(&#34;错误编号:%d\n&#34;,errno);
+    pid_t  pid;
+    char buffer[BSIZE];
+ 
+    if((pid=fork())&gt;0) {
+        //shmat函数的作用就是用来启动对该共享内存的访问，并把共享内存连接到当前进程的地址空间 返回共享内存的第一个位置的指针
+        void* addr=shmat(shmid,NULL,0);
+        strcpy((char*)addr,&#34;hello child&#34;);
+    }else{
+        sleep(2);
+        void* addr=shmat(shmid,NULL,0);
+        printf(&#34;共享数据：%s\n&#34;,(char*)addr);
+    }
+}</code></pre></div>
+<p>》》线程</p>
+<p>线程是可独立运行的单元 相对于进程来说 更加轻量级 优点如下：</p>
+<p>在开销方面：每个进程都有独立的代码和数据空间（程序上下文），程序之间的切换会有较大的开销；线程可以看做轻量级的进程，同一类线程共享代码和数据空间，每个线程都有自己独立的运行栈和程序计数器（PC），线程之间切换的开销小。</p>
+<p>内存分配方面：系统在运行的时候会为每个进程分配不同的内存空间；而对线程而言，除了CPU外，系统不会为线程分配内存（线程所使用的资源来自其所属进程的资源），线程组之间只能共享资源。</p>
+<p>包含关系：没有线程的进程可以看做是单线程的，如果一个进程内有多个线程，则执行过程不是一条线的，而是多条线（线程）共同完成的；线程是进程的一部分，所以线程也被称为轻权进程或者轻量级进程。
+ </p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include  &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &#34;string.h&#34;
+#include &lt;sys/unistd.h&gt;
+#include &lt;pthread.h&gt;
+ 
+#define BSIZE 200
+#define FIFO &#34;c:/alink&#34;
+ 
+void* myfun(void * a){
+    printf(&#34;线程被执行\n&#34;);
+}
+/**
+ * linux编译时 指定 pthread的静态库 gcc th.c -lpthread -o th
+ * clion中不需要链接静态库
+ * @param p
+ * @param arg
+ * @return
+ */
+ int main(int p,char* arg[]) {
+    pthread_t pt;
+    int err=pthread_create(&amp;pt,NULL,myfun,NULL);
+    printf(&#34;线程id:%d\n&#34;,pt);
+    if(err != 0){
+         printf(&#34;can&#39;t create thread: %s\n&#34;,strerror(err));
+         return 1;
+    }
+    //pthread_cancel(pt); 取消线程
+    //pthread_join(pt,NULL);等待线程执行完成后 在往后执行
+    sleep(2);
+ }</code></pre></div>
+<p>网络编程 </p>
+<p>定义一个socket服务 监听 8888端口使用tenlnet连接发送数据</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include  &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &#34;string.h&#34;
+#include &#34;errno.h&#34;
+#include &#34;errno.h&#34;
+#include &lt;sys/unistd.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &#34;arpa/inet.h&#34;;
+#define BSIZE 200
+#define FIFO &#34;c:/alink&#34;
+ 
+void* myfun(void * a){
+    printf(&#34;线程被执行\n&#34;);
+}
+/**
+ * linux编译时 指定 pthread的静态库 gcc th.c -lpthread -o th
+ * clion中不需要链接静态库
+ * @param p
+ * @param arg
+ * @return
+ */
+ int main(int p,char* arg[]) {
+ 
+     //系统申请socket 返回sockfd文件描述符
+     int sockfd=socket(AF_INET,SOCK_STREAM,0);//定义在#include &lt;sys/socket.h&gt;
+     struct sockaddr_in servaddr;//定义在&lt;netinet/in.h&gt;
+     servaddr.sin_addr.s_addr=htonl(INADDR_ANY);//绑定本机所有ip
+     servaddr.sin_port=htons(8888);//绑定端口
+     servaddr.sin_family=AF_INET;
+     //将端口绑定到sock
+     if(bind(sockfd,&amp;servaddr, sizeof(servaddr))&lt;0){
+         perror(strerror(errno));
+     }
+     //开始监听 第二个参数允许最大连接数
+     if(listen(sockfd,10)&lt;0){
+         perror(strerror(errno));
+     }
+    //接受请求
+    while(1){
+        struct sockaddr_in client;
+        socklen_t len=sizeof(client);
+        int connfd=accept(sockfd,( struct sockaddr_in* )&amp;client,(socklen_t*)&amp;len);//会阻塞 等待一个客户端连接
+        printf(&#34;%s\n&#34;,strerror(errno));
+        printf(&#34;接受到连接:%d 客户端的ip:%s&#34;,connfd,inet_ntoa(client.sin_addr));//inet_ntoa在 #include &#34;arpa/inet.h&#34;;
+        fflush(stdout);
+        char buffer[ 10 ];
+        ssize_t rsize=recv(connfd,buffer,9,0 );
+        printf(&#34;接受到消息:%s 接受到的长度是：%d&#34;,buffer,rsize);
+        fflush(stdout);
+        sleep(1);
+    }
+    close(sockfd);
+ 
+ }</code></pre></div>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/gcc/index.html"><a class="padding" href="/docs/programming/languages/gcc/index.html">c语言</a><ul id="R-subsections-e8c9b5cff4c7849bafc19d21e0433f7f" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_01/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01/index.html">linux下gcc编程01-gcc工具安装和使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_02/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_02/index.html">linux下gcc编程02-gdb调试工具使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_03/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_03/index.html">linux下gcc编程03-make工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_04/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_04/index.html">linux下gcc编程04-cmake工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_05/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_05/index.html">linux下gcc编程05-window下开发工具安装</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_06/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_06/index.html">linux下gcc编程06-c语言参考手册</a></li>
+            <li class="active " data-nav-id="/docs/programming/languages/gcc/linuxgcc_07-copy/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_07-copy/index.html">linux下gcc编程07-使用linux下c库函数</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_07/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_07/index.html">linux下gcc编程07-使用linux下c库函数</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/assembly/index.html"><a class="padding" href="/docs/programming/languages/assembly/index.html">汇编语言</a><ul id="R-subsections-664e07814ed6bbd77b351b341bff28e6" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758354478" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758354478" defer></script>
+    <script src="/docs/js/theme.js?1758354478" defer></script>
+  </body>
+</html>

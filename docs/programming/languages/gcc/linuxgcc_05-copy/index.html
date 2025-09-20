@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/docs/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=docs/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一。 window下开发环境安装
+Unix下编译通过的C代码,在win32下编译是不能通过的 ,当然Unix 和win32的API都是符合标准C,也就是说,大多数函数调用在unix和win32下是相同的.但是,unix有自己一些独特的API（如fork,spawn,signals,select,sockets等）,如果代码中使用了这些API,在win32下当然找不到对应的库. 但是,这些API的功能在win32中也能实现,也许你已经发现了一个能让window编译Unix风格代码的方法: 1.修改编译器,让window下的编译器把诸如fork的调用翻译成window等价的形式–这就是mingw的做法. 2.修改库,让window提供一个类似unix提供的库,他们对程序的接口如同unix一样,而这些库,当然是由win32的API实现的–这就是cygwin的做法.
+MinGW相比CygWin/gcc来讲，更加贴近win32。因为它几乎支持所有的Win32API。它所连接的程序，不需要任何第三方库即可运行。
+MinGW安装 mingw官网提供是 一个二进制文件 远程安装 mingw-get-setup.exe 官网太慢直接去sourceforage去down下来 https://sourceforge.net/projects/mingw-w64/ 直接地址
+接下来双击一路 等待下载完成 已经下载完成的离线包 500多MB 将bin目录设置到环境变量
+C:\MinGW\bin&gt;gcc --versiongcc (MinGW.org GCC-6.3.0-1) 6.3.0Copyright (C) 2016 Free Software Foundation, Inc.This is free software; see the source for copying conditions. There is NOwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 二。Clion开发工具
+使用记事本 或者vi在linux直接编写代码 个人感觉效率偏低 有时引入头文件还要去查api 如果有提示 大概方法也能 猜个90%左右 这里推荐jetbrains公司的clion 下载地址（30天的免费使用 ）： http://www.jetbrains.com/clion/
+下载完成后 一路到验证 阶段 点击激活码 （https://jetlicense.nss.im/ 这个网站上有 拷贝进去就可以激活一年试用期）">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="linux下gcc编程05-window下开发工具安装 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一。 window下开发环境安装
+Unix下编译通过的C代码,在win32下编译是不能通过的 ,当然Unix 和win32的API都是符合标准C,也就是说,大多数函数调用在unix和win32下是相同的.但是,unix有自己一些独特的API（如fork,spawn,signals,select,sockets等）,如果代码中使用了这些API,在win32下当然找不到对应的库. 但是,这些API的功能在win32中也能实现,也许你已经发现了一个能让window编译Unix风格代码的方法: 1.修改编译器,让window下的编译器把诸如fork的调用翻译成window等价的形式–这就是mingw的做法. 2.修改库,让window提供一个类似unix提供的库,他们对程序的接口如同unix一样,而这些库,当然是由win32的API实现的–这就是cygwin的做法.
+MinGW相比CygWin/gcc来讲，更加贴近win32。因为它几乎支持所有的Win32API。它所连接的程序，不需要任何第三方库即可运行。
+MinGW安装 mingw官网提供是 一个二进制文件 远程安装 mingw-get-setup.exe 官网太慢直接去sourceforage去down下来 https://sourceforge.net/projects/mingw-w64/ 直接地址
+接下来双击一路 等待下载完成 已经下载完成的离线包 500多MB 将bin目录设置到环境变量
+C:\MinGW\bin&gt;gcc --versiongcc (MinGW.org GCC-6.3.0-1) 6.3.0Copyright (C) 2016 Free Software Foundation, Inc.This is free software; see the source for copying conditions. There is NOwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 二。Clion开发工具
+使用记事本 或者vi在linux直接编写代码 个人感觉效率偏低 有时引入头文件还要去查api 如果有提示 大概方法也能 猜个90%左右 这里推荐jetbrains公司的clion 下载地址（30天的免费使用 ）： http://www.jetbrains.com/clion/
+下载完成后 一路到验证 阶段 点击激活码 （https://jetlicense.nss.im/ 这个网站上有 拷贝进去就可以激活一年试用期）">
+    <meta property="og:url" content="http://localhost:1313/docs/programming/languages/gcc/linuxgcc_05-copy/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="linux下gcc编程05-window下开发工具安装 :: liaomin416100569博客">
+    <meta property="og:description" content="一。 window下开发环境安装
+Unix下编译通过的C代码,在win32下编译是不能通过的 ,当然Unix 和win32的API都是符合标准C,也就是说,大多数函数调用在unix和win32下是相同的.但是,unix有自己一些独特的API（如fork,spawn,signals,select,sockets等）,如果代码中使用了这些API,在win32下当然找不到对应的库. 但是,这些API的功能在win32中也能实现,也许你已经发现了一个能让window编译Unix风格代码的方法: 1.修改编译器,让window下的编译器把诸如fork的调用翻译成window等价的形式–这就是mingw的做法. 2.修改库,让window提供一个类似unix提供的库,他们对程序的接口如同unix一样,而这些库,当然是由win32的API实现的–这就是cygwin的做法.
+MinGW相比CygWin/gcc来讲，更加贴近win32。因为它几乎支持所有的Win32API。它所连接的程序，不需要任何第三方库即可运行。
+MinGW安装 mingw官网提供是 一个二进制文件 远程安装 mingw-get-setup.exe 官网太慢直接去sourceforage去down下来 https://sourceforge.net/projects/mingw-w64/ 直接地址
+接下来双击一路 等待下载完成 已经下载完成的离线包 500多MB 将bin目录设置到环境变量
+C:\MinGW\bin&gt;gcc --versiongcc (MinGW.org GCC-6.3.0-1) 6.3.0Copyright (C) 2016 Free Software Foundation, Inc.This is free software; see the source for copying conditions. There is NOwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 二。Clion开发工具
+使用记事本 或者vi在linux直接编写代码 个人感觉效率偏低 有时引入头文件还要去查api 如果有提示 大概方法也能 猜个90%左右 这里推荐jetbrains公司的clion 下载地址（30天的免费使用 ）： http://www.jetbrains.com/clion/
+下载完成后 一路到验证 阶段 点击激活码 （https://jetlicense.nss.im/ 这个网站上有 拷贝进去就可以激活一年试用期）">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="linux下gcc编程05-window下开发工具安装 :: liaomin416100569博客">
+    <meta itemprop="description" content="一。 window下开发环境安装
+Unix下编译通过的C代码,在win32下编译是不能通过的 ,当然Unix 和win32的API都是符合标准C,也就是说,大多数函数调用在unix和win32下是相同的.但是,unix有自己一些独特的API（如fork,spawn,signals,select,sockets等）,如果代码中使用了这些API,在win32下当然找不到对应的库. 但是,这些API的功能在win32中也能实现,也许你已经发现了一个能让window编译Unix风格代码的方法: 1.修改编译器,让window下的编译器把诸如fork的调用翻译成window等价的形式–这就是mingw的做法. 2.修改库,让window提供一个类似unix提供的库,他们对程序的接口如同unix一样,而这些库,当然是由win32的API实现的–这就是cygwin的做法.
+MinGW相比CygWin/gcc来讲，更加贴近win32。因为它几乎支持所有的Win32API。它所连接的程序，不需要任何第三方库即可运行。
+MinGW安装 mingw官网提供是 一个二进制文件 远程安装 mingw-get-setup.exe 官网太慢直接去sourceforage去down下来 https://sourceforge.net/projects/mingw-w64/ 直接地址
+接下来双击一路 等待下载完成 已经下载完成的离线包 500多MB 将bin目录设置到环境变量
+C:\MinGW\bin&gt;gcc --versiongcc (MinGW.org GCC-6.3.0-1) 6.3.0Copyright (C) 2016 Free Software Foundation, Inc.This is free software; see the source for copying conditions. There is NOwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 二。Clion开发工具
+使用记事本 或者vi在linux直接编写代码 个人感觉效率偏低 有时引入头文件还要去查api 如果有提示 大概方法也能 猜个90%左右 这里推荐jetbrains公司的clion 下载地址（30天的免费使用 ）： http://www.jetbrains.com/clion/
+下载完成后 一路到验证 阶段 点击激活码 （https://jetlicense.nss.im/ 这个网站上有 拷贝进去就可以激活一年试用期）">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="165">
+    <title>linux下gcc编程05-window下开发工具安装 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758353861" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758353861" defer></script>
+    <script src="/docs/js/search-lunr.js?1758353861" defer></script>
+    <script src="/docs/js/search.js?1758353861" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758353861";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758353861" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758353861" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758353861" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758353861" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758353861" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758353861" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758353861" rel="stylesheet">
+    <link href="/docs/css/theme.css?1758353861" rel="stylesheet">
+    <link href="/docs/css/format-html.css?1758353861" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/programming\/languages\/gcc\/linuxgcc_05-copy\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758353861" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/languages/gcc/linuxgcc_05-copy/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/index.html"><span itemprop="name">编程语言</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/gcc/index.html"><span itemprop="name">c语言</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">linux下gcc编程05-window下开发工具安装</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_04/index.html" title="linux下gcc编程04-cmake工程管理 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_05/index.html" title="linux下gcc编程05-window下开发工具安装 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="linux下gcc编程05-window下开发工具安装">linux下gcc编程05-window下开发工具安装</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p><strong>一。 window下开发环境安装</strong></p>
+<p>  Unix下编译通过的C代码,在win32下编译是不能通过的 ,当然Unix 和win32的<a href="https://so.csdn.net/so/search?q=API&spm=1001.2101.3001.7020" rel="external" target="_blank">API</a>都是符合标准C,也就是说,大多数函数调用在unix和win32下是相同的.但是,unix有自己一些独特的API（如fork,spawn,signals,select,sockets等）,如果代码中使用了这些API,在win32下当然找不到对应的库.
+    但是,这些API的功能在win32中也能实现,也许你已经发现了一个能让window编译Unix风格代码的方法:
+    1.修改编译器,让window下的编译器把诸如fork的调用翻译成window等价的形式&ndash;这就是mingw的做法.
+    2.修改库,让window提供一个类似unix提供的库,他们对程序的接口如同unix一样,而这些库,当然是由win32的API实现的&ndash;这就是cygwin的做法.</p>
+<p>MinGW相比CygWin/<a href="https://so.csdn.net/so/search?q=gcc&spm=1001.2101.3001.7020" rel="external" target="_blank">gcc</a>来讲，更加贴近win32。因为它几乎支持所有的Win32API。它所连接的程序，不需要任何第三方库即可运行。</p>
+<p>MinGW安装 </p>
+<p>   mingw官网提供是 一个二进制文件 远程安装 mingw-get-setup.exe  官网太慢直接去sourceforage去down下来
+   <a href="https://sourceforge.net/projects/mingw-w64/" rel="external" target="_blank">https://sourceforge.net/projects/mingw-w64/  </a>
+   直接<a href="https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe" rel="external" target="_blank">地址</a></p>
+<p>   接下来双击一路 等待下载完成 已经下载完成的离线包 500多MB
+   将bin目录设置到环境变量</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>C:\MinGW\bin&gt;gcc --version
+gcc (MinGW.org GCC-6.3.0-1) 6.3.0
+Copyright (C) 2016 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</code></pre></div>
+<p> </p>
+<p><strong>二。Clion开发工具</strong></p>
+<p> 使用记事本 或者vi在linux直接编写代码 个人感觉效率偏低 有时引入头文件还要去查api 如果有提示 大概方法也能
+猜个90%左右  这里推荐jetbrains公司的clion
+ 下载地址（30天的免费使用 ）：
+ <a href="http://www.jetbrains.com/clion/" rel="external" target="_blank">http://www.jetbrains.com/clion/</a></p>
+<p> 下载完成后  一路到验证 阶段 点击激活码 （<a href="https://jetlicense.nss.im/" rel="external" target="_blank">https://jetlicense.nss.im/</a> 这个网站上有 拷贝进去就可以激活一年试用期）</p>
+<p>配置MinGW</p>
+<p> 打开clion 新建一个项目 选择 c可执行文件
+<a href="#R-image-749042bf7e4da9bae24dc0a92ce6f92a" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/62920234aef8a06e595c3aac2d6fedd6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-749042bf7e4da9bae24dc0a92ce6f92a"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/62920234aef8a06e595c3aac2d6fedd6.png"></a></p>
+<p>如果安装了mingw clion自动搜索并且配置 （点击菜单 File  Setting选择）
+<a href="#R-image-b8f7670abd4aa582d4aeb2ae9bf14539" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/4f8e399f8ff6a9be2a2d515a8ed2042d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b8f7670abd4aa582d4aeb2ae9bf14539"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/4f8e399f8ff6a9be2a2d515a8ed2042d.png"></a>
+但是 我的控制台报错 </p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>For MinGW make to work correctly sh.exe must NOT be in your path</code></pre></div>
+<p>说找了一个sh.exe  我之前装过openssh（C:\Program Files\OpenSSH\bin;） 立马从环境变量中剔除 点击控制台刷新按钮发现正常 后 就可以点击菜单栏的Run - Run 项目名称 或者 shift+f10  正常输出helloworld 为啥会输出了打开目录结构
+<a href="#R-image-3ca208b74a0c1e5683b0c12130394c7b" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/f798a858e3c7a4bfd14f5bf3b37651c9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3ca208b74a0c1e5683b0c12130394c7b"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/f798a858e3c7a4bfd14f5bf3b37651c9.png"></a></p>
+<p>CmakeLists.txt明显是cmake clion继承了cmake verygood 里面的代码自己打开看看吧
+main.c 就是一个普通的main方法了
+clion带给我们的除了编译运行（gcc make） 调试（gdb）方便 同时代码提示也是牛b的一点
+现在享受在window上开发linux程序吧  </p>
+<p>mingw很多关于linux内部的一些功能无法使用 比如fork等 cygwin支持 </p>
+<p>配置Cygwin</p>
+<p>cygwin也是离线安装 下载一个壳程序  <a href="https://cygwin.com/install.html" rel="external" target="_blank">https://cygwin.com/install.html</a>
+64位下载地址：<a href="https://cygwin.com/setup-x86_64.exe" rel="external" target="_blank">https://cygwin.com/setup-x86_64.exe</a></p>
+<p>下载后 打开开始安装 cygwin（一路默认 安装目录是 C:\cygwin64） 到达</p>
+<p> choose A download Site页面
+<a href="#R-image-37a47ecc90ac4369751fa547dd05ed4e" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/f9a8a9739f0165e81c3c3ee7d7af61c4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-37a47ecc90ac4369751fa547dd05ed4e"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/f9a8a9739f0165e81c3c3ee7d7af61c4.png"></a></p>
+<p>一路到达 Select Package页面 view上点击类别
+<a href="#R-image-e77587a7c6f36dd39b95af269c53dd3a" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/da3d8093c7a112561e9605ce345a643f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e77587a7c6f36dd39b95af269c53dd3a"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/da3d8093c7a112561e9605ce345a643f.png"></a></p>
+<p>Search中搜索gcc 将所有包选中安装</p>
+<p>               搜索gdb 将所有包选中安装</p>
+<p>               搜索make 将所有包选中安装</p>
+<p>clion中 同 mingw配置就可以使用拉  安装的目录结构</p>
+<p><a href="#R-image-d85e05c3776ada150c09cadbfab79333" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/033445fa2aa48ffe5ae23cf0efedf239.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d85e05c3776ada150c09cadbfab79333"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_05.md.images/033445fa2aa48ffe5ae23cf0efedf239.png"></a></p>
+<p>由于cygwin实现了linux的基本所有的头文件的功能window库 所以在window编写的程序 linux直接编译运行
+而且linux的api在window都可以直接使用  接下里我所有的代码都是基于cygwin在window下使用clion编写</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/gcc/index.html"><a class="padding" href="/docs/programming/languages/gcc/index.html">c语言</a><ul id="R-subsections-e8c9b5cff4c7849bafc19d21e0433f7f" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_01/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01/index.html">linux下gcc编程01-gcc工具安装和使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_02/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_02/index.html">linux下gcc编程02-gdb调试工具使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_03/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_03/index.html">linux下gcc编程03-make工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_04/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_04/index.html">linux下gcc编程04-cmake工程管理</a></li>
+            <li class="active " data-nav-id="/docs/programming/languages/gcc/linuxgcc_05-copy/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_05-copy/index.html">linux下gcc编程05-window下开发工具安装</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_05/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_05/index.html">linux下gcc编程05-window下开发工具安装</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/assembly/index.html"><a class="padding" href="/docs/programming/languages/assembly/index.html">汇编语言</a><ul id="R-subsections-664e07814ed6bbd77b351b341bff28e6" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758353861" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758353861" defer></script>
+    <script src="/docs/js/theme.js?1758353861" defer></script>
+  </body>
+</html>

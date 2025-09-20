@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="CustomResourceDefinition简介： 在 Kubernetes 中一切都可视为资源，Kubernetes 1.7 之后增加了对 CRD 自定义资源二次开发能力来扩展 Kubernetes API，通过 CRD 我们可以向 Kubernetes API 中增加新资源类型，而不需要修改 Kubernetes 源码来创建自定义的 API server，该功能大大提高了 Kubernetes 的扩展能力。 当你创建一个新的CustomResourceDefinition (CRD)时，Kubernetes API服务器将为你指定的每个版本创建一个新的RESTful资源路径，我们可以根据该api路径来创建一些我们自己定义的类型资源。CRD可以是命名空间的，也可以是集群范围的，由CRD的作用域(scpoe)字段中所指定的，与现有的内置对象一样，删除名称空间将删除该名称空间中的所有自定义对象。customresourcedefinition本身没有名称空间，所有名称空间都可以使用。
+创建crd定义 Kuberneters 官方文档 中文版本 通过crd资源创建自定义资源，即自定义一个Restful API：
+apiVersion: apiextensions.k8s.io/v1 kind: CustomResourceDefinition metadata: # 名称必须与下面的spec字段匹配，格式为: &lt;plural&gt;.&lt;group&gt; name: crontabs.stable.example.com spec: # 用于REST API的组名称: /apis/&lt;group&gt;/&lt;version&gt; group: stable.example.com # 此CustomResourceDefinition支持的版本列表 versions: - name: v1 # 每个版本都可以通过服务标志启用/禁用。 served: true # 必须将一个且只有一个版本标记为存储版本。 storage: true #使用v3定义创建容器的属性 cronSpec和image是字符串类型replicas是int型 schema: openAPIV3Schema: type: object properties: spec: type: object properties: cronSpec: type: string description: &#34;定时任务触发时间&#34; image: type: string description: &#34;镜像&#34; replicas: type: integer description: &#34;副本数&#34; # 指定crd资源作用范围在命名空间或集群 scope: Namespaced names: # URL中使用的复数名称: /apis/&lt;group&gt;/&lt;version&gt;/&lt;plural&gt; plural: crontabs # 在CLI(shell界面输入的参数)上用作别名并用于显示的单数名称 singular: crontab # kind字段使用驼峰命名规则. 资源清单使用如此 kind: CronTab # 短名称允许短字符串匹配CLI上的资源，意识就是能通过kubectl 在查看资源的时候使用该资源的简名称来获取。 shortNames: - ct 注意：这是只是一个资源定义，类似于java中class的定义，new class是创建的对象。 在k8s中 pod，service都是已经预先定义的资源，通过kubectl create|run创建的是实例，定义只有一个，实例可以有多个。">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="K8S二次开发03-CRD资源详解 :: liaomin416100569博客">
+    <meta name="twitter:description" content="CustomResourceDefinition简介： 在 Kubernetes 中一切都可视为资源，Kubernetes 1.7 之后增加了对 CRD 自定义资源二次开发能力来扩展 Kubernetes API，通过 CRD 我们可以向 Kubernetes API 中增加新资源类型，而不需要修改 Kubernetes 源码来创建自定义的 API server，该功能大大提高了 Kubernetes 的扩展能力。 当你创建一个新的CustomResourceDefinition (CRD)时，Kubernetes API服务器将为你指定的每个版本创建一个新的RESTful资源路径，我们可以根据该api路径来创建一些我们自己定义的类型资源。CRD可以是命名空间的，也可以是集群范围的，由CRD的作用域(scpoe)字段中所指定的，与现有的内置对象一样，删除名称空间将删除该名称空间中的所有自定义对象。customresourcedefinition本身没有名称空间，所有名称空间都可以使用。
+创建crd定义 Kuberneters 官方文档 中文版本 通过crd资源创建自定义资源，即自定义一个Restful API：
+apiVersion: apiextensions.k8s.io/v1 kind: CustomResourceDefinition metadata: # 名称必须与下面的spec字段匹配，格式为: &lt;plural&gt;.&lt;group&gt; name: crontabs.stable.example.com spec: # 用于REST API的组名称: /apis/&lt;group&gt;/&lt;version&gt; group: stable.example.com # 此CustomResourceDefinition支持的版本列表 versions: - name: v1 # 每个版本都可以通过服务标志启用/禁用。 served: true # 必须将一个且只有一个版本标记为存储版本。 storage: true #使用v3定义创建容器的属性 cronSpec和image是字符串类型replicas是int型 schema: openAPIV3Schema: type: object properties: spec: type: object properties: cronSpec: type: string description: &#34;定时任务触发时间&#34; image: type: string description: &#34;镜像&#34; replicas: type: integer description: &#34;副本数&#34; # 指定crd资源作用范围在命名空间或集群 scope: Namespaced names: # URL中使用的复数名称: /apis/&lt;group&gt;/&lt;version&gt;/&lt;plural&gt; plural: crontabs # 在CLI(shell界面输入的参数)上用作别名并用于显示的单数名称 singular: crontab # kind字段使用驼峰命名规则. 资源清单使用如此 kind: CronTab # 短名称允许短字符串匹配CLI上的资源，意识就是能通过kubectl 在查看资源的时候使用该资源的简名称来获取。 shortNames: - ct 注意：这是只是一个资源定义，类似于java中class的定义，new class是创建的对象。 在k8s中 pod，service都是已经预先定义的资源，通过kubectl create|run创建的是实例，定义只有一个，实例可以有多个。">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/devops/kubernetes/k8s_dev_03/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="K8S二次开发03-CRD资源详解 :: liaomin416100569博客">
+    <meta property="og:description" content="CustomResourceDefinition简介： 在 Kubernetes 中一切都可视为资源，Kubernetes 1.7 之后增加了对 CRD 自定义资源二次开发能力来扩展 Kubernetes API，通过 CRD 我们可以向 Kubernetes API 中增加新资源类型，而不需要修改 Kubernetes 源码来创建自定义的 API server，该功能大大提高了 Kubernetes 的扩展能力。 当你创建一个新的CustomResourceDefinition (CRD)时，Kubernetes API服务器将为你指定的每个版本创建一个新的RESTful资源路径，我们可以根据该api路径来创建一些我们自己定义的类型资源。CRD可以是命名空间的，也可以是集群范围的，由CRD的作用域(scpoe)字段中所指定的，与现有的内置对象一样，删除名称空间将删除该名称空间中的所有自定义对象。customresourcedefinition本身没有名称空间，所有名称空间都可以使用。
+创建crd定义 Kuberneters 官方文档 中文版本 通过crd资源创建自定义资源，即自定义一个Restful API：
+apiVersion: apiextensions.k8s.io/v1 kind: CustomResourceDefinition metadata: # 名称必须与下面的spec字段匹配，格式为: &lt;plural&gt;.&lt;group&gt; name: crontabs.stable.example.com spec: # 用于REST API的组名称: /apis/&lt;group&gt;/&lt;version&gt; group: stable.example.com # 此CustomResourceDefinition支持的版本列表 versions: - name: v1 # 每个版本都可以通过服务标志启用/禁用。 served: true # 必须将一个且只有一个版本标记为存储版本。 storage: true #使用v3定义创建容器的属性 cronSpec和image是字符串类型replicas是int型 schema: openAPIV3Schema: type: object properties: spec: type: object properties: cronSpec: type: string description: &#34;定时任务触发时间&#34; image: type: string description: &#34;镜像&#34; replicas: type: integer description: &#34;副本数&#34; # 指定crd资源作用范围在命名空间或集群 scope: Namespaced names: # URL中使用的复数名称: /apis/&lt;group&gt;/&lt;version&gt;/&lt;plural&gt; plural: crontabs # 在CLI(shell界面输入的参数)上用作别名并用于显示的单数名称 singular: crontab # kind字段使用驼峰命名规则. 资源清单使用如此 kind: CronTab # 短名称允许短字符串匹配CLI上的资源，意识就是能通过kubectl 在查看资源的时候使用该资源的简名称来获取。 shortNames: - ct 注意：这是只是一个资源定义，类似于java中class的定义，new class是创建的对象。 在k8s中 pod，service都是已经预先定义的资源，通过kubectl create|run创建的是实例，定义只有一个，实例可以有多个。">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="运维一体化">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="K8S二次开发03-CRD资源详解 :: liaomin416100569博客">
+    <meta itemprop="description" content="CustomResourceDefinition简介： 在 Kubernetes 中一切都可视为资源，Kubernetes 1.7 之后增加了对 CRD 自定义资源二次开发能力来扩展 Kubernetes API，通过 CRD 我们可以向 Kubernetes API 中增加新资源类型，而不需要修改 Kubernetes 源码来创建自定义的 API server，该功能大大提高了 Kubernetes 的扩展能力。 当你创建一个新的CustomResourceDefinition (CRD)时，Kubernetes API服务器将为你指定的每个版本创建一个新的RESTful资源路径，我们可以根据该api路径来创建一些我们自己定义的类型资源。CRD可以是命名空间的，也可以是集群范围的，由CRD的作用域(scpoe)字段中所指定的，与现有的内置对象一样，删除名称空间将删除该名称空间中的所有自定义对象。customresourcedefinition本身没有名称空间，所有名称空间都可以使用。
+创建crd定义 Kuberneters 官方文档 中文版本 通过crd资源创建自定义资源，即自定义一个Restful API：
+apiVersion: apiextensions.k8s.io/v1 kind: CustomResourceDefinition metadata: # 名称必须与下面的spec字段匹配，格式为: &lt;plural&gt;.&lt;group&gt; name: crontabs.stable.example.com spec: # 用于REST API的组名称: /apis/&lt;group&gt;/&lt;version&gt; group: stable.example.com # 此CustomResourceDefinition支持的版本列表 versions: - name: v1 # 每个版本都可以通过服务标志启用/禁用。 served: true # 必须将一个且只有一个版本标记为存储版本。 storage: true #使用v3定义创建容器的属性 cronSpec和image是字符串类型replicas是int型 schema: openAPIV3Schema: type: object properties: spec: type: object properties: cronSpec: type: string description: &#34;定时任务触发时间&#34; image: type: string description: &#34;镜像&#34; replicas: type: integer description: &#34;副本数&#34; # 指定crd资源作用范围在命名空间或集群 scope: Namespaced names: # URL中使用的复数名称: /apis/&lt;group&gt;/&lt;version&gt;/&lt;plural&gt; plural: crontabs # 在CLI(shell界面输入的参数)上用作别名并用于显示的单数名称 singular: crontab # kind字段使用驼峰命名规则. 资源清单使用如此 kind: CronTab # 短名称允许短字符串匹配CLI上的资源，意识就是能通过kubectl 在查看资源的时候使用该资源的简名称来获取。 shortNames: - ct 注意：这是只是一个资源定义，类似于java中class的定义，new class是创建的对象。 在k8s中 pod，service都是已经预先定义的资源，通过kubectl create|run创建的是实例，定义只有一个，实例可以有多个。">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="842">
+    <title>K8S二次开发03-CRD资源详解 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/devops\/kubernetes\/k8s_dev_03\/index.html';
+      window.relearn.relBasePath='..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/devops/kubernetes/k8s_dev_03/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#customresourcedefinition简介">CustomResourceDefinition简介：</a>
+      <ul>
+        <li><a href="#创建crd定义">创建crd定义</a></li>
+        <li><a href="#创建crd实例">创建crd实例</a></li>
+        <li><a href="#添加额外的打印列">添加额外的打印列</a></li>
+        <li><a href="#自定义资源验证">自定义资源验证</a></li>
+        <li><a href="#添加状态和伸缩配置">添加状态和伸缩配置</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/index.html"><span itemprop="name">运维一体化</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/kubernetes/index.html"><span itemprop="name">kubernetes</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">K8S二次开发03-CRD资源详解</span><meta itemprop="position" content="4"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/kubernetes/k8s_dev_02/index.html" title="K8S二次开发02-kubeadm安装k8s集群 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/kubernetes/k8s_dev_04/index.html" title="K8S二次开发04-自定义operator（operator-sdk调试） (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable devops" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="k8s二次开发03-crd资源详解">K8S二次开发03-CRD资源详解</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1 id="customresourcedefinition简介">CustomResourceDefinition简介：</h1>
+<p>在 Kubernetes 中一切都可视为资源，Kubernetes 1.7 之后增加了对 CRD 自定义资源二次开发能力来扩展 Kubernetes API，通过 CRD 我们可以向 Kubernetes API 中增加新资源类型，而不需要修改 Kubernetes 源码来创建自定义的 API server，该功能大大提高了 Kubernetes 的扩展能力。
+当你创建一个新的CustomResourceDefinition (CRD)时，Kubernetes API服务器将为你指定的每个版本创建一个新的RESTful资源路径，我们可以根据该api路径来创建一些我们自己定义的类型资源。CRD可以是命名空间的，也可以是集群范围的，由CRD的作用域(scpoe)字段中所指定的，与现有的内置对象一样，删除名称空间将删除该名称空间中的所有自定义对象。customresourcedefinition本身没有名称空间，所有名称空间都可以使用。</p>
+<h2 id="创建crd定义">创建crd定义</h2>
+<p><a href="https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/" rel="external" target="_blank">Kuberneters 官方文档</a>  <a href="https://kubernetes.io/zh/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/" rel="external" target="_blank">中文版本</a>
+通过crd资源创建自定义资源，即自定义一个Restful API：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: apiextensions.k8s.io<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>kind: CustomResourceDefinition
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 名称必须与下面的spec字段匹配，格式为: &lt;plural&gt;.&lt;group&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  name: crontabs.stable.example.com
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 用于REST API的组名称: /apis/&lt;group&gt;/&lt;version&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  group: stable.example.com
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 此CustomResourceDefinition支持的版本列表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  versions:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> name: v1
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 每个版本都可以通过服务标志启用/禁用。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      served: true
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 必须将一个且只有一个版本标记为存储版本。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      storage: true
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#使用v3定义创建容器的属性 cronSpec和image是字符串类型replicas是int型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      schema:
+</span></span><span style="display:flex;"><span>        openAPIV3Schema:
+</span></span><span style="display:flex;"><span>          type: object
+</span></span><span style="display:flex;"><span>          properties:
+</span></span><span style="display:flex;"><span>            spec:
+</span></span><span style="display:flex;"><span>              type: object
+</span></span><span style="display:flex;"><span>              properties:
+</span></span><span style="display:flex;"><span>                cronSpec:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;定时任务触发时间&#34;</span>
+</span></span><span style="display:flex;"><span>                image:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;镜像&#34;</span>
+</span></span><span style="display:flex;"><span>                replicas:
+</span></span><span style="display:flex;"><span>                  type: integer
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;副本数&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 指定crd资源作用范围在命名空间或集群
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  scope: Namespaced
+</span></span><span style="display:flex;"><span>  names:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># URL中使用的复数名称: /apis/&lt;group&gt;/&lt;version&gt;/&lt;plural&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    plural: crontabs
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 在CLI(shell界面输入的参数)上用作别名并用于显示的单数名称
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    singular: crontab
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># kind字段使用驼峰命名规则. 资源清单使用如此
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    kind: CronTab
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 短名称允许短字符串匹配CLI上的资源，意识就是能通过kubectl 在查看资源的时候使用该资源的简名称来获取。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    shortNames:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> ct</span></span></code></pre></div>
+<blockquote>
+<p>注意：这是只是一个资源定义，类似于java中class的定义，new class是创建的对象。
+在k8s中 pod，service都是已经预先定义的资源，通过kubectl create|run创建的是实例，定义只有一个，实例可以有多个。</p></blockquote>
+<p>具体的详细语法可以使用kube explain查看</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>kubectl explain crd <span style="color:#f92672">--</span>recursive</span></span></code></pre></div>
+<p>在k8s中创建资源类型</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl apply <span style="color:#f92672">-</span>f crd.yaml 
+</span></span><span style="display:flex;"><span>customresourcedefinition.apiextensions.k8s.io<span style="color:#f92672">/</span>crontabs.stable.example.com created
+</span></span><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl get crd
+</span></span><span style="display:flex;"><span>NAME                                                  CREATED AT
+</span></span><span style="display:flex;"><span>bgpconfigurations.crd.projectcalico.org               <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>bgppeers.crd.projectcalico.org                        <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>blockaffinities.crd.projectcalico.org                 <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>caliconodestatuses.crd.projectcalico.org              <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>clusterinformations.crd.projectcalico.org             <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>crontabs.stable.example.com                           <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">17</span>T02:<span style="color:#ae81ff">41</span><span style="color:#f92672">:</span><span style="color:#ae81ff">58</span>Z
+</span></span><span style="display:flex;"><span>felixconfigurations.crd.projectcalico.org             <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>globalnetworkpolicies.crd.projectcalico.org           <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>globalnetworksets.crd.projectcalico.org               <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>hostendpoints.crd.projectcalico.org                   <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>ipamblocks.crd.projectcalico.org                      <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>ipamconfigs.crd.projectcalico.org                     <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>ipamhandles.crd.projectcalico.org                     <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>ippools.crd.projectcalico.org                         <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>ipreservations.crd.projectcalico.org                  <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>kubecontrollersconfigurations.crd.projectcalico.org   <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>networkpolicies.crd.projectcalico.org                 <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z
+</span></span><span style="display:flex;"><span>networksets.crd.projectcalico.org                     <span style="color:#ae81ff">2022</span><span style="color:#f92672">-</span><span style="color:#ae81ff">02</span><span style="color:#f92672">-</span><span style="color:#ae81ff">14</span>T09:<span style="color:#ae81ff">06</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>Z</span></span></code></pre></div>
+<p>会自动创建一个新的带有名称空间的RESTful API端点:
+/apis/stable.example.com/v1/namespaces/*/crontabs/&hellip;然后我们可以使用该url来创建和管理自定义对象资源。
+查看api版本</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl api<span style="color:#f92672">-</span>versions <span style="color:#f92672">|</span> grep stable.example.com
+</span></span><span style="display:flex;"><span>stable.example.com<span style="color:#f92672">/</span>v1</span></span></code></pre></div>
+<p>查看api资源</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl api<span style="color:#f92672">-</span>resources <span style="color:#f92672">|</span> grep <span style="color:#f92672">-</span>E example
+</span></span><span style="display:flex;"><span>NAME                              SHORTNAMES   APIVERSION                             NAMESPACED   KIND
+</span></span><span style="display:flex;"><span>crontabs                          ct           stable.example.com<span style="color:#f92672">/</span>v1                  true         CronTab</span></span></code></pre></div>
+<p>查看整个api的yaml定义</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl explain ct <span style="color:#f92672">--</span>recursive    
+</span></span><span style="display:flex;"><span>KIND:     CronTab
+</span></span><span style="display:flex;"><span>VERSION:  stable.example.com<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIPTION:
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">&lt;</span>empty<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FIELDS:
+</span></span><span style="display:flex;"><span>   apiVersion   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   kind <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   metadata     <span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      annotations       <span style="color:#f92672">&lt;</span>map[string]string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      clusterName       <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      creationTimestamp <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      deletionGracePeriodSeconds        <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      deletionTimestamp <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      finalizers        <span style="color:#f92672">&lt;</span>[]string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      generateName      <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      generation        <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      labels    <span style="color:#f92672">&lt;</span>map[string]string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      managedFields     <span style="color:#f92672">&lt;</span>[]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         apiVersion     <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         fieldsType     <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         fieldsV1       <span style="color:#f92672">&lt;</span>map[string]<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         manager        <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         operation      <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         subresource    <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         time   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      name      <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">namespace</span> <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      ownerReferences   <span style="color:#f92672">&lt;</span>[]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         apiVersion     <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         blockOwnerDeletion     <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         controller     <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         kind   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         name   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>         uid    <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      resourceVersion   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      selfLink  <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      uid       <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   spec <span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      cronSpec  <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      image     <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      replicas  <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span></span></span></code></pre></div>
+<p>查看某个字段的定义</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl explain ct.spec.replicas
+</span></span><span style="display:flex;"><span>KIND:     CronTab
+</span></span><span style="display:flex;"><span>VERSION:  stable.example.com<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FIELD:    replicas <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIPTION:
+</span></span><span style="display:flex;"><span>     <span style="color:#960050;background-color:#1e0010">副本数</span></span></span></code></pre></div>
+<h2 id="创建crd实例">创建crd实例</h2>
+<p>创建一个crontab的实例</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: <span style="color:#e6db74">&#34;stable.example.com/v1&#34;</span>
+</span></span><span style="display:flex;"><span>kind: CronTab
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  cronSpec: <span style="color:#e6db74">&#34;* * * * */5&#34;</span>
+</span></span><span style="display:flex;"><span>  image: my<span style="color:#f92672">-</span>awesome<span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>image
+</span></span><span style="display:flex;"><span>  replicas: <span style="color:#ae81ff">2</span></span></span></code></pre></div>
+<p>创建完成后查看该实例，因为是一个自定义资源，没有任何的逻辑。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>crontab.stable.example.com<span style="color:#f92672">/</span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object created
+</span></span><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl get ct
+</span></span><span style="display:flex;"><span>NAME                 AGE
+</span></span><span style="display:flex;"><span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object   <span style="color:#ae81ff">50</span>s
+</span></span><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl get ct
+</span></span><span style="display:flex;"><span>NAME                 AGE
+</span></span><span style="display:flex;"><span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object   <span style="color:#ae81ff">64</span>s
+</span></span><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl get ct <span style="color:#f92672">-</span>o wide
+</span></span><span style="display:flex;"><span>NAME                 AGE
+</span></span><span style="display:flex;"><span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object   <span style="color:#ae81ff">85</span>s</span></span></code></pre></div>
+<h2 id="添加额外的打印列">添加额外的打印列</h2>
+<p>从Kubernetes 1.11开始，kubectl使用服务器端打印。服务器决定由kubectl get命令显示哪些列即在我们获取一个内置资源的时候会显示出一些列表信息(比如：kubectl get nodes)。这里我们可以使用CustomResourceDefinition自定义这些列，当我们在查看自定义资源信息的时候显示出我们需要的列表信息。通过在crd文件中添加“additionalPrinterColumns:”字段，在该字段下声明需要打印列的的信息。
+spec.versions新增</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 用于REST API的组名称: /apis/&lt;group&gt;/&lt;version&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  group: stable.example.com
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 此CustomResourceDefinition支持的版本列表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  versions:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> name: v1
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 每个版本都可以通过服务标志启用/禁用。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      served: true
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 必须将一个且只有一个版本标记为存储版本。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      storage: true
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#使用v3定义创建容器的属性 cronSpec和image是字符串类型replicas是int型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      schema:
+</span></span><span style="display:flex;"><span>        openAPIV3Schema:
+</span></span><span style="display:flex;"><span>          type: object
+</span></span><span style="display:flex;"><span>          properties:
+</span></span><span style="display:flex;"><span>            spec:
+</span></span><span style="display:flex;"><span>              type: object
+</span></span><span style="display:flex;"><span>              properties:
+</span></span><span style="display:flex;"><span>                cronSpec:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;定时任务触发时间&#34;</span>
+</span></span><span style="display:flex;"><span>                image:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;镜像&#34;</span>
+</span></span><span style="display:flex;"><span>                replicas:
+</span></span><span style="display:flex;"><span>                  type: integer
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;副本数&#34;</span>
+</span></span><span style="display:flex;"><span>      additionalPrinterColumns:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> name: cronSpec
+</span></span><span style="display:flex;"><span>          type: string
+</span></span><span style="display:flex;"><span>          description: <span style="color:#960050;background-color:#1e0010">定时任务触发时间</span>
+</span></span><span style="display:flex;"><span>          jsonPath: .spec.cronSpec
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> name: replicas
+</span></span><span style="display:flex;"><span>          type: integer
+</span></span><span style="display:flex;"><span>          description: <span style="color:#960050;background-color:#1e0010">副本数</span>
+</span></span><span style="display:flex;"><span>          jsonPath: .spec.replicas
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> name: <span style="color:#66d9ef">namespace</span>
+</span></span><span style="display:flex;"><span>          type: string
+</span></span><span style="display:flex;"><span>          description: <span style="color:#960050;background-color:#1e0010">命名空间</span>
+</span></span><span style="display:flex;"><span>          jsonPath: .metadata.<span style="color:#66d9ef">namespace</span></span></span></code></pre></div>
+<p>kubectl apply后查看该定义实例</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl get ct
+</span></span><span style="display:flex;"><span>NAME                 CRONSPEC      REPLICAS   NAMESPACE
+</span></span><span style="display:flex;"><span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object   <span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#960050;background-color:#1e0010">*/</span><span style="color:#ae81ff">5</span>   <span style="color:#ae81ff">2</span>          <span style="color:#66d9ef">default</span></span></span></code></pre></div>
+<p>也可以通过获取实际对象yaml指定jsonPath</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl get ct <span style="color:#f92672">-</span>o yaml
+</span></span><span style="display:flex;"><span>apiVersion: v1
+</span></span><span style="display:flex;"><span>items:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> apiVersion: stable.example.com<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>  kind: CronTab
+</span></span><span style="display:flex;"><span>  metadata:
+</span></span><span style="display:flex;"><span>    annotations:
+</span></span><span style="display:flex;"><span>      kubectl.kubernetes.io<span style="color:#f92672">/</span>last<span style="color:#f92672">-</span>applied<span style="color:#f92672">-</span>configuration: <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>        {<span style="color:#e6db74">&#34;apiVersion&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;stable.example.com/v1&#34;</span>,<span style="color:#e6db74">&#34;kind&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;CronTab&#34;</span>,<span style="color:#e6db74">&#34;metadata&#34;</span><span style="color:#f92672">:</span>{<span style="color:#e6db74">&#34;annotations&#34;</span><span style="color:#f92672">:</span>{},<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;my-new-cron-object&#34;</span>,<span style="color:#e6db74">&#34;namespace&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;default&#34;</span>},<span style="color:#e6db74">&#34;spec&#34;</span><span style="color:#f92672">:</span>{<span style="color:#e6db74">&#34;cronSpec&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;* * * * */5&#34;</span>,<span style="color:#e6db74">&#34;image&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;my-awesome-cron-image&#34;</span>,<span style="color:#e6db74">&#34;replicas&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>}}
+</span></span><span style="display:flex;"><span>    creationTimestamp: <span style="color:#e6db74">&#34;2022-02-17T03:21:32Z&#34;</span>  <span style="color:#960050;background-color:#1e0010">#比如可以指定</span>metadata.creationTimestamp表示创建时间
+</span></span><span style="display:flex;"><span>    generation: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    name: my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">namespace</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">default</span>  <span style="color:#960050;background-color:#1e0010">#比如指定</span>jsonPath<span style="color:#f92672">=</span>metadata.namespace就是命名空间
+</span></span><span style="display:flex;"><span>    resourceVersion: <span style="color:#e6db74">&#34;314285&#34;</span>
+</span></span><span style="display:flex;"><span>    uid: d402bffe<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>c04<span style="color:#f92672">-</span><span style="color:#ae81ff">424</span>a<span style="color:#f92672">-</span>b7f9<span style="color:#f92672">-</span><span style="color:#ae81ff">0</span>c4e50b4dd46
+</span></span><span style="display:flex;"><span>  spec:
+</span></span><span style="display:flex;"><span>    cronSpec: <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#960050;background-color:#1e0010">*/</span><span style="color:#ae81ff">5</span><span style="color:#960050;background-color:#1e0010">&#39;</span>
+</span></span><span style="display:flex;"><span>    image: my<span style="color:#f92672">-</span>awesome<span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>image
+</span></span><span style="display:flex;"><span>    replicas: <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>kind: List
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  resourceVersion: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>  selfLink: <span style="color:#e6db74">&#34;&#34;</span></span></span></code></pre></div>
+<h2 id="自定义资源验证">自定义资源验证</h2>
+<p>validation这个验证是为了在创建好自定义资源后，通过该资源创建对象的时候，对象的字段中存在无效值，则创建该对象的请求将被拒绝，否则会被创建。我们可以在crd文件中添加“validation:”字段来添加相应的验证机制。</p>
+<p>我们可以通过使用OpenAPI v3 模式来验证我们自定义的资源对象，使用该模式也应用了一些限制：</p>
+<ul>
+<li>default, nullable, discriminator, readOnly, writeOnly, xml, deprecated和$ref不能设置这些字段。</li>
+<li>字段uniqueItem不能设置为true</li>
+<li>字段additionalProperties不能设置为false
+具体支持格式可使用explain打印</li>
+</ul>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span> openAPIV3Schema     <span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#960050;background-color:#1e0010">$</span>ref     <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#960050;background-color:#1e0010">$</span>schema  <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               additionalItems  <span style="color:#f92672">&lt;&gt;</span>
+</span></span><span style="display:flex;"><span>               additionalProperties     <span style="color:#f92672">&lt;&gt;</span>
+</span></span><span style="display:flex;"><span>               allOf    <span style="color:#f92672">&lt;</span>[]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               anyOf    <span style="color:#f92672">&lt;</span>[]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#66d9ef">default</span>  <span style="color:#f92672">&lt;&gt;</span>
+</span></span><span style="display:flex;"><span>               definitions      <span style="color:#f92672">&lt;</span>map[string]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               dependencies     <span style="color:#f92672">&lt;</span>map[string]<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               description      <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#66d9ef">enum</span>     <span style="color:#960050;background-color:#1e0010">&lt;[]</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               example  <span style="color:#f92672">&lt;&gt;</span>
+</span></span><span style="display:flex;"><span>               exclusiveMaximum <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               exclusiveMinimum <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               externalDocs     <span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>                  description   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>                  url   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               format   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               id       <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               items    <span style="color:#f92672">&lt;&gt;</span>
+</span></span><span style="display:flex;"><span>               maxItems <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               maxLength        <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               maxProperties    <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               maximum  <span style="color:#f92672">&lt;</span>number<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               minItems <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               minLength        <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               minProperties    <span style="color:#f92672">&lt;</span>integer<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               minimum  <span style="color:#f92672">&lt;</span>number<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               multipleOf       <span style="color:#f92672">&lt;</span>number<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               not      <span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               nullable <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               oneOf    <span style="color:#f92672">&lt;</span>[]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               pattern  <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               patternProperties        <span style="color:#f92672">&lt;</span>map[string]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               properties       <span style="color:#f92672">&lt;</span>map[string]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               required <span style="color:#f92672">&lt;</span>[]string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               title    <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               type     <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               uniqueItems      <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               x<span style="color:#f92672">-</span>kubernetes<span style="color:#f92672">-</span>embedded<span style="color:#f92672">-</span>resource   <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               x<span style="color:#f92672">-</span>kubernetes<span style="color:#f92672">-</span><span style="color:#66d9ef">int</span><span style="color:#f92672">-</span>or<span style="color:#f92672">-</span>string       <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               x<span style="color:#f92672">-</span>kubernetes<span style="color:#f92672">-</span>list<span style="color:#f92672">-</span>map<span style="color:#f92672">-</span>keys       <span style="color:#f92672">&lt;</span>[]string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               x<span style="color:#f92672">-</span>kubernetes<span style="color:#f92672">-</span>list<span style="color:#f92672">-</span>type   <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               x<span style="color:#f92672">-</span>kubernetes<span style="color:#f92672">-</span>map<span style="color:#f92672">-</span>type    <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               x<span style="color:#f92672">-</span>kubernetes<span style="color:#f92672">-</span>preserve<span style="color:#f92672">-</span>unknown<span style="color:#f92672">-</span>fields     <span style="color:#f92672">&lt;</span>boolean<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>               x<span style="color:#f92672">-</span>kubernetes<span style="color:#f92672">-</span>validations <span style="color:#f92672">&lt;</span>[]Object<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>                  message       <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>                  rule  <span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span></span></span></code></pre></div>
+<p>修改 crd文件测试数字和正则表达式</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>      schema:
+</span></span><span style="display:flex;"><span>        openAPIV3Schema:
+</span></span><span style="display:flex;"><span>          type: object
+</span></span><span style="display:flex;"><span>          properties:
+</span></span><span style="display:flex;"><span>            spec:
+</span></span><span style="display:flex;"><span>              type: object
+</span></span><span style="display:flex;"><span>              properties:
+</span></span><span style="display:flex;"><span>                cronSpec:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;定时任务触发时间&#34;</span>
+</span></span><span style="display:flex;"><span>                  pattern: <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">^</span>(<span style="color:#960050;background-color:#1e0010">\</span>d<span style="color:#f92672">+|</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#f92672">*</span>)(<span style="color:#f92672">/</span><span style="color:#960050;background-color:#1e0010">\</span>d<span style="color:#f92672">+</span>)<span style="color:#f92672">?</span>(<span style="color:#960050;background-color:#1e0010">\</span>s<span style="color:#f92672">+</span>(<span style="color:#960050;background-color:#1e0010">\</span>d<span style="color:#f92672">+|</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#f92672">*</span>)(<span style="color:#f92672">/</span><span style="color:#960050;background-color:#1e0010">\</span>d<span style="color:#f92672">+</span>)<span style="color:#f92672">?</span>){<span style="color:#ae81ff">4</span>}<span style="color:#960050;background-color:#1e0010">$&#39;</span>
+</span></span><span style="display:flex;"><span>                image:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;镜像&#34;</span>
+</span></span><span style="display:flex;"><span>                replicas:
+</span></span><span style="display:flex;"><span>                  type: integer
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;副本数&#34;</span>
+</span></span><span style="display:flex;"><span>                  minimum: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>                  maximum: <span style="color:#ae81ff">10</span></span></span></code></pre></div>
+<p>修改crontab实例</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: <span style="color:#e6db74">&#34;stable.example.com/v1&#34;</span>
+</span></span><span style="display:flex;"><span>kind: CronTab
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  cronSpec: <span style="color:#e6db74">&#34;* * * * */5&#34;</span>
+</span></span><span style="display:flex;"><span>  image: my<span style="color:#f92672">-</span>awesome<span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>image
+</span></span><span style="display:flex;"><span>  replicas: <span style="color:#ae81ff">12</span></span></span></code></pre></div>
+<p>当relica大小不在1-10之间是创建会出现。</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl apply <span style="color:#f92672">-</span>f crontab.yaml
+</span></span><span style="display:flex;"><span>The CronTab <span style="color:#e6db74">&#34;my-new-cron-object&#34;</span> is invalid: spec.replicas: Invalid value: <span style="color:#ae81ff">12</span><span style="color:#f92672">:</span> spec.replicas in body should be less than or equal to <span style="color:#ae81ff">10</span></span></span></code></pre></div>
+<h2 id="添加状态和伸缩配置">添加状态和伸缩配置</h2>
+<p>直接创建的my-new-cron-object 进行scale操作</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl scale <span style="color:#f92672">--</span>replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> ct<span style="color:#f92672">/</span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object
+</span></span><span style="display:flex;"><span>Error from server (NotFound)<span style="color:#f92672">:</span> crontabs.stable.example.com <span style="color:#e6db74">&#34;my-new-cron-object&#34;</span> not found</span></span></code></pre></div>
+<p>修改crd配置（新增自定义子资源）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 用于REST API的组名称: /apis/&lt;group&gt;/&lt;version&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  group: stable.example.com
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 此CustomResourceDefinition支持的版本列表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  versions:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> name: v1
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 每个版本都可以通过服务标志启用/禁用。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      served: true
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 必须将一个且只有一个版本标记为存储版本。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      storage: true
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#使用v3定义创建容器的属性 cronSpec和image是字符串类型replicas是int型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      schema:
+</span></span><span style="display:flex;"><span>        openAPIV3Schema:
+</span></span><span style="display:flex;"><span>          type: object
+</span></span><span style="display:flex;"><span>          properties:
+</span></span><span style="display:flex;"><span>            spec:
+</span></span><span style="display:flex;"><span>              type: object
+</span></span><span style="display:flex;"><span>              properties:
+</span></span><span style="display:flex;"><span>                cronSpec:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;定时任务触发时间&#34;</span>
+</span></span><span style="display:flex;"><span>                  pattern: <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">^</span>(<span style="color:#960050;background-color:#1e0010">\</span>d<span style="color:#f92672">+|</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#f92672">*</span>)(<span style="color:#f92672">/</span><span style="color:#960050;background-color:#1e0010">\</span>d<span style="color:#f92672">+</span>)<span style="color:#f92672">?</span>(<span style="color:#960050;background-color:#1e0010">\</span>s<span style="color:#f92672">+</span>(<span style="color:#960050;background-color:#1e0010">\</span>d<span style="color:#f92672">+|</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#f92672">*</span>)(<span style="color:#f92672">/</span><span style="color:#960050;background-color:#1e0010">\</span>d<span style="color:#f92672">+</span>)<span style="color:#f92672">?</span>){<span style="color:#ae81ff">4</span>}<span style="color:#960050;background-color:#1e0010">$&#39;</span>
+</span></span><span style="display:flex;"><span>                image:
+</span></span><span style="display:flex;"><span>                  type: string
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;镜像&#34;</span>
+</span></span><span style="display:flex;"><span>                replicas:
+</span></span><span style="display:flex;"><span>                  type: integer
+</span></span><span style="display:flex;"><span>                  description: <span style="color:#e6db74">&#34;副本数&#34;</span>
+</span></span><span style="display:flex;"><span>                  minimum: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>                  maximum: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>      additionalPrinterColumns:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> name: cronSpec
+</span></span><span style="display:flex;"><span>          type: string
+</span></span><span style="display:flex;"><span>          description: <span style="color:#960050;background-color:#1e0010">定时任务触发时间</span>
+</span></span><span style="display:flex;"><span>          jsonPath: .spec.cronSpec
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> name: replicas
+</span></span><span style="display:flex;"><span>          type: integer
+</span></span><span style="display:flex;"><span>          description: <span style="color:#960050;background-color:#1e0010">副本数</span>
+</span></span><span style="display:flex;"><span>          jsonPath: .spec.replicas
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> name: <span style="color:#66d9ef">namespace</span>
+</span></span><span style="display:flex;"><span>          type: string
+</span></span><span style="display:flex;"><span>          description: <span style="color:#960050;background-color:#1e0010">命名空间</span>
+</span></span><span style="display:flex;"><span>          jsonPath: .metadata.<span style="color:#66d9ef">namespace</span>         
+</span></span><span style="display:flex;"><span>     <span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#960050;background-color:#1e0010">自定义资源的子资源的描述</span>
+</span></span><span style="display:flex;"><span>      subresources:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 启用状态子资源。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        status: {}
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 启用scale子资源
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        scale:
+</span></span><span style="display:flex;"><span>          specReplicasPath: .spec.replicas <span style="color:#960050;background-color:#1e0010">#表示</span>scale是spec.relicas字段
+</span></span><span style="display:flex;"><span>          statusReplicasPath: .status.replicas 
+</span></span><span style="display:flex;"><span>          labelSelectorPath: .status.labelSelector</span></span></code></pre></div>
+<p>apply之后添加后</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl scale <span style="color:#f92672">--</span>replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> ct<span style="color:#f92672">/</span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object      
+</span></span><span style="display:flex;"><span>crontab.stable.example.com<span style="color:#f92672">/</span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object scaled
+</span></span><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl get ct
+</span></span><span style="display:flex;"><span>NAME                 CRONSPEC      REPLICAS   NAMESPACE
+</span></span><span style="display:flex;"><span>my<span style="color:#f92672">-</span><span style="color:#66d9ef">new</span><span style="color:#f92672">-</span>cron<span style="color:#f92672">-</span>object   <span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#f92672">*</span> <span style="color:#960050;background-color:#1e0010">*/</span><span style="color:#ae81ff">5</span>   <span style="color:#ae81ff">5</span>          <span style="color:#66d9ef">default</span>
+</span></span><span style="display:flex;"><span>root<span style="color:#960050;background-color:#1e0010">@</span>liaok8s:<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>mainte<span style="color:#f92672">/</span>coredns<span style="color:#960050;background-color:#1e0010">#</span> kubectl get ct <span style="color:#f92672">-</span>o yaml</span></span></code></pre></div>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu"></ul></li>
+            <li class="parent " data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/devops/kubernetes/index.html"><a class="padding" href="/docs/devops/kubernetes/index.html">kubernetes</a><ul id="R-subsections-a6d9d4850f81ae033d42cdaa03dad084" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_01/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_01/index.html">K8S二次开发01-各种资源对象的理解和定义</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_02/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_02/index.html">K8S二次开发02-kubeadm安装k8s集群</a></li>
+            <li class="active " data-nav-id="/docs/devops/kubernetes/k8s_dev_03/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_03/index.html">K8S二次开发03-CRD资源详解</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_04/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_04/index.html">K8S二次开发04-自定义operator（operator-sdk调试）</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_05/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_05/index.html">K8S二次开发05-使用clientgo自定义ingresscontroller</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/devops/networking/index.html"><a class="padding" href="/docs/devops/networking/index.html">网络技术</a><ul id="R-subsections-bd6b3f75e8269a91d29691b78d3bac17" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

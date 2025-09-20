@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="clientgo简介 client-go 作为官方维护的 go 语言实现的 client 库，提供了大量的高质量代码帮助开发者编写自己的客户端程序，来访问、操作 Kubernetes 集群
+infomer简介 cient-go 是从 k8s 代码中抽出来的一个客户端工具，Informer 是 client-go 中的核心工具包，已经被 kubernetes 中众多组件所使用。所谓 Informer，其实就是一个带有本地缓存和索引机制的、可以注册 EventHandler 的 client，本地缓存被称为 Store，索引被称为 Index。使用 informer 的目的是为了减轻 apiserver 数据交互的压力而抽象出来的一个 cache 层, 客户端对 apiserver 数据的 “读取” 和 “监听” 操作都通过本地 informer 进行。Informer 实例的Lister()方法可以直接查找缓存在本地内存中的数据。
+Informer 的主要功能：
+同步数据到本地缓存 根据对应的事件类型，触发事先注册好的 ResourceEventHandler infomer产生背景 随着Controller越来越多，如果Controller直接访问k8s-apiserver，那么将会导致其压力过大，于是在这样的背景下就有了Informer的概念。其发展到今天这个架构，大概可以总结出以下迭代思路： 第一阶段，Controller直接访问k8s-api-server。存在的问题：多个控制器大量访问k8s-apiserver时会对其造成巨大的压力。
+第二阶段，Informer代替Controller去访问k8s-apiserver。而Controller的所有操作操作(如：查状态、对资源进行伸缩等）都和Informer进行交互。但Informer没有必要每次都去访问k8s-apiserver，它只要在需要的时候通过ListAndWatch(即通过k8s List API获取所有资源的最新状态；通过Wath API去监听这些资源状态的变化)与k8s-apiserver交互即可。
+ListAndWatch的代码位置: client-go/tools/cache/reflector.go
+func (r *Reflector) ListAndWatch(stopCh &lt;-chan struct{}) error{ … } 第三阶段， Informer并没有直接访问k8s-api-server，而是通过一个叫Reflector的对象进行api-server的访问。上面所说的 ListAndWatch 事实上是由Reflector`实现的。">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="K8S二次开发05-使用clientgo自定义ingresscontroller :: liaomin416100569博客">
+    <meta name="twitter:description" content="clientgo简介 client-go 作为官方维护的 go 语言实现的 client 库，提供了大量的高质量代码帮助开发者编写自己的客户端程序，来访问、操作 Kubernetes 集群
+infomer简介 cient-go 是从 k8s 代码中抽出来的一个客户端工具，Informer 是 client-go 中的核心工具包，已经被 kubernetes 中众多组件所使用。所谓 Informer，其实就是一个带有本地缓存和索引机制的、可以注册 EventHandler 的 client，本地缓存被称为 Store，索引被称为 Index。使用 informer 的目的是为了减轻 apiserver 数据交互的压力而抽象出来的一个 cache 层, 客户端对 apiserver 数据的 “读取” 和 “监听” 操作都通过本地 informer 进行。Informer 实例的Lister()方法可以直接查找缓存在本地内存中的数据。
+Informer 的主要功能：
+同步数据到本地缓存 根据对应的事件类型，触发事先注册好的 ResourceEventHandler infomer产生背景 随着Controller越来越多，如果Controller直接访问k8s-apiserver，那么将会导致其压力过大，于是在这样的背景下就有了Informer的概念。其发展到今天这个架构，大概可以总结出以下迭代思路： 第一阶段，Controller直接访问k8s-api-server。存在的问题：多个控制器大量访问k8s-apiserver时会对其造成巨大的压力。
+第二阶段，Informer代替Controller去访问k8s-apiserver。而Controller的所有操作操作(如：查状态、对资源进行伸缩等）都和Informer进行交互。但Informer没有必要每次都去访问k8s-apiserver，它只要在需要的时候通过ListAndWatch(即通过k8s List API获取所有资源的最新状态；通过Wath API去监听这些资源状态的变化)与k8s-apiserver交互即可。
+ListAndWatch的代码位置: client-go/tools/cache/reflector.go
+func (r *Reflector) ListAndWatch(stopCh &lt;-chan struct{}) error{ … } 第三阶段， Informer并没有直接访问k8s-api-server，而是通过一个叫Reflector的对象进行api-server的访问。上面所说的 ListAndWatch 事实上是由Reflector`实现的。">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/devops/kubernetes/k8s_dev_05/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="K8S二次开发05-使用clientgo自定义ingresscontroller :: liaomin416100569博客">
+    <meta property="og:description" content="clientgo简介 client-go 作为官方维护的 go 语言实现的 client 库，提供了大量的高质量代码帮助开发者编写自己的客户端程序，来访问、操作 Kubernetes 集群
+infomer简介 cient-go 是从 k8s 代码中抽出来的一个客户端工具，Informer 是 client-go 中的核心工具包，已经被 kubernetes 中众多组件所使用。所谓 Informer，其实就是一个带有本地缓存和索引机制的、可以注册 EventHandler 的 client，本地缓存被称为 Store，索引被称为 Index。使用 informer 的目的是为了减轻 apiserver 数据交互的压力而抽象出来的一个 cache 层, 客户端对 apiserver 数据的 “读取” 和 “监听” 操作都通过本地 informer 进行。Informer 实例的Lister()方法可以直接查找缓存在本地内存中的数据。
+Informer 的主要功能：
+同步数据到本地缓存 根据对应的事件类型，触发事先注册好的 ResourceEventHandler infomer产生背景 随着Controller越来越多，如果Controller直接访问k8s-apiserver，那么将会导致其压力过大，于是在这样的背景下就有了Informer的概念。其发展到今天这个架构，大概可以总结出以下迭代思路： 第一阶段，Controller直接访问k8s-api-server。存在的问题：多个控制器大量访问k8s-apiserver时会对其造成巨大的压力。
+第二阶段，Informer代替Controller去访问k8s-apiserver。而Controller的所有操作操作(如：查状态、对资源进行伸缩等）都和Informer进行交互。但Informer没有必要每次都去访问k8s-apiserver，它只要在需要的时候通过ListAndWatch(即通过k8s List API获取所有资源的最新状态；通过Wath API去监听这些资源状态的变化)与k8s-apiserver交互即可。
+ListAndWatch的代码位置: client-go/tools/cache/reflector.go
+func (r *Reflector) ListAndWatch(stopCh &lt;-chan struct{}) error{ … } 第三阶段， Informer并没有直接访问k8s-api-server，而是通过一个叫Reflector的对象进行api-server的访问。上面所说的 ListAndWatch 事实上是由Reflector`实现的。">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="运维一体化">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="K8S二次开发05-使用clientgo自定义ingresscontroller :: liaomin416100569博客">
+    <meta itemprop="description" content="clientgo简介 client-go 作为官方维护的 go 语言实现的 client 库，提供了大量的高质量代码帮助开发者编写自己的客户端程序，来访问、操作 Kubernetes 集群
+infomer简介 cient-go 是从 k8s 代码中抽出来的一个客户端工具，Informer 是 client-go 中的核心工具包，已经被 kubernetes 中众多组件所使用。所谓 Informer，其实就是一个带有本地缓存和索引机制的、可以注册 EventHandler 的 client，本地缓存被称为 Store，索引被称为 Index。使用 informer 的目的是为了减轻 apiserver 数据交互的压力而抽象出来的一个 cache 层, 客户端对 apiserver 数据的 “读取” 和 “监听” 操作都通过本地 informer 进行。Informer 实例的Lister()方法可以直接查找缓存在本地内存中的数据。
+Informer 的主要功能：
+同步数据到本地缓存 根据对应的事件类型，触发事先注册好的 ResourceEventHandler infomer产生背景 随着Controller越来越多，如果Controller直接访问k8s-apiserver，那么将会导致其压力过大，于是在这样的背景下就有了Informer的概念。其发展到今天这个架构，大概可以总结出以下迭代思路： 第一阶段，Controller直接访问k8s-api-server。存在的问题：多个控制器大量访问k8s-apiserver时会对其造成巨大的压力。
+第二阶段，Informer代替Controller去访问k8s-apiserver。而Controller的所有操作操作(如：查状态、对资源进行伸缩等）都和Informer进行交互。但Informer没有必要每次都去访问k8s-apiserver，它只要在需要的时候通过ListAndWatch(即通过k8s List API获取所有资源的最新状态；通过Wath API去监听这些资源状态的变化)与k8s-apiserver交互即可。
+ListAndWatch的代码位置: client-go/tools/cache/reflector.go
+func (r *Reflector) ListAndWatch(stopCh &lt;-chan struct{}) error{ … } 第三阶段， Informer并没有直接访问k8s-api-server，而是通过一个叫Reflector的对象进行api-server的访问。上面所说的 ListAndWatch 事实上是由Reflector`实现的。">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="1246">
+    <title>K8S二次开发05-使用clientgo自定义ingresscontroller :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/devops\/kubernetes\/k8s_dev_05\/index.html';
+      window.relearn.relBasePath='..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/devops/kubernetes/k8s_dev_05/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#clientgo简介">clientgo简介</a></li>
+    <li><a href="#infomer简介">infomer简介</a>
+      <ul>
+        <li><a href="#infomer产生背景">infomer产生背景</a></li>
+        <li><a href="#infomer组件">infomer组件</a></li>
+        <li><a href="#informer-的工作流程">Informer 的工作流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#自定义-ingress-controller">自定义 Ingress Controller</a>
+      <ul>
+        <li><a href="#ingress-对象">Ingress 对象</a></li>
+        <li><a href="#ingress实现">Ingress实现</a>
+          <ul>
+            <li><a href="#client-go实现">client-go实现</a></li>
+            <li><a href="#创建镜像">创建镜像</a></li>
+            <li><a href="#创建daemonset">创建daemonset</a></li>
+            <li><a href="#创建ingress">创建ingress</a></li>
+          </ul>
+        </li>
+        <li><a href="#映射域名">映射域名</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/index.html"><span itemprop="name">运维一体化</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/kubernetes/index.html"><span itemprop="name">kubernetes</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">K8S二次开发05-使用clientgo自定义ingresscontroller</span><meta itemprop="position" content="4"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/kubernetes/k8s_dev_04/index.html" title="K8S二次开发04-自定义operator（operator-sdk调试） (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/networking/index.html" title="网络技术 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable devops" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="k8s二次开发05-使用clientgo自定义ingresscontroller">K8S二次开发05-使用clientgo自定义ingresscontroller</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1 id="clientgo简介">clientgo简介</h1>
+<p>client-go 作为官方维护的 go 语言实现的 client 库，提供了大量的高质量代码帮助开发者编写自己的客户端程序，来访问、操作 Kubernetes 集群</p>
+<h1 id="infomer简介">infomer简介</h1>
+<p>cient-go 是从 k8s 代码中抽出来的一个客户端工具，Informer 是 client-go 中的核心工具包，已经被 kubernetes 中众多组件所使用。所谓 Informer，其实就是一个带有本地缓存和索引机制的、可以注册 EventHandler 的 client，本地缓存被称为 Store，索引被称为 Index。使用 informer 的目的是为了减轻 apiserver 数据交互的压力而抽象出来的一个 cache 层, 客户端对 apiserver 数据的 “读取” 和 “监听” 操作都通过本地 informer 进行。Informer 实例的Lister()方法可以直接查找缓存在本地内存中的数据。</p>
+<p>Informer 的主要功能：</p>
+<ol>
+<li>同步数据到本地缓存</li>
+<li>根据对应的事件类型，触发事先注册好的 ResourceEventHandler</li>
+</ol>
+<h2 id="infomer产生背景">infomer产生背景</h2>
+<p>随着Controller越来越多，如果Controller直接访问k8s-apiserver，那么将会导致其压力过大，于是在这样的背景下就有了Informer的概念。其发展到今天这个架构，大概可以总结出以下迭代思路：
+<a href="#R-image-3600e3ed493eb08202d75bcfeea07840" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/6b5152da370b2af1692642eb872e08cb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3600e3ed493eb08202d75bcfeea07840"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/6b5152da370b2af1692642eb872e08cb.png"></a>
+第一阶段，Controller直接访问k8s-api-server。存在的问题：多个控制器大量访问k8s-apiserver时会对其造成巨大的压力。</p>
+<p>第二阶段，Informer代替Controller去访问k8s-apiserver。而Controller的所有操作操作(如：查状态、对资源进行伸缩等）都和Informer进行交互。但Informer没有必要每次都去访问k8s-apiserver，它只要在需要的时候通过ListAndWatch(即通过k8s List API获取所有资源的最新状态；通过Wath API去监听这些资源状态的变化)与k8s-apiserver交互即可。</p>
+<p>ListAndWatch的代码位置: client-go/tools/cache/reflector.go</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>func (r <span style="color:#f92672">*</span>Reflector) ListAndWatch(stopCh <span style="color:#f92672">&lt;-</span>chan <span style="color:#66d9ef">struct</span>{}) error{ <span style="color:#960050;background-color:#1e0010">…</span> }</span></span></code></pre></div>
+<p>第三阶段， Informer并没有直接访问k8s-api-server，而是通过一个叫Reflector的对象进行api-server的访问。上面所说的 ListAndWatch 事实上是由Reflector`实现的。</p>
+<p>第四阶段, 通过指定资源类型来Watch特定资源。</p>
+<p>// 代码位置: client-go/tools/cache/listwatch.go</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Watcher is any object that knows how to start a watch on a resource.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>type Watcher interface {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Watch should begin a watch at the specified version.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Watch(options metav1.ListOptions) (watch.Interface, error)
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+<p>第五阶段，定义SharedInformer。如果Controller与Informer是一一对应的关系，那么k8s-api-server的压力也还是挺大的。但是类似于Pod这样的资源来说，Deployment和StatefulSet都能对它进行管理，当多个控制器同时想查Pod的状态时，实现上，只需要有一个Informer就能满足需求了，即: SharedInformered。</p>
+<p>第六阶段，解决多个不同的控制器排除与重试问题，引入DeltaFIFOQueue。每当资源被修改时，Reflector就会收到事件通知，并将对应的事件放入DeltaFIFOQueue中。另外，SharedInformer会不断从DeltaFIFOQueue中读取事件并更新本地缓存(ThreadSafeStore)的状态。</p>
+<h2 id="infomer组件">infomer组件</h2>
+<p>Informer 中主要有 Reflector、Delta FIFO Queue、Local Store、WorkQueue 几个组件。以下是 Informer 的工作流程图。
+<a href="#R-image-3e1f048ecf1f7e439398d88a3ff5ea2f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/bc12981c1fc71039b947ed69e4a9cfd2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3e1f048ecf1f7e439398d88a3ff5ea2f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/bc12981c1fc71039b947ed69e4a9cfd2.png"></a>
+根据流程图来解释一下 Informer 中几个组件的作用：</p>
+<ul>
+<li>
+<p>Reflector：称之为反射器，实现对 apiserver 指定类型对象的监控(ListAndWatch)，其中反射实现的就是把监控的结果实例化成具体的对象，最终也是调用 Kubernetes 的 List/Watch API；</p>
+</li>
+<li>
+<p>DeltaIFIFO Queue：一个增量队列，将 Reflector 监控变化的对象形成一个 FIFO 队列，此处的 Delta 就是变化；</p>
+</li>
+<li>
+<p>LocalStore：就是 informer 的 cache，这里面缓存的是 apiserver 中的对象(其中有一部分可能还在DeltaFIFO 中)，此时使用者再查询对象的时候就直接从 cache 中查找，减少了 apiserver 的压力，LocalStore 只会被 Lister 的 List/Get 方法访问。</p>
+</li>
+<li>
+<p>WorkQueue：DeltaIFIFO 收到时间后会先将时间存储在自己的数据结构中，然后直接操作 Store 中存储的数据，更新完 store 后 DeltaIFIFO 会将该事件 pop 到 WorkQueue 中，Controller 收到 WorkQueue 中的事件会根据对应的类型触发对应的回调函数。</p>
+</li>
+</ul>
+<h2 id="informer-的工作流程">Informer 的工作流程</h2>
+<ul>
+<li>Informer 首先会 list/watch apiserver，Informer 所使用的 Reflector 包负责与 apiserver 建立连接，Reflector 使用 ListAndWatch 的方法，会先从 apiserver 中 list 该资源的所有实例，list 会拿到该对象最新的 resourceVersion，然后使用 watch 方法监听该 resourceVersion 之后的所有变化，若中途出现异常，reflector 则会从断开的 resourceVersion 处重现尝试监听所有变化，一旦该对象的实例有创建、删除、更新动作，Reflector 都会收到”事件通知”，这时，该事件及它对应的 API 对象这个组合，被称为增量（Delta），它会被放进 DeltaFIFO 中。</li>
+<li>Informer 会不断地从这个 DeltaFIFO 中读取增量，每拿出一个对象，Informer 就会判断这个增量的时间类型，然后创建或更新本地的缓存，也就是 store。</li>
+<li>如果事件类型是 Added（添加对象），那么 Informer 会通过 Indexer 的库把这个增量里的 API 对象保存到本地的缓存中，并为它创建索引，若为删除操作，则在本地缓存中删除该对象。</li>
+<li>DeltaFIFO 再 pop 这个事件到 controller 中，controller 会调用事先注册的 ResourceEventHandler 回调函数进行处理。</li>
+<li>在 ResourceEventHandler 回调函数中，其实只是做了一些很简单的过滤，然后将关心变更的 Object 放到 workqueue 里面。</li>
+<li>Controller 从 workqueue 里面取出 Object，启动一个 worker 来执行自己的业务逻辑，业务逻辑通常是计算目前集群的状态和用户希望达到的状态有多大的区别，然后孜孜不倦地让 apiserver 将状态演化到用户希望达到的状态，比如为 deployment 创建新的 pods，或者是扩容/缩容 deployment。</li>
+<li>在worker中就可以使用 lister 来获取 resource，而不用频繁的访问 apiserver，因为 apiserver 中 resource 的变更都会反映到本地的 cache 中。</li>
+</ul>
+<p>Informer 在使用时需要先初始化一个 InformerFactory，目前主要推荐使用的是 SharedInformerFactory，Shared 指的是在多个 Informer 中共享一个本地 cache。
+Informer 中的 ResourceEventHandler 函数有三种：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// ResourceEventHandlerFuncs is an adaptor to let you easily specify as many or
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// as few of the notification functions as you want while still implementing
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// ResourceEventHandler.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>type ResourceEventHandlerFuncs <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    AddFunc    <span style="color:#a6e22e">func</span>(obj interface{})
+</span></span><span style="display:flex;"><span>    UpdateFunc func(oldObj, newObj interface{})
+</span></span><span style="display:flex;"><span>    DeleteFunc func(obj interface{})
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+<p>这三种函数的处理逻辑是用户自定义的，在初始化 controller 时注册完 ResourceEventHandler 后，一旦该对象的实例有创建、删除、更新三中操作后就会触发对应的 ResourceEventHandler。</p>
+<h1 id="自定义-ingress-controller">自定义 Ingress Controller</h1>
+<p>在 Kubernetes 中通过 Ingress 来暴露服务到集群外部，这个已经是一个很普遍的方式了，而真正扮演请求转发的角色是背后的 Ingress Controller，比如我们经常使用的 traefik、ingress-nginx 等就是一个 Ingress Controller。这里将通过 client-go来实现一个简单的自定义的 Ingress Controller，可以加深我们对 Ingress 的理解。
+我们先创建一个nginx的服务</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>kubectl run nginx <span style="color:#f92672">--</span>image<span style="color:#f92672">=</span>nginx</span></span></code></pre></div>
+<p>我们可以使用 NodePort 类型的 Service 来进行访问</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>kind: Service
+</span></span><span style="display:flex;"><span>apiVersion: v1
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: whoami
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  selector:
+</span></span><span style="display:flex;"><span>    app: whoami
+</span></span><span style="display:flex;"><span>  ports:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> protocol: TCP
+</span></span><span style="display:flex;"><span>      port: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>      targetPort: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>      nodePort:<span style="color:#ae81ff">80</span></span></span></code></pre></div>
+<p>但是当我们应用越来越多的时候端口的管理也是一个很大的问题，所以一般情况下不采用该方式，之前我们的方法是用 DaemonSet 在每个边缘节点上运行一个 Nginx 应用：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  hostNetwork: true
+</span></span><span style="display:flex;"><span>  containers:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> image: nginx:<span style="color:#ae81ff">1.15.3</span><span style="color:#f92672">-</span>alpine
+</span></span><span style="display:flex;"><span>      name: nginx
+</span></span><span style="display:flex;"><span>      ports:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> name: http
+</span></span><span style="display:flex;"><span>          containerPort: <span style="color:#ae81ff">80</span></span></span></code></pre></div>
+<p>通过设置 hostNetwork:true，容器将绑定节点的80端口，而不仅仅是容器，这样我们就可以通过节点的公共 IP 地址的 80 端口访问到 Nginx 应用了。这种方法理论上肯定是有效的，但是有一个最大的问题就是需要创建一个 Nginx 配置文件，如果应用有变更，还需要手动修改配置，不能自动发现和热更新，这对于大量的应用维护的成本显然太大,同时每个服务都需要暴露主机端口，端口太多不好维护。这个时候我们就可以用另外一个 Kubernetes 提供的方案了：Ingress。</p>
+<h2 id="ingress-对象">Ingress 对象</h2>
+<p>Kubernetes 内置就支持通过 Ingress 对象将外部的域名映射到集群内部服务，类似于nginx，我们可以通过如下的 Ingress 对象来对外暴露服务：</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: networking.k8s.io<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>kind: Ingress
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: testingress
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  tls:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> hosts:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> <span style="color:#e6db74">&#34;*.jiaozi.com&#34;</span>
+</span></span><span style="display:flex;"><span>      secretName: jiaozi<span style="color:#f92672">-</span>tls
+</span></span><span style="display:flex;"><span>  rules:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> host: main.jiaozi.com
+</span></span><span style="display:flex;"><span>      http:
+</span></span><span style="display:flex;"><span>        paths:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">-</span> path: <span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>            pathType: Prefix
+</span></span><span style="display:flex;"><span>            backend:
+</span></span><span style="display:flex;"><span>              service:
+</span></span><span style="display:flex;"><span>                name: nginx
+</span></span><span style="display:flex;"><span>                port:
+</span></span><span style="display:flex;"><span>                  number: <span style="color:#ae81ff">80</span></span></span></code></pre></div>
+<p>这里为了最简单实现ingress案例，我们去除掉https的部分</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: networking.k8s.io<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>kind: Ingress
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: testingress
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  rules:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> host: main.jiaozi.com
+</span></span><span style="display:flex;"><span>      http:
+</span></span><span style="display:flex;"><span>        paths:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">-</span> path: <span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>            pathType: Prefix
+</span></span><span style="display:flex;"><span>            backend:
+</span></span><span style="display:flex;"><span>              service:
+</span></span><span style="display:flex;"><span>                name: nginx
+</span></span><span style="display:flex;"><span>                port:
+</span></span><span style="display:flex;"><span>                  number: <span style="color:#ae81ff">80</span></span></span></code></pre></div>
+<blockquote>
+<p>上面配置的大概意识是当访问main.jiaozi.com/下所有请求转发到nginx服务的80端口。</p></blockquote>
+<h2 id="ingress实现">Ingress实现</h2>
+<h3 id="client-go实现">client-go实现</h3>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>package controller
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;context&#34;</span>
+</span></span><span style="display:flex;"><span>	_ <span style="color:#e6db74">&#34;context&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;flag&#34;</span>
+</span></span><span style="display:flex;"><span>	_ <span style="color:#e6db74">&#34;flag&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/demdxx/gocast&#34;</span>
+</span></span><span style="display:flex;"><span>	_ <span style="color:#e6db74">&#34;k8s.io/api/core/v1&#34;</span>
+</span></span><span style="display:flex;"><span>	v1 <span style="color:#e6db74">&#34;k8s.io/api/networking/v1&#34;</span>
+</span></span><span style="display:flex;"><span>	metav1 <span style="color:#e6db74">&#34;k8s.io/apimachinery/pkg/apis/meta/v1&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/apimachinery/pkg/util/runtime&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/client-go/informers&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/client-go/kubernetes&#34;</span>
+</span></span><span style="display:flex;"><span>	_ <span style="color:#e6db74">&#34;k8s.io/client-go/kubernetes&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/client-go/rest&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/client-go/tools/cache&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/client-go/tools/clientcmd&#34;</span>
+</span></span><span style="display:flex;"><span>	_ <span style="color:#e6db74">&#34;k8s.io/client-go/tools/clientcmd&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;k8s.io/client-go/util/homedir&#34;</span>
+</span></span><span style="display:flex;"><span>	_ <span style="color:#e6db74">&#34;k8s.io/client-go/util/homedir&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;net/http&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;net/http/httputil&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;net/url&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;path/filepath&#34;</span>
+</span></span><span style="display:flex;"><span>	_ <span style="color:#e6db74">&#34;path/filepath&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;regexp&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>var client <span style="color:#f92672">*</span>kubernetes.Clientset
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  获取Clientset对象客户端操作对象
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span><span style="display:flex;"><span>func GetClientSet() (<span style="color:#f92672">*</span>kubernetes.Clientset, error) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> client<span style="color:#f92672">==</span>nil {
+</span></span><span style="display:flex;"><span>		var kubeconfig <span style="color:#f92672">*</span>string
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> home :<span style="color:#f92672">=</span> homedir.HomeDir(); home <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>			kubeconfig <span style="color:#f92672">=</span> flag.String(<span style="color:#e6db74">&#34;kubeconfig&#34;</span>, filepath.Join(home, <span style="color:#e6db74">&#34;.kube&#34;</span>, <span style="color:#e6db74">&#34;config&#34;</span>), <span style="color:#e6db74">&#34;(optional) absolute path to the kubeconfig file&#34;</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">//kubeconfig = flag.String(&#34;kubeconfig&#34;, filepath.Join( &#34;d:/test/&#34;, &#34;config&#34;), &#34;(optional) absolute path to the kubeconfig file&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>			kubeconfig <span style="color:#f92672">=</span> flag.String(<span style="color:#e6db74">&#34;kubeconfig&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#e6db74">&#34;absolute path to the kubeconfig file&#34;</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		flag.Parse()
+</span></span><span style="display:flex;"><span>		config, err :<span style="color:#f92672">=</span> clientcmd.BuildConfigFromFlags(<span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#f92672">*</span>kubeconfig)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">//集群内部
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			log.Println(<span style="color:#e6db74">&#34;进去集群内部获取集群内部配置&#34;</span>)
+</span></span><span style="display:flex;"><span>			config, err <span style="color:#f92672">=</span> rest.InClusterConfig()
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>				log.Println(<span style="color:#e6db74">&#34;进去集群内部获取配置错误:&#34;</span>,err)
+</span></span><span style="display:flex;"><span>				panic(err)
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 初始化 client
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		var configerr error
+</span></span><span style="display:flex;"><span>		client,configerr<span style="color:#f92672">=</span>kubernetes.NewForConfig(config)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> client,configerr
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> client,nil
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  watch
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     ingress或者service发生变化直接重启读取配置重启代理
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span><span style="display:flex;"><span>func <span style="color:#a6e22e">WatchResource</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 初始化 client
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	clientset, err :<span style="color:#f92672">=</span> GetClientSet()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>		log.Panic(err.Error())
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	stopper :<span style="color:#f92672">=</span> make(chan <span style="color:#66d9ef">struct</span>{})
+</span></span><span style="display:flex;"><span>	defer close(stopper)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 初始化 informer 为了降低过多watch对apiserver的压力，使用共享的infomer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	factory :<span style="color:#f92672">=</span> informers.NewSharedInformerFactory(clientset, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//创建一个service的informer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">//serviceInformer := factory.Core().V1().Services()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">//ingressInformer := factory.Core().V1().Pods()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	ingressInformer :<span style="color:#f92672">=</span> factory.Networking().V1().Ingresses()
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//SharedIndexInformer 提供 add and get Indexers 能力基于 SharedInformer.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	defer runtime.HandleCrash()
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//// 启动 informer，list &amp; watch
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	go factory.Start(stopper)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// list  一个 Informer 实例只能监听一种 resource，每个 resource 需要创建对应的 Informer 实例。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#f92672">!</span>cache.WaitForCacheSync(stopper, ingressInformer.Informer().HasSynced) {
+</span></span><span style="display:flex;"><span>		runtime.HandleError(fmt.Errorf(<span style="color:#e6db74">&#34;Timed out waiting for caches to sync&#34;</span>))
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	go func() {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 使用自定义 handler infomer获取到事件对象后分发到这个handler中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		ingressInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+</span></span><span style="display:flex;"><span>			AddFunc: func(obj interface{}) {
+</span></span><span style="display:flex;"><span>				onUpdate(<span style="color:#e6db74">&#34;ADD&#34;</span>, obj)
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>			UpdateFunc: func(o1 interface{}, o2 interface{}) { onUpdate(<span style="color:#e6db74">&#34;UPDATE&#34;</span>, o1, o2) }, <span style="color:#75715e">// 此处省略 workqueue 的使用
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			DeleteFunc: func(o1 interface{}) { onUpdate(<span style="color:#e6db74">&#34;DELETE&#34;</span>, o1) },
+</span></span><span style="display:flex;"><span>		})
+</span></span><span style="display:flex;"><span>	}()
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;-</span>make(chan <span style="color:#66d9ef">int</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>func <span style="color:#a6e22e">onUpdate</span>(op string, obj ...interface{}) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">switch</span> obj[<span style="color:#ae81ff">0</span>].(type) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span>v1.Ingress:
+</span></span><span style="display:flex;"><span>		ingress <span style="color:#f92672">=</span> obj[<span style="color:#ae81ff">0</span>].(<span style="color:#f92672">*</span>v1.Ingress)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;ADD&#34;</span><span style="color:#f92672">==</span>op {
+</span></span><span style="display:flex;"><span>			ingress <span style="color:#f92672">=</span> obj[<span style="color:#ae81ff">0</span>].(<span style="color:#f92672">*</span>v1.Ingress)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;UPDATE&#34;</span><span style="color:#f92672">==</span>op {
+</span></span><span style="display:flex;"><span>			ingress <span style="color:#f92672">=</span> obj[<span style="color:#ae81ff">1</span>].(<span style="color:#f92672">*</span>v1.Ingress)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;DELETE&#34;</span><span style="color:#f92672">==</span>op {
+</span></span><span style="display:flex;"><span>			ingress <span style="color:#f92672">=</span> nil
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	RenderProxyConfig()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>var ingress <span style="color:#f92672">*</span>v1.Ingress
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">   定义和ingress配置匹配的映射对象
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span>type Server <span style="color:#66d9ef">struct</span>{
+</span></span><span style="display:flex;"><span>	ServiceName string  <span style="color:#75715e">//跳转k8s服务名称
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	Port string         <span style="color:#75715e">//跳转k8s服务端口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	MatchHost string    <span style="color:#75715e">//匹配hostname
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>var regServerMapping map[string]<span style="color:#f92672">*</span>Server<span style="color:#f92672">=</span>make(map[string]<span style="color:#f92672">*</span>Server)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>func RenderProxyConfig(){
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> ingress<span style="color:#f92672">!=</span>nil {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> _, rule :<span style="color:#f92672">=</span> range ingress.Spec.Rules {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">for</span> _, path :<span style="color:#f92672">=</span> range rule.HTTP.Paths {
+</span></span><span style="display:flex;"><span>				mappingHost :<span style="color:#f92672">=</span> rule.Host
+</span></span><span style="display:flex;"><span>				<span style="color:#75715e">//为了防止http.handle在ingress修改后重新注册，导致出错
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>				<span style="color:#66d9ef">if</span>  _, ok :<span style="color:#f92672">=</span>regServerMapping[path.Path];<span style="color:#f92672">!</span>ok {
+</span></span><span style="display:flex;"><span>					var server <span style="color:#f92672">*</span>Server;
+</span></span><span style="display:flex;"><span>					server <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>Server{
+</span></span><span style="display:flex;"><span>						ServiceName: path.Backend.Service.Name,
+</span></span><span style="display:flex;"><span>						Port:        gocast.ToString(path.Backend.Service.Port.Number),
+</span></span><span style="display:flex;"><span>						MatchHost:   strings.ReplaceAll(mappingHost, <span style="color:#e6db74">&#34;*&#34;</span>, <span style="color:#e6db74">&#34;.*&#34;</span>),
+</span></span><span style="display:flex;"><span>					}
+</span></span><span style="display:flex;"><span>					http.Handle(path.Path, server)
+</span></span><span style="display:flex;"><span>					regServerMapping[path.Path]<span style="color:#f92672">=</span>server
+</span></span><span style="display:flex;"><span>				}<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>					server:<span style="color:#f92672">=</span>regServerMapping[path.Path]
+</span></span><span style="display:flex;"><span>					server.ServiceName<span style="color:#f92672">=</span>path.Backend.Service.Name;
+</span></span><span style="display:flex;"><span>					server.Port<span style="color:#f92672">=</span>gocast.ToString(path.Backend.Service.Port.Number)
+</span></span><span style="display:flex;"><span>					server.MatchHost<span style="color:#f92672">=</span>strings.ReplaceAll(mappingHost, <span style="color:#e6db74">&#34;*&#34;</span>, <span style="color:#e6db74">&#34;.*&#34;</span>)
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>func <span style="color:#a6e22e">StartProxy</span>(){
+</span></span><span style="display:flex;"><span>	RenderProxyConfig()
+</span></span><span style="display:flex;"><span>	http.ListenAndServe(<span style="color:#e6db74">&#34;:80&#34;</span>, nil)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ServeHTTP 处理 HTTP 请求
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>func (s <span style="color:#f92672">*</span>Server )ServeHTTP(w http.ResponseWriter, r <span style="color:#f92672">*</span>http.Request) {
+</span></span><span style="display:flex;"><span>	requestHost:<span style="color:#f92672">=</span>r.Host
+</span></span><span style="display:flex;"><span>	log.Println(<span style="color:#e6db74">&#34;开始匹配ingrees域名:&#34;</span>,s.MatchHost,<span style="color:#e6db74">&#34;，到请求域名：&#34;</span>,requestHost)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> result,_:<span style="color:#f92672">=</span>regexp.Match(s.MatchHost,[]byte(requestHost));result {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//通过服务名称获取到集群ip
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		client, _ :<span style="color:#f92672">=</span> GetClientSet()
+</span></span><span style="display:flex;"><span>		service, _ :<span style="color:#f92672">=</span> client.CoreV1().Services(ingress.Namespace).Get(context.TODO(), s.ServiceName, metav1.GetOptions{})
+</span></span><span style="display:flex;"><span>		log.Println(<span style="color:#e6db74">&#34;匹配到service:&#34;</span>,service)
+</span></span><span style="display:flex;"><span>		serviceIp :<span style="color:#f92672">=</span> service.Spec.ClusterIP
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//serviceIp := &#34;10.10.0.118&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#75715e">// 根据请求的域名和 Path 路径获取背后真实的后端地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		backendURL, _ :<span style="color:#f92672">=</span> url.Parse(<span style="color:#e6db74">&#34;http://&#34;</span> <span style="color:#f92672">+</span> serviceIp <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">+</span> s.Port)
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 对后端真实 URL 发起代理请求
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		p :<span style="color:#f92672">=</span> httputil.NewSingleHostReverseProxy(backendURL)
+</span></span><span style="display:flex;"><span>		p.ServeHTTP(w, r)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+<p>main.go代码</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>package main
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">import</span> (
+</span></span><span style="display:flex;"><span>	controller <span style="color:#e6db74">&#34;clientgo/controller&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>func main() {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//开启informer监听ingress资源的变化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	go controller.WatchResource()
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//开启代理服务器接收来自外部的请求
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	controller.StartProxy()
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+<h3 id="创建镜像">创建镜像</h3>
+<p>我们自定义的controller因为对外接受请求，并能转发到nginx应用，所以他本身也必须是一个和转发服务在同一个namespace的k8s应用.</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e"># 第一阶段的镜像定义为名字builder 通过golang将源代码构建出应用程序，第二阶段就是用输出的应用程序直接在最小镜像下运行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>FROM golang:<span style="color:#ae81ff">1.17</span> as builder
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>WORKDIR <span style="color:#f92672">/</span>workspace
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy the Go Modules manifests
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>COPY go.mod go.mod
+</span></span><span style="display:flex;"><span>COPY go.sum go.sum
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># cache deps before building and copying source so that we don&#39;t need to re-download as much
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># and so that source changes don&#39;t invalidate our downloaded layer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>RUN go env <span style="color:#f92672">-</span>w GO111MODULE<span style="color:#f92672">=</span>on
+</span></span><span style="display:flex;"><span>RUN <span style="color:#66d9ef">export</span> GO111MODULE<span style="color:#f92672">=</span>on
+</span></span><span style="display:flex;"><span>RUN go env <span style="color:#f92672">-</span>w GOPROXY<span style="color:#f92672">=</span>https:<span style="color:#75715e">//mirrors.aliyun.com/goproxy/
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>RUN <span style="color:#66d9ef">export</span> GOPROXY<span style="color:#f92672">=</span>https:<span style="color:#75715e">//mirrors.aliyun.com/goproxy/
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>RUN go mod download <span style="color:#f92672">-</span>x
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy the go source
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>COPY main.go main.go
+</span></span><span style="display:flex;"><span>COPY controller<span style="color:#f92672">/</span> controller<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Build
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>RUN CGO_ENABLED<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> GOOS<span style="color:#f92672">=</span>linux GOARCH<span style="color:#f92672">=</span>amd64 go build <span style="color:#f92672">-</span>a <span style="color:#f92672">-</span>o manager main.go
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用最小的镜像zi
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>FROM alpine:latest
+</span></span><span style="display:flex;"><span>WORKDIR <span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>COPY <span style="color:#f92672">--</span>from<span style="color:#f92672">=</span>builder <span style="color:#f92672">/</span>workspace<span style="color:#f92672">/</span>manager .
+</span></span><span style="display:flex;"><span>ENTRYPOINT [<span style="color:#e6db74">&#34;/manager&#34;</span>]</span></span></code></pre></div>
+<p>使用docker命令构建镜像</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>docker build <span style="color:#f92672">-</span>t jiaozi.com:<span style="color:#ae81ff">5000</span><span style="color:#f92672">/</span>hello<span style="color:#f92672">-</span>ingress:<span style="color:#ae81ff">1.0.1</span> .</span></span></code></pre></div>
+<p>上传到私服jiaozi.com:5000</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>docker push jiaozi.com:<span style="color:#ae81ff">5000</span><span style="color:#f92672">/</span>hello<span style="color:#f92672">-</span>ingress:<span style="color:#ae81ff">1.0.1</span> 
+</span></span></code></pre></div>
+<blockquote>
+<p>私服创建请参考上一章节 <a href="https://blog.csdn.net/liaomin416100569/article/details/122985042?spm=1001.2014.3001.5501" rel="external" target="_blank">K8S二次开发04-自定义operator（operator-sdk调试）-前置安装章节</a></p></blockquote>
+<h3 id="创建daemonset">创建daemonset</h3>
+<p>创建的controller需要在每个worker节点创建一个对外暴露的端口，所以必须将之前创建的client-go镜像部署为daemonset</p>
+<blockquote>
+<p>注意自定义的controller需要创建对应账号和权限，并且绑定在daemonset中，否则代码listwatch会提示没有权限</p></blockquote>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: v1
+</span></span><span style="display:flex;"><span>kind: ServiceAccount
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: hello<span style="color:#f92672">-</span>ingresscontroller<span style="color:#f92672">-</span>serviceaccount
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">namespace</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">default</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">---</span>
+</span></span><span style="display:flex;"><span>kind: ClusterRole
+</span></span><span style="display:flex;"><span>apiVersion: rbac.authorization.k8s.io<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: hello<span style="color:#f92672">-</span>ingresscontroller<span style="color:#f92672">-</span>role
+</span></span><span style="display:flex;"><span>rules:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span> apiGroups:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    resources:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> services
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> endpoints
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> secrets
+</span></span><span style="display:flex;"><span>    verbs:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> get
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> list
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> watch
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span> apiGroups:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> extensions
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> networking.k8s.io
+</span></span><span style="display:flex;"><span>    resources:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> ingresses
+</span></span><span style="display:flex;"><span>    verbs:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> get
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> list
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">-</span> watch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">---</span>
+</span></span><span style="display:flex;"><span>kind: ClusterRoleBinding
+</span></span><span style="display:flex;"><span>apiVersion: rbac.authorization.k8s.io<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: hello<span style="color:#f92672">-</span>ingresscontroller<span style="color:#f92672">-</span>binding
+</span></span><span style="display:flex;"><span>roleRef:
+</span></span><span style="display:flex;"><span>  apiGroup: rbac.authorization.k8s.io
+</span></span><span style="display:flex;"><span>  kind: ClusterRole
+</span></span><span style="display:flex;"><span>  name: hello<span style="color:#f92672">-</span>ingresscontroller<span style="color:#f92672">-</span>role
+</span></span><span style="display:flex;"><span>subjects:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span> kind: ServiceAccount
+</span></span><span style="display:flex;"><span>    name: hello<span style="color:#f92672">-</span>ingresscontroller<span style="color:#f92672">-</span>serviceaccount
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">namespace</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">default</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">---</span>
+</span></span><span style="display:flex;"><span>apiVersion: apps<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>kind: DaemonSet
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: hello<span style="color:#f92672">-</span>ingress<span style="color:#f92672">-</span>ds
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">namespace</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">default</span>
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  selector:
+</span></span><span style="display:flex;"><span>    matchLabels:
+</span></span><span style="display:flex;"><span>      app: hello<span style="color:#f92672">-</span>ingress
+</span></span><span style="display:flex;"><span>      release: stable
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">template</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    metadata:
+</span></span><span style="display:flex;"><span>      labels:
+</span></span><span style="display:flex;"><span>        app: hello<span style="color:#f92672">-</span>ingress
+</span></span><span style="display:flex;"><span>        release: stable
+</span></span><span style="display:flex;"><span>    spec:
+</span></span><span style="display:flex;"><span>      hostNetwork: true
+</span></span><span style="display:flex;"><span>      serviceAccountName: hello<span style="color:#f92672">-</span>ingresscontroller<span style="color:#f92672">-</span>serviceaccount
+</span></span><span style="display:flex;"><span>      containers:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> name: hello<span style="color:#f92672">-</span>ingress
+</span></span><span style="display:flex;"><span>          image: jiaozi.com:<span style="color:#ae81ff">5000</span><span style="color:#f92672">/</span>hello<span style="color:#f92672">-</span>ingress:<span style="color:#ae81ff">1.0.1</span>
+</span></span><span style="display:flex;"><span>          imagePullPolicy: IfNotPresent</span></span></code></pre></div>
+<p>使用kubectl创建</p>
+<h3 id="创建ingress">创建ingress</h3>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: networking.k8s.io<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>kind: Ingress
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: testingress
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  rules:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> host: main.jiaozi.com
+</span></span><span style="display:flex;"><span>      http:
+</span></span><span style="display:flex;"><span>        paths:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">-</span> path: <span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>            pathType: Prefix
+</span></span><span style="display:flex;"><span>            backend:
+</span></span><span style="display:flex;"><span>              service:
+</span></span><span style="display:flex;"><span>                name: nginx
+</span></span><span style="display:flex;"><span>                port:
+</span></span><span style="display:flex;"><span>                  number: <span style="color:#ae81ff">80</span></span></span></code></pre></div>
+<p>使用kubectl apply -f 创建</p>
+<h2 id="映射域名">映射域名</h2>
+<p>新建两个测试的域名，指向worker节点</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ae81ff">10.10.0.116</span> main.jiaozi.com
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">10.10.0.116</span> gg.jiaozi.com</span></span></code></pre></div>
+<p>访问main.jiaozi.com
+<a href="#R-image-00758b82240c614bc071160f53cd28e2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/313cf1de0eaa7279ba37fadb2f4f401f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-00758b82240c614bc071160f53cd28e2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/313cf1de0eaa7279ba37fadb2f4f401f.png"></a>
+无法访问gg.jiaozi.com
+尝试修改ingress配置</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>apiVersion: networking.k8s.io<span style="color:#f92672">/</span>v1
+</span></span><span style="display:flex;"><span>kind: Ingress
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  name: testingress
+</span></span><span style="display:flex;"><span>spec:
+</span></span><span style="display:flex;"><span>  rules:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> host: <span style="color:#f92672">*</span>.jiaozi.com
+</span></span><span style="display:flex;"><span>      http:
+</span></span><span style="display:flex;"><span>        paths:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">-</span> path: <span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>            pathType: Prefix
+</span></span><span style="display:flex;"><span>            backend:
+</span></span><span style="display:flex;"><span>              service:
+</span></span><span style="display:flex;"><span>                name: nginx
+</span></span><span style="display:flex;"><span>                port:
+</span></span><span style="display:flex;"><span>                  number: <span style="color:#ae81ff">80</span></span></span></code></pre></div>
+<p>使用kubectl apply -f  测试gg.jiaozi.com和*.jiaozi.com子域名均可正常访问。</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu"></ul></li>
+            <li class="parent " data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/devops/kubernetes/index.html"><a class="padding" href="/docs/devops/kubernetes/index.html">kubernetes</a><ul id="R-subsections-a6d9d4850f81ae033d42cdaa03dad084" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_01/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_01/index.html">K8S二次开发01-各种资源对象的理解和定义</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_02/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_02/index.html">K8S二次开发02-kubeadm安装k8s集群</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_03/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_03/index.html">K8S二次开发03-CRD资源详解</a></li>
+            <li class="" data-nav-id="/docs/devops/kubernetes/k8s_dev_04/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_04/index.html">K8S二次开发04-自定义operator（operator-sdk调试）</a></li>
+            <li class="active " data-nav-id="/docs/devops/kubernetes/k8s_dev_05/index.html"><a class="padding" href="/docs/devops/kubernetes/k8s_dev_05/index.html">K8S二次开发05-使用clientgo自定义ingresscontroller</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/devops/networking/index.html"><a class="padding" href="/docs/devops/networking/index.html">网络技术</a><ul id="R-subsections-bd6b3f75e8269a91d29691b78d3bac17" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

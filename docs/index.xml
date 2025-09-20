@@ -15,5 +15,19 @@
       <guid>https://jiaozi789.github.io/docs/programming/index.html</guid>
       <description></description>
     </item>
+    <item>
+      <title>运维一体化</title>
+      <link>https://jiaozi789.github.io/docs/devops/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/devops/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>安全攻防</title>
+      <link>https://jiaozi789.github.io/docs/security/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/security/index.html</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一。内核动态模块介绍 Linux内核给开发者提供了灵活的模块加载方式，开发者可根据需要适当地选择静态或动态的方式将模块加入内核当中。静态加载的时候我们只需将驱动文件添加到对应的文件夹中并修改相应的Makefile和Kconfig即可，但是通过动态加载模块的方式，如果只是编译一个小的驱动文件而对内核大动干戈，那样编译的时间不仅长而且修改内核配置文件也是一件多余的工作。那么我们是否可以在不修改内核的前提下单独编译它是如何编译内核的呢？下面我们就通过分析它的Makefile入手简单介绍一个编译驱动（模块）文件的新方法。
+动态模块生成文件后缀名为 *.ko
+内核模块的相关操作
+加载内核模块：insmod 卸载内核模块：rmmod 查看内核模块：lsmod 二。动态模块helloworld开发 本人习惯于使用开发工具强大的代码补全功能 觉得效率会更高 所以我这里使用clion开发 完成后拷贝到linux编译
+clion开发环境配置
+主要使用clion的提示 下载内核的源代码解压 找到include目录 接下来新建一个 c的库项目 里面有 CMakeLists.txt添加引入头文件 添加include_directories后 写代码依然是没有提示的 需要重新加载一个cmake Header Search PAths就有了新包含的头文件了 接下来新建一个hello.c 写代码就有提示拉 出错可以不管 反正window编译不了的
+#include &lt;linux/init.h&gt;#include &lt;linux/module.h&gt;MODULE_LICENSE(&#34;GPL&#34;);static void hello_init(){printk(KERN_INFO&#34;***********hello world init&#34;);}static void hello_exit(){printk(KERN_INFO&#34;***********hello world exit&#34;);}module_init(hello_init);module_exit(hello_exit); 拷贝到linux某个目录新建 Makefile（不能使用小写的makefile）">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="linux下gcc编程09-编写内核helloworld模块 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一。内核动态模块介绍 Linux内核给开发者提供了灵活的模块加载方式，开发者可根据需要适当地选择静态或动态的方式将模块加入内核当中。静态加载的时候我们只需将驱动文件添加到对应的文件夹中并修改相应的Makefile和Kconfig即可，但是通过动态加载模块的方式，如果只是编译一个小的驱动文件而对内核大动干戈，那样编译的时间不仅长而且修改内核配置文件也是一件多余的工作。那么我们是否可以在不修改内核的前提下单独编译它是如何编译内核的呢？下面我们就通过分析它的Makefile入手简单介绍一个编译驱动（模块）文件的新方法。
+动态模块生成文件后缀名为 *.ko
+内核模块的相关操作
+加载内核模块：insmod 卸载内核模块：rmmod 查看内核模块：lsmod 二。动态模块helloworld开发 本人习惯于使用开发工具强大的代码补全功能 觉得效率会更高 所以我这里使用clion开发 完成后拷贝到linux编译
+clion开发环境配置
+主要使用clion的提示 下载内核的源代码解压 找到include目录 接下来新建一个 c的库项目 里面有 CMakeLists.txt添加引入头文件 添加include_directories后 写代码依然是没有提示的 需要重新加载一个cmake Header Search PAths就有了新包含的头文件了 接下来新建一个hello.c 写代码就有提示拉 出错可以不管 反正window编译不了的
+#include &lt;linux/init.h&gt;#include &lt;linux/module.h&gt;MODULE_LICENSE(&#34;GPL&#34;);static void hello_init(){printk(KERN_INFO&#34;***********hello world init&#34;);}static void hello_exit(){printk(KERN_INFO&#34;***********hello world exit&#34;);}module_init(hello_init);module_exit(hello_exit); 拷贝到linux某个目录新建 Makefile（不能使用小写的makefile）">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/programming/languages/gcc/linuxgcc_09/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="linux下gcc编程09-编写内核helloworld模块 :: liaomin416100569博客">
+    <meta property="og:description" content="一。内核动态模块介绍 Linux内核给开发者提供了灵活的模块加载方式，开发者可根据需要适当地选择静态或动态的方式将模块加入内核当中。静态加载的时候我们只需将驱动文件添加到对应的文件夹中并修改相应的Makefile和Kconfig即可，但是通过动态加载模块的方式，如果只是编译一个小的驱动文件而对内核大动干戈，那样编译的时间不仅长而且修改内核配置文件也是一件多余的工作。那么我们是否可以在不修改内核的前提下单独编译它是如何编译内核的呢？下面我们就通过分析它的Makefile入手简单介绍一个编译驱动（模块）文件的新方法。
+动态模块生成文件后缀名为 *.ko
+内核模块的相关操作
+加载内核模块：insmod 卸载内核模块：rmmod 查看内核模块：lsmod 二。动态模块helloworld开发 本人习惯于使用开发工具强大的代码补全功能 觉得效率会更高 所以我这里使用clion开发 完成后拷贝到linux编译
+clion开发环境配置
+主要使用clion的提示 下载内核的源代码解压 找到include目录 接下来新建一个 c的库项目 里面有 CMakeLists.txt添加引入头文件 添加include_directories后 写代码依然是没有提示的 需要重新加载一个cmake Header Search PAths就有了新包含的头文件了 接下来新建一个hello.c 写代码就有提示拉 出错可以不管 反正window编译不了的
+#include &lt;linux/init.h&gt;#include &lt;linux/module.h&gt;MODULE_LICENSE(&#34;GPL&#34;);static void hello_init(){printk(KERN_INFO&#34;***********hello world init&#34;);}static void hello_exit(){printk(KERN_INFO&#34;***********hello world exit&#34;);}module_init(hello_init);module_exit(hello_exit); 拷贝到linux某个目录新建 Makefile（不能使用小写的makefile）">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="编程开发">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="linux下gcc编程09-编写内核helloworld模块 :: liaomin416100569博客">
+    <meta itemprop="description" content="一。内核动态模块介绍 Linux内核给开发者提供了灵活的模块加载方式，开发者可根据需要适当地选择静态或动态的方式将模块加入内核当中。静态加载的时候我们只需将驱动文件添加到对应的文件夹中并修改相应的Makefile和Kconfig即可，但是通过动态加载模块的方式，如果只是编译一个小的驱动文件而对内核大动干戈，那样编译的时间不仅长而且修改内核配置文件也是一件多余的工作。那么我们是否可以在不修改内核的前提下单独编译它是如何编译内核的呢？下面我们就通过分析它的Makefile入手简单介绍一个编译驱动（模块）文件的新方法。
+动态模块生成文件后缀名为 *.ko
+内核模块的相关操作
+加载内核模块：insmod 卸载内核模块：rmmod 查看内核模块：lsmod 二。动态模块helloworld开发 本人习惯于使用开发工具强大的代码补全功能 觉得效率会更高 所以我这里使用clion开发 完成后拷贝到linux编译
+clion开发环境配置
+主要使用clion的提示 下载内核的源代码解压 找到include目录 接下来新建一个 c的库项目 里面有 CMakeLists.txt添加引入头文件 添加include_directories后 写代码依然是没有提示的 需要重新加载一个cmake Header Search PAths就有了新包含的头文件了 接下来新建一个hello.c 写代码就有提示拉 出错可以不管 反正window编译不了的
+#include &lt;linux/init.h&gt;#include &lt;linux/module.h&gt;MODULE_LICENSE(&#34;GPL&#34;);static void hello_init(){printk(KERN_INFO&#34;***********hello world init&#34;);}static void hello_exit(){printk(KERN_INFO&#34;***********hello world exit&#34;);}module_init(hello_init);module_exit(hello_exit); 拷贝到linux某个目录新建 Makefile（不能使用小写的makefile）">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="207">
+    <title>linux下gcc编程09-编写内核helloworld模块 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/programming\/languages\/gcc\/linuxgcc_09\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/programming/languages/gcc/linuxgcc_09/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#一内核动态模块介绍"><strong>一。内核动态模块介绍</strong></a></li>
+        <li><a href="#二动态模块helloworld开发">二。动态模块helloworld开发</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/index.html"><span itemprop="name">编程开发</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/index.html"><span itemprop="name">编程语言</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/programming/languages/gcc/index.html"><span itemprop="name">c语言</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">linux下gcc编程09-编写内核helloworld模块</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_08/index.html" title="linux下gcc编程08-编译linux内核 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/programming/languages/gcc/linuxgcc_10/index.html" title="linux下gcc编程10-clion编译调试nginx (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable programming" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="linux下gcc编程09-编写内核helloworld模块">linux下gcc编程09-编写内核helloworld模块</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h2 id="一内核动态模块介绍"><strong>一。内核动态模块介绍</strong></h2>
+<p>    Linux内核给开发者提供了灵活的模块加载方式，开发者可根据需要适当地选择静态或动态的方式将模块加入内核当中。静态加载的时候我们只需将驱动文件添加到对应的文件夹中并修改相应的<a href="https://so.csdn.net/so/search?q=Makefile&spm=1001.2101.3001.7020" rel="external" target="_blank">Makefile</a>和Kconfig即可，但是通过动态加载模块的方式，如果只是编译一个小的驱动文件而对内核大动干戈，那样编译的时间不仅长而且修改内核配置文件也是一件多余的工作。那么我们是否可以在不修改内核的前提下单独编译它是如何编译内核的呢？下面我们就通过分析它的Makefile入手简单介绍一个编译驱动（模块）文件的新方法。</p>
+<p>动态模块生成文件后缀名为 *.ko</p>
+<p>内核模块的相关操作</p>
+<ol>
+<li>加载内核模块：insmod</li>
+<li>卸载内核模块：rmmod</li>
+<li>查看内核模块：lsmod</li>
+</ol>
+<h2 id="二动态模块helloworld开发">二。动态模块helloworld开发</h2>
+<p>本人习惯于使用开发工具强大的代码补全功能 觉得效率会更高 所以我这里使用<a href="https://so.csdn.net/so/search?q=clion&spm=1001.2101.3001.7020" rel="external" target="_blank">clion</a>开发 完成后拷贝到linux编译</p>
+<p>clion开发环境配置</p>
+<p>主要使用clion的提示 下载内核的源代码解压  找到include目录 
+<a href="#R-image-63a1afc5b4870c9546c7541e3e39fc7b" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_09.md.images/889d36ed7c5df9ce888c787b34325d16.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-63a1afc5b4870c9546c7541e3e39fc7b"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_09.md.images/889d36ed7c5df9ce888c787b34325d16.png"></a></p>
+<p>接下来新建一个 c的库项目  里面有 CMakeLists.txt添加引入头文件
+<a href="#R-image-b1e0018141a2fd3f99aec1d96c5850a0" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_09.md.images/053f0031c8c50359b3e9317ba6e11df7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b1e0018141a2fd3f99aec1d96c5850a0"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_09.md.images/053f0031c8c50359b3e9317ba6e11df7.png"></a></p>
+<p>添加include_directories后 写代码依然是没有提示的 需要重新加载一个cmake Header Search PAths就有了新包含的头文件了
+<a href="#R-image-9b2da9b6bc9a6351dbbc7d970a6db72f" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_09.md.images/382ac54e8cad012ef25f8411356da814.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9b2da9b6bc9a6351dbbc7d970a6db72f"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/languages/gcc/linuxgcc_09.md.images/382ac54e8cad012ef25f8411356da814.png"></a></p>
+<p>接下来新建一个hello.c 写代码就有提示拉 出错可以不管 反正window编译不了的</p>
+<p> </p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+ 
+MODULE_LICENSE(&#34;GPL&#34;);
+static void hello_init(){
+    printk(KERN_INFO&#34;***********hello world init&#34;);
+}
+static void hello_exit(){
+    printk(KERN_INFO&#34;***********hello world exit&#34;);
+}
+module_init(hello_init);
+module_exit(hello_exit);</code></pre></div>
+<p>拷贝到linux某个目录新建 Makefile（不能使用小写的makefile）</p>
+<p>DIRS变量表示内核源代码的目录 一般安装的centos都没有 使用 yum -y install kernel-devel安装 </p>
+<p>如果uanme -r和源代码的版本号不对应 生成的ko是无法动态加载的</p>
+<p>make -C 表示进入源代码目录编译 然后调用modules目标 传入一个参数M=当前目录  跳转到当前目录去make</p>
+<p>obj-m:=hello.o表示当前生成的目标文件 会生成一个同名的hello.ko</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>obj-m := hello.o
+DIRS :=/usr/src/kernels/3.10.0-862.14.4.el7.x86_64
+all:
+	make -C $(DIRS) M=$(PWD) modules
+clean:
+	rm -Rf *.o *.ko *.mod.c *.order *.symvers</code></pre></div>
+<p>执行make运行 查看是否生成hello.ko </p>
+<p>加载（如果源代码和当前系统版本不匹配 是会出现下面错误）</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost kernel]# insmod hello.ko
+insmod: ERROR: could not insert module hello.ko: Invalid module format</code></pre></div>
+<p>正确后可以使用 </p>
+<p>tail -f /var/log/messages查看是否正常打印了 加载初始化函数</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>[root@localhost kernel]# tail -20 /var/log/messages
+Oct 18 16:34:09 localhost kernel: Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 05/19/2017
+Oct 18 16:34:09 localhost kernel: Call Trace:
+Oct 18 16:34:09 localhost kernel: [&lt;ffffffff84d0d768&gt;] dump_stack+0x19/0x1b
+Oct 18 16:34:09 localhost kernel: [&lt;ffffffff8470f5db&gt;] load_module+0x275b/0x2bc0
+Oct 18 16:34:09 localhost kernel: [&lt;ffffffff849767a0&gt;] ? ddebug_proc_write+0xf0/0xf0
+Oct 18 16:34:09 localhost kernel: [&lt;ffffffff8470b1e3&gt;] ? copy_module_from_fd.isra.43+0x53/0x150
+Oct 18 16:34:09 localhost kernel: [&lt;ffffffff8470fbf6&gt;] SyS_finit_module+0xa6/0xd0
+Oct 18 16:34:09 localhost kernel: [&lt;ffffffff84d1f7d5&gt;] system_call_fastpath+0x1c/0x21
+Oct 18 16:34:59 localhost kernel: ***********hello world exit
+Oct 18 16:34:59 localhost kernel: ***********hello world init</code></pre></div>
+<p>接下来可以使用 rmmod删除模块  可以使用lsmod显示所有加载的模块</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="parent " data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/index.html"><a class="padding" href="/docs/programming/languages/index.html">编程语言</a><ul id="R-subsections-1bbde7fb0c312ba940b425df5a4caf67" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/programming/languages/gcc/index.html"><a class="padding" href="/docs/programming/languages/gcc/index.html">c语言</a><ul id="R-subsections-e8c9b5cff4c7849bafc19d21e0433f7f" class="collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_01/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_01/index.html">linux下gcc编程01-gcc工具安装和使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_02/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_02/index.html">linux下gcc编程02-gdb调试工具使用</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_03/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_03/index.html">linux下gcc编程03-make工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_04/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_04/index.html">linux下gcc编程04-cmake工程管理</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_05/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_05/index.html">linux下gcc编程05-window下开发工具安装</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_06/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_06/index.html">linux下gcc编程06-c语言参考手册</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_07/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_07/index.html">linux下gcc编程07-使用linux下c库函数</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_08/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_08/index.html">linux下gcc编程08-编译linux内核</a></li>
+            <li class="active " data-nav-id="/docs/programming/languages/gcc/linuxgcc_09/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_09/index.html">linux下gcc编程09-编写内核helloworld模块</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_10/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_10/index.html">linux下gcc编程10-clion编译调试nginx</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_11/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_11/index.html">linux下gcc编程11-window下clion编译调试nginx&#43;集成lua-nginx-module&#43;安装开源x-waf</a></li>
+            <li class="" data-nav-id="/docs/programming/languages/gcc/linuxgcc_12/index.html"><a class="padding" href="/docs/programming/languages/gcc/linuxgcc_12/index.html">linux下gcc编程12-window下clion编译调试redis7.0</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/languages/assembly/index.html"><a class="padding" href="/docs/programming/languages/assembly/index.html">汇编语言</a><ul id="R-subsections-664e07814ed6bbd77b351b341bff28e6" class="collapsible-menu"></ul></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/ai/index.html"><a class="padding" href="/docs/programming/ai/index.html">人工智能</a><ul id="R-subsections-9d06be7bd8c736c09a65fb0b91b71d0e" class="collapsible-menu"></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

@@ -1,0 +1,543 @@
+---
+title: "K8S二次开发05-使用clientgo自定义ingresscontroller"
+date: 2025-09-18T16:55:17+08:00
+weight: 3
+# bookComments: false
+# bookSearchExclude: false
+---
+
+
+# clientgo简介
+client-go 作为官方维护的 go 语言实现的 client 库，提供了大量的高质量代码帮助开发者编写自己的客户端程序，来访问、操作 Kubernetes 集群
+
+# infomer简介
+cient-go 是从 k8s 代码中抽出来的一个客户端工具，Informer 是 client-go 中的核心工具包，已经被 kubernetes 中众多组件所使用。所谓 Informer，其实就是一个带有本地缓存和索引机制的、可以注册 EventHandler 的 client，本地缓存被称为 Store，索引被称为 Index。使用 informer 的目的是为了减轻 apiserver 数据交互的压力而抽象出来的一个 cache 层, 客户端对 apiserver 数据的 “读取” 和 “监听” 操作都通过本地 informer 进行。Informer 实例的Lister()方法可以直接查找缓存在本地内存中的数据。
+
+Informer 的主要功能：
+1. 同步数据到本地缓存
+2. 根据对应的事件类型，触发事先注册好的 ResourceEventHandler
+## infomer产生背景
+随着Controller越来越多，如果Controller直接访问k8s-apiserver，那么将会导致其压力过大，于是在这样的背景下就有了Informer的概念。其发展到今天这个架构，大概可以总结出以下迭代思路：
+![在这里插入图片描述](/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/6b5152da370b2af1692642eb872e08cb.png)
+第一阶段，Controller直接访问k8s-api-server。存在的问题：多个控制器大量访问k8s-apiserver时会对其造成巨大的压力。
+
+第二阶段，Informer代替Controller去访问k8s-apiserver。而Controller的所有操作操作(如：查状态、对资源进行伸缩等）都和Informer进行交互。但Informer没有必要每次都去访问k8s-apiserver，它只要在需要的时候通过ListAndWatch(即通过k8s List API获取所有资源的最新状态；通过Wath API去监听这些资源状态的变化)与k8s-apiserver交互即可。
+
+ListAndWatch的代码位置: client-go/tools/cache/reflector.go
+```cpp
+func (r *Reflector) ListAndWatch(stopCh <-chan struct{}) error{ … }
+```
+第三阶段， Informer并没有直接访问k8s-api-server，而是通过一个叫Reflector的对象进行api-server的访问。上面所说的 ListAndWatch 事实上是由Reflector`实现的。
+
+第四阶段, 通过指定资源类型来Watch特定资源。
+
+// 代码位置: client-go/tools/cache/listwatch.go
+
+```cpp
+// Watcher is any object that knows how to start a watch on a resource.
+type Watcher interface {
+    // Watch should begin a watch at the specified version.
+    Watch(options metav1.ListOptions) (watch.Interface, error)
+}
+```
+
+第五阶段，定义SharedInformer。如果Controller与Informer是一一对应的关系，那么k8s-api-server的压力也还是挺大的。但是类似于Pod这样的资源来说，Deployment和StatefulSet都能对它进行管理，当多个控制器同时想查Pod的状态时，实现上，只需要有一个Informer就能满足需求了，即: SharedInformered。
+
+第六阶段，解决多个不同的控制器排除与重试问题，引入DeltaFIFOQueue。每当资源被修改时，Reflector就会收到事件通知，并将对应的事件放入DeltaFIFOQueue中。另外，SharedInformer会不断从DeltaFIFOQueue中读取事件并更新本地缓存(ThreadSafeStore)的状态。
+
+## infomer组件
+Informer 中主要有 Reflector、Delta FIFO Queue、Local Store、WorkQueue 几个组件。以下是 Informer 的工作流程图。
+![在这里插入图片描述](/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/bc12981c1fc71039b947ed69e4a9cfd2.png)
+根据流程图来解释一下 Informer 中几个组件的作用：
+
+- Reflector：称之为反射器，实现对 apiserver 指定类型对象的监控(ListAndWatch)，其中反射实现的就是把监控的结果实例化成具体的对象，最终也是调用 Kubernetes 的 List/Watch API；
+
+- DeltaIFIFO Queue：一个增量队列，将 Reflector 监控变化的对象形成一个 FIFO 队列，此处的 Delta 就是变化；
+
+- LocalStore：就是 informer 的 cache，这里面缓存的是 apiserver 中的对象(其中有一部分可能还在DeltaFIFO 中)，此时使用者再查询对象的时候就直接从 cache 中查找，减少了 apiserver 的压力，LocalStore 只会被 Lister 的 List/Get 方法访问。
+
+- WorkQueue：DeltaIFIFO 收到时间后会先将时间存储在自己的数据结构中，然后直接操作 Store 中存储的数据，更新完 store 后 DeltaIFIFO 会将该事件 pop 到 WorkQueue 中，Controller 收到 WorkQueue 中的事件会根据对应的类型触发对应的回调函数。
+
+## Informer 的工作流程
+- Informer 首先会 list/watch apiserver，Informer 所使用的 Reflector 包负责与 apiserver 建立连接，Reflector 使用 ListAndWatch 的方法，会先从 apiserver 中 list 该资源的所有实例，list 会拿到该对象最新的 resourceVersion，然后使用 watch 方法监听该 resourceVersion 之后的所有变化，若中途出现异常，reflector 则会从断开的 resourceVersion 处重现尝试监听所有变化，一旦该对象的实例有创建、删除、更新动作，Reflector 都会收到”事件通知”，这时，该事件及它对应的 API 对象这个组合，被称为增量（Delta），它会被放进 DeltaFIFO 中。
+- Informer 会不断地从这个 DeltaFIFO 中读取增量，每拿出一个对象，Informer 就会判断这个增量的时间类型，然后创建或更新本地的缓存，也就是 store。
+- 如果事件类型是 Added（添加对象），那么 Informer 会通过 Indexer 的库把这个增量里的 API 对象保存到本地的缓存中，并为它创建索引，若为删除操作，则在本地缓存中删除该对象。
+- DeltaFIFO 再 pop 这个事件到 controller 中，controller 会调用事先注册的 ResourceEventHandler 回调函数进行处理。
+- 在 ResourceEventHandler 回调函数中，其实只是做了一些很简单的过滤，然后将关心变更的 Object 放到 workqueue 里面。
+- Controller 从 workqueue 里面取出 Object，启动一个 worker 来执行自己的业务逻辑，业务逻辑通常是计算目前集群的状态和用户希望达到的状态有多大的区别，然后孜孜不倦地让 apiserver 将状态演化到用户希望达到的状态，比如为 deployment 创建新的 pods，或者是扩容/缩容 deployment。
+- 在worker中就可以使用 lister 来获取 resource，而不用频繁的访问 apiserver，因为 apiserver 中 resource 的变更都会反映到本地的 cache 中。
+
+Informer 在使用时需要先初始化一个 InformerFactory，目前主要推荐使用的是 SharedInformerFactory，Shared 指的是在多个 Informer 中共享一个本地 cache。
+Informer 中的 ResourceEventHandler 函数有三种：
+
+```cpp
+// ResourceEventHandlerFuncs is an adaptor to let you easily specify as many or
+// as few of the notification functions as you want while still implementing
+// ResourceEventHandler.
+type ResourceEventHandlerFuncs struct {
+    AddFunc    func(obj interface{})
+    UpdateFunc func(oldObj, newObj interface{})
+    DeleteFunc func(obj interface{})
+}
+```
+这三种函数的处理逻辑是用户自定义的，在初始化 controller 时注册完 ResourceEventHandler 后，一旦该对象的实例有创建、删除、更新三中操作后就会触发对应的 ResourceEventHandler。
+
+# 自定义 Ingress Controller
+在 Kubernetes 中通过 Ingress 来暴露服务到集群外部，这个已经是一个很普遍的方式了，而真正扮演请求转发的角色是背后的 Ingress Controller，比如我们经常使用的 traefik、ingress-nginx 等就是一个 Ingress Controller。这里将通过 client-go来实现一个简单的自定义的 Ingress Controller，可以加深我们对 Ingress 的理解。
+我们先创建一个nginx的服务
+
+```cpp
+kubectl run nginx --image=nginx
+```
+我们可以使用 NodePort 类型的 Service 来进行访问
+```cpp
+kind: Service
+apiVersion: v1
+metadata:
+  name: whoami
+spec:
+  selector:
+    app: whoami
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort:80
+```
+但是当我们应用越来越多的时候端口的管理也是一个很大的问题，所以一般情况下不采用该方式，之前我们的方法是用 DaemonSet 在每个边缘节点上运行一个 Nginx 应用：
+
+```cpp
+spec:
+  hostNetwork: true
+  containers:
+    - image: nginx:1.15.3-alpine
+      name: nginx
+      ports:
+        - name: http
+          containerPort: 80
+```
+通过设置 hostNetwork:true，容器将绑定节点的80端口，而不仅仅是容器，这样我们就可以通过节点的公共 IP 地址的 80 端口访问到 Nginx 应用了。这种方法理论上肯定是有效的，但是有一个最大的问题就是需要创建一个 Nginx 配置文件，如果应用有变更，还需要手动修改配置，不能自动发现和热更新，这对于大量的应用维护的成本显然太大,同时每个服务都需要暴露主机端口，端口太多不好维护。这个时候我们就可以用另外一个 Kubernetes 提供的方案了：Ingress。
+
+## Ingress 对象
+Kubernetes 内置就支持通过 Ingress 对象将外部的域名映射到集群内部服务，类似于nginx，我们可以通过如下的 Ingress 对象来对外暴露服务：
+
+```cpp
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: testingress
+spec:
+  tls:
+    - hosts:
+        - "*.jiaozi.com"
+      secretName: jiaozi-tls
+  rules:
+    - host: main.jiaozi.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+```
+这里为了最简单实现ingress案例，我们去除掉https的部分
+
+```cpp
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: testingress
+spec:
+  rules:
+    - host: main.jiaozi.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+
+```
+>上面配置的大概意识是当访问main.jiaozi.com/下所有请求转发到nginx服务的80端口。
+
+## Ingress实现
+### client-go实现
+```cpp
+package controller
+
+import (
+	"context"
+	_ "context"
+	"flag"
+	_ "flag"
+	"fmt"
+	"github.com/demdxx/gocast"
+	_ "k8s.io/api/core/v1"
+	v1 "k8s.io/api/networking/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/runtime"
+	"k8s.io/client-go/informers"
+	"k8s.io/client-go/kubernetes"
+	_ "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/cache"
+	"k8s.io/client-go/tools/clientcmd"
+	_ "k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/util/homedir"
+	_ "k8s.io/client-go/util/homedir"
+	"log"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
+	"path/filepath"
+	_ "path/filepath"
+	"regexp"
+	"strings"
+)
+var client *kubernetes.Clientset
+/**
+  获取Clientset对象客户端操作对象
+*/
+func GetClientSet() (*kubernetes.Clientset, error) {
+	if client==nil {
+		var kubeconfig *string
+		if home := homedir.HomeDir(); home != "" {
+			kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+			//kubeconfig = flag.String("kubeconfig", filepath.Join( "d:/test/", "config"), "(optional) absolute path to the kubeconfig file")
+		} else {
+			kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+		}
+		flag.Parse()
+		config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+		if err != nil {
+			//集群内部
+			log.Println("进去集群内部获取集群内部配置")
+			config, err = rest.InClusterConfig()
+			if err != nil {
+				log.Println("进去集群内部获取配置错误:",err)
+				panic(err)
+			}
+		}
+		// 初始化 client
+		var configerr error
+		client,configerr=kubernetes.NewForConfig(config)
+		return client,configerr
+	}
+	return client,nil
+}
+
+/**
+  watch
+     ingress或者service发生变化直接重启读取配置重启代理
+*/
+func WatchResource() {
+	// 初始化 client
+	clientset, err := GetClientSet()
+	if err != nil {
+		log.Panic(err.Error())
+	}
+	stopper := make(chan struct{})
+	defer close(stopper)
+	// 初始化 informer 为了降低过多watch对apiserver的压力，使用共享的infomer
+	factory := informers.NewSharedInformerFactory(clientset, 0)
+	//创建一个service的informer
+	//serviceInformer := factory.Core().V1().Services()
+	//ingressInformer := factory.Core().V1().Pods()
+	ingressInformer := factory.Networking().V1().Ingresses()
+	//SharedIndexInformer 提供 add and get Indexers 能力基于 SharedInformer.
+	defer runtime.HandleCrash()
+	//// 启动 informer，list & watch
+	go factory.Start(stopper)
+	// list  一个 Informer 实例只能监听一种 resource，每个 resource 需要创建对应的 Informer 实例。
+	if !cache.WaitForCacheSync(stopper, ingressInformer.Informer().HasSynced) {
+		runtime.HandleError(fmt.Errorf("Timed out waiting for caches to sync"))
+		return
+	}
+	go func() {
+		// 使用自定义 handler infomer获取到事件对象后分发到这个handler中
+		ingressInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+			AddFunc: func(obj interface{}) {
+				onUpdate("ADD", obj)
+			},
+			UpdateFunc: func(o1 interface{}, o2 interface{}) { onUpdate("UPDATE", o1, o2) }, // 此处省略 workqueue 的使用
+			DeleteFunc: func(o1 interface{}) { onUpdate("DELETE", o1) },
+		})
+	}()
+	<-make(chan int)
+}
+func onUpdate(op string, obj ...interface{}) {
+	switch obj[0].(type) {
+	case *v1.Ingress:
+		ingress = obj[0].(*v1.Ingress)
+		if "ADD"==op {
+			ingress = obj[0].(*v1.Ingress)
+		}
+		if "UPDATE"==op {
+			ingress = obj[1].(*v1.Ingress)
+		}
+		if "DELETE"==op {
+			ingress = nil
+		}
+	}
+	RenderProxyConfig()
+}
+var ingress *v1.Ingress
+/**
+   定义和ingress配置匹配的映射对象
+ */
+type Server struct{
+	ServiceName string  //跳转k8s服务名称
+	Port string         //跳转k8s服务端口
+	MatchHost string    //匹配hostname
+}
+var regServerMapping map[string]*Server=make(map[string]*Server)
+
+func RenderProxyConfig(){
+	if ingress!=nil {
+		for _, rule := range ingress.Spec.Rules {
+			for _, path := range rule.HTTP.Paths {
+				mappingHost := rule.Host
+				//为了防止http.handle在ingress修改后重新注册，导致出错
+				if  _, ok :=regServerMapping[path.Path];!ok {
+					var server *Server;
+					server = &Server{
+						ServiceName: path.Backend.Service.Name,
+						Port:        gocast.ToString(path.Backend.Service.Port.Number),
+						MatchHost:   strings.ReplaceAll(mappingHost, "*", ".*"),
+					}
+					http.Handle(path.Path, server)
+					regServerMapping[path.Path]=server
+				}else{
+					server:=regServerMapping[path.Path]
+					server.ServiceName=path.Backend.Service.Name;
+					server.Port=gocast.ToString(path.Backend.Service.Port.Number)
+					server.MatchHost=strings.ReplaceAll(mappingHost, "*", ".*")
+				}
+			}
+
+		}
+	}
+}
+func StartProxy(){
+	RenderProxyConfig()
+	http.ListenAndServe(":80", nil)
+}
+// ServeHTTP 处理 HTTP 请求
+func (s *Server )ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	requestHost:=r.Host
+	log.Println("开始匹配ingrees域名:",s.MatchHost,"，到请求域名：",requestHost)
+	if result,_:=regexp.Match(s.MatchHost,[]byte(requestHost));result {
+		//通过服务名称获取到集群ip
+		client, _ := GetClientSet()
+		service, _ := client.CoreV1().Services(ingress.Namespace).Get(context.TODO(), s.ServiceName, metav1.GetOptions{})
+		log.Println("匹配到service:",service)
+		serviceIp := service.Spec.ClusterIP
+		//serviceIp := "10.10.0.118"
+		// 根据请求的域名和 Path 路径获取背后真实的后端地址
+		backendURL, _ := url.Parse("http://" + serviceIp + ":" + s.Port)
+		// 对后端真实 URL 发起代理请求
+		p := httputil.NewSingleHostReverseProxy(backendURL)
+		p.ServeHTTP(w, r)
+	}
+}
+
+```
+main.go代码
+
+```cpp
+package main
+import (
+	controller "clientgo/controller"
+)
+func main() {
+	//开启informer监听ingress资源的变化
+	go controller.WatchResource()
+	//开启代理服务器接收来自外部的请求
+	controller.StartProxy()
+}
+
+```
+### 创建镜像
+我们自定义的controller因为对外接受请求，并能转发到nginx应用，所以他本身也必须是一个和转发服务在同一个namespace的k8s应用.
+
+```cpp
+# 第一阶段的镜像定义为名字builder 通过golang将源代码构建出应用程序，第二阶段就是用输出的应用程序直接在最小镜像下运行
+FROM golang:1.17 as builder
+
+WORKDIR /workspace
+# Copy the Go Modules manifests
+COPY go.mod go.mod
+COPY go.sum go.sum
+# cache deps before building and copying source so that we don't need to re-download as much
+# and so that source changes don't invalidate our downloaded layer
+RUN go env -w GO111MODULE=on
+RUN export GO111MODULE=on
+RUN go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/
+RUN export GOPROXY=https://mirrors.aliyun.com/goproxy/
+RUN go mod download -x
+
+# Copy the go source
+COPY main.go main.go
+COPY controller/ controller/
+
+# Build
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o manager main.go
+
+# 使用最小的镜像zi
+FROM alpine:latest
+WORKDIR /
+COPY --from=builder /workspace/manager .
+ENTRYPOINT ["/manager"]
+
+```
+使用docker命令构建镜像
+
+```cpp
+docker build -t jiaozi.com:5000/hello-ingress:1.0.1 .
+```
+上传到私服jiaozi.com:5000
+
+```cpp
+docker push jiaozi.com:5000/hello-ingress:1.0.1 
+```
+>私服创建请参考上一章节 [K8S二次开发04-自定义operator（operator-sdk调试）-前置安装章节](https://blog.csdn.net/liaomin416100569/article/details/122985042?spm=1001.2014.3001.5501)
+
+### 创建daemonset
+创建的controller需要在每个worker节点创建一个对外暴露的端口，所以必须将之前创建的client-go镜像部署为daemonset
+>注意自定义的controller需要创建对应账号和权限，并且绑定在daemonset中，否则代码listwatch会提示没有权限
+
+```cpp
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: hello-ingresscontroller-serviceaccount
+  namespace: default
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: hello-ingresscontroller-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: hello-ingresscontroller-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: hello-ingresscontroller-role
+subjects:
+  - kind: ServiceAccount
+    name: hello-ingresscontroller-serviceaccount
+    namespace: default
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: hello-ingress-ds
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: hello-ingress
+      release: stable
+  template:
+    metadata:
+      labels:
+        app: hello-ingress
+        release: stable
+    spec:
+      hostNetwork: true
+      serviceAccountName: hello-ingresscontroller-serviceaccount
+      containers:
+        - name: hello-ingress
+          image: jiaozi.com:5000/hello-ingress:1.0.1
+          imagePullPolicy: IfNotPresent
+```
+
+使用kubectl创建
+### 创建ingress
+
+```cpp
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: testingress
+spec:
+  rules:
+    - host: main.jiaozi.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+
+```
+使用kubectl apply -f 创建
+## 映射域名
+新建两个测试的域名，指向worker节点
+```cpp
+10.10.0.116 main.jiaozi.com
+10.10.0.116 gg.jiaozi.com
+```
+访问main.jiaozi.com
+![在这里插入图片描述](/docs/images/content/devops/kubernetes/k8s_dev_05.md.images/313cf1de0eaa7279ba37fadb2f4f401f.png)
+无法访问gg.jiaozi.com
+尝试修改ingress配置
+
+```cpp
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: testingress
+spec:
+  rules:
+    - host: *.jiaozi.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+
+```
+使用kubectl apply -f  测试gg.jiaozi.com和*.jiaozi.com子域名均可正常访问。
+
+
+

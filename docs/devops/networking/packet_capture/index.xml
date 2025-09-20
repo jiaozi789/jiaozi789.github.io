@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>网络抓包 :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/devops/networking/packet_capture/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/devops/networking/packet_capture/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>android逆向攻防01-http抓包</title>
+      <link>https://jiaozi789.github.io/docs/devops/networking/packet_capture/net_android_fpackage/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/devops/networking/packet_capture/net_android_fpackage/index.html</guid>
+      <description>概述 网络抓包，是Android应用逆向分析的重中之重，很多时候我们拿到一个APP，不知道从何入手分析，往往是从抓包开始，先弄清楚他与服务器通信的内容，如果一目了然，我们完全可以照搬，自行写一个程序来模拟，如果有一些加密字段和随机字段，也不用担心，我们可以从抓包中了解到一些关键的URL和session之类的信息，然后再反编译分析代码的时候，这些字符串可以帮助我们更快的定位关键代码所在之处。&#xA;android抓包的方式有以下几种：&#xA;基于代理的https根证书替换抓包。 android系统安装抓包软件。 使用sslhock抓包pcap文件分析。 该内容仅供用于学习目的，请勿用于商业目的。&#xA;抓包实战 代理抓包 使用代理抓包的工具非常多，比如burpsuite，fiddler，charles等。 其中burpsuite抓包之前写过，地址：https://blog.csdn.net/liaomin416100569/article/details/129176916 无论是fidder和charles都是充当了一个中间人代理的角色来对HTTPS进行抓包:&#xA;截获客户端向发起的HTTPS请求，佯装客户端，向真实的服务器发起请求。 截获真实服务器的返回，佯装真实服务器，向客户端发送数据。 获取了用来加密服务器公钥的非对称秘钥和用来加密数据的对称秘钥。 这里演示charles，模拟器使用夜神模拟器。 使用fiddler导出根证书，使用下面相同的方法，在chrome中就无法抓包，不知道是版本的还是其他问题，charles和burpsuite正常。&#xA;charles安装 建议安装使用最新版，官方下载地址 https://www.charlesproxy.com/download 这是我的注册序列号 Registered Name:&#x9;jiaozi License Key:&#x9;5363faa4184fb6fbcb&#xA;这是免费共享序列号提供站：https://www.zzzmode.com/mytools/charles/。 github开源地址:https://github.com/8enet/Charles-Crack&#xA;浏览器抓包 点击proxy-proxy settings 设置代理端口，比如我设置的8881 点击 proxy-ssl proxy settings ，新增一个include : 点击help - ssl proxying - Install Charles Root Certificate，证书弹出后点击安装证书-选择本地计算机 点击浏览选择：受信任的根证书颁发机构 在浏览器上通过SwitchyOmega添加代理绑定到 ip:8881,浏览器切换到该场景，抓包</description>
+    </item>
+  </channel>
+</rss>

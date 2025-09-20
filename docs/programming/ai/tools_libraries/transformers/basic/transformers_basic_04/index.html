@@ -93,26 +93,26 @@ $$[X_{\text{norm}} = \frac{{X - X_{\text{min}}}}{{X_{\text{max}} - X_{\text{min}
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="393">
     <title>Transformer模型详解04-Encoder 结构 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -166,7 +166,7 @@ $$[X_{\text{norm}} = \frac{{X - X_{\text{min}}}}{{X_{\text{max}} - X_{\text{min}
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_04/index.html">
     <div id="R-body" class="default-animation">
@@ -314,21 +314,21 @@ window.MathJax = {
 </ol>
 <p>举个例子，考虑一个包含残差连接的深度残差网络（Residual Network，ResNet）。在这个网络中，每个残差块都由两个或多个卷积层组成，其中第一个卷积层产生特征图 $H(x)$，而第二个卷积层则对 $H(x)$ 进行进一步变换。然后，原始输入 $x$ 被添加到 $H(x)$ 上，得到 $F(x)=H(x)+x$。这样，输出 $F(x)$ 就包含了相对于输入 $x$ 的增量，网络可以更轻松地学习到残差部分，从而更有效地优化模型。</p>
 <h1 id="add--norm">Add &amp; Norm</h1>
-<p><a href="#R-image-a249510cc725485d6341325d3e3cbf78" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/dc10384f9e4c4321dedd2e69da70a5c9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a249510cc725485d6341325d3e3cbf78"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/dc10384f9e4c4321dedd2e69da70a5c9.png"></a></p>
+<p><a href="#R-image-e3db20363b84f43032d13bab28aedb5a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/dc10384f9e4c4321dedd2e69da70a5c9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e3db20363b84f43032d13bab28aedb5a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/dc10384f9e4c4321dedd2e69da70a5c9.png"></a></p>
 <p>Add &amp; Norm 层由 Add 和 Norm 两部分组成，其计算公式如下：
-<a href="#R-image-b515449fbe3332701fa92b14142de711" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/02a8a45b57c0b3be8f85c4c058cd83b1.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b515449fbe3332701fa92b14142de711"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/02a8a45b57c0b3be8f85c4c058cd83b1.png"></a>
+<a href="#R-image-725e60f7952f0dcb4893ddf4fac50f3f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/02a8a45b57c0b3be8f85c4c058cd83b1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-725e60f7952f0dcb4893ddf4fac50f3f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/02a8a45b57c0b3be8f85c4c058cd83b1.png"></a>
 第一个Add&amp;Norm中Add指 X+MultiHeadAttention(X)，是一种残差连接，通常用于解决多层网络训练的问题，可以让网络只关注当前差异的部分，在 ResNet 中经常用到：
-<a href="#R-image-e85902633e0022ade8ccf9c6e9c28e77" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/8b91ce8ab64a706cca1aad31425c03a0.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e85902633e0022ade8ccf9c6e9c28e77"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/8b91ce8ab64a706cca1aad31425c03a0.png"></a>
+<a href="#R-image-7d484f4fd22b376d3c64cef5d23f0959" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/8b91ce8ab64a706cca1aad31425c03a0.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7d484f4fd22b376d3c64cef5d23f0959"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/8b91ce8ab64a706cca1aad31425c03a0.png"></a>
 Norm指 Layer Normalization，通常用于 RNN 结构，Layer Normalization 会将每一层神经元的输入都转成均值方差都一样的，这样可以加快收敛。</p>
 <h1 id="feed-forward">Feed Forward</h1>
 <p>Feed Forward 层比较简单，是一个两层的全连接层，第一层的激活函数为 Relu，第二层不使用激活函数，对应的公式如下。
 $$\text{FFN}(x) = \text{ReLU}(xW_1 + b_1)W_2 + b_2$$
 也就是：
-<a href="#R-image-eeb5363c577aea39ff4e39d0253bab94" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/9e89520056b61c9d6857515aee431ede.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-eeb5363c577aea39ff4e39d0253bab94"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/9e89520056b61c9d6857515aee431ede.png"></a>
+<a href="#R-image-aad96dbe88a28059f46ed1e606f48cee" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/9e89520056b61c9d6857515aee431ede.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-aad96dbe88a28059f46ed1e606f48cee"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/9e89520056b61c9d6857515aee431ede.png"></a>
 在这个公式中：</p>
 <ul>
 <li>$(X)$ 是输入的隐藏表示，维度为 $(d_{\text{model}})$，是Add&amp;Norm输出；</li>
@@ -355,8 +355,8 @@ $$\text{FFN}(x) = \text{ReLU}(xW_1 + b_1)W_2 + b_2$$
 <h1 id="组成-encoder">组成 Encoder</h1>
 <p>通过上面描述的 Multi-Head Attention, Feed Forward, Add &amp; Norm 就可以构造出一个 Encoder block，Encoder block 接收输入矩阵$X_(n<em>d)$, 并输出一个矩阵$O_(n</em>d)$,通过多个 Encoder block 叠加就可以组成 Encoder。
 第一个 Encoder block 的输入为句子单词的表示向量矩阵，后续 Encoder block 的输入是前一个 Encoder block 的输出，最后一个 Encoder block 输出的矩阵就是编码信息矩阵 C，这一矩阵后续会用到 Decoder 中。
-<a href="#R-image-00cf0d441068ab766d0d46a5fa6ca42e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/aab05f88a0c52334e3ad0a6ae8134c4a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-00cf0d441068ab766d0d46a5fa6ca42e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/aab05f88a0c52334e3ad0a6ae8134c4a.png"></a></p>
+<a href="#R-image-d06dd6f3477f371ff9d0ade521cd1133" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/aab05f88a0c52334e3ad0a6ae8134c4a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d06dd6f3477f371ff9d0ade521cd1133"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_04.md.images/aab05f88a0c52334e3ad0a6ae8134c4a.png"></a></p>
 <h1 id="代码实现">代码实现</h1>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import torch
 import torch.nn as nn
@@ -460,6 +460,8 @@ class TransformerEncoder(nn.Module):
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -477,8 +479,8 @@ class TransformerEncoder(nn.Module):
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

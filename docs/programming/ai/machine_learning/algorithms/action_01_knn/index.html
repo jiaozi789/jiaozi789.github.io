@@ -97,26 +97,26 @@
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="958">
     <title>机器学习实战教程（一）：K-近邻（KNN）算法 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -170,7 +170,7 @@
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_01_knn/index.html">
     <div id="R-body" class="default-animation">
@@ -278,17 +278,17 @@ window.MathJax = {
 <h4 id="1k-近邻法简介">1、k-近邻法简介</h4>
 <p>k近邻法(k-nearest neighbor, k-NN)是1967年由Cover T和Hart P提出的一种基本分类与回归方法。它的工作原理是：存在一个样本数据集合，也称作为训练样本集，并且样本集中每个数据都存在标签，即我们知道样本集中每一个数据与所属分类的对应关系。输入没有标签的新数据后，将新的数据的每个特征与样本集中数据对应的特征进行比较，然后算法提取样本最相似数据(最近邻)的分类标签。一般来说，我们只选择样本数据集中前k个最相似的数据，这就是k-近邻算法中k的出处，通常k是不大于20的整数。最后，选择k个最相似数据中出现次数最多的分类，作为新数据的分类。</p>
 <p>举个简单的例子，我们可以使用k-近邻算法分类一个电影是爱情片还是动作片。</p>
-<p><a href="#R-image-ac5b6317d793635a6bb35c5a316e7d10" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/75feb6140ac91f92c94ee92c5d51ded2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ac5b6317d793635a6bb35c5a316e7d10"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/75feb6140ac91f92c94ee92c5d51ded2.png"></a></p>
+<p><a href="#R-image-647fb1fe5d61c9e50ba94d5a02b86ca4" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/75feb6140ac91f92c94ee92c5d51ded2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-647fb1fe5d61c9e50ba94d5a02b86ca4"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/75feb6140ac91f92c94ee92c5d51ded2.png"></a></p>
 <p>表1.1 每部电影的打斗镜头数、接吻镜头数以及电影类型</p>
 <p>表1.1 就是我们已有的数据集合，也就是训练样本集。这个数据集有两个特征，即打斗镜头数和接吻镜头数。除此之外，我们也知道每个电影的所属类型，即分类标签。用肉眼粗略地观察，接吻镜头多的，是爱情片。打斗镜头多的，是动作片。以我们多年的看片经验，这个分类还算合理。如果现在给我一部电影，你告诉我这个电影打斗镜头数和接吻镜头数。不告诉我这个电影类型，我可以根据你给我的信息进行判断，这个电影是属于爱情片还是动作片。而k-近邻算法也可以像我们人一样做到这一点，不同的地方在于，我们的经验更&quot;牛逼&quot;，而k-近邻算法是靠已有的数据。比如，你告诉我这个电影打斗镜头数为2，接吻镜头数为102，我的经验会告诉你这个是爱情片，k-近邻算法也会告诉你这个是爱情片。你又告诉我另一个电影打斗镜头数为49，接吻镜头数为51，我&quot;邪恶&quot;的经验可能会告诉你，这有可能是个&quot;爱情动作片&quot;，画面太美，我不敢想象。 (如果说，你不知道&quot;爱情动作片&quot;是什么？请评论留言与我联系，我需要你这样像我一样纯洁的朋友。) 但是k-近邻算法不会告诉你这些，因为在它的眼里，电影类型只有爱情片和动作片，它会提取样本集中特征最相似数据(最邻近)的分类标签，得到的结果可能是爱情片，也可能是动作片，但绝不会是&quot;爱情动作片&quot;。当然，这些取决于数据集的大小以及最近邻的判断标准等因素。</p>
 <h4 id="2距离度量">2、距离度量</h4>
 <p>我们已经知道k-近邻算法根据特征比较，然后提取样本集中特征最相似数据(最邻近)的分类标签。那么，如何进行比较呢？比如，我们还是以表1.1为例，怎么判断红色圆点标记的电影所属的类别呢？ 如下图所示。</p>
-<p><a href="#R-image-c8e3690873a70a4da00034f873020062" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/28889705e32efe192430c93f9eec46ef.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c8e3690873a70a4da00034f873020062"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/28889705e32efe192430c93f9eec46ef.jpeg"></a></p>
+<p><a href="#R-image-c215816f3e919bf0034d74ba1668e895" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/28889705e32efe192430c93f9eec46ef.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c215816f3e919bf0034d74ba1668e895"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/28889705e32efe192430c93f9eec46ef.jpeg"></a></p>
 <p>我们可以从散点图大致推断，这个红色圆点标记的电影可能属于动作片，因为距离已知的那两个动作片的圆点更近。k-近邻算法用什么方法进行判断呢？没错，就是距离度量。这个电影分类的例子有2个特征，也就是在2维实数向量空间，可以使用我们高中学过的两点距离公式计算距离，如图1.2所示。</p>
-<p><a href="#R-image-3027f6d59e6f1fae3f01a3ce8394631a" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/eb641625ed9dc104b7bad989f42ffd29.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3027f6d59e6f1fae3f01a3ce8394631a"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/eb641625ed9dc104b7bad989f42ffd29.jpeg"></a></p>
+<p><a href="#R-image-cb7768b20f85d6c9e72133a36cb2871d" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/eb641625ed9dc104b7bad989f42ffd29.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cb7768b20f85d6c9e72133a36cb2871d"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/eb641625ed9dc104b7bad989f42ffd29.jpeg"></a></p>
 <p>通过计算，我们可以得到如下结果：</p>
 <ul>
 <li>(101,20)-&gt;动作片(108,5)的距离约为16.55</li>
@@ -308,15 +308,15 @@ window.MathJax = {
 <p>其他距离公式：<br>
 曼哈顿距离（ManhattanDistance）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)<br>
 则 dis=|x1−x2|+|y1−y2|<br>
-<a href="#R-image-f1f0383cb32ade0ec98a1891983f4df7" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/003770fda926dcfb274e1553ef44b818.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f1f0383cb32ade0ec98a1891983f4df7"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/003770fda926dcfb274e1553ef44b818.png"></a><br>
+<a href="#R-image-7f518065a673d95d11800d1f2afec51b" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/003770fda926dcfb274e1553ef44b818.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7f518065a673d95d11800d1f2afec51b"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/003770fda926dcfb274e1553ef44b818.png"></a><br>
 比如 每个小正方形距离是1  红，栏，黄色都是12个方格都是曼哈顿距离<br>
 绿色线是欧氏距离(欧几里德距离：在二维和三维空间中的欧氏距离的就是两点之间的直线距离）<br>
 切比雪夫距离（Chebyshev Distance ）：设平面空间内存在两点，它们的坐标为(x1,y1)(x1,y1)，(x2,y2)(x2,y2)<br>
 则dis=max(|x1−x2|,|y1−y2|)</p>
 <p>闵可夫斯基距离(MinkowskiDistance)：</p>
-<p><a href="#R-image-a67f566eb1b14cf278ce19b49f125f49" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f60fa0fee2b1813e80b404022b9732fd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a67f566eb1b14cf278ce19b49f125f49"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f60fa0fee2b1813e80b404022b9732fd.png"></a><br>
+<p><a href="#R-image-d2e95138dd50753d3cdafdb49b2a16bc" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f60fa0fee2b1813e80b404022b9732fd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d2e95138dd50753d3cdafdb49b2a16bc"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f60fa0fee2b1813e80b404022b9732fd.png"></a><br>
 两个n维变量a(x11,x12,…,x1n)与 b(x21,x22,…,x2n)间的闵可夫斯基距离定义为：<br>
 其中p是一个变参数。</p>
 <ul>
@@ -415,8 +415,8 @@ window.MathJax = {
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>    排序的索引是 [6 5 7 2 4 1 3 0][6 5 7][0, 0, 1]0爱情片</code></pre></div>
 <p>可以看到，分类结果根据我们的&quot;经验&quot;，是正确的，尽管这种分类比较耗时，用时1.4s。</p>
 <p>到这里，也许有人早已经发现，电影例子中的特征是2维的，这样的距离度量可以用两 点距离公式计算，但是如果是更高维的呢？对，没错。我们可以用欧氏距离(也称欧几里德度量)，如图1.5所示。我们高中所学的两点距离公式就是欧氏距离在二维空间上的公式，也就是欧氏距离的n的值为2的情况。</p>
-<p><a href="#R-image-bd3dc5d4686cf4bc63e1e2bbbdd74ce2" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ee6dfe45e75caead3fea5ad77fac94a8.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bd3dc5d4686cf4bc63e1e2bbbdd74ce2"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ee6dfe45e75caead3fea5ad77fac94a8.jpeg"></a></p>
+<p><a href="#R-image-d6b7855be3d3af6c5cfbadb7d881789f" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ee6dfe45e75caead3fea5ad77fac94a8.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d6b7855be3d3af6c5cfbadb7d881789f"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ee6dfe45e75caead3fea5ad77fac94a8.jpeg"></a></p>
 <p>图1.5 欧氏距离公式</p>
 <p>看到这里，有人可能会问：“分类器何种情况下会出错？”或者“答案是否总是正确的？”答案是否定的，分类器并不会得到百分百正确的结果，我们可以使用多种方法检测分类器的正确率。此外分类器的性能也会受到多种因素的影响，如分类器设置和数据集等。不同的算法在不同数据集上的表现可能完全不同。为了测试分类器的效果，我们可以使用已知答案的数据，当然答案不能告诉分类器，检验分类器给出的结果是否符合预期结果。通过大量的测试数据，我们可以得到分类器的错误率-分类器给出错误结果的次数除以测试执行的总数。错误率是常用的评估方法，主要用于评估分类器在某个数据集上的执行效果。完美分类器的错误率为0，最差分类器的错误率是1.0。同时，我们也不难发现，k-近邻算法没有进行数据的训练，直接使用未知的数据与已知的数据进行比较，得到结果。因此，可以说k-近邻算法不具有显式的学习过程。</p>
 <h3 id="二k-近邻算法实战之约会网站配对效果判定">二、k-近邻算法实战之约会网站配对效果判定</h3>
@@ -444,8 +444,8 @@ window.MathJax = {
 <li>每周消费的冰淇淋公升数</li>
 </ol>
 <p>这里不得不吐槽一句，海伦是个小吃货啊，冰淇淋公斤数都影响自己择偶标准。打开txt文本文件，数据格式如图2.1所示。</p>
-<p><a href="#R-image-1018fedf22ac4c1255521bfc5cf93ffd" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/03b0ccbfdb101cbd371c8f3f462e899c.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1018fedf22ac4c1255521bfc5cf93ffd"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/03b0ccbfdb101cbd371c8f3f462e899c.jpeg"></a></p>
+<p><a href="#R-image-b5bc0f4573575fa1c2bb224f400a3e3e" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/03b0ccbfdb101cbd371c8f3f462e899c.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b5bc0f4573575fa1c2bb224f400a3e3e"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/03b0ccbfdb101cbd371c8f3f462e899c.jpeg"></a></p>
 <p>图2.1 datingTestSet.txt格式</p>
 <h4 id="2准备数据数据解析">2、准备数据：数据解析</h4>
 <p>在将上述特征数据输入到分类器前，必须将待处理的数据的格式改变为分类器可以接收的格式。分类器接收的数据是什么格式的？从上小结已经知道，要将数据分类两部分，即特征矩阵和对应的分类标签向量。创建lovesimple.py文件，创建名为dataSet的函数，以此来处理输入格式问题。 将lovedata.txt放到与py文件相同目录下，编写代码如下：</p>
@@ -475,8 +475,8 @@ window.MathJax = {
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">#前三列是特征数据 读取出来时字符串数组， 转换成float类型 #最后一列是标签数据 转换成1维向量</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> arrnp[:,:<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>astype(dtype<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>float32),arrnp[:,<span style="color:#ae81ff">3</span>:]<span style="color:#f92672">.</span>T[<span style="color:#ae81ff">0</span>];</span></span></code></pre></div>
 <p>运行上述代码，得到的数据解析结果如图2.2所示。</p>
-<p><a href="#R-image-66d07b286a829e1fe4a1ae54e79d26d8" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/4761701054d59698ef9fe4542d1c5d52.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-66d07b286a829e1fe4a1ae54e79d26d8"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/4761701054d59698ef9fe4542d1c5d52.png"></a></p>
+<p><a href="#R-image-2daf67d0693530885f31ec4aa21f1ac8" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/4761701054d59698ef9fe4542d1c5d52.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2daf67d0693530885f31ec4aa21f1ac8"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/4761701054d59698ef9fe4542d1c5d52.png"></a></p>
 <p>可以看到，我们已经顺利导入数据，并对数据进行解析，格式化为分类器需要的数据格式。接着我们需要了解数据的真正含义。可以通过友好、直观的图形化的方式观察数据。</p>
 <h4 id="3分析数据数据可视化">3、分析数据：数据可视化</h4>
 <p>在lovesimple.py文件中编写名为graphDataSet的函数，用来将数据可视化。编写代码如下：</p>
@@ -542,16 +542,16 @@ window.MathJax = {
 </span></span><span style="display:flex;"><span>print(result)
 </span></span><span style="display:flex;"><span>graphDataSet(feature,result)</span></span></code></pre></div>
 <p>，可以看到可视化结果如图所示。<br>
-<a href="#R-image-8314f67d680b7b27e9f2efbcf8a37cc1" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/41757aabae48c447cc8b532d1ebb3146.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8314f67d680b7b27e9f2efbcf8a37cc1"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/41757aabae48c447cc8b532d1ebb3146.png"></a></p>
+<a href="#R-image-1345ca113f3ec51f3b196dd1c7151538" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/41757aabae48c447cc8b532d1ebb3146.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1345ca113f3ec51f3b196dd1c7151538"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/41757aabae48c447cc8b532d1ebb3146.png"></a></p>
 <p>通过数据可以很直观的发现数据的规律，比如以玩游戏所消耗时间占比与每年获得的飞行常客里程数，只考虑这二维的特征信息，给我的感觉就是海伦喜欢有生活质量的男人。为什么这么说呢？每年获得的飞行常客里程数表明，海伦喜欢能享受飞行常客奖励计划的男人，但是不能经常坐飞机，疲于奔波，满世界飞。同时，这个男人也要玩视频游戏，并且占一定时间比例。能到处飞，又能经常玩游戏的男人是什么样的男人？很显然，有生活质量，并且生活悠闲的人。我的分析，仅仅是通过可视化的数据总结的个人看法。我想，每个人的感受应该也是不尽相同。</p>
 <h4 id="4准备数据数据归一化">4、准备数据：数据归一化</h4>
 <p>以下给出了四组样本，如果想要计算样本3和样本4之间的距离，可以使用欧拉公式计算。</p>
-<p><a href="#R-image-e1655a9d2f67a365b7a7fc104372d0df" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ad71247437b8dc41170b269ebb06afdb.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e1655a9d2f67a365b7a7fc104372d0df"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ad71247437b8dc41170b269ebb06afdb.jpeg"></a></p>
+<p><a href="#R-image-a89c1b452551963fbd0b4c921568d7c1" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ad71247437b8dc41170b269ebb06afdb.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a89c1b452551963fbd0b4c921568d7c1"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ad71247437b8dc41170b269ebb06afdb.jpeg"></a></p>
 <p>计算方法如下所示。</p>
-<p><a href="#R-image-0ee547531518af223e146435e9664d8f" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5e5bb8e529cd3684dc2ec0c31fa74d37.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0ee547531518af223e146435e9664d8f"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5e5bb8e529cd3684dc2ec0c31fa74d37.jpeg"></a></p>
+<p><a href="#R-image-8c24e80e711172e3b5776087df8a3578" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5e5bb8e529cd3684dc2ec0c31fa74d37.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8c24e80e711172e3b5776087df8a3578"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5e5bb8e529cd3684dc2ec0c31fa74d37.jpeg"></a></p>
 <p>从上计算公式</p>
 <p>我们很容易发现，上面方程中数字差值最大的属性对计算结果的影响最大，也就是说，每年获取的飞行常客里程数对于计算结果的影响将远远大于表中其他两个特征-玩视频游戏所耗时间占比和每周消费冰淇淋公斤数的影响。而产生这种现象的唯一原因，仅仅是因为飞行常客里程数远大于其他特征值。但海伦认为这三种特征是同等重要的，因此作为三个等权重的特征之一，飞行常客里程数并不应该如此严重地影响到计算结果。</p>
 <p>在处理这种不同取值范围的特征值时，我们通常采用的方法是将数值归一化，如将取值范围处理为０到１或者-１到１之间。下面的公式可以将任意取值范围的特征值转化为０到１区间内的值：</p>
@@ -583,11 +583,11 @@ window.MathJax = {
 <p>从上面运行结果可以看到，我们已经顺利将数据归一化了<br>
 其他比较常用的归一化方法： 均值方差归一化</p>
 <p>这种方式给予原始数据的均值（mean）和标准差（standard deviation）进行数据的标准化。经过处理的数据符合标准正态分布，即均值为0，标准差为1，转化函数为：<br>
-<a href="#R-image-51cd1764e2334579ff68c383e29ac2d5" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/94cc5208e39946d5d7f3d6a71b62bc1c.gif" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-51cd1764e2334579ff68c383e29ac2d5"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/94cc5208e39946d5d7f3d6a71b62bc1c.gif"></a></p>
-<p>其中<a href="#R-image-50dd023f8165e9e17464b2b7fe10a6d8" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5abfc576cdaf37155547b12506ae04b2.gif" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-50dd023f8165e9e17464b2b7fe10a6d8"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5abfc576cdaf37155547b12506ae04b2.gif"></a>为所有样本数据的均值，<a href="#R-image-ab015d53b3eb741271b46740dccdc4ba" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/21948685f68d6b3c832fae1793c88444.gif" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ab015d53b3eb741271b46740dccdc4ba"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/21948685f68d6b3c832fae1793c88444.gif"></a>为所有样本数据的标准差。</p>
+<a href="#R-image-c2d531390c9b0d09c67085af6e8abe76" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/94cc5208e39946d5d7f3d6a71b62bc1c.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c2d531390c9b0d09c67085af6e8abe76"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/94cc5208e39946d5d7f3d6a71b62bc1c.gif"></a></p>
+<p>其中<a href="#R-image-26d48ec6355785095bb5d25d28b3b3ad" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5abfc576cdaf37155547b12506ae04b2.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-26d48ec6355785095bb5d25d28b3b3ad"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5abfc576cdaf37155547b12506ae04b2.gif"></a>为所有样本数据的均值，<a href="#R-image-bbd2e0d315b3e081752d4d43af3a0c98" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/21948685f68d6b3c832fae1793c88444.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bbd2e0d315b3e081752d4d43af3a0c98"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/21948685f68d6b3c832fae1793c88444.gif"></a>为所有样本数据的标准差。</p>
 <h4 id="5测试算法验证分类器">5、测试算法：验证分类器</h4>
 <p>机器学习算法一个很重要的工作就是评估算法的正确率，通常我们只提供已有数据的90%作为训练样本来训练分类器，而使用其余的10%数据去测试分类器，检测分类器的正确率。需要注意的是，10%的测试数据应该是随机选择的，由于海伦提供的数据并没有按照特定目的来排序，所以我们可以随意选择10%数据而不影响其随机性。</p>
 <p>为了测试分类器效果，在lovsimple.py文件中创建函数datingClassTest，编写代码如下：</p>
@@ -666,8 +666,8 @@ window.MathJax = {
 </span></span><span style="display:flex;"><span>classifyPerson()</span></span></code></pre></div>
 <p>在cmd中，运行程序，并输入数据(44000,12,0.5)，预测结果是&quot;你可能有些喜欢这个人&quot;，也就是这个人魅力一般。一共有三个档次：讨厌、有些喜欢、非常喜欢，对应着不喜欢的人、魅力一般的人、极具魅力的人。</p>
 <p>预测结果</p>
-<p><a href="#R-image-9cf1c510ec9c6aaa5054794b89bf551a" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f9327b66bf538fe402cb63e2177d2ab8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9cf1c510ec9c6aaa5054794b89bf551a"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f9327b66bf538fe402cb63e2177d2ab8.png"></a></p>
+<p><a href="#R-image-a7194224b1968bee399c84a6b71bc386" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f9327b66bf538fe402cb63e2177d2ab8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a7194224b1968bee399c84a6b71bc386"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/f9327b66bf538fe402cb63e2177d2ab8.png"></a></p>
 <p>以上例子换成sklearn实现,代码量大大减少</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.neighbors <span style="color:#f92672">import</span> KNeighborsClassifier
@@ -713,17 +713,17 @@ window.MathJax = {
 <h3 id="三k-近邻算法实战之sklearn手写数字识别">三、k-近邻算法实战之sklearn手写数字识别</h3>
 <h4 id="1实战背景-1">1、实战背景</h4>
 <p>对于需要识别数字的图片一般都使用图形处理软件，处理成具有相同的色彩和大小：宽高是32像素x32像素。这里将采用本文格式存储图像，但是为了方便理解，我们将图片转换为文本格式，数字的文本格式如图所示。</p>
-<p><a href="https://i-blog.csdnimg.cn/blog_migrate/277fc2a1130e86b2a105e678d6f9aaeb.jpeg" rel="external" target="_blank"><a href="#R-image-8b8bcc7cf7c493e3dbb2edbbb7db7e38" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/277fc2a1130e86b2a105e678d6f9aaeb.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8b8bcc7cf7c493e3dbb2edbbb7db7e38"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/277fc2a1130e86b2a105e678d6f9aaeb.jpeg"></a></a></p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/277fc2a1130e86b2a105e678d6f9aaeb.jpeg" rel="external" target="_blank"><a href="#R-image-a477e5cc455455ee6ec5d50511f3353f" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/277fc2a1130e86b2a105e678d6f9aaeb.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a477e5cc455455ee6ec5d50511f3353f"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/277fc2a1130e86b2a105e678d6f9aaeb.jpeg"></a></a></p>
 <p>与此同时，这些文本格式存储的数字的文件命名也很有特点，格式为：数字的值_该数字的样本序号，如图3.2所示。</p>
-<p><a href="https://i-blog.csdnimg.cn/blog_migrate/88fcc52c2a64b8a4e97cb12559c5217b.jpeg" rel="external" target="_blank"><a href="#R-image-e32002b2fd802064eb9324b3d323ecd3" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/88fcc52c2a64b8a4e97cb12559c5217b.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e32002b2fd802064eb9324b3d323ecd3"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/88fcc52c2a64b8a4e97cb12559c5217b.jpeg"></a></a></p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/88fcc52c2a64b8a4e97cb12559c5217b.jpeg" rel="external" target="_blank"><a href="#R-image-0b3ba2db844cd59a99816c4002d5d1ea" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/88fcc52c2a64b8a4e97cb12559c5217b.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0b3ba2db844cd59a99816c4002d5d1ea"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/88fcc52c2a64b8a4e97cb12559c5217b.jpeg"></a></a></p>
 <p>比如0_0.txt 记事本打开 就是一个用0或者 1 拼成的 32*32个字符的0<br>
-<a href="#R-image-f065a6b868523d4f937a625a72db2bbf" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/bd6e82ae0653c3ce349426b985820686.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f065a6b868523d4f937a625a72db2bbf"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/bd6e82ae0653c3ce349426b985820686.png"></a></p>
+<a href="#R-image-5c8356816711ca4ec4a7166733fea87a" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/bd6e82ae0653c3ce349426b985820686.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5c8356816711ca4ec4a7166733fea87a"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/bd6e82ae0653c3ce349426b985820686.png"></a></p>
 <p>比如 0_1.txt 也是0和上面的0写法优点区别 这两个文件的label就是0  有两个样本<br>
-<a href="#R-image-45ff359fe2048d300d7ddbf49b352598" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/474cc19402a1cb07122c52631f066ca9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-45ff359fe2048d300d7ddbf49b352598"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/474cc19402a1cb07122c52631f066ca9.png"></a></p>
+<a href="#R-image-11b9a92d1fd3c99dc9b840cb55e19ce6" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/474cc19402a1cb07122c52631f066ca9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-11b9a92d1fd3c99dc9b840cb55e19ce6"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/474cc19402a1cb07122c52631f066ca9.png"></a></p>
 <p>对于这样已经整理好的文本，我们可以直接使用Python处理，进行数字预测。数据集分为训练集和测试集，使用上小结的方法，自己设计k-近邻算法分类器，可以实现分类。数据集和实现代码下载地址：<a href="https://github.com/jiaozi789/machinelearn/tree/master/sklearn_knn" rel="external" target="_blank">数据集下载</a>  其中<a href="https://github.com/jiaozi789/machinelearn/tree/master/sklearn_knn/trainingDigits" rel="external" target="_blank">trainingDigits</a>是训练数据<br>
 <a href="https://github.com/jiaozi789/machinelearn/tree/master/sklearn_knn/testDigits" rel="external" target="_blank">testDigits</a>是测试数据</p>
 <p>这里不再讲解自己用Python写的k-邻域分类器的方法，因为这不是本小节的重点。接下来，我们将使用强大的第三方Python科学计算库Sklearn构建手写数字系统。</p>
@@ -741,23 +741,23 @@ window.MathJax = {
 <h4 id="3sklearn安装">3、sklearn安装</h4>
 <p>在安装sklearn之前，需要安装两个库，即numpy+mkl和scipy。不要使用pip直接进行安装，因为pip3默安装的是numpy，而不是numpy+mkl。第三方库下载地址：<a href="https://cuijiahua.com/wp-content/themes/begin/inc/go.php?url=http://link.zhihu.com/?target=http%3A//www.lfd.uci.edu/~gohlke/pythonlibs/" rel="external" target="_blank">http://www.lfd.uci.edu/~gohlke/pythonlibs/</a></p>
 <p>找到对应python版本（python &ndash;version）的numpy+mkl和scipy，下载安装即可，如图3.3和图3.4所示。</p>
-<p><a href="https://i-blog.csdnimg.cn/blog_migrate/5893e170464a5fa7df1a72189b550abd.jpeg" rel="external" target="_blank"><a href="#R-image-a261955402586526c2ce355803b24a1f" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5893e170464a5fa7df1a72189b550abd.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a261955402586526c2ce355803b24a1f"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5893e170464a5fa7df1a72189b550abd.jpeg"></a></a></p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/5893e170464a5fa7df1a72189b550abd.jpeg" rel="external" target="_blank"><a href="#R-image-46c5c1c5f77c56d21923ed038c589622" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5893e170464a5fa7df1a72189b550abd.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-46c5c1c5f77c56d21923ed038c589622"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/5893e170464a5fa7df1a72189b550abd.jpeg"></a></a></p>
 <p>图3.3 numpy+mkl</p>
-<p><a href="https://i-blog.csdnimg.cn/blog_migrate/d81013a2950e2d3a0ef605bd042fdd32.jpeg" rel="external" target="_blank"><a href="#R-image-a35ec9e77a5aead3b4e7faa0d900a248" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/d81013a2950e2d3a0ef605bd042fdd32.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a35ec9e77a5aead3b4e7faa0d900a248"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/d81013a2950e2d3a0ef605bd042fdd32.jpeg"></a></a></p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/d81013a2950e2d3a0ef605bd042fdd32.jpeg" rel="external" target="_blank"><a href="#R-image-52d758f29e5419ef5860ebac031521d6" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/d81013a2950e2d3a0ef605bd042fdd32.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-52d758f29e5419ef5860ebac031521d6"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/d81013a2950e2d3a0ef605bd042fdd32.jpeg"></a></a></p>
 <p>使用pip安装好这两个whl文件后，使用如下指令安装sklearn。</p>
 <pre><code>pip install -U scikit-learn
 </code></pre>
 <h4 id="4sklearn实现k-近邻算法简介">4、sklearn实现k-近邻算法简介</h4>
 <p>官网英文文档：<a href="https://cuijiahua.com/wp-content/themes/begin/inc/go.php?url=http://link.zhihu.com/?target=http%3A//scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html" rel="external" target="_blank">点我查看</a></p>
 <p>sklearn.neighbors模块实现了k-近邻算法，内容如图3.5所示。</p>
-<p><a href="https://i-blog.csdnimg.cn/blog_migrate/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg" rel="external" target="_blank"><a href="#R-image-4effcba48de800f381b7e71418f36600" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4effcba48de800f381b7e71418f36600"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg"></a></a></p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg" rel="external" target="_blank"><a href="#R-image-87596a0c22c838b49012f10048897e97" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-87596a0c22c838b49012f10048897e97"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/3a7f4197be24c59cd90fc0a1ec2c2e18.jpeg"></a></a></p>
 <p>图3.5 sklearn.neighbors</p>
 <p>我们使用sklearn.neighbors.KNeighborsClassifier就可以是实现上小结，我们实现的k-近邻算法。KNeighborsClassifier函数一共有8个参数，如图3.6所示。</p>
-<p><a href="https://i-blog.csdnimg.cn/blog_migrate/ab1db1caa2a10e42bba715b25832c09f.jpeg" rel="external" target="_blank"><a href="#R-image-aa95bdf8357182f18ba428d462a72fbb" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ab1db1caa2a10e42bba715b25832c09f.jpeg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-aa95bdf8357182f18ba428d462a72fbb"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ab1db1caa2a10e42bba715b25832c09f.jpeg"></a></a></p>
+<p><a href="https://i-blog.csdnimg.cn/blog_migrate/ab1db1caa2a10e42bba715b25832c09f.jpeg" rel="external" target="_blank"><a href="#R-image-22de440403e064d81f812e0bb94a0fae" class="lightbox-link"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ab1db1caa2a10e42bba715b25832c09f.jpeg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-22de440403e064d81f812e0bb94a0fae"><img alt="机器学习实战教程（一）：K-近邻（KNN）算法（史诗级干货长文）" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_01_knn.md.images/ab1db1caa2a10e42bba715b25832c09f.jpeg"></a></a></p>
 <p>图3.6 KNeighborsClassifier</p>
 <p>KNneighborsClassifier参数说明：</p>
 <ul>
@@ -915,6 +915,8 @@ window.MathJax = {
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -932,8 +934,8 @@ window.MathJax = {
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

@@ -41,26 +41,26 @@ Transformer 整体结构 首先介绍 Transformer 的整体结构，下图是 Tr
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="755">
     <title>Transformer模型详解01-Word Embedding :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -114,7 +114,7 @@ Transformer 整体结构 首先介绍 Transformer 的整体结构，下图是 Tr
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/tools_libraries/transformers/basic/transformers_basic_01/index.html">
     <div id="R-body" class="default-animation">
@@ -203,24 +203,24 @@ window.MathJax = {
 <p>Attention is All You Need：<a href="https://arxiv.org/abs/1706.03762" rel="external" target="_blank">Attention Is All You Need</a></p>
 <h1 id="transformer-整体结构">Transformer 整体结构</h1>
 <p>首先介绍 Transformer 的整体结构，下图是 Transformer 用于中英文翻译的整体结构：
-<a href="#R-image-52e098a7d1c4d7d7bdbf6f3a28beea25" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d49ef7466fc02b19d3824dbdc802e91a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-52e098a7d1c4d7d7bdbf6f3a28beea25"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d49ef7466fc02b19d3824dbdc802e91a.png"></a>
+<a href="#R-image-71d3d0fe28bb4af6cf4ca6c7e1b92fd1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d49ef7466fc02b19d3824dbdc802e91a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-71d3d0fe28bb4af6cf4ca6c7e1b92fd1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d49ef7466fc02b19d3824dbdc802e91a.png"></a>
 可以看到 Transformer 由 Encoder 和 Decoder 两个部分组成，Encoder 和 Decoder 都包含 6 个 block。Transformer 的工作流程大体如下：</p>
 <p>第一步：获取输入句子的每一个单词的表示向量 X，X由单词的 Embedding（Embedding就是从原始数据提取出来的Feature） 和单词位置的 Embedding 相加得到。
-<a href="#R-image-9f6ce97fe6f4a1bcfd2e2386822c5954" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/89035956f94fdab8362259d8b800e28c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9f6ce97fe6f4a1bcfd2e2386822c5954"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/89035956f94fdab8362259d8b800e28c.png"></a>
+<a href="#R-image-a22e1bf50c41fad103cd79c050004666" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/89035956f94fdab8362259d8b800e28c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a22e1bf50c41fad103cd79c050004666"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/89035956f94fdab8362259d8b800e28c.png"></a>
 第二步：将得到的单词表示向量矩阵 (如上图所示，每一行是一个单词的表示 x) 传入 Encoder 中，经过 6 个 Encoder block 后可以得到句子所有单词的编码信息矩阵 C，如下图。单词向量矩阵用 $X_{n\times d}$
 表示， n 是句子中单词个数，d 是表示向量的维度 (论文中 d=512)。每一个 Encoder block 输出的矩阵维度与输入完全一致。
-<a href="#R-image-a107764713c7db9fce8c89b0eca20bc4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/bdbfc3c65a4cf71beb6f80605c4493b9.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a107764713c7db9fce8c89b0eca20bc4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/bdbfc3c65a4cf71beb6f80605c4493b9.png"></a>
+<a href="#R-image-71ea405d50dbc5903c3410fdf9b00dc6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/bdbfc3c65a4cf71beb6f80605c4493b9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-71ea405d50dbc5903c3410fdf9b00dc6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/bdbfc3c65a4cf71beb6f80605c4493b9.png"></a>
 第三步：将 Encoder 输出的编码信息矩阵 C传递到 Decoder 中，Decoder 依次会根据当前翻译过的单词 1~ i 翻译下一个单词 i+1，如下图所示。在使用的过程中，翻译到单词 i+1 的时候需要通过 Mask (掩盖) 操作遮盖住 i+1 之后的单词。
-<a href="#R-image-b5af0ca64769ea04ee2a537f95518d2b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/74790f1b0401a607f3a99febd1083965.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b5af0ca64769ea04ee2a537f95518d2b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/74790f1b0401a607f3a99febd1083965.png"></a>
+<a href="#R-image-81418c5fb3dd1b23fbe24d3000f96a6b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/74790f1b0401a607f3a99febd1083965.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-81418c5fb3dd1b23fbe24d3000f96a6b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/74790f1b0401a607f3a99febd1083965.png"></a>
 上图 Decoder 接收了 Encoder 的编码矩阵 C，然后首先输入一个翻译开始符 &ldquo;<!-- raw HTML omitted -->&quot;，预测第一个单词 &ldquo;I&rdquo;；然后输入翻译开始符 &ldquo;<!-- raw HTML omitted -->&rdquo; 和单词 &ldquo;I&rdquo;，预测单词 &ldquo;have&rdquo;，以此类推。这是 Transformer 使用时候的大致流程，接下来是里面各个部分的细节。</p>
 <h1 id="transformer-的输入">Transformer 的输入</h1>
 <p>Transformer 中单词的输入表示 x由单词 Embedding 和位置 Embedding （Positional Encoding）相加得到。
-<a href="#R-image-738a0081ce4382e4e9a257211cfcf2e2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/e97ee76deff93f5f8f205729d914b1c6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-738a0081ce4382e4e9a257211cfcf2e2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/e97ee76deff93f5f8f205729d914b1c6.png"></a></p>
+<a href="#R-image-7bad7ad7e174e57ab4776da24e8a58e4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/e97ee76deff93f5f8f205729d914b1c6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7bad7ad7e174e57ab4776da24e8a58e4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/e97ee76deff93f5f8f205729d914b1c6.png"></a></p>
 <h2 id="单词-embedding">单词 Embedding</h2>
 <p>单词的 Embedding 有很多种方式可以获取，例如可以采用 Word2Vec、Glove 等算法预训练得到，也可以在 Transformer 中训练得到。</p>
 <h3 id="原理">原理</h3>
@@ -240,8 +240,8 @@ window.MathJax = {
 <li>CBOW模型：全称为 Continuous Bag-of-Word，连续词袋模型，该模型的特点是，输入已知的上下文，输出对当前单词的预测，其实就是利用中心两侧的词来预测中心的词。</li>
 </ul>
 <p>以下两幅图展现了CBOW模型和Skip-gram模型。
-<a href="#R-image-b47c23b063e9327dd0f59dbc044c4b6d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/26d6032d0d2b3e9ad40c9914bc500c70.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b47c23b063e9327dd0f59dbc044c4b6d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/26d6032d0d2b3e9ad40c9914bc500c70.png"></a></p>
+<a href="#R-image-58c5d5fba65c2162bb1f8186b4e1104c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/26d6032d0d2b3e9ad40c9914bc500c70.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-58c5d5fba65c2162bb1f8186b4e1104c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/26d6032d0d2b3e9ad40c9914bc500c70.png"></a></p>
 <h4 id="cbow-模型">CBOW 模型</h4>
 <p>如果对以下神经网络连接不太清楚的，可以先去看看：https://blog.csdn.net/liaomin416100569/article/details/130572559?spm=1001.2014.3001.5501</p>
 <h5 id="one-hot">one-hot</h5>
@@ -277,8 +277,8 @@ window.MathJax = {
 <p>这里使用one-hot的原因是列的个数就是单词的格式，最后使用隐藏层的w作为嵌入结果，刚好是(列数，隐藏层神经元个数)</p></blockquote>
 <h5 id="构建-cbow-训练数据集">构建 CBOW 训练数据集</h5>
 <p>cbow是使用两侧的词语，预测中心的词语，预测窗口大小为 2，输入就是左侧和右侧的两个单词，预测的单词就是中心的单词。
-<a href="#R-image-c378d20f43c7e422dc81d33766bb0cc9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/9b8dc2f52f231e7590731a697b54a1f3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c378d20f43c7e422dc81d33766bb0cc9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/9b8dc2f52f231e7590731a697b54a1f3.png"></a></p>
+<a href="#R-image-bfb33300860241b52753578e0b04dfdd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/9b8dc2f52f231e7590731a697b54a1f3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bfb33300860241b52753578e0b04dfdd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/9b8dc2f52f231e7590731a697b54a1f3.png"></a></p>
 <p>我们语料库仍然为：”I drink coffee everyday“，假设我们的<strong>预测窗口大小为 2</strong>，通过语料库我们可以<strong>构建以下训练集</strong>，表2</p>
 <table>
   <thead>
@@ -308,12 +308,12 @@ window.MathJax = {
 </table>
 <h5 id="构建-cbow-神经网络">构建 CBOW 神经网络</h5>
 <p>从上可知，我们的输入层有4个输入单元（one-hot的4列，因为one-hot所以就是原始单词个数），输出层神经元的个数应该跟输入层保持一致，输出层也是4个神经元，加入我们想要每个单词为一个五维的向量表示，那么我们的隐藏层则为五个神经元。由此，我们可以构建一个输入层为4，隐藏层为5，输出层为4的全连接神经网络，如下图所示，训练好的模型的权重矩阵w1可以作为我们的词向量化表。
-<a href="#R-image-17b33f4f13a9beca0de973a39bd3af63" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/0db652d1802fddc09d7cc0c91c502ebd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-17b33f4f13a9beca0de973a39bd3af63"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/0db652d1802fddc09d7cc0c91c502ebd.png"></a></p>
+<a href="#R-image-ad4b0bbae0ee88ebdf93e5064b9459e4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/0db652d1802fddc09d7cc0c91c502ebd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ad4b0bbae0ee88ebdf93e5064b9459e4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/0db652d1802fddc09d7cc0c91c502ebd.png"></a></p>
 <h5 id="训练-cbow-神经网络">训练 CBOW 神经网络</h5>
 <p>这时我们可以根据构建的CBOW数据集对模型进行训练了，假设我们要预测的词是coffee，那么由表2可知，我们输入词为[I, drink, everyday]，我们可以得到如下训练过程。
-<a href="#R-image-e9457b51495294afb00727a0dee80cfd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/3fad5b4a6249f463d37063a7db2af220.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e9457b51495294afb00727a0dee80cfd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/3fad5b4a6249f463d37063a7db2af220.png"></a>
+<a href="#R-image-774ff2c32aff5253b007faae30f8b836" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/3fad5b4a6249f463d37063a7db2af220.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-774ff2c32aff5253b007faae30f8b836"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/3fad5b4a6249f463d37063a7db2af220.png"></a>
 首先，我们将输入词[I, drink, everyday]转换为对应的one-hot编码向量。假设我们的词汇表中有四个词（I, drink, coffee, everyday），则输入词的one-hot编码分别为：</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>I:                [1, 0, 0, 0]
 drink:            [0, 1, 0, 0]
@@ -414,8 +414,8 @@ $$z = [0.233, 0.333, 0.433, 0.533, 0.633] \times W_{proj}$$</p>
 <h5 id="构建-skip-gram训练数据集">构建 Skip-gram训练数据集</h5>
 <p>cbow是使用两侧的词语，预测中心的词语，预测窗口大小为 2，输入就是左侧和右侧的两个单词，预测的单词就是中心的单词。
 skip-gram是使用中心的词语，预测两侧的词语，预测窗口大小为 2，输入就是中心词语，预测的单词就是左侧和右侧的两个单词。
-<a href="#R-image-b4349e9fa3445e80bb736dc0f2c98482" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d334d266b2ef636fd3fca8cd81ae2811.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b4349e9fa3445e80bb736dc0f2c98482"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d334d266b2ef636fd3fca8cd81ae2811.png"></a></p>
+<a href="#R-image-2047a0c9bdfecac600fd92a9c810b4f8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d334d266b2ef636fd3fca8cd81ae2811.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2047a0c9bdfecac600fd92a9c810b4f8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d334d266b2ef636fd3fca8cd81ae2811.png"></a></p>
 <p>我们语料库仍然为：”I drink coffee everyday“，假设我们的<strong>预测窗口大小为 2</strong>，通过语料库我们可以<strong>构建以下训练集</strong>，表2</p>
 <table>
   <thead>
@@ -471,8 +471,8 @@ skip-gram是使用中心的词语，预测两侧的词语，预测窗口大小�
 <p>注意输入是一个词，输出是一个词</p></blockquote>
 <h5 id="训练-skip-gram神经网络">训练 Skip-gram神经网络</h5>
 <p>这时我们可以根据构建的Skip-gram数据集对模型进行训练了，假设我们要预测的词是coffee，那么由表2可知，我们输入词为[I, drink, everyday]中的任何一个，由表2可知，对其进行one-hot编码后的结果为 [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1]], **我们选择其中一个就可以得到一个 1*4 的输入向量，那么我们可以得到如下训练过程。
-<a href="#R-image-edac990abf249fe6420e64fca55d705c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/facecbf4e5468400fc012d0549c9a83f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-edac990abf249fe6420e64fca55d705c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/facecbf4e5468400fc012d0549c9a83f.png"></a>
+<a href="#R-image-112bf821bca9780a33c8477b4e7dc49a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/facecbf4e5468400fc012d0549c9a83f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-112bf821bca9780a33c8477b4e7dc49a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/facecbf4e5468400fc012d0549c9a83f.png"></a>
 经过训练之后，我们拿 W1( 4*5 权重矩阵) 作为我们的词向量化表。
 训练过程不表,类似于CBOW 。</p>
 <h3 id="word2vec实例">Word2Vec实例</h3>
@@ -501,8 +501,8 @@ import jieba  </code></pre></div>
     split_s = context[i]
     context[i] = &#34; &#34;.join(jieba.cut(split_s, HMM=True))
 context = [e.split(&#34; &#34;) for e in context]</code></pre></div>
-<p><a href="#R-image-4e5da70f019417806eb32d1dedea1e02" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d01ad34961044f2c306ef2c1a2abcc1a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4e5da70f019417806eb32d1dedea1e02"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d01ad34961044f2c306ef2c1a2abcc1a.png"></a></p>
+<p><a href="#R-image-098a5efd73739d0caa9b6e6966fab7bc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d01ad34961044f2c306ef2c1a2abcc1a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-098a5efd73739d0caa9b6e6966fab7bc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/tools_libraries/transformers/basic/transformers_basic_01.md.images/d01ad34961044f2c306ef2c1a2abcc1a.png"></a></p>
 <ol start="4">
 <li>
 <p>配置日志：</p>
@@ -609,6 +609,8 @@ loaded_model = Word2Vec.load(&#34;word2vec_model.bin&#34;)</code></pre></div>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -626,8 +628,8 @@ loaded_model = Word2Vec.load(&#34;word2vec_model.bin&#34;)</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

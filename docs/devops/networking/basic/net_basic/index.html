@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.150.0">
+    <meta name="generator" content="Relearn 8.0.1+b23cf6629eada0c2802f34ae4012e04343497862">
+    <meta name="description" content="一.计算机网络分类
+覆盖范围分为：
+局域网 LAN（：Local Area Network） 高数据传输 低延迟 低误码率 组件成本低
+城域网 MAN （MetroPolitan Area Network） 主要使用光纤传输
+广域网 WAN (Wide Area Network) 主要使用光纤传输
+互联网 (Network)
+二.计算机网络拓扑结构
+用于描述计算机 网线以及其他网络设备的配置方式 是网络物理布局的一种方式
+1.总线型拓扑 所有的计算机通过一条总线来进行连接 如果一台机器发送数据其他的机器就必须先暂停发送等待 发送效率较低
+2.星型拓扑 目前最流行网络拓扑 主要是使用一个中心的集线器或者交换机来进行管理 所以的pc连接该中心 发送和接受数据 每台pc可以单独发送接受数据不受其他pc机器影响
+常见的公司星型网络架构 不同网络之间形成了一个树形网络架构
+不同公司内部搭建局域网 通过isp运营商接入外部城域网将多个城市网络接入广域网
+3.环型拓扑 pc机器之间使用环形结构通信 比如 pc1 发送数据给pc3 必须经过pc2 一般不使用在局域网 ">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="计算机网络基础00-网络分层 :: liaomin416100569博客">
+    <meta name="twitter:description" content="一.计算机网络分类
+覆盖范围分为：
+局域网 LAN（：Local Area Network） 高数据传输 低延迟 低误码率 组件成本低
+城域网 MAN （MetroPolitan Area Network） 主要使用光纤传输
+广域网 WAN (Wide Area Network) 主要使用光纤传输
+互联网 (Network)
+二.计算机网络拓扑结构
+用于描述计算机 网线以及其他网络设备的配置方式 是网络物理布局的一种方式
+1.总线型拓扑 所有的计算机通过一条总线来进行连接 如果一台机器发送数据其他的机器就必须先暂停发送等待 发送效率较低
+2.星型拓扑 目前最流行网络拓扑 主要是使用一个中心的集线器或者交换机来进行管理 所以的pc连接该中心 发送和接受数据 每台pc可以单独发送接受数据不受其他pc机器影响
+常见的公司星型网络架构 不同网络之间形成了一个树形网络架构
+不同公司内部搭建局域网 通过isp运营商接入外部城域网将多个城市网络接入广域网
+3.环型拓扑 pc机器之间使用环形结构通信 比如 pc1 发送数据给pc3 必须经过pc2 一般不使用在局域网 ">
+    <meta property="og:url" content="https://jiaozi789.github.io/docs/devops/networking/basic/net_basic/index.html">
+    <meta property="og:site_name" content="liaomin416100569博客">
+    <meta property="og:title" content="计算机网络基础00-网络分层 :: liaomin416100569博客">
+    <meta property="og:description" content="一.计算机网络分类
+覆盖范围分为：
+局域网 LAN（：Local Area Network） 高数据传输 低延迟 低误码率 组件成本低
+城域网 MAN （MetroPolitan Area Network） 主要使用光纤传输
+广域网 WAN (Wide Area Network) 主要使用光纤传输
+互联网 (Network)
+二.计算机网络拓扑结构
+用于描述计算机 网线以及其他网络设备的配置方式 是网络物理布局的一种方式
+1.总线型拓扑 所有的计算机通过一条总线来进行连接 如果一台机器发送数据其他的机器就必须先暂停发送等待 发送效率较低
+2.星型拓扑 目前最流行网络拓扑 主要是使用一个中心的集线器或者交换机来进行管理 所以的pc连接该中心 发送和接受数据 每台pc可以单独发送接受数据不受其他pc机器影响
+常见的公司星型网络架构 不同网络之间形成了一个树形网络架构
+不同公司内部搭建局域网 通过isp运营商接入外部城域网将多个城市网络接入广域网
+3.环型拓扑 pc机器之间使用环形结构通信 比如 pc1 发送数据给pc3 必须经过pc2 一般不使用在局域网 ">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="运维一体化">
+    <meta property="article:published_time" content="2025-09-18T16:55:17+08:00">
+    <meta property="article:modified_time" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="name" content="计算机网络基础00-网络分层 :: liaomin416100569博客">
+    <meta itemprop="description" content="一.计算机网络分类
+覆盖范围分为：
+局域网 LAN（：Local Area Network） 高数据传输 低延迟 低误码率 组件成本低
+城域网 MAN （MetroPolitan Area Network） 主要使用光纤传输
+广域网 WAN (Wide Area Network) 主要使用光纤传输
+互联网 (Network)
+二.计算机网络拓扑结构
+用于描述计算机 网线以及其他网络设备的配置方式 是网络物理布局的一种方式
+1.总线型拓扑 所有的计算机通过一条总线来进行连接 如果一台机器发送数据其他的机器就必须先暂停发送等待 发送效率较低
+2.星型拓扑 目前最流行网络拓扑 主要是使用一个中心的集线器或者交换机来进行管理 所以的pc连接该中心 发送和接受数据 每台pc可以单独发送接受数据不受其他pc机器影响
+常见的公司星型网络架构 不同网络之间形成了一个树形网络架构
+不同公司内部搭建局域网 通过isp运营商接入外部城域网将多个城市网络接入广域网
+3.环型拓扑 pc机器之间使用环形结构通信 比如 pc1 发送数据给pc3 必须经过pc2 一般不使用在局域网 ">
+    <meta itemprop="datePublished" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
+    <meta itemprop="wordCount" content="134">
+    <title>计算机网络基础00-网络分层 :: liaomin416100569博客</title>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
+    </script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['zh'];
+    </script>
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/devops\/networking\/basic\/net_basic\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..\/..';
+      window.relearn.absBaseUri='https:\/\/jiaozi789.github.io\/docs';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
+  </head>
+  <body class="mobile-support html" data-url="/docs/devops/networking/basic/net_basic/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/index.html"><span itemprop="name">liaomin416100569博客</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/index.html"><span itemprop="name">运维一体化</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/networking/index.html"><span itemprop="name">网络技术</span></a><meta itemprop="position" content="3">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/docs/devops/networking/basic/index.html"><span itemprop="name">网络基础</span></a><meta itemprop="position" content="4">&nbsp;>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">计算机网络基础00-网络分层</span><meta itemprop="position" content="5"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/networking/basic/index.html" title="网络基础 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docs/devops/networking/basic/net_basic_01/index.html" title="计算机网络基础01-IP地址相关知识 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable devops" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="计算机网络基础00-网络分层">计算机网络基础00-网络分层</h1>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p><strong>一.计算机网络分类</strong></p>
+<p>   覆盖范围分为：</p>
+<p>     局域网 LAN（：Local Area Network） 高数据传输  低延迟 低误码率 组件成本低</p>
+<p>     城域网 MAN  （MetroPolitan Area Network） 主要使用光纤传输</p>
+<p>     <a href="https://so.csdn.net/so/search?q=%E5%B9%BF%E5%9F%9F%E7%BD%91&spm=1001.2101.3001.7020" rel="external" target="_blank">广域网</a> WAN (Wide Area Network)                      主要使用光纤传输</p>
+<p>     互联网 (Network)</p>
+<p><strong>二.计算机网络拓扑结构</strong></p>
+<p>     用于描述计算机 网线以及其他网络设备的配置方式 是网络物理布局的一种方式</p>
+<p>1.总线型拓扑   所有的计算机通过一条总线来进行连接 如果一台机器发送数据其他的机器就必须先暂停发送等待 发送效率较低</p>
+<p><a href="#R-image-85805a885f96f6c630584060a01f21f5" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_1.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-85805a885f96f6c630584060a01f21f5"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_1.png"></a></p>
+<p>2.星型拓扑  目前最流行网络拓扑  主要是使用一个中心的集线器或者交换机来进行管理 所以的pc连接该中心 发送和接受数据 每台pc可以单独发送接受数据不受其他pc机器影响</p>
+<p><a href="#R-image-f2b3043e4ab984d0e012abd05c73545c" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f2b3043e4ab984d0e012abd05c73545c"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_2.png"></a></p>
+<p>常见的公司星型网络架构  不同网络之间形成了一个树形网络架构<br>
+不同公司内部搭建局域网 通过isp运营商接入外部城域网将多个城市网络接入广域网</p>
+<p>  <a href="#R-image-7a547f72f1e291daf6ff813d194ec087" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7a547f72f1e291daf6ff813d194ec087"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_3.png"></a></p>
+<p>3.环型拓扑  pc机器之间使用环形结构通信 比如 pc1 发送数据给pc3 必须经过pc2 一般不使用在局域网 </p>
+<p><a href="#R-image-c31bc45b89a10e7d1707ee113257f99f" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_4.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c31bc45b89a10e7d1707ee113257f99f"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_4.png"></a></p>
+<p>4.网状拓扑</p>
+<p>    每台pc机器之间都进行连接  比如 Apc和B,C,D都有连接 缺点是 需要的线路特别多</p>
+<p><a href="#R-image-01c036c88615706ef26381d871b6fb4e" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-01c036c88615706ef26381d871b6fb4e"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_5.png"></a></p>
+<p><strong>三.网络互连设备</strong></p>
+<p>物理层 ：中继器（Repeater，也叫放大器），集线器。</p>
+<p>数据链路层 ：网桥，交换机。</p>
+<p>网络层 ：路由器。</p>
+<p>网关 ：网络层以上的设备。</p>
+<p>设备解释：</p>
+<p>网卡 NIC(NetWork Interface Card) 计算机和计算机进行通信的设备 每台计算机最少配置一个网卡</p>
+<p>中继器 是信号放大器 信号在传输过程中可能会丢失数据 中继器可以重新恢复数据</p>
+<p>集线器 都是星型拓扑结构的中心处理器 OSI7层物理层 传输的是bit 所有的接口争用带宽</p>
+<p>交换机  也可以是星型拓扑结构的中心处理器 OSI7层的数据链路层 传输的是数据帧 包含了发送和接受方的物理地址等信息</p>
+<p>   局域网一般都使用交换机 因为交换器网络接口多 接口之间处理的流量大 接口之间独立拥有带宽</p>
+<p>网桥一般是两个不同网络间进行数据交换的桥梁 网桥会记录需要桥接的两个网络中的所有网络成员的物理地址 </p>
+<p>网关  协议转换器 用于连接差别较大 协议不同的网络之间连接 可以打包数据重新转换成其他网络格式的数据包并发送 作用 iso7层</p>
+<p>路由器是一种特殊的网关 iso3层 比如计算机 网卡上都需要设置网关上网  </p>
+<p>     一般路由器都有两个以上的网卡 </p>
+<p>          路由器网卡1 ip地址为 192.168.1.1  其他连接该路由器的局域网主机都会分配一个 192.168.1网段的IP地址  局域网主机的网关配置必须为路由器的ip 1                      192.168.1.1</p>
+<p>          路由器 网卡2  用于连接互联网  连接后会存在一个公网ip   </p>
+<p>      当局域网主机发起一个外网访问的ip包后 包会被网关192.168.1.1路由器接受 接受后 重新打包数据（修改源ip为外网ip） 发送给网卡2  网卡2访问外网结果后获取结果后 重新打包数据 发送给网卡1  原路返回响应给局域网主机</p>
+<p>      centos主机 可以通过修改 echo 1 &gt; /proc/sys/net/ipv4/ip_forward  启用路由功能</p>
+<p><strong>三.OSI七层模型</strong></p>
+<p><a href="#R-image-141dc92b7bdd1af4c06b1338b0870ea1" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="http://hi.csdn.net/attachment/201202/10/0_1328873801dE3r.gif" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-141dc92b7bdd1af4c06b1338b0870ea1"><img class="lazy lightbox lightbox-image" loading="lazy" src="http://hi.csdn.net/attachment/201202/10/0_1328873801dE3r.gif"></a></p>
+<p>每层具体用途</p>
+<p><a href="#R-image-7beb4f11682f0808c8dd065a11e55073" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7beb4f11682f0808c8dd065a11e55073"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_7.png"></a></p>
+<p>具体描述：</p>
+<p><a href="#R-image-4e7276923973b41ceeba47aa8b1d4cb6" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4e7276923973b41ceeba47aa8b1d4cb6"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_8.png"></a></p>
+<p><a href="#R-image-bccffd2981125c3ff7c0c6293d85ae27" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_9.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bccffd2981125c3ff7c0c6293d85ae27"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_9.png"></a></p>
+<p><a href="#R-image-03f0c853beb02af4578d4a4fc5a68357" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_10.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-03f0c853beb02af4578d4a4fc5a68357"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_10.png"></a></p>
+<p><a href="#R-image-e95bdb2b5180aef5e7f8df67d8c2a24e" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_11.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e95bdb2b5180aef5e7f8df67d8c2a24e"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_11.png"></a></p>
+<p><a href="#R-image-4dd54536b9d0a6329a8325797f282595" class="lightbox-link"><img class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_12.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-4dd54536b9d0a6329a8325797f282595"><img class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/devops/networking/basic/net_basic.md.images/image_12.png"></a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/docs/index.html">
+            <div class="logo-title">liaomin416100569博客</div>
+          </a>
+        </div>
+        <search><form action="/docs/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="" data-nav-id="/docs/index.html"><a class="padding" href="/docs/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/docs/programming/index.html"><a class="padding" href="/docs/programming/index.html">编程开发</a><ul id="R-subsections-e3fc01b477dbaf64a8f5013a3dab5c5b" class="collapsible-menu"></ul></li>
+            <li class="parent " data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu">
+            <li class="alwaysopen " data-nav-id="/docs/devops/kubernetes/index.html"><a class="padding" href="/docs/devops/kubernetes/index.html">kubernetes</a><ul id="R-subsections-a6d9d4850f81ae033d42cdaa03dad084" class="collapsible-menu"></ul></li>
+            <li class="parent alwaysopen " data-nav-id="/docs/devops/networking/index.html"><a class="padding" href="/docs/devops/networking/index.html">网络技术</a><ul id="R-subsections-bd6b3f75e8269a91d29691b78d3bac17" class="collapsible-menu">
+            <li class="parent alwaysopen " data-nav-id="/docs/devops/networking/basic/index.html"><a class="padding" href="/docs/devops/networking/basic/index.html">网络基础</a><ul id="R-subsections-736e298d464a228d5f70014b04a0f7a2" class="collapsible-menu">
+            <li class="active " data-nav-id="/docs/devops/networking/basic/net_basic/index.html"><a class="padding" href="/docs/devops/networking/basic/net_basic/index.html">计算机网络基础00-网络分层</a></li>
+            <li class="" data-nav-id="/docs/devops/networking/basic/net_basic_01/index.html"><a class="padding" href="/docs/devops/networking/basic/net_basic_01/index.html">计算机网络基础01-IP地址相关知识</a></li>
+            <li class="" data-nav-id="/docs/devops/networking/basic/net_basic_02/index.html"><a class="padding" href="/docs/devops/networking/basic/net_basic_02/index.html">计算机网络基础02-linux虚拟网络隔离（网桥bridge，路由，虚拟网卡veth）</a></li></ul></li>
+            <li class="alwaysopen " data-nav-id="/docs/devops/networking/packet_capture/index.html"><a class="padding" href="/docs/devops/networking/packet_capture/index.html">网络抓包</a><ul id="R-subsections-0589ce82bed54f8d96552feda54e19b5" class="collapsible-menu"></ul></li></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
+  </body>
+</html>

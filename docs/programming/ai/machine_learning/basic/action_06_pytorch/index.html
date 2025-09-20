@@ -93,26 +93,26 @@ import torchprint(torch.__version__)#cuda是否可用，如果返回True，表
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="3212">
     <title>深度学习06-pytorch从入门到精通 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -166,7 +166,7 @@ import torchprint(torch.__version__)#cuda是否可用，如果返回True，表
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/basic/action_06_pytorch/index.html">
     <div id="R-body" class="default-animation">
@@ -378,15 +378,15 @@ window.MathJax = {
 <h1 id="环境准备">环境准备</h1>
 <h2 id="安装cuda和cudnn">安装cuda和cudnn</h2>
 <p>一般pc电脑或者服务器都有nvida显卡，可以通过nvidia-smi命令查看。
-<a href="#R-image-0a48d7482be6620afb4bd4a0bcc49570" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/7c7485dacdb8adcba9d5c4a222595310.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0a48d7482be6620afb4bd4a0bcc49570"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/7c7485dacdb8adcba9d5c4a222595310.png"></a>
+<a href="#R-image-6b90af3119edab8062bf1af53207bc24" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/7c7485dacdb8adcba9d5c4a222595310.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6b90af3119edab8062bf1af53207bc24"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/7c7485dacdb8adcba9d5c4a222595310.png"></a>
 其中python环境（3.8+版本），cuda和cudnn安装请参考：https://blog.csdn.net/liaomin416100569/article/details/130532993
 安装后可以看到我的cuda version是11.2</p>
 <h2 id="安装pytorch">安装pytorch</h2>
 <p>考虑到版本向下兼容，不一定非要下载cuda=11.2对应的那个版本的torch，或许低于这个版本就可以。所以我就选择下载cuda11.1的版本。
 以下是pytorch对应的稳定版的网址下载链接，可以根据需要找到对应的torch版本下载。cu版本就是gpu版本，不带cu的是cpu版本，https://download.pytorch.org/whl/torch_stable.html，搜索cu111
-<a href="#R-image-ee57e69c9fdb8e407a7b7ffae5889377" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/857d436ed5632f0d7ba1e8077f290297.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ee57e69c9fdb8e407a7b7ffae5889377"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/857d436ed5632f0d7ba1e8077f290297.png"></a>
+<a href="#R-image-e3ae0dc6df4b72c635ec70e7ed60a179" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/857d436ed5632f0d7ba1e8077f290297.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e3ae0dc6df4b72c635ec70e7ed60a179"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/857d436ed5632f0d7ba1e8077f290297.png"></a>
 直接选择</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>pip install torch==1.9.1+cu111 torchvision==0.10.1+cu111 torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html</code></pre></div>
 <p>编写测试代码</p>
@@ -415,54 +415,54 @@ tensor([[0.5761, 0.7046, 0.2004],
 <p>首先你先需要申请一个googledrive（类似百度网盘），准备一个gmail邮箱就可以申请，申请完成后默认有15GB的存储空间，如果需要更多就需要购买了。
 在我的云端云盘右侧空白的地方点击邮件，关联更多应用，搜索colab安装，安装后右键就会多了
 一个google colaboratory，点击进去，会弹出一个notebook的开发环境。
-<a href="#R-image-3e1601c64863c9705b1fea2aa21f4241" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/513b61836eb74cf1a57b309f7d19de6d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3e1601c64863c9705b1fea2aa21f4241"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/513b61836eb74cf1a57b309f7d19de6d.png"></a>
+<a href="#R-image-95cf7ae8aa5c08651823b56ff0496fef" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/513b61836eb74cf1a57b309f7d19de6d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-95cf7ae8aa5c08651823b56ff0496fef"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/513b61836eb74cf1a57b309f7d19de6d.png"></a>
 可以点击左侧的文件夹，自动分配一个计算资源
-<a href="#R-image-14eef2252f5f9db74beb9774e142b5ac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/dedeecbed8930d2b550c9ad5372bf3be.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-14eef2252f5f9db74beb9774e142b5ac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/dedeecbed8930d2b550c9ad5372bf3be.png"></a>
+<a href="#R-image-1b309f869f0e434cf1052b88155eb4ad" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/dedeecbed8930d2b550c9ad5372bf3be.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1b309f869f0e434cf1052b88155eb4ad"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/dedeecbed8930d2b550c9ad5372bf3be.png"></a>
 查看分配的机器
-<a href="#R-image-16343f37e681a156d4bd3cbbb50ee626" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/c5861825eb1467fc2f441e4768daa943.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-16343f37e681a156d4bd3cbbb50ee626"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/c5861825eb1467fc2f441e4768daa943.png"></a>
+<a href="#R-image-1693bdfe8e6ca67afb3df1ec1e702078" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/c5861825eb1467fc2f441e4768daa943.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1693bdfe8e6ca67afb3df1ec1e702078"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/c5861825eb1467fc2f441e4768daa943.png"></a>
 点击目录..可以进入到系统根目录,点击工具栏第三个图标挂载googledrive
-<a href="#R-image-01612fbc7ad62477573a3ad030597bbd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/815027001ec16447f56bb1c9d8c4020b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-01612fbc7ad62477573a3ad030597bbd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/815027001ec16447f56bb1c9d8c4020b.png"></a>
+<a href="#R-image-92100bcada4794e3f05a20b5e9979b22" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/815027001ec16447f56bb1c9d8c4020b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-92100bcada4794e3f05a20b5e9979b22"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/815027001ec16447f56bb1c9d8c4020b.png"></a>
 在content notepadbook中执行命令查看资源信息，和右侧的资源坐下对比，可以确认系统是ubuntu，内存是12.7gb，磁盘107gb，没有gpu
-<a href="#R-image-db7f78621f64a18b7f2f3df45ba52a71" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/39ae8f7a2cfe2e36725e9c2e74027095.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-db7f78621f64a18b7f2f3df45ba52a71"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/39ae8f7a2cfe2e36725e9c2e74027095.png"></a>
+<a href="#R-image-acab54b64987f75aed7cc1b3e8577beb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/39ae8f7a2cfe2e36725e9c2e74027095.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-acab54b64987f75aed7cc1b3e8577beb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/39ae8f7a2cfe2e36725e9c2e74027095.png"></a>
 你的notepad文件内容，默认是新建在googledrive的根目录下，你可以双击文件直接进入notebook
-<a href="#R-image-31a976ca851f2ebb8d0a54170cdc97f7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/729c97c06a90544540c31673759905c6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-31a976ca851f2ebb8d0a54170cdc97f7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/729c97c06a90544540c31673759905c6.png"></a></p>
+<a href="#R-image-ade5d8631bd9d64268b533974906a9ab" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/729c97c06a90544540c31673759905c6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ade5d8631bd9d64268b533974906a9ab"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/729c97c06a90544540c31673759905c6.png"></a></p>
 <h3 id="挂载googledrive">挂载googledrive</h3>
-<p><a href="#R-image-a2df6b99bd9385fb5bac82a1703461d5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d54741aa9b66ccb2f5dcce53f4f6745f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a2df6b99bd9385fb5bac82a1703461d5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d54741aa9b66ccb2f5dcce53f4f6745f.png"></a>
+<p><a href="#R-image-8ce2ea03cf724e745bce9abd8cd8dd82" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d54741aa9b66ccb2f5dcce53f4f6745f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8ce2ea03cf724e745bce9abd8cd8dd82"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d54741aa9b66ccb2f5dcce53f4f6745f.png"></a>
 挂载完成后/content多了一个drive目录，MyDrive内容就和googledrive是一致的。
-<a href="#R-image-2acf5503a636a699604bf5b4626e494d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/0eeaf8fcfc14923a0d4e91de70034109.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2acf5503a636a699604bf5b4626e494d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/0eeaf8fcfc14923a0d4e91de70034109.png"></a></p>
+<a href="#R-image-0f83a3320f01c59489928fa702b65e14" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/0eeaf8fcfc14923a0d4e91de70034109.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0f83a3320f01c59489928fa702b65e14"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/0eeaf8fcfc14923a0d4e91de70034109.png"></a></p>
 <h3 id="colab申请gpu">colab申请gpu</h3>
 <p>点击右上角的view resouce
-<a href="#R-image-a48faafbcaba7c2f550d632965e57963" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/ede9fef01cde00a0f1f3cf4a9ae559c6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a48faafbcaba7c2f550d632965e57963"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/ede9fef01cde00a0f1f3cf4a9ae559c6.png"></a>
+<a href="#R-image-aa5561af900be6204e9ebe811a24555c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/ede9fef01cde00a0f1f3cf4a9ae559c6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-aa5561af900be6204e9ebe811a24555c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/ede9fef01cde00a0f1f3cf4a9ae559c6.png"></a>
 选择change runtime type,选择免费的GPU或者TPU
-<a href="#R-image-fc7a110b3dc2168cafe6184e65dc6f88" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/c800af8f306e064ceb7159a967975e37.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-fc7a110b3dc2168cafe6184e65dc6f88"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/c800af8f306e064ceb7159a967975e37.png"></a>
+<a href="#R-image-e1640ec14f5b7a886b1a6d6c4bdd0384" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/c800af8f306e064ceb7159a967975e37.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e1640ec14f5b7a886b1a6d6c4bdd0384"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/c800af8f306e064ceb7159a967975e37.png"></a>
 再次使用nvdia-smi确认
-<a href="#R-image-ecf29f2fdf439099a7c75a7be23f5c03" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/be6b362358675a6cb10e1d231886a30e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ecf29f2fdf439099a7c75a7be23f5c03"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/be6b362358675a6cb10e1d231886a30e.png"></a></p>
+<a href="#R-image-bb05a172417c7fa2d38ec5a9f3d396b8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/be6b362358675a6cb10e1d231886a30e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bb05a172417c7fa2d38ec5a9f3d396b8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/be6b362358675a6cb10e1d231886a30e.png"></a></p>
 <blockquote>
 <p>google的另一款免费的实验免费gpu是kaggle，也可以注册使用，比colab更简单方便，同时可直接引用其他开源模型。</p></blockquote>
 <h3 id="notebook语法">notebook语法</h3>
 <ol>
 <li>python语法
 可直接在快中执行python语法。
-<a href="#R-image-dc14c1652454f49eceb6d06057ca72ef" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/f32d7b00b88b97e9dfbd2ef80df20c52.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-dc14c1652454f49eceb6d06057ca72ef"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/f32d7b00b88b97e9dfbd2ef80df20c52.png"></a></li>
+<a href="#R-image-85880a7217f4ca62e1d0997f3e28f4d7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/f32d7b00b88b97e9dfbd2ef80df20c52.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-85880a7217f4ca62e1d0997f3e28f4d7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/f32d7b00b88b97e9dfbd2ef80df20c52.png"></a></li>
 <li>使用！执行shell命令。
 比如使用 !bash进入一个交互shell行，exit退出
-<a href="#R-image-5c04bf371772b5047e24f9d3c8f55c9b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/730e9b2adb8eef8db66b75ef16969a90.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5c04bf371772b5047e24f9d3c8f55c9b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/730e9b2adb8eef8db66b75ef16969a90.png"></a>
+<a href="#R-image-23f79246728cca9a9775092e8640409d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/730e9b2adb8eef8db66b75ef16969a90.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-23f79246728cca9a9775092e8640409d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/730e9b2adb8eef8db66b75ef16969a90.png"></a>
 可以使用 ！任意shell命令执行，
-<a href="#R-image-8e6491b154a1e8642be9d59e72c23254" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/1e3fc222300f02cb36acceae96aca869.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8e6491b154a1e8642be9d59e72c23254"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/1e3fc222300f02cb36acceae96aca869.png"></a></li>
+<a href="#R-image-f50a5e73372f43da6d765bbb7cb1d923" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/1e3fc222300f02cb36acceae96aca869.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f50a5e73372f43da6d765bbb7cb1d923"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/1e3fc222300f02cb36acceae96aca869.png"></a></li>
 </ol>
 <h1 id="基础">基础</h1>
 <h2 id="张量">张量</h2>
@@ -755,8 +755,8 @@ y_pre=fx(x)
 plot.plot(x,y,&#39;.&#39;)
 plot.plot(x.data.numpy(),y_pre.data.numpy())
 plot.show()</code></pre></div>
-<p><a href="#R-image-b9c566aab4c5543cb0f91ee16e56c6ac" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/fc646741ad2645c16168f0bccf15287e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b9c566aab4c5543cb0f91ee16e56c6ac"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/fc646741ad2645c16168f0bccf15287e.png"></a></p>
+<p><a href="#R-image-2b88b952852d954df5657fb2f299b25b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/fc646741ad2645c16168f0bccf15287e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2b88b952852d954df5657fb2f299b25b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/fc646741ad2645c16168f0bccf15287e.png"></a></p>
 <h3 id="计算图">计算图</h3>
 <p>PyTorch的计算图是一种用于描述计算操作的有向无环图(Directed Acyclic Graph, DAG)。在PyTorch中，计算图是动态的，它会随着代码的执行而构建。</p>
 <p>计算图的主要作用是记录和管理计算操作的流程，以便进行自动微分和梯度优化。通过构建计算图，PyTorch能够追踪和记录所有的计算操作，从而实现自动求导。这使得在深度学习中，我们可以方便地进行反向传播和优化模型的参数。</p>
@@ -781,18 +781,18 @@ y = w*x + b
 dot = make_dot(y, params={&#39;x&#39;: x, &#39;w&#39;: w, &#39;b&#39;: b}, show_attrs=True, show_saved=True)
 dot.render(filename=&#39;compute_graph&#39;, format=&#39;png&#39;)</code></pre></div>
 <p>当前运行的目录出现一个compute_graph.png
-<a href="#R-image-7b175fd5da3edcf197c69915543c3ef5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/0433628210603d6c618717987e23e461.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-7b175fd5da3edcf197c69915543c3ef5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/0433628210603d6c618717987e23e461.png"></a>
+<a href="#R-image-3a4bad5bbf6e001d8abc0bbd27fe6bc0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/0433628210603d6c618717987e23e461.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3a4bad5bbf6e001d8abc0bbd27fe6bc0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/0433628210603d6c618717987e23e461.png"></a>
 剖析下反向求导的过程
 如表达式z=wx+b可分解为y=wx和z=y+b，其计算图如图3-5所示，图中的MUL和ADD都是算子，w、x、b为变量。
-<a href="#R-image-2b6ed9dcc94162f0ddcde6306a44acd4" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/29b10513a262dbef31e51b319975f3f7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2b6ed9dcc94162f0ddcde6306a44acd4"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/29b10513a262dbef31e51b319975f3f7.png"></a>
+<a href="#R-image-fee18d8625484d618e33d7034a75fd2e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/29b10513a262dbef31e51b319975f3f7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fee18d8625484d618e33d7034a75fd2e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/29b10513a262dbef31e51b319975f3f7.png"></a>
 如上有向无环图中，X 和b是叶子节点（leaf node），这些节点通常由用户自己创建，不依赖于其他变量。z称为根节点，是计算图的最终目标。利用链式法则很容易求得各个叶子节点的梯度。
-<a href="#R-image-8690149964aea2f6d1c90341891e2332" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9a9f7896983d152213ba86f4ea637e95.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8690149964aea2f6d1c90341891e2332"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9a9f7896983d152213ba86f4ea637e95.png"></a>
+<a href="#R-image-75b560e406753b97a2cd94297cbe6d45" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9a9f7896983d152213ba86f4ea637e95.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-75b560e406753b97a2cd94297cbe6d45"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9a9f7896983d152213ba86f4ea637e95.png"></a>
 而有了计算图，上述链式求导即可利用计算图的反向传播自动完成，其过程如图所示。
-<a href="#R-image-21d37aa94fcfc33ba1b2d7e595e9d92b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/578c727b6e32ac3e0e44faeadcab66b6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-21d37aa94fcfc33ba1b2d7e595e9d92b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/578c727b6e32ac3e0e44faeadcab66b6.png"></a></p>
+<a href="#R-image-fa89a1d6bdea43a7e055560c58462627" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/578c727b6e32ac3e0e44faeadcab66b6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fa89a1d6bdea43a7e055560c58462627"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/578c727b6e32ac3e0e44faeadcab66b6.png"></a></p>
 <h1 id="torchvision模块">torchvision模块</h1>
 <p>torchvision是PyTorch的一个扩展库，提供了许多用于计算机视觉任务的实用函数和预训练模型。它包含了常用的数据集、数据转换、模型架构和图像处理方法等功能。</p>
 <p>torchvision的主要特点包括：</p>
@@ -1144,14 +1144,14 @@ plt.show()
 #每个卷积核（3×3）与原始的输入图像（480×479）进行卷积，这样得到的 feature map（特征图）大小为（480-3+1）×（479-3+1）= 478×477
 print(&#34;输出形状&#34;,output.shape)</code></pre></div>
 <p>原始图
-<a href="#R-image-cb71389ab327e7afe280308959c195f0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d2c77d023c85456a5d4864d11536be10.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cb71389ab327e7afe280308959c195f0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d2c77d023c85456a5d4864d11536be10.png"></a>
+<a href="#R-image-85d12396bd9c47e8015b16a799c6eeae" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d2c77d023c85456a5d4864d11536be10.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-85d12396bd9c47e8015b16a799c6eeae"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d2c77d023c85456a5d4864d11536be10.png"></a>
 输出：
 torch.Size([1, 480, 479])
 输入形状 torch.Size([1, 1, 480, 479])
 输出形状 torch.Size([1, 1, 478, 477])
-<a href="#R-image-3e0bc8c87411663f6f4b715b07dc0271" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9a892feb3df58c4732dac61b94eacd8c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-3e0bc8c87411663f6f4b715b07dc0271"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9a892feb3df58c4732dac61b94eacd8c.png"></a></p>
+<a href="#R-image-d89c76c2c7e2ecffdb249361c329fd9c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9a892feb3df58c4732dac61b94eacd8c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d89c76c2c7e2ecffdb249361c329fd9c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9a892feb3df58c4732dac61b94eacd8c.png"></a></p>
 <h4 id="nnavgpool2d和nnmaxpool2d">nn.AvgPool2d和nn.MaxPool2d</h4>
 <p>上面的卷积图在经过池化</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>plt.rcParams[&#39;font.sans-serif&#39;] = [&#39;SimHei&#39;]  # 设置全局字体为SimHei
@@ -1172,10 +1172,10 @@ plt.title(&#34;最大池化&#34;)
 plt.imshow(transforms.ToPILImage()(poolOuput.squeeze(0)),cmap=&#34;gray&#34;)
 plt.show()</code></pre></div>
 <p>输出
-<a href="#R-image-0f05922350b9163050a9f1e8c9d2bfc8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9ac95beb241b69070f877014f6233eb6.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0f05922350b9163050a9f1e8c9d2bfc8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9ac95beb241b69070f877014f6233eb6.png"></a>
-<a href="#R-image-20bde49e69e0b23a624ca083ff35f999" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d7510ad901669f61c865e2815ca84b50.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-20bde49e69e0b23a624ca083ff35f999"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d7510ad901669f61c865e2815ca84b50.png"></a></p>
+<a href="#R-image-282a702c9b8a83b11dc1fb7e98ae5a8f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9ac95beb241b69070f877014f6233eb6.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-282a702c9b8a83b11dc1fb7e98ae5a8f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/9ac95beb241b69070f877014f6233eb6.png"></a>
+<a href="#R-image-d70d208d9c4470a57d0fbcb114cb6100" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d7510ad901669f61c865e2815ca84b50.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d70d208d9c4470a57d0fbcb114cb6100"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d7510ad901669f61c865e2815ca84b50.png"></a></p>
 <h4 id="nnlinear">nn.Linear</h4>
 <p><code>nn.Linear</code>是PyTorch中用于定义线性变换的类。它是<code>nn.Module</code>的子类，用于构建神经网络的层。</p>
 <p><code>nn.Linear</code>接受两个参数：<code>in_features</code>和<code>out_features</code>，分别表示输入特征的大小和输出特征的大小。它会自动创建一个可学习的权重矩阵，形状为<code>( in_features，out_features)</code>，以及一个可学习的偏置向量，形状为<code>(out_features,)</code>。</p>
@@ -1889,8 +1889,8 @@ torch.cuda.empty_cache()</code></pre></div>
 <p>总之，<code>torch.hub</code>是一个非常方便的工具，使您能够轻松地使用各种预训练模型，并将它们集成到您的代码中，从而加速您的深度学习项目开发。
 官网模型搜索地址：https://pytorch.org/hub/research-models
 以下是最火的6个model
-<a href="#R-image-b4c7b5313c067177841a7f57d5ad6df7" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/3955c390dc3f1f0827cdff049558f886.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b4c7b5313c067177841a7f57d5ad6df7"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/3955c390dc3f1f0827cdff049558f886.png"></a></p>
+<a href="#R-image-968771284e6594e2642f2412e4d9a89f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/3955c390dc3f1f0827cdff049558f886.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-968771284e6594e2642f2412e4d9a89f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/3955c390dc3f1f0827cdff049558f886.png"></a></p>
 <h3 id="yolov5目标检测">yolov5目标检测</h3>
 <p>实战使用yolov5目标检测,参考官方模型文档：https://pytorch.org/hub/ultralytics_yolov5/
 注意 Python&gt;=3.8  PyTorch&gt;=1.7
@@ -1911,8 +1911,8 @@ results.print()
 results.save()  # or .show()
 results.xyxy[0]  # img1 predictions (tensor)</code></pre></div>
 <p>会在当前运行的目录上生成一个runs/detect/exp/zidane.jpg
-<a href="#R-image-26ca96b82f6aebd82f93a3fba74ddd0a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/3add9fe98a0400ae437f7b9872e8c9ca.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-26ca96b82f6aebd82f93a3fba74ddd0a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/3add9fe98a0400ae437f7b9872e8c9ca.png"></a></p>
+<a href="#R-image-ba86973bccfd9546104c4aef054b6ae3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/3add9fe98a0400ae437f7b9872e8c9ca.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ba86973bccfd9546104c4aef054b6ae3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/3add9fe98a0400ae437f7b9872e8c9ca.png"></a></p>
 <h3 id="生成动漫图像">生成动漫图像</h3>
 <p>github项目地址：https://github.com/bryandlee/animegan2-pytorch
 可以将人物图像转换为动漫效果。</p>
@@ -1926,11 +1926,11 @@ out = face2paint(model, image)
 pyplot.imshow(out)
 pyplot.show()</code></pre></div>
 <p>原始图像
-<a href="#R-image-752c2e023da99abeabda114fbec50fc2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d8dab52114d56a4a9c4e04e207e82f71.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-752c2e023da99abeabda114fbec50fc2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d8dab52114d56a4a9c4e04e207e82f71.png"></a>
+<a href="#R-image-84c0098b95a7277550c21250715a28cc" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d8dab52114d56a4a9c4e04e207e82f71.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-84c0098b95a7277550c21250715a28cc"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d8dab52114d56a4a9c4e04e207e82f71.png"></a>
 转换后
-<a href="#R-image-05e9aa4315df47dc8f2b90a30f079314" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d81d7092436aeae4fabf4da4f18ecaa7.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-05e9aa4315df47dc8f2b90a30f079314"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d81d7092436aeae4fabf4da4f18ecaa7.png"></a></p>
+<a href="#R-image-6349983d0e791827d8410102fb647854" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d81d7092436aeae4fabf4da4f18ecaa7.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6349983d0e791827d8410102fb647854"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d81d7092436aeae4fabf4da4f18ecaa7.png"></a></p>
 <h2 id="可视化监控">可视化监控</h2>
 <p>在 TensorFlow 中，最常使用的可视化工具是Tensorboard ,TensorboardX 工具使得 PyTorch 也享受到 Tensorboard 的便捷功能。
 pytorch1.8之后已经包含了tensorboardx工具，在torch.utils.tensorboard包中。
@@ -2030,18 +2030,18 @@ TensorFlow installation not found - running with reduced feature set.
 Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
 TensorBoard 2.13.0 at http://localhost:6006/ (Press CTRL+C to quit)</code></pre></div>
 <p>访问：http://localhost:6006/
-<a href="#R-image-dc9816676b3526717c72475f43851c00" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d452e8ea55bc4602c7f125cc64499cbd.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-dc9816676b3526717c72475f43851c00"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d452e8ea55bc4602c7f125cc64499cbd.png"></a>
+<a href="#R-image-c9af20cb7a2b4b0c9ffc4704a4e8d361" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d452e8ea55bc4602c7f125cc64499cbd.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c9af20cb7a2b4b0c9ffc4704a4e8d361"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/d452e8ea55bc4602c7f125cc64499cbd.png"></a>
 可以看到epoch到达80左右基本损失就很小了
 我们把代码的epochCount调整到20
-<a href="#R-image-a1d37cbcc0ed2232ef57eebac14ccc07" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/fb65a3943b45a6d8c66f40d15d584601.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-a1d37cbcc0ed2232ef57eebac14ccc07"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/fb65a3943b45a6d8c66f40d15d584601.png"></a>
+<a href="#R-image-a1eede7634577b3e57b145fc2d3216d1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/fb65a3943b45a6d8c66f40d15d584601.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a1eede7634577b3e57b145fc2d3216d1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/fb65a3943b45a6d8c66f40d15d584601.png"></a>
 可以看到损失梯度下降还没有达到平缓，在看下拟合的图形
-<a href="#R-image-4bd1a822f527ea9c69338999028b3dc3" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/bfe0af06723fff29233f698299b8c3a3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4bd1a822f527ea9c69338999028b3dc3"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/bfe0af06723fff29233f698299b8c3a3.png"></a>
+<a href="#R-image-989cb7f520432ae10998bd2c1f1fa488" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/bfe0af06723fff29233f698299b8c3a3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-989cb7f520432ae10998bd2c1f1fa488"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/bfe0af06723fff29233f698299b8c3a3.png"></a>
 再把epochCount调整到10000
-<a href="#R-image-238f6957d1b017a12f73c558e392f9d2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/09da09404ef86c5d074f0fa49727a201.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-238f6957d1b017a12f73c558e392f9d2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/09da09404ef86c5d074f0fa49727a201.png"></a>
+<a href="#R-image-59374ed8f42cca1661c53309c39a9ac6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/09da09404ef86c5d074f0fa49727a201.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-59374ed8f42cca1661c53309c39a9ac6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/09da09404ef86c5d074f0fa49727a201.png"></a>
 可以看到在100左右基本就平缓了，后面的训练是多余的了，所以我们可以观察到epoch到100是最合适的</p>
 <h5 id="add_histogram">add_histogram</h5>
 <p>使用 <code>add_histogram</code> 方法来记录一组数据的直方图。</p>
@@ -2070,8 +2070,8 @@ if flag :
         writer.add_histogram(&#34;data1&#34;,data_1,x)
         writer.add_histogram(&#39;data2&#39;,data_2,x)
 writer.close()</code></pre></div>
-<p><a href="#R-image-8f959a42035e02cdfc0bad735a7b00ab" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/5abaa65df4ff08038f87082deb920894.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-8f959a42035e02cdfc0bad735a7b00ab"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/5abaa65df4ff08038f87082deb920894.png"></a>
+<p><a href="#R-image-cf3d4d8ad708c54cd1fd64075944ed17" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/5abaa65df4ff08038f87082deb920894.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cf3d4d8ad708c54cd1fd64075944ed17"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/5abaa65df4ff08038f87082deb920894.png"></a>
 右侧的坐标表示循环的次数，下方的坐标表示这1000个数的分布情况</p>
 <h5 id="运行图-graph">运行图 (graph)</h5>
 <p>使用 <code>add_graph</code> 方法来可视化一个神经网络。</p>
@@ -2085,8 +2085,8 @@ writer.close()</code></pre></div>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>model=LinearModel()
 #加入代码
 writer.add_graph(model,model.w)</code></pre></div>
-<p><a href="#R-image-204117e6892d104f5d88f44b2a316005" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/e1ae4f3dfad234f890022cc52a5411a3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-204117e6892d104f5d88f44b2a316005"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/e1ae4f3dfad234f890022cc52a5411a3.png"></a></p>
+<p><a href="#R-image-2bc09b07dffa5448e94dae9e87eb7589" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/e1ae4f3dfad234f890022cc52a5411a3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2bc09b07dffa5448e94dae9e87eb7589"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/basic/action_06_pytorch.md.images/e1ae4f3dfad234f890022cc52a5411a3.png"></a></p>
 <h5 id="图片add_image">图片add_image</h5>
 <p>使用 <code>add_image</code> 方法来记录单个图像数据。<strong>注意，该方法需要 <code>pillow</code> 库的支持。</strong></p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>add_image(tag, img_tensor, global_step<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, walltime<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, dataformats<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;CHW&#39;</span>)</span></span></code></pre></div>
@@ -2164,6 +2164,8 @@ writer.add_graph(model,model.w)</code></pre></div>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -2181,8 +2183,8 @@ writer.add_graph(model,model.w)</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

@@ -109,26 +109,26 @@ group2的新中心点也就是$x={(x1&#43;x2&#43;x3)\over 3} ={(2&#43;4&#43;5)\o
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="92">
     <title>机器学习实战教程（十二）：聚类算法Kmeans :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -182,7 +182,7 @@ group2的新中心点也就是$x={(x1&#43;x2&#43;x3)\over 3} ={(2&#43;4&#43;5)\o
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_12_cluster/index.html">
     <div id="R-body" class="default-animation">
@@ -300,36 +300,36 @@ window.MathJax = {
 （4）对于所有的c个聚类中心，如果利用（2）（3）的迭代法更新后，值保持不变，则迭代结束，否则继续迭代。</p>
 <p>假设 现在有4组数据，每组数据有2个维度，对其进行聚类分为2类，将其可视化一下。
 $A=(1,1),B=(2,1),C=(4,3),D=(5,4)$
-<a href="#R-image-4c1f10093a4a39466dae97b12e2676cb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/5911f95f115bcb1d1fd6cf34a5c9d911.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4c1f10093a4a39466dae97b12e2676cb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/5911f95f115bcb1d1fd6cf34a5c9d911.png"></a>
+<a href="#R-image-8175d251a1fa761197be95684133291d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/5911f95f115bcb1d1fd6cf34a5c9d911.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8175d251a1fa761197be95684133291d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/5911f95f115bcb1d1fd6cf34a5c9d911.png"></a>
 假设选取两个星的位置为初始中心 $c_1=(1,1),c_2=(2,1)$，计算每个点到初始中心的距离，使用欧式距离得到4个点分别距离两个初始中心的距离，归于最近的类：
-<a href="#R-image-1e77f852f221acf1ecd8ad6ad107790e" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/7d7cfd62340cd43bcf6bdf40f725a4ee.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1e77f852f221acf1ecd8ad6ad107790e"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/7d7cfd62340cd43bcf6bdf40f725a4ee.png"></a></p>
+<a href="#R-image-9bb00cc4e489c52fe4971fd3894cb2f0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/7d7cfd62340cd43bcf6bdf40f725a4ee.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9bb00cc4e489c52fe4971fd3894cb2f0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/7d7cfd62340cd43bcf6bdf40f725a4ee.png"></a></p>
 <blockquote>
 <p>$D^0第一行表示ABCD四个点到c1的举例，第二行表示ABCD四个点到c2的举例，举例使用欧氏距离公式计算出来，以C为例，到c1这一组的举例是3.61,到c2这一组的举例是2.83说明第一次迭代C是属于group-2$</p></blockquote>
 <p>通过比较，将其进行归类。并使用平均法更新中心位置。
-<a href="#R-image-44e6091b42c7fa5966f6c2be902c8694" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/2413bd3ffa5f49f2cdfca9c303e11274.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-44e6091b42c7fa5966f6c2be902c8694"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/2413bd3ffa5f49f2cdfca9c303e11274.png"></a>
+<a href="#R-image-8edbce6873b2ce04568e1992689cd9b8" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/2413bd3ffa5f49f2cdfca9c303e11274.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8edbce6873b2ce04568e1992689cd9b8"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/2413bd3ffa5f49f2cdfca9c303e11274.png"></a>
 由于归于group1的只有一个点，一次更新后的中心位置$c_1=(1,1)$，而 $c_{2} = (\frac{11}{3}, \frac{8}{3})$</p>
 <blockquote>
 <p>group2的新中心点也就是$x={(x1+x2+x3)\over 3} ={(2+4+5)\over3}={11\over3}$
 $y={(y1+y2+y3)\over 3} ={(1+3+4)\over3}={8\over3}$
-<a href="#R-image-f988a09405dd1627df03051e09bf3cc0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/c86bb1f6f448950e3147294c6094fe09.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f988a09405dd1627df03051e09bf3cc0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/c86bb1f6f448950e3147294c6094fe09.png"></a>
+<a href="#R-image-64096f99f5cb48076f2b29f5d909d5b9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/c86bb1f6f448950e3147294c6094fe09.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-64096f99f5cb48076f2b29f5d909d5b9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/c86bb1f6f448950e3147294c6094fe09.png"></a>
 再次计算每个点与更新后的位置中心的距离</p></blockquote>
-<p><a href="#R-image-14322ba17c8dd61145ae6f545b69cda5" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/d6eec84ebdede9d0261c3bed31b1d0e5.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-14322ba17c8dd61145ae6f545b69cda5"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/d6eec84ebdede9d0261c3bed31b1d0e5.png"></a>
-<a href="#R-image-de8079b4a94205a6010e331d3befed68" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/bc3a24c6ca8602ebf26159cc0ebb2b78.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-de8079b4a94205a6010e331d3befed68"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/bc3a24c6ca8602ebf26159cc0ebb2b78.png"></a>
-<a href="#R-image-cf80820fd8db200ddf8b1d7e01699c6f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/864712201ddaad36dd5708daeb09ff86.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-cf80820fd8db200ddf8b1d7e01699c6f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/864712201ddaad36dd5708daeb09ff86.png"></a>
+<p><a href="#R-image-7cc21e042668de563d10259a0f613ec2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/d6eec84ebdede9d0261c3bed31b1d0e5.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7cc21e042668de563d10259a0f613ec2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/d6eec84ebdede9d0261c3bed31b1d0e5.png"></a>
+<a href="#R-image-aceb48b7cd394676389b441e2ddf905a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/bc3a24c6ca8602ebf26159cc0ebb2b78.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-aceb48b7cd394676389b441e2ddf905a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/bc3a24c6ca8602ebf26159cc0ebb2b78.png"></a>
+<a href="#R-image-9c0b1b9cb6eb25f00f5aee48317f8e4d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/864712201ddaad36dd5708daeb09ff86.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9c0b1b9cb6eb25f00f5aee48317f8e4d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/864712201ddaad36dd5708daeb09ff86.png"></a>
 继续迭代下去，
-<a href="#R-image-e6f03c92e789168423fe981271f81e61" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/aed49ae48b4cbf872d6f1d371c23ee4c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e6f03c92e789168423fe981271f81e61"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/aed49ae48b4cbf872d6f1d371c23ee4c.png"></a>
-<a href="#R-image-96889884cae9cb62ecf28d5cb41eb5fa" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/179ca7024136a25c7c60f0189abc527b.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-96889884cae9cb62ecf28d5cb41eb5fa"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/179ca7024136a25c7c60f0189abc527b.png"></a>
-<a href="#R-image-357fa1f7263cceee8739c5569fa0fa40" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/a3ca8d52acc18f15b0fa6a99ba862a72.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-357fa1f7263cceee8739c5569fa0fa40"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/a3ca8d52acc18f15b0fa6a99ba862a72.png"></a>
+<a href="#R-image-16a5361f35038f4e4970e56973b0108b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/aed49ae48b4cbf872d6f1d371c23ee4c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-16a5361f35038f4e4970e56973b0108b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/aed49ae48b4cbf872d6f1d371c23ee4c.png"></a>
+<a href="#R-image-6b44d179a8347ca54585a63df0b198dd" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/179ca7024136a25c7c60f0189abc527b.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6b44d179a8347ca54585a63df0b198dd"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/179ca7024136a25c7c60f0189abc527b.png"></a>
+<a href="#R-image-7e8396e95cfcc9b985a7b2f2e92fc7ff" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/a3ca8d52acc18f15b0fa6a99ba862a72.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7e8396e95cfcc9b985a7b2f2e92fc7ff"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/a3ca8d52acc18f15b0fa6a99ba862a72.png"></a>
 此时，与上一次的类别标记无变化，即可停止。</p>
 <h1 id="kmeans的编程实现">Kmeans的编程实现</h1>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#%%
@@ -349,8 +349,8 @@ kmeans.fit(X)
 plt.scatter(X[:, 0], X[:, 1], c=kmeans.labels_, cmap=&#39;viridis&#39;)
 plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], marker=&#39;*&#39;, s=150, color=&#39;red&#39;)
 plt.show()</code></pre></div>
-<p><a href="#R-image-403c54e7d4de61fb6e38d4c40d5cdc76" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/7d9f78b9823b28f32f98bc73c07a9071.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-403c54e7d4de61fb6e38d4c40d5cdc76"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/7d9f78b9823b28f32f98bc73c07a9071.png"></a></p>
+<p><a href="#R-image-1eb09e8646b9b78089ffd8ef9553bd7f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/7d9f78b9823b28f32f98bc73c07a9071.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1eb09e8646b9b78089ffd8ef9553bd7f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_12_cluster.md.images/7d9f78b9823b28f32f98bc73c07a9071.png"></a></p>
 
   <footer class="footline">
               <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
@@ -421,6 +421,8 @@ plt.show()</code></pre></div>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -438,8 +440,8 @@ plt.show()</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>

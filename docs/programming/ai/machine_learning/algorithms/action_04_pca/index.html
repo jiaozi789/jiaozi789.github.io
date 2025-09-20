@@ -33,26 +33,26 @@
     <meta itemprop="dateModified" content="2025-09-18T16:55:17+08:00">
     <meta itemprop="wordCount" content="529">
     <title>机器学习实战教程（四）：从特征分解到协方差矩阵：详细剖析和实现PCA算法 :: liaomin416100569博客</title>
-    <link href="/docs/css/auto-complete/auto-complete.min.css?1758337673" rel="stylesheet">
-    <script src="/docs/js/auto-complete/auto-complete.min.js?1758337673" defer></script>
-    <script src="/docs/js/search-lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/search.min.js?1758337673" defer></script>
+    <link href="/docs/css/auto-complete/auto-complete.min.css?1758355652" rel="stylesheet">
+    <script src="/docs/js/auto-complete/auto-complete.min.js?1758355652" defer></script>
+    <script src="/docs/js/search-lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/search.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
-      window.relearn.index_js_url="/docs/searchindex.en.js?1758337673";
+      window.relearn.index_js_url="/docs/searchindex.en.js?1758355652";
     </script>
-    <script src="/docs/js/lunr/lunr.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.multi.min.js?1758337673" defer></script>
-    <script src="/docs/js/lunr/lunr.zh.min.js?1758337673" defer></script>
+    <script src="/docs/js/lunr/lunr.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.stemmer.support.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.multi.min.js?1758355652" defer></script>
+    <script src="/docs/js/lunr/lunr.zh.min.js?1758355652" defer></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.contentLangs=['zh'];
     </script>
-    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758337673" rel="stylesheet"></noscript>
-    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/theme.min.css?1758337673" rel="stylesheet">
-    <link href="/docs/css/format-html.min.css?1758337673" rel="stylesheet" id="R-format-style">
+    <link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/docs/fonts/fontawesome/css/fontawesome-all.min.css?1758355652" rel="stylesheet"></noscript>
+    <link href="/docs/css/perfect-scrollbar/perfect-scrollbar.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/theme.min.css?1758355652" rel="stylesheet">
+    <link href="/docs/css/format-html.min.css?1758355652" rel="stylesheet" id="R-format-style">
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -106,7 +106,7 @@
       window.relearn.initVariant();
       window.relearn.markVariant();
     </script>
-    <link href="/docs/css/custom.css?1758337673" rel="stylesheet">
+    <link href="/docs/css/custom.css?1758355652" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/docs/programming/ai/machine_learning/algorithms/action_04_pca/index.html">
     <div id="R-body" class="default-animation">
@@ -196,14 +196,14 @@ window.MathJax = {
 <p>方差和标准差的原理和实例演示，请<a href="https://raw.githubusercontent.com/lzeqian/machinelearn/master/learn_algorithm/%E6%A0%87%E5%87%86%E5%B7%AE%E5%92%8C%E6%96%B9%E5%B7%AE%E7%90%86%E8%A7%A3.png" rel="external" target="_blank">参考</a></p>
 <h3 id="方差">方差</h3>
 <p>方差（Variance）是度量一组数据的分散程度。方差是各个样本与样本均值的差的平方和的均值：
-<a href="#R-image-b48323d41de9c3f233604fc8e121234b" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/3c88381f9ecf1248f7d117726825d7ad.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-b48323d41de9c3f233604fc8e121234b"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/3c88381f9ecf1248f7d117726825d7ad.png"></a></p>
+<a href="#R-image-fdfcabb944ce6044d13db079b94632af" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/3c88381f9ecf1248f7d117726825d7ad.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-fdfcabb944ce6044d13db079b94632af"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/3c88381f9ecf1248f7d117726825d7ad.png"></a></p>
 <h3 id="标准差">标准差</h3>
 <p>标准差是数值分散的测量。
 标准差的符号是 σ （希腊语字母 西格马，英语 sigma）
 公式很简单：方差的平方根。
-<a href="#R-image-dae7da53c093a97656d4c5140d7924cb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/a759f02e48a4050b9731475e3a97f921.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-dae7da53c093a97656d4c5140d7924cb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/a759f02e48a4050b9731475e3a97f921.png"></a></p>
+<a href="#R-image-46d5cf4ed288e9b39b61ad2bf2ca3f4f" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/a759f02e48a4050b9731475e3a97f921.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-46d5cf4ed288e9b39b61ad2bf2ca3f4f"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/a759f02e48a4050b9731475e3a97f921.png"></a></p>
 <h3 id="协方差">协方差</h3>
 <h4 id="通俗理解">通俗理解</h4>
 <p>可以通俗的理解为：两个变量在变化过程中是同方向变化？还是反方向变化？同向或反向程度如何？
@@ -215,37 +215,37 @@ window.MathJax = {
 <p>协方差（Covariance）在概率论和统计学中用于衡量两个变量的总体误差。而方差是协方差的一种特殊情况，即当两个变量是相同的情况。 这个解释摘自维基百科，看起来很是抽象，不好理解。其实简单来讲，协方差就是衡量两个变量相关性的变量。当协方差为正时，两个变量呈正相关关系（同增同减）；当协方差为负时，两个变量呈负相关关系（一增一减）。而协方差矩阵，只是将所有变量的协方差关系用矩阵的形式表现出来而已。通过矩阵这一工具，可以更方便地进行数学运算。
 <strong>数学定义</strong>
 回想概率统计里面关于方差的数学定义：
-<a href="#R-image-1a0046fa220a7301b008d3a0f69ad541" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/c47bb97596c055e595e5970eb82c2795.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1a0046fa220a7301b008d3a0f69ad541"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/c47bb97596c055e595e5970eb82c2795.png"></a>
+<a href="#R-image-63a46aab781effd2fadab79b0dac0660" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/c47bb97596c055e595e5970eb82c2795.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-63a46aab781effd2fadab79b0dac0660"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/c47bb97596c055e595e5970eb82c2795.png"></a>
 协方差的数学定义异曲同工：
-<a href="#R-image-4eb3287459975541ec1d42134e9336ad" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/fdb8c3fd4a067249f71627a1555e9b8f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-4eb3287459975541ec1d42134e9336ad"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/fdb8c3fd4a067249f71627a1555e9b8f.png"></a>
+<a href="#R-image-16ec4c8dee25ae92e354198af8707975" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/fdb8c3fd4a067249f71627a1555e9b8f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-16ec4c8dee25ae92e354198af8707975"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/fdb8c3fd4a067249f71627a1555e9b8f.png"></a>
 这里的 x和y表示两个变量空间。用机器学习的话讲，就是样本有 x和 y两种特征，
 而 X 就是包含所有样本的 x特征的集合，
 Y就是包含所有样本的 y特征的集合。
 用一个例子来解释会更加形象。
-<a href="#R-image-5f53ee7a52c7b20cc6349035007f3a33" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/6925227ee279b3b084078e39c5fc4eab.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5f53ee7a52c7b20cc6349035007f3a33"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/6925227ee279b3b084078e39c5fc4eab.png"></a>
+<a href="#R-image-6259438fe933d30cbc4b015e94d1f6f0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/6925227ee279b3b084078e39c5fc4eab.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6259438fe933d30cbc4b015e94d1f6f0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/6925227ee279b3b084078e39c5fc4eab.png"></a>
 用一个矩阵表示为：
-<a href="#R-image-1204a6622ae2a3a4d060444e0299ee82" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/d8440298fe8204f7c1ad37a7d8205402.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1204a6622ae2a3a4d060444e0299ee82"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/d8440298fe8204f7c1ad37a7d8205402.png"></a>
+<a href="#R-image-d4756f64be5ea36060d1675e5b192dcf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/d8440298fe8204f7c1ad37a7d8205402.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d4756f64be5ea36060d1675e5b192dcf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/d8440298fe8204f7c1ad37a7d8205402.png"></a>
 现在，我们用两个变量空间X ，Y 来表示这两个特征：
-<a href="#R-image-74454f4ada0b933ad88c5b38785556d2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/4c19ba09ef917699ff8e226e094ea684.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-74454f4ada0b933ad88c5b38785556d2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/4c19ba09ef917699ff8e226e094ea684.png"></a>
+<a href="#R-image-cc1361a715911f31fc37507d225859c6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/4c19ba09ef917699ff8e226e094ea684.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-cc1361a715911f31fc37507d225859c6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/4c19ba09ef917699ff8e226e094ea684.png"></a>
 由于协方差反应的是两个变量之间的相关性，因此，协方差矩阵表示的是所有变量之间两两相关的关系，具体来讲，一个包含两个特征的矩阵，其协方差矩阵应该有 2*2 大小：
-<a href="#R-image-1aaeac3bd160955c331cdb40e3121a0a" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/e7f66c48a2edbad38913c02616b3ab81.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-1aaeac3bd160955c331cdb40e3121a0a"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/e7f66c48a2edbad38913c02616b3ab81.png"></a>
+<a href="#R-image-7223df628b05f83e925f9643f92963a9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/e7f66c48a2edbad38913c02616b3ab81.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7223df628b05f83e925f9643f92963a9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/e7f66c48a2edbad38913c02616b3ab81.png"></a>
 接下来，就来逐一计算 Cov(Z)的值。 首先，我们需要先计算出 X，Y  两个特征空间的平均值：
 AVG(X)=3.25,AVG(Y)=3 ，  。 然后，根据协方差的数学定义，计算协方差矩阵的每个元素：
-<a href="#R-image-bd626d1fc3db44a1253068a051dcd941" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/404f5a07cccb75f6bf102f6863040157.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bd626d1fc3db44a1253068a051dcd941"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/404f5a07cccb75f6bf102f6863040157.png"></a>
+<a href="#R-image-caa0854e5a2c9bdf1099c4ceb40e6116" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/404f5a07cccb75f6bf102f6863040157.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-caa0854e5a2c9bdf1099c4ceb40e6116"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/404f5a07cccb75f6bf102f6863040157.png"></a>
 所以协方差矩阵
-<a href="#R-image-bdb2c2922dd11091f3cef5fabd4d86a2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/254202ba81a740d449d5fc7e2e96c8e8.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bdb2c2922dd11091f3cef5fabd4d86a2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/254202ba81a740d449d5fc7e2e96c8e8.png"></a>
+<a href="#R-image-104c442ea2a015f6dabe8572e2e31981" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/254202ba81a740d449d5fc7e2e96c8e8.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-104c442ea2a015f6dabe8572e2e31981"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/254202ba81a740d449d5fc7e2e96c8e8.png"></a>
 好了，虽然这只是一个二维特征的例子，但我们已经可以从中总结出协方差矩阵
 的「计算套路」：
-<a href="#R-image-ece29fdab1f2c7c57c317a099d8cdbb9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7ae4fe089b617e639500052edd304d5a.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ece29fdab1f2c7c57c317a099d8cdbb9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7ae4fe089b617e639500052edd304d5a.png"></a>
+<a href="#R-image-1d5aa9b8e270d7b89a7c4bdc0ccaa343" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7ae4fe089b617e639500052edd304d5a.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-1d5aa9b8e270d7b89a7c4bdc0ccaa343"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7ae4fe089b617e639500052edd304d5a.png"></a>
 python协方差原理</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code># 协方差主要是多个特征
 pa=np.array([
@@ -362,16 +362,16 @@ print(&#34;conv&#34;,np.cov(pa,rowvar=False))</code></pre></div>
 <p>首先，假设这些科目成绩不相关，那么怎么区分谁的成绩好了，明显语文和英文大家都差不多，数学上就拉开了差距，数学就可以理解为主成分。</p>
 <h2 id="理论">理论</h2>
 <p>先看下面这幅图：
-<a href="#R-image-5813acb168775e4de7feca92f0673be1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/f346783456a8e701ca310be61b1cfbfe.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-5813acb168775e4de7feca92f0673be1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/f346783456a8e701ca310be61b1cfbfe.png"></a>
+<a href="#R-image-12a177f640e5b21a106ee13a74c92bf6" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/f346783456a8e701ca310be61b1cfbfe.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-12a177f640e5b21a106ee13a74c92bf6"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/f346783456a8e701ca310be61b1cfbfe.png"></a>
 先假定特征只有二维，即只有两个变量，它们由横坐标和纵坐标所代表；因此每个观测值都有相应于这两个坐标轴的两个坐标值；如果这些数据形成一个椭圆形状的点阵，那么这个椭圆有一个长轴和一个短轴。在短轴方向上，数据变化很少；在极端的情况，短轴如果退化成一点，那只有在长轴的方向才能够解释这些点的变化了；这样，由二维到一维的降维就自然完成了。</p>
 <p>上图中，u1就是主成分方向，然后在二维空间中取和u1方向正交的方向，就是u2的方向。则n个数据在u1轴的离散程度最大（方差最大），数据在u1上的投影代表了原始数据的绝大部分信息，即使不考虑u2，信息损失也不多。而且，u1、u2不相关。只考虑u1时，二维降为一维。</p>
 <p>椭圆的长短轴相差得越大，降维也越有道理。</p>
 <h2 id="公式推导">公式推导</h2>
 <p>那么如何找到这个让样本间距最大的轴？</p>
 <p>如何定义样本间间距？ 使用方差(Variance)
-<a href="#R-image-bbe6d9ce92fe865f50212dec2cfd3646" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/b2c6ae46a68989fc6c7d25d87cca5d11.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-bbe6d9ce92fe865f50212dec2cfd3646"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/b2c6ae46a68989fc6c7d25d87cca5d11.png"></a>
+<a href="#R-image-5a426631650bf92bf828ad9eb0bf3eab" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/b2c6ae46a68989fc6c7d25d87cca5d11.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5a426631650bf92bf828ad9eb0bf3eab"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/b2c6ae46a68989fc6c7d25d87cca5d11.png"></a>
 方差越大代表样本之间越稀疏，方差越小代表样本之间越紧密。
 移动坐标轴，使得样本在每一个维度均值都为0：</p>
 <p>创建一个3x+4线性附近20个随机样本，样例和结果：https://github.com/lzeqian/machinelearn/blob/master/sklean_pca/demean.ipynb</p>
@@ -385,8 +385,8 @@ randc=20
 x1=np.random.rand(randc);
 x2=x1*3+4+np.random.rand(randc);
 plot.plot(x1,x2,&#34;o&#34;);</code></pre></div>
-<p><a href="#R-image-83fb557931c17f58b063dedbbabb2ac0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7ae5cc00619dc88f610da94823fcd20e.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-83fb557931c17f58b063dedbbabb2ac0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7ae5cc00619dc88f610da94823fcd20e.png"></a>
+<p><a href="#R-image-524c6e6774ae0a3e016c36ec363074ed" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7ae5cc00619dc88f610da94823fcd20e.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-524c6e6774ae0a3e016c36ec363074ed"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7ae5cc00619dc88f610da94823fcd20e.png"></a>
 转换为矩阵表示</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>#使用矩阵数组表示,x1,x2  x1和x2是两个特征
 &#39;&#39;&#39;
@@ -440,35 +440,35 @@ def demean(X):
 #均值归零的算法是x1-xmean，x2-x2mean
 X_demean=demean(X)
 plot.plot(X_demean[:,0],X_demean[:,1],&#34;o&#34;);</code></pre></div>
-<p><a href="#R-image-9795717548294f32c6f7bdd84c534fb2" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ac681b32c52517e4e4902e7f93c72d5c.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-9795717548294f32c6f7bdd84c534fb2"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ac681b32c52517e4e4902e7f93c72d5c.png"></a>
+<p><a href="#R-image-be0e161307024a371bc7bfaa2d842a54" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ac681b32c52517e4e4902e7f93c72d5c.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-be0e161307024a371bc7bfaa2d842a54"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ac681b32c52517e4e4902e7f93c72d5c.png"></a>
 demean之后的方差最大其实就是求映射后每个点到(0,0)的距离最大再求和，假设降维后轴的方向是w=(w1, w2)
-<a href="#R-image-d0e2d8dc036122edf72e5a83db73e614" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ba2ff38292cf0c3db56a18df8775997d.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-d0e2d8dc036122edf72e5a83db73e614"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ba2ff38292cf0c3db56a18df8775997d.png"></a>
+<a href="#R-image-7a567ebcb33942b1c90be210bb3a1daf" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ba2ff38292cf0c3db56a18df8775997d.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7a567ebcb33942b1c90be210bb3a1daf"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ba2ff38292cf0c3db56a18df8775997d.png"></a>
 ，Xi是映射前的向量，Xi(project)是映射后的向量，这里注意w向量是单位向量 |w|=1
-<a href="#R-image-01a7bb6153caf505d1d4807151e537b1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/d0b980850a29292f0b6c57e2c45412ce.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-01a7bb6153caf505d1d4807151e537b1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/d0b980850a29292f0b6c57e2c45412ce.png"></a>
+<a href="#R-image-ee4f166e5afae43ed63ff7d32b7a1282" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/d0b980850a29292f0b6c57e2c45412ce.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ee4f166e5afae43ed63ff7d32b7a1282"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/d0b980850a29292f0b6c57e2c45412ce.png"></a>
 以上是推导公式
 目标函数是：
-<a href="#R-image-0833ac2b9e938974f36b2657742dd5a1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/65e00e762152889eb062264fde120fd2.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0833ac2b9e938974f36b2657742dd5a1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/65e00e762152889eb062264fde120fd2.png"></a>
+<a href="#R-image-973321bfc04b9cef69bea5b290b5c810" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/65e00e762152889eb062264fde120fd2.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-973321bfc04b9cef69bea5b290b5c810"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/65e00e762152889eb062264fde120fd2.png"></a>
 通过公司可知
-<a href="#R-image-c9a91ff2567cad8829d32d1907a9a524" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/8569b5586ccb2f512a43d5fc85bae7ab.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-c9a91ff2567cad8829d32d1907a9a524"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/8569b5586ccb2f512a43d5fc85bae7ab.png"></a></p>
+<a href="#R-image-ac6c6046dd955cf744ec5276b8f327d1" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/8569b5586ccb2f512a43d5fc85bae7ab.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ac6c6046dd955cf744ec5276b8f327d1"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/8569b5586ccb2f512a43d5fc85bae7ab.png"></a></p>
 <blockquote>
 <p><!-- raw HTML omitted -->注意i是样本索引，下标1，2是特征数，x1是特征1，x2是特征2  xj是特征j，每个特征xj对应一个维度wj<!-- raw HTML omitted --></p></blockquote>
 <p>目标函数即：
-<a href="#R-image-2178766f0b81d9e8139bc6e107979074" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/2f5c527579fdc683110708467201b75f.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-2178766f0b81d9e8139bc6e107979074"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/2f5c527579fdc683110708467201b75f.png"></a>
+<a href="#R-image-f414fa4701a620bece6ac57250feecc9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/2f5c527579fdc683110708467201b75f.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f414fa4701a620bece6ac57250feecc9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/2f5c527579fdc683110708467201b75f.png"></a>
 对目标函数求梯度：
-<a href="#R-image-f1ee9eb02e51fb37e8b2eceb294c2b09" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/1520a9604a9108661085456861cca3db.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f1ee9eb02e51fb37e8b2eceb294c2b09"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/1520a9604a9108661085456861cca3db.png"></a>
+<a href="#R-image-280dd485dce2faa5f5fe5efd932d04f9" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/1520a9604a9108661085456861cca3db.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-280dd485dce2faa5f5fe5efd932d04f9"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/1520a9604a9108661085456861cca3db.png"></a>
 转化为：
-<a href="#R-image-e522d9ee87b6b7802335511d5eb3c828" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ee261b01d6ea0bc17e3a9b33fbe08634.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-e522d9ee87b6b7802335511d5eb3c828"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ee261b01d6ea0bc17e3a9b33fbe08634.png"></a>
+<a href="#R-image-3977b29d6cf2563eed088b7e11f87d76" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ee261b01d6ea0bc17e3a9b33fbe08634.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3977b29d6cf2563eed088b7e11f87d76"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/ee261b01d6ea0bc17e3a9b33fbe08634.png"></a>
 由于最终转换的结果是一个1行m列的矩阵，而我们想要得到一个n行1列的矩阵，所以还要进行一次转置</p>
-<p><a href="#R-image-96833a4be438bcf420386a1fa42c9874" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/3b9d2f2215be5b10b44b41b94bea85d3.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-96833a4be438bcf420386a1fa42c9874"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/3b9d2f2215be5b10b44b41b94bea85d3.png"></a></p>
+<p><a href="#R-image-0713e6b52224b50e819bd74ebdcf682c" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/3b9d2f2215be5b10b44b41b94bea85d3.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-0713e6b52224b50e819bd74ebdcf682c"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/3b9d2f2215be5b10b44b41b94bea85d3.png"></a></p>
 <h2 id="编程实现第一主成分">编程实现（第一主成分）</h2>
 <p>产生一个 3x+4附近的点</p>
 <div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>import numpy as np;
@@ -567,11 +567,11 @@ print(&#34;方差：&#34;,wappy)
 ax.set_title(&#39;3D line plot&#39;)
 plot.show()</code></pre></div>
 <p>拟合的直线
-<a href="#R-image-0b6e1584245f9f2b1d82923ab5b4964d" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/f38c0937db779fc160fc4f8a234ae0cb.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-0b6e1584245f9f2b1d82923ab5b4964d"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/f38c0937db779fc160fc4f8a234ae0cb.png"></a>
+<a href="#R-image-7e0fdc4ff8188ecc5a9c69b5518734fb" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/f38c0937db779fc160fc4f8a234ae0cb.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7e0fdc4ff8188ecc5a9c69b5518734fb"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/f38c0937db779fc160fc4f8a234ae0cb.png"></a>
 梯度上升过程
-<a href="#R-image-f91a7731135950d740c3d7e4ee1b4144" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7c36504a5cd47247dc106ac39ff6d2dc.png" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-f91a7731135950d740c3d7e4ee1b4144"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7c36504a5cd47247dc106ac39ff6d2dc.png"></a></p>
+<a href="#R-image-8c98ddd0dcabaa24582133772a840ad0" class="lightbox-link"><img alt="在这里插入图片描述" class="lazy lightbox figure-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7c36504a5cd47247dc106ac39ff6d2dc.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8c98ddd0dcabaa24582133772a840ad0"><img alt="在这里插入图片描述" class="lazy lightbox lightbox-image" loading="lazy" src="/docs/images/content/programming/ai/machine_learning/algorithms/action_04_pca.md.images/7c36504a5cd47247dc106ac39ff6d2dc.png"></a></p>
 
   <footer class="footline">
               <i class='fa-fw fas fa-calendar'></i> Sep 18, 2025
@@ -642,6 +642,8 @@ plot.show()</code></pre></div>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/deep_learning/index.html"><a class="padding" href="/docs/programming/ai/deep_learning/index.html">深度学习</a><ul id="R-subsections-8e4f2a2c63b9f66a19e3b2a7c957ccda" class="collapsible-menu"></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/ai/computer_vision/index.html"><a class="padding" href="/docs/programming/ai/computer_vision/index.html">计算机视觉</a><ul id="R-subsections-ee78ef5588610a65894e6d07832cb0b2" class="collapsible-menu"></ul></li></ul></li>
             <li class="alwaysopen " data-nav-id="/docs/programming/plugins/index.html"><a class="padding" href="/docs/programming/plugins/index.html">插件开发</a><ul id="R-subsections-de66f54cff99288ca68bfcb5bb0439ae" class="collapsible-menu"></ul></li></ul></li>
+            <li class="" data-nav-id="/docs/devops/index.html"><a class="padding" href="/docs/devops/index.html">运维一体化</a><ul id="R-subsections-389d4feb4920b919bcbc0b1e9947dace" class="collapsible-menu"></ul></li>
+            <li class="" data-nav-id="/docs/security/index.html"><a class="padding" href="/docs/security/index.html">安全攻防</a><ul id="R-subsections-66815ecaaecfc1c209e5637d03b258b2" class="collapsible-menu"></ul></li>
           </ul>
         </div>
         <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
@@ -659,8 +661,8 @@ plot.show()</code></pre></div>
 <div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
       </div>
     </aside>
-    <script src="/docs/js/clipboard/clipboard.min.js?1758337673" defer></script>
-    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758337673" defer></script>
-    <script src="/docs/js/theme.min.js?1758337673" defer></script>
+    <script src="/docs/js/clipboard/clipboard.min.js?1758355652" defer></script>
+    <script src="/docs/js/perfect-scrollbar/perfect-scrollbar.min.js?1758355652" defer></script>
+    <script src="/docs/js/theme.min.js?1758355652" defer></script>
   </body>
 </html>
